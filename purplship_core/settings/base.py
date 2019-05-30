@@ -16,7 +16,8 @@ from django.urls import reverse_lazy
 from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CUR_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.join(CUR_DIR, "..")
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,10 +29,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY', get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG_MODE', True))
 
-ALLOWED_HOSTS = PURPLSHIP.ALLOWED_HOSTS
+SECURE_DOMAIN = os.environ.get('SECURE', False)
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost'
+]
+
 CORS_ORIGIN_ALLOW_ALL = True
 
-if not DEBUG:
+if SECURE_DOMAIN:
     global SECURE_SSL_REDIRECT
     global SECURE_PROXY_SSL_HEADER
 

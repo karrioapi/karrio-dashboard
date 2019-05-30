@@ -1,6 +1,6 @@
 {
-    "name": "urplShip Server",
-    "description": "A Self hosted PurplShip cloud server.",
+    "name": "PurplShip Server",
+    "description": "A Self hosted Multi-carrier shipping cloud service.",
     "keywords": [
         "PurplShip",
         "Shipping",
@@ -10,14 +10,17 @@
     "repository": "https://github.com/PurplShip/purplship-server.git",
     "logo": "https://avatars3.githubusercontent.com/u/37806986?s=400&u=d4e06b368ab2886b075b0bda96f7c7e46d15785d&v=4",
     "success_url": "/",
-    "scripts": {
-        "postdeploy": "echo \"from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'pass')\" | python manage.py shell"
-    },
+    "scripts": {},
     "env": {
         "DEBUG_MODE": {
             "description": "Debug flag.",
-            "value": ""
-        }
+            "value": "False"
+        },
+        "SECURE_DOMAIN": {
+            "description": "HTTPS required?",
+            "value": "True"
+        },
+        "APP_STAGE": "production"
     },
     "formation": {
         "web": {
