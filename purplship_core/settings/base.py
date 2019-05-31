@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import purplship_config as PURPLSHIP
 from django.urls import reverse_lazy
 from django.core.management.utils import get_random_secret_key
 
@@ -119,8 +118,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-    **PURPLSHIP.DATABASES
+    }
 }
 
 # Heroku: Update database configuration from $DATABASE_URL.
@@ -197,9 +195,6 @@ SWAGGER_SETTINGS = {
 REDOC_SETTINGS = {
     'SPEC_URL': ('schema-json', {'format': '.json'}),
 }
-
-# PurplShip configuration
-PURPLSHIP_SETTINGS = PURPLSHIP.SETTINGS
 
 # Logging configuration
 LOGGING = {

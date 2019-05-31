@@ -7,3 +7,5 @@ elif app_stage == 'containerized':
     from .containerized import *
 else:
     from .development import *
+
+from purplship_config import *
