@@ -1,2 +1,6 @@
 -f https://git.io/purplship
-purplship.pakcage
+purplship.package
+django
+djangorestframework
+drf-yasg
+djangorestframework-camel-case
