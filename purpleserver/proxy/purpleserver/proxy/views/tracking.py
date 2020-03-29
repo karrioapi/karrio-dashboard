@@ -20,19 +20,21 @@ from purpleserver.proxy.router import router
     methods=['get'],
     responses={200: serializers.CompleteTrackingResponse()},
     operation_description="""
-    GET /v1/tracks/[carrier]/[tracking_number]
+    GET /v1/tracking/[carrier]/[tracking_number]
     """,
     operation_id="TrackShipment",
     manual_parameter=[
         openapi.Parameter(
             'carrier',
             openapi.IN_PATH,
+            required=True,
             description="specific shipping carrier",
             type=openapi.TYPE_STRING
         ),
         openapi.Parameter(
             'tracking_number',
             openapi.IN_PATH,
+            required=True,
             description="shipment tracking number",
             type=openapi.TYPE_STRING
         )
@@ -42,7 +44,7 @@ from purpleserver.proxy.router import router
 @authentication_classes((SessionAuthentication, BasicAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated, ))
 @throttle_classes([UserRateThrottle, AnonRateThrottle])
-def tracking(carrier: str = None, tracking_number: str = None):
+def track(carrier: str = None, tracking_number: str = None):
     error = None
     try:
         if error is None:
@@ -56,4 +58,4 @@ def tracking(carrier: str = None, tracking_number: str = None):
         return Response(e.args, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-router.urls.append(path('track/<carrier>/<tracking_number>', tracking, name='Tracking'))
+router.urls.append(path('tracking/<carrier>/<tracking_number>', track, name='Tracking'))

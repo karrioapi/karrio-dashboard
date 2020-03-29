@@ -1,7 +1,9 @@
 from django.contrib import admin
 
-from purpleserver.core.models import Carrier, CanadaPostSettings, FedexSettings
+from purpleserver.core import models
 
-admin.site.register(Carrier)
-admin.site.register(FedexSettings)
-admin.site.register(CanadaPostSettings)
+admin.site.register(models.FedexSettings)
+admin.site.register(models.DHLSettings)
+admin.site.register(models.PurolatorSettings)
+admin.site.register(models.UPSSettings)
+admin.site.register(models.CanadaPostSettings)

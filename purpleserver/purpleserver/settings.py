@@ -174,7 +174,6 @@ SWAGGER_SETTINGS = {
         }
     }
 }
-
-# REDOC_SETTINGS = {
-#     'SPEC_URL': ('schema-json', {'format': '.json'}),
-# }
+REDOC_SETTINGS = {
+   'LAZY_RENDERING': False,
+}

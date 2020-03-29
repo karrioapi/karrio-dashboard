@@ -39,17 +39,10 @@ schema_view = get_schema_view(
 )
 
 
-def root_redirect(request):
-    schema_view = 'cschema-redoc'
-    return redirect(schema_view, permanent=True)
-
-
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('dashboard/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
-    path('', root_redirect),
 
     path(r'v1/', include(router.urls)),
 ]

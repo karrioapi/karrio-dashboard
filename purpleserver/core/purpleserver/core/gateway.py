@@ -1,41 +1,10 @@
-import attr
-from typing import List, Dict, Tuple, cast
+from typing import List, Tuple, cast
 from purplship import package as api
-from purplship.core.utils import exec_async
-from purplship.core.models import (
-    RateDetails, Address, RateRequest, Message, ShipmentRequest, ShipmentDetails, TrackingDetails,
-    TrackingRequest
+from purplship.core.utils import exec_async, to_dict
+from purpleserver.core.serializers import (
+    RateDetails, RateRequest, ShipmentRequest, ShipmentDetails,
+    TrackingRequest, CarrierSettings, Shipment, CompleteShipmentResponse, CompleteTrackingResponse,
 )
-
-
-@attr.s(auto_attribs=True)
-class CarrierSettings:
-    type: str  # eg: dhl, caps, aups...
-    settings: dict
-
-
-@attr.s(auto_attribs=True)
-class Shipment:
-    shipper: Address
-    recipient: Address
-    options: Dict
-    rates: List[RateDetails]
-    carrier: str = None
-    selected_rate: RateDetails = None
-    label: str = None
-    tracking_number: str = None
-
-
-@attr.s(auto_attribs=True)
-class CompleteShipmentResponse:
-    messages: List[Message]
-    shipment: Shipment = None
-
-
-@attr.s(auto_attribs=True)
-class CompleteTrackingResponse:
-    messages: List[Message]
-    tracking_details: TrackingDetails = None
 
 
 def fetch_rates(payload: dict, carriers: List[CarrierSettings]) -> CompleteShipmentResponse:
@@ -46,18 +15,18 @@ def fetch_rates(payload: dict, carriers: List[CarrierSettings]) -> CompleteShipm
         return api.rating.fetch(request).from_(gateway).parse()
 
     results: List[Tuple] = exec_async(process, carriers)
-    rates = sum((r for r, _ in results), [])
-    messages = sum((m for _, m in results), [])
+    rates = sum((to_dict(r) for r, _ in results), [])
+    messages = sum((to_dict(m) for _, m in results), [])
 
-    return CompleteShipmentResponse(
-        shipment=Shipment(
+    return CompleteShipmentResponse(**dict(
+        shipment=dict(
             shipper=request.shipper,
             recipient=request.recipient,
             options=request.options,
             rates=rates
         ),
         messages=messages
-    )
+    ))
 
 
 def create_shipment(payload: dict, carrier: CarrierSettings) -> CompleteShipmentResponse:
