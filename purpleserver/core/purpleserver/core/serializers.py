@@ -1,16 +1,22 @@
+from purplship.package.mappers import Providers
 from rest_framework.serializers import (
-    Serializer, CharField, FloatField, BooleanField, IntegerField, ListField,
-    DictField
+    Serializer, CharField, FloatField, BooleanField, IntegerField, ListField, DictField, ChoiceField, ListSerializer
 )
 
-
-class CarrierSettings:
-    type = CharField(required=True)
-    settings = DictField(required=True)
+CARRIERS = [(k, k) for k in Providers.keys()]
 
 
 class StringListField(ListField):
     child = CharField()
+
+
+class CarrierSettings(Serializer):
+    carrier = ChoiceField(choices=CARRIERS)
+    settings = DictField(required=True)
+
+
+class CarrierSettingsList(ListSerializer):
+    child = CarrierSettings()
 
 
 class Address(Serializer):
