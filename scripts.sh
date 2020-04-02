@@ -59,3 +59,5 @@ run_container() {
     docker-compose up "$@"
 }
 alias run:container=run_container
+
+env:on || true
