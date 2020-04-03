@@ -1,12 +1,11 @@
+import pkgutil
+import logging
+import purpleserver.core.extension.models as extensions
+from typing import Any, Dict
 from django.db import models
+from purpleserver.core.models.carrier import Carrier
 
-
-class Carrier(models.Model):
-    class Meta:
-        abstract = True
-
-    carrier_name = models.CharField(max_length=200)
-    test = models.BooleanField(default=True)
+logger = logging.getLogger(__name__)
 
 
 class CanadaPostSettings(Carrier):
@@ -81,10 +80,21 @@ class FedexSettings(Carrier):
 FedexSettings._meta.get_field('carrier_name').default = 'FedEx'
 
 
-MODELS = {
+MODELS: Dict[str, Any] = {
     'canadapost': CanadaPostSettings,
     'dhl': DHLSettings,
     'fedex': FedexSettings,
     'purolator': PurolatorSettings,
     'ups': UPSSettings,
 }
+
+
+# Register purplship-server models extensions
+
+for _, name, _ in pkgutil.iter_modules(extensions.__path__):
+    try:
+        extension = __import__(f"{extensions.__name__}.{name}", fromlist=[name])
+        MODELS.update({name: extension.settings()})
+    except Exception as e:
+        logger.warning(f'Failed to register extension "{name}" Model')
+        logger.exception(e)
