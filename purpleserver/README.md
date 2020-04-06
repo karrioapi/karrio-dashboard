@@ -1,10 +1,13 @@
-# purplship-server
+# PurplShip-server
 
-Purplship server core
+PurplShip-server 
 
-## Deploy your demo
+## Deployments
+
+### Dev
+
+### Docker
 
 ### Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/PurplShip/purplship-server/tree/master)
-
