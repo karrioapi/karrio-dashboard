@@ -14,9 +14,7 @@ setup(
       author_email='danielk.developer@gmail.com',
       license='AGPLv3',
       packages=find_packages("."),
-      install_requires=[
-            'purplship.package'
-      ],
+      install_requires=[],
       dependency_links=[
             'https://git.io/purplship',
       ],
