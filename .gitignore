@@ -106,5 +106,3 @@ venv.bak/
 *.DS_Store
 
 .idea/
-
-staticfiles
