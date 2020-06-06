@@ -5,7 +5,7 @@ certifi==2020.4.5.1
 chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
-Django==3.0.5
+Django==3.0.7
 djangorestframework==3.11.0
 djangorestframework-camel-case==1.1.2
 drf-yasg==1.17.1
