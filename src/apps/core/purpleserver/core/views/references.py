@@ -25,7 +25,7 @@ TYPE_MAPPING = {
 
 def import_pkg(pkg: str):
     *_, carrier, name = pkg.split(".")
-    if any(model_name for model_name in MODELS.keys() if carrier in model_name):
+    if carrier in MODELS.keys():
         return __import__(pkg, fromlist=[name])
     return None
 
@@ -43,37 +43,33 @@ PACKAGE_MAPPERS = {
         'options': "OptionCode",
         'packagePresets': "PackagePresets"
     },
-    'dhl_express': {
-        'label': "DHL Express",
-        'package': import_pkg('purplship.providers.dhl_express.units'),
+    'dhl': {
+        'label': "DHL",
+        'package': import_pkg('purplship.providers.dhl.units'),
         'services': "Product",
         'options': "SpecialServiceCode",
-        'packagePresets': "PackagePresets",
-        'packagingTypes': "DCTPackageType"
+        'packagePresets': "PackagePresets"
     },
-    'fedex_express': {
-        'label': "FedEx Express",
+    'fedex': {
+        'label': "FedEx",
         'package': import_pkg('purplship.providers.fedex.units'),
         'services': "ServiceType",
         'options': "SpecialServiceType",
-        'packagePresets': "PackagePresets",
-        'packagingTypes': "PackagingType"
+        'packagePresets': "PackagePresets"
     },
-    'purolator_courier': {
-        'label': "Purolator Courier",
+    'purolator': {
+        'label': "Purolator",
         'package': import_pkg('purplship.providers.purolator.units'),
         'services': "Product",
         'options': "Service",
-        'packagePresets': "PackagePresets",
-        'packagingTypes': "PackagingType"
+        'packagePresets': "PackagePresets"
     },
-    'ups_package': {
-        'label': "UPS Package",
+    'ups': {
+        'label': "UPS",
         'package': import_pkg('purplship.providers.ups.units'),
         'services': "ShippingServiceCode",
         'options': "ServiceOption",
-        'packagePresets': "PackagePresets",
-        'packagingTypes': "RatingPackagingType"
+        'packagePresets': "PackagePresets"
     },
     'freightcom': {
         'label': "Freightcom",
@@ -93,7 +89,6 @@ REFERENCE_MODELS = {
     "countries": {c.name: c.value for c in list(Country)},
     "currencies": {c.name: c.value for c in list(Currency)},
     "states": {c.name: {s.name: s.value for s in list(c.value)} for c in list(CountryState)},
-    "carriers": {k: v['label'] for k, v in PACKAGE_MAPPERS.items() if k in MODELS},
     "services": {
         key: {c.name: c.value for c in list(getattr(mapper['package'], mapper['services']))}
         for key, mapper in PACKAGE_MAPPERS.items()
@@ -159,7 +154,7 @@ Code | Name
 </details><br/>
 
 
-## Packaging Types
+## Packaging Type
 
 <details>
 
@@ -251,7 +246,6 @@ for key, value in REFERENCE_MODELS["services"].items()
 class References(Serializer):
     countries = StringListField()
     currencies = StringListField()
-    carriers = PlainDictField()
     states = PlainDictField()
     services = PlainDictField()
     options = PlainDictField()

@@ -10,13 +10,11 @@ dev_requirements = [
       'wheel',
 
       'purplship.canadapost',
-      'purplship.dhl-express',
+      'purplship.dhl',
       'purplship.fedex',
-      'purplship.fedex-express',
+      'purplship.package',
       'purplship.purolator',
-      'purplship.purolator-courier',
       'purplship.ups',
-      'purplship.ups-package',
 
       'eshipper.extension',
       'freightcom.extension',
@@ -35,9 +33,10 @@ setup(
       packages=find_packages("."),
       install_requires=[
             'django',
-            'djangorestframework==3.11.1',
+            'djangorestframework',
             'djangorestframework-camel-case',
             'drf-yasg',
+            'django-oauth-toolkit',
             'gunicorn',
             'jsonfield',
             'python-decouple',

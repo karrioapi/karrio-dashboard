@@ -5,9 +5,8 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 const build_path = '../apps/client/purpleserver/client/static/purpleserver/client';
 
 module.exports = {
-  entry: './src/dashboard.tsx',
-  mode: 'development',
-  devtool: "source-map",
+  entry: './src/index.tsx',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -16,26 +15,12 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        // For pure CSS - /\.css$/i,
-        // For Sass/SCSS - /\.((c|sa|sc)ss)$/i,
-        // For Less - /\.((c|le)ss)$/i,
-        test: /\.((c|sa|sc)ss)$/i,
-        exclude: /node_modules/,
+        test: /\.css$/,
         use: [
-          'style-loader',
           {
             loader: MiniCssExtractPlugin.loader,
           },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              modules: { auto: true },
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
+          'css-loader',
         ],
       },
       {
@@ -48,7 +33,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [ '.ts', '.tsx', '.js' ],
+    extensions: [ '.tsx', '.ts', '.js' ],
     alias: {
       "@": path.resolve(__dirname, 'src'),
     }
