@@ -4,9 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-      name='purplship-server.manager',
-      version='2021.2',
-      description='Multi-carrier shipping API Shipments manager module',
+      name='purplship-server.events',
+      version='2021.3',
+      description='Multi-carrier shipping API Events module',
       long_description=long_description,
       long_description_content_type="text/markdown",
       url='https://github.com/PurplShip/purplship-server',
@@ -16,6 +16,7 @@ setup(
       packages=find_packages("."),
       install_requires=[
             'purplship-server.core',
+            'huey'
       ],
       dependency_links=[
             'https://git.io/purplship',
