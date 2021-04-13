@@ -9,8 +9,8 @@
       "density": "4.0"
     },
     {
-      "src": "\/static\/purpleserver\/favicon-set\/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "\/static\/purpleserver\/favicon-set\/android-chrome-256x256.png",
+      "sizes": "256x256",
       "type": "image\/png",
       "density": "4.0"
     }

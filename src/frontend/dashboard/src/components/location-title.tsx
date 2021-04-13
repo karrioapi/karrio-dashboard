@@ -29,7 +29,7 @@ const LocationTitle: React.FC<LocationTitleComponent> = () => {
                     title = '| Shipments';
                 }
 
-                document.title = `Purplship ${title}`;
+                document.title = `Caribshopper ${title}`;
                 return <></>;
             }}
         </Location>

@@ -1,0 +1,1 @@
+web: purplship collectstatic --noinput && gunicorn purpleserver.wsgi --preload --log-file -
