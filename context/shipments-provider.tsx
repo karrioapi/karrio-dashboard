@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { ShipmentList } from '@/api/index';
+import { PurplshipClient, ShipmentList } from '@/api/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination, isNone } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode';
-import { ListRequest } from '@/api/apis/ShipmentsApi';
+import { AppMode } from '@/context/app-mode-provider';
+import { ListRequest } from '@/api/generated/apis/ShipmentsApi';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
 type RequestOptions = { cursor?: string } & ListRequest;
@@ -19,7 +19,7 @@ type ResultType = ShipmentList & {
 };
 export const Shipments = React.createContext<ResultType>({} as ResultType);
 
-const ShipmentsQuery: React.FC = ({ children }) => {
+const ShipmentsProvider: React.FC = ({ children }) => {
   const purplship = useContext(RestContext);
   const { testMode } = useContext(AppMode);
   const [result, setValue] = useState<ShipmentList>(DEFAULT_PAGINATED_RESULT);
@@ -39,8 +39,7 @@ const ShipmentsQuery: React.FC = ({ children }) => {
     setCursor(params);
     setLoading(true);
 
-    return purplship
-      .shipments
+    return (purplship as PurplshipClient).shipments
       .list(params)
       .then(setValue)
       .catch(setError)
@@ -68,4 +67,4 @@ const ShipmentsQuery: React.FC = ({ children }) => {
   );
 };
 
-export default ShipmentsQuery;
+export default ShipmentsProvider;

@@ -15,8 +15,6 @@ const Login: React.FC = () => {
       password: password.current?.value,
       callbackUrl: `${(new URLSearchParams(location.search)).get('next') || '/'}`,
     });
-
-    console.log(res);
   };
 
   return (

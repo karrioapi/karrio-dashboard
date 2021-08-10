@@ -6,7 +6,6 @@ import type { AppProps } from 'next/app';
 import { Provider } from 'next-auth/client';
 import Head from 'next/head';
 import MainLayout from '@/components/main-layout';
-import { GetStaticPropsContext } from 'next';
 import { ClientsProvider } from '@/client/context';
 
 
@@ -23,12 +22,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       </ClientsProvider>
     </Provider>
   );
-}
-
-export async function getServerSideProps(context: GetStaticPropsContext) {
-  return {
-    props: {},
-  };
 }
 
 export default MyApp;

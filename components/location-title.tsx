@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { APIReference } from '@/context/references-query';
-import { AppMode } from '@/context/app-mode';
+import { AppMode } from '@/context/app-mode-provider';
 
 interface LocationTitleComponent { }
 

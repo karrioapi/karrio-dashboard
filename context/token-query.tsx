@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetToken, GetToken_token, GET_TOKEN } from '@/graphql';
-import { AppMode } from '@/context/app-mode';
+import { AppMode } from '@/context/app-mode-provider';
 
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {

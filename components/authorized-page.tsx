@@ -5,11 +5,13 @@ import UserProvider from '@/context/user-provider';
 import APIReferenceProvider from '@/context/references-provider';
 import { isNone } from '@/lib/helper';
 import { AuthToken, RestContext } from '@/client/context';
-import { TokenPair } from '@/api';
+import { PurplshipClient, TokenPair } from '@/api';
+import AppModeProvider from '@/context/app-mode-provider';
 
 
 const DATA_CONTEXTS = [
   APIReferenceProvider,
+  AppModeProvider,
 ];
 
 
@@ -28,7 +30,7 @@ const AuthorizedPage = (Component: React.FC) => {
   const [session] = useSession();
   const purplship = useContext(RestContext);
 
-  const isReady = (purplship: any) => {
+  const isReady = (purplship?: PurplshipClient) => {
     return ((purplship?.config.apiKey as string || '').length > 0);
   };
 

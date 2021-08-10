@@ -3,7 +3,7 @@ import { WebhookList } from '@/api/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode';
+import { AppMode } from '@/context/app-mode-provider';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
 
@@ -31,7 +31,7 @@ const WebhooksQuery: React.FC = ({ children }) => {
     setCursor(cursor || '');
     setLoading(true);
 
-    return purplship
+    return (purplship as any)
       .webhooks
       .list({ ...getCursorPagination(cursor), testMode: testMode })
       .then(setValue)

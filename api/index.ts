@@ -1,18 +1,17 @@
-import {
-  APIApi,
-  AddressesApi,
-  CarriersApi,
-  CustomsApi,
-  ParcelsApi,
-  PickupsApi,
-  ProxyApi,
-  ShipmentsApi,
-  TrackersApi,
-  WebhooksApi,
-} from './generated/api';
-import { Configuration, ConfigurationParameters } from './generated/configuration';
+import { AddressesApi } from './generated/apis/AddressesApi';
+import { APIApi } from './generated/apis/APIApi';
+import { CarriersApi } from './generated/apis/CarriersApi';
+import { CustomsApi } from './generated/apis/CustomsApi';
+import { ParcelsApi } from './generated/apis/ParcelsApi';
+import { PickupsApi } from './generated/apis/PickupsApi';
+import { ProxyApi } from './generated/apis/ProxyApi';
+import { ShipmentsApi } from './generated/apis/ShipmentsApi';
+import { TrackersApi } from './generated/apis/TrackersApi';
+import { WebhooksApi } from './generated/apis/WebhooksApi';
+import { Configuration, ConfigurationParameters } from './generated/runtime';
 
-export * from "./generated";
+export * from './generated/runtime';
+export * from './generated/models';
 
 export interface PurplshipClientInterface {
   API: APIApi;
@@ -25,7 +24,7 @@ export interface PurplshipClientInterface {
   shipments: ShipmentsApi;
   trackers: TrackersApi;
   webhooks: WebhooksApi;
-  config: Configuration;
+  config: ConfigurationParameters;
 }
 
 export class PurplshipClient implements PurplshipClientInterface {
@@ -39,12 +38,12 @@ export class PurplshipClient implements PurplshipClientInterface {
   shipments: ShipmentsApi;
   trackers: TrackersApi;
   webhooks: WebhooksApi;
-  config: Configuration;
+  config: ConfigurationParameters;
 
   constructor(clientConfig: ConfigurationParameters) {
     const config = new Configuration(clientConfig);
 
-    this.config = config;
+    this.config = clientConfig;
     this.API = new APIApi(config);
     this.addresses = new AddressesApi(config);
     this.carriers = new CarriersApi(config);

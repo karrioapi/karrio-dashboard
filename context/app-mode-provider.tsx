@@ -7,7 +7,8 @@ type AppModeType = {
 };
 
 export function computeMode() {
-  return window.location.pathname.startsWith('/test/');
+  // return window.location.pathname.startsWith('/test/');
+  return true
 };
 
 export function computeBasePath() {

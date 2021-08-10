@@ -12,20 +12,20 @@ export type WebhookMutator<T> = T & {
 }
 
 const WebhookMutation = <T extends {}>(Component: React.FC<WebhookMutator<T>>) => (
-  ({ children, ...props }: any) => {
+  function WebhookMutationWrapper({ children, ...props }: any) {
     const purplship = useContext(RestContext);
 
     const addWebhook = async (data: WebhookData) => handleFailure(
-      purplship.webhooks.create({ data })
+      purplship!.webhooks.create({ data })
     );
     const updateWebhook = async ({ id, ...data }: Partial<Webhook>) => handleFailure(
-      purplship.webhooks.update({ id: id as string, data: data as any })
+      purplship!.webhooks.update({ id: id as string, data: data as any })
     );
     const testWebhook = async (id: string, payload: object) => handleFailure(
-      purplship.webhooks.test({ id, data: { payload } })
+      purplship!.webhooks.test({ id, data: { payload } })
     );
     const removeWebhook = async (id: string) => handleFailure(
-      purplship.webhooks.remove({ id })
+      purplship!.webhooks.remove({ id })
     );
 
     return (

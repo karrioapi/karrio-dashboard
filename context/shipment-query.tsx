@@ -39,7 +39,7 @@ const LabelDataQuery: React.FC = ({ children }) => {
       }
 
       await handleFailure(
-        purplship.shipments.retrieve(id as string)
+        (purplship as any).shipments.retrieve(id as string)
       )
         .then(r => { setValue(r as any); resolve(r as any); })
         .catch(e => { setError(e); setValue({} as Shipment); })

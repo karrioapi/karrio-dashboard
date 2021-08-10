@@ -42,16 +42,16 @@ export const ClientsProvider: React.FC = ({ children }) => {
 
 
 export async function authenticate(credentials: { email: string, password: string }) {
-  const { data } = await restClient.getValue().API.authenticate(credentials);
+  const token = await restClient.getValue().API.authenticate({ data: credentials });
 
-  AuthToken.next(data);
+  AuthToken.next(token);
 
-  return data;
+  return token;
 }
 
 export async function refreshToken(refresh: string) {
-  const { data } = await restClient.getValue().API.refreshToken({ refresh });
-  const token = { refresh, access: data.access } as TokenPair;
+  const response = await restClient.getValue().API.refreshToken({ data: { refresh } });
+  const token = { refresh, access: response.access } as TokenPair;
 
   AuthToken.next(token);
 
@@ -63,6 +63,7 @@ function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
     basePath: PURPLSHIP_API_URL,
     apiKey: accessToken ? `Bearer ${accessToken}` : "",
+    ...(typeof window !== 'undefined' ? {} : { fetchApi: require('node-fetch') }),
   });
 }
 

@@ -10,7 +10,7 @@ const APIReferenceProvider: React.FC = ({ children }) => {
   const [references, setValue] = useState<References>({} as References);
 
   useEffect(() => {
-    purplship?.API.data().then(({ data }) => setValue(data));
+    purplship?.API.data().then(data => setValue(data));
   }, [purplship]);
 
   return (

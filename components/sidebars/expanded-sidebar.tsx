@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AppMode } from '@/context/app-mode';
+import { AppMode } from '@/context/app-mode-provider';
 import { FeatureFlags } from '@/context/feature-flags';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
 

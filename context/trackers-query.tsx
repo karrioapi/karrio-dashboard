@@ -3,11 +3,10 @@ import { TrackerList } from '@/api/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination, isNone } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode';
-import { ListRequest } from '@/api/apis/TrackersApi';
+import { AppMode } from '@/context/app-mode-provider';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
-type RequestOptions = { cursor?: string } & ListRequest;
+type RequestOptions = { cursor?: string } & any;
 
 type ResultType = TrackerList & {
   error?: RequestError;
@@ -39,7 +38,7 @@ const TrackersQuery: React.FC = ({ children }) => {
     setCursor(params);
     setLoading(true);
 
-    return purplship
+    return (purplship as any)
       .trackers
       .list(params)
       .then(setValue)

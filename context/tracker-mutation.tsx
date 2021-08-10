@@ -10,14 +10,14 @@ type TrackerMutator<T> = T & {
 }
 
 const TrackerMutation = <T extends {}>(Component: React.FC<TrackerMutator<T>>) => (
-  ({ children, ...props }: any) => {
+  function TrackerMutationWrapper({ children, ...props }: any) {
     const purplship = useContext(RestContext);
 
     const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(
-      purplship.trackers.create({ carrierName: carrier_name, trackingNumber: tracking_number, test })
+      purplship!.trackers.create({ carrierName: carrier_name, trackingNumber: tracking_number, test })
     );
     const removeTracker = async (idOrTrackingNumber: string) => handleFailure(
-      purplship.trackers.remove({ idOrTrackingNumber })
+      purplship!.trackers.remove({ idOrTrackingNumber })
     );
 
     return (
