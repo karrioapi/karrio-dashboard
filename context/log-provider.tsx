@@ -4,7 +4,7 @@ import { get_log, GET_LOG, get_logVariables, get_log_log } from '@/graphql';
 
 
 type Log = get_log_log;
-export type LogResultType = LazyQueryResult<get_log, get_logVariables> & { 
+export type LogResultType = LazyQueryResult<get_log, get_logVariables> & {
   log?: Log;
   loadLog: (id: string) => void;
   setLog: React.Dispatch<React.SetStateAction<get_log_log | undefined>>;
@@ -12,7 +12,7 @@ export type LogResultType = LazyQueryResult<get_log, get_logVariables> & {
 
 export const Log = React.createContext<LogResultType>({} as LogResultType);
 
-const LogQuery: React.FC = ({ children }) => {
+const LogProvider: React.FC = ({ children }) => {
   const [load, result] = useLazyQuery<get_log, get_logVariables>(GET_LOG);
   const [log, setLog] = useState<Log>();
 
@@ -32,4 +32,4 @@ const LogQuery: React.FC = ({ children }) => {
   );
 };
 
-export default LogQuery;
+export default LogProvider;

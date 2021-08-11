@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 type AppModeType = {
   basePath: string;
@@ -7,35 +7,37 @@ type AppModeType = {
 };
 
 export function computeMode() {
-  // return window.location.pathname.startsWith('/test/');
-  return true
+  return window.location.pathname.startsWith('/test');
 };
 
 export function computeBasePath() {
-  return window.location.pathname.startsWith('/test/') ? '/test' : '';
+  return window.location.pathname.startsWith('/test') ? '/test' : '/';
 };
 
 
 // Init the APP client mode
-export const AppMode = React.createContext<AppModeType>({
-  testMode: false,
-  basePath: '',
-} as AppModeType);
+export const AppMode = React.createContext<AppModeType>({} as AppModeType);
 
 const AppModeProvider: React.FC = ({ children }) => {
+  const hasWindow = typeof window !== 'undefined';
   const switchMode = () => {
     const { pathname } = window.location;
 
-    if (computeMode()) window.location.replace(pathname.replace('test/', ''));
+    if (computeMode()) window.location.replace(pathname.replace('test', ''));
     else window.location.replace('/test' + pathname);
   };
+  const [mode, setMode] = React.useState<AppModeType>({ switchMode } as AppModeType);
+
+  useEffect(() => {
+    setMode({
+      testMode: computeMode(),
+      basePath: computeBasePath(),
+      switchMode
+    });
+  }, [hasWindow]);
 
   return (
-    <AppMode.Provider value={{
-      switchMode,
-      testMode: computeMode(),
-      basePath: computeBasePath()
-    }}>
+    <AppMode.Provider value={{ ...mode }}>
       {children}
     </AppMode.Provider>
   );

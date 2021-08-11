@@ -1,19 +1,23 @@
 import React, { useContext, useRef } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { AppMode } from '@/context/app-mode-provider';
 import { FeatureFlags } from '@/context/feature-flags';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
+import AppLink from '@/components/app-link';
 
 interface ExpandedSidebarComponent { }
 
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
-  const { testMode, switchMode } = useContext(AppMode);
+  const { testMode, basePath, switchMode } = useContext(AppMode);
   const { MULTI_ORGANIZATIONS } = useContext(FeatureFlags);
   const sidebar = useRef<HTMLDivElement>(null);
+
   const dismiss = (e: React.MouseEvent) => {
     e.preventDefault();
     sidebar.current?.classList.remove('is-mobile-active');
+  };
+  const isActive = (path: string) => {
+    return window.location.pathname === `${basePath}${path}` ? 'is-active' : '';
   };
 
   return (
@@ -26,64 +30,46 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         </button>
       </div>
       <div className="sidebar-menu has-slimscroll py-4" style={{ height: "calc(100% - 60px)" }}>
-        <Link href="/">
-          <a className="menu-item is-active">
-            <span>Shipments</span>
-          </a>
-        </Link>
+        <AppLink href="" className={"menu-item " + isActive("")}>
+          <span>Shipments</span>
+        </AppLink>
 
-        <Link href="/trackers">
-          <a className="menu-item">
-            <span>Trackers</span>
-          </a>
-        </Link>
+        <AppLink href="/trackers" className={"menu-item " + isActive("/trackers")}>
+          <span>Trackers</span>
+        </AppLink>
 
-        <Link href="/connections">
-          <a className="menu-item">
-            <span>Carriers</span>
-          </a>
-        </Link>
+        <AppLink href="/connections" className={"menu-item " + isActive("/connections")}>
+          <span>Carriers</span>
+        </AppLink>
 
-        <Link href="/templates/addresses">
-          <a className="menu-item">
-            <span>Addresses</span>
-          </a>
-        </Link>
+        <AppLink href="/templates/addresses" className={"menu-item " + isActive("/templates/addresses")}>
+          <span>Addresses</span>
+        </AppLink>
 
-        <Link href="/templates/parcels">
-          <a className="menu-item">
-            <span>Parcels</span>
-          </a>
-        </Link>
+        <AppLink href="/templates/parcels" className={"menu-item " + isActive("/templates/parcels")}>
+          <span>Parcels</span>
+        </AppLink>
 
-        <Link href="/templates/customs_infos">
-          <a className="menu-item">
-            <span>Customs</span>
-          </a>
-        </Link>
+        <AppLink href="/templates/customs_infos" className={"menu-item " + isActive("/templates/customs_infos")}>
+          <span>Customs</span>
+        </AppLink>
 
 
         <div className="menu-item menu-label my-0">
           <span>Developers</span>
         </div>
 
-        <Link href="/developers/api">
-          <a className="menu-item ml-6">
-            <span>API</span>
-          </a>
-        </Link>
+        <AppLink href="/developers/api" className={"menu-item ml-6 " + isActive("/developers/api")}>
+          <span>API</span>
+        </AppLink>
 
-        <Link href="/developers/webhooks">
-          <a className="menu-item ml-6">
-            <span>Webhooks</span>
-          </a>
-        </Link>
+        <AppLink href="/developers/webhooks" className={"menu-item ml-6 " + isActive("/developers/webhooks")}>
+          <span>Webhooks</span>
+        </AppLink>
 
-        <Link href="/developers/logs">
-          <a className="menu-item ml-6">
-            <span>Logs</span>
-          </a>
-        </Link>
+        <AppLink href="/developers/logs" className={"menu-item ml-6 " + isActive("/developers/logs")}>
+          <span>Logs</span>
+        </AppLink>
 
         {testMode ?
           <a className="menu-item mode-menu-item" onClick={switchMode}>
@@ -97,12 +83,10 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           </a>
         }
 
-        <Link href="/settings/account">
-          <a className="menu-item has-text-grey">
-            <i className="fas fa-cog"></i>
-            <span>Account Settings</span>
-          </a>
-        </Link>
+        <AppLink href="/settings/account" className={"menu-item " + isActive("/settings/account")}>
+          <i className="fas fa-cog"></i>
+          <span>Account Settings</span>
+        </AppLink>
       </div>
     </div>
   );

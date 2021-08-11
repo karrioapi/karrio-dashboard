@@ -18,7 +18,7 @@ type LogsType = LazyQueryResult<get_logs, any> & {
 
 export const Logs = React.createContext<LogsType>({} as LogsType);
 
-const LogsQuery: React.FC = ({ children }) => {
+const LogsProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_logs>(GET_LOGS, { notifyOnNetworkStatusChange: true });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
@@ -37,7 +37,7 @@ const LogsQuery: React.FC = ({ children }) => {
       offset: offset || 0,
       ...(isNone(status) ? {} : { status })
     };
-    return (query.called ? fetchMore: initialLoad)({ variables: { ...variables, ...params } });
+    return (query.called ? fetchMore : initialLoad)({ variables: { ...variables, ...params } });
   };
   const load = (options?: get_logsVariables) => loadMore(options);
 
@@ -54,4 +54,4 @@ const LogsQuery: React.FC = ({ children }) => {
   );
 };
 
-export default LogsQuery;
+export default LogsProvider;

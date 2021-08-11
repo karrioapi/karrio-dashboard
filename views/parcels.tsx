@@ -3,12 +3,12 @@ import DashboardLayout from "@/components/dashboard-layout";
 import Head from "next/head";
 
 
-export default function LogsPage() {
+export default function ParcelsPage() {
   return AuthorizedPage(() => {
 
     return (
       <DashboardLayout>
-        <Head><title>Logs</title></Head>
+        <Head><title>Parcel Templates</title></Head>
 
       </DashboardLayout>
     );
