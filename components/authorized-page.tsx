@@ -7,11 +7,13 @@ import { isNone } from '@/lib/helper';
 import { AuthToken, RestContext } from '@/client/context';
 import { PurplshipClient, TokenPair } from '@/api';
 import AppModeProvider from '@/context/app-mode-provider';
+import LoadingProvider from '@/components/loader';
 
 
 const DATA_CONTEXTS = [
   APIReferenceProvider,
   AppModeProvider,
+  LoadingProvider,
 ];
 
 

@@ -18,7 +18,7 @@ type ResultType = TrackerList & {
 };
 export const Trackers = React.createContext<ResultType>({} as ResultType);
 
-const TrackersQuery: React.FC = ({ children }) => {
+const TrackersProvider: React.FC = ({ children }) => {
   const purplship = useContext(RestContext);
   const { testMode } = useContext(AppMode);
   const [result, setValue] = useState<TrackerList>(DEFAULT_PAGINATED_RESULT);
@@ -67,4 +67,4 @@ const TrackersQuery: React.FC = ({ children }) => {
   );
 };
 
-export default TrackersQuery;
+export default TrackersProvider;
