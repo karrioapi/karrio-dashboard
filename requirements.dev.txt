@@ -84,3 +84,4 @@ purplship.freightcom
 # Dev dependencies
 mkdocs-material
 black
+pygments>=2.7.4 # not directly required, pinned by Snyk to avoid a vulnerability
