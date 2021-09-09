@@ -10,10 +10,10 @@ import ModeIndicator from "@/components/mode-indicator";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import TrackShipmentModal from "@/components/track-shipment-modal";
-import SystemConnectionsQuery from "@/context/system-connections-query";
+import SystemConnectionsProvider from "@/context/system-connections-provider";
 import TrackerMutation from "@/context/tracker-mutation";
 import TrackersProvider, { Trackers } from "@/context/trackers-provider";
-import UserConnectionsQuery from "@/context/user-connections-query";
+import UserConnectionsProvider from "@/context/user-connections-provider";
 import { isNone } from "@/lib/helper";
 import Head from "next/head";
 import Image from "next/image";
@@ -159,8 +159,8 @@ export default function TrackersPage() {
       <DashboardLayout>
         <Head><title>Shipments</title></Head>
         <TrackersProvider>
-          <UserConnectionsQuery>
-            <SystemConnectionsQuery>
+          <UserConnectionsProvider>
+            <SystemConnectionsProvider>
               <TrackingPreview>
                 <ConfirmModal>
 
@@ -168,8 +168,8 @@ export default function TrackersPage() {
 
                 </ConfirmModal>
               </TrackingPreview>
-            </SystemConnectionsQuery>
-          </UserConnectionsQuery>
+            </SystemConnectionsProvider>
+          </UserConnectionsProvider>
         </TrackersProvider>
       </DashboardLayout>
     ));

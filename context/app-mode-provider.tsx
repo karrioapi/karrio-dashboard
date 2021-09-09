@@ -23,7 +23,7 @@ const AppModeProvider: React.FC = ({ children }) => {
   const switchMode = () => {
     const { pathname } = window.location;
 
-    if (computeMode()) window.location.replace(pathname.replace('test', ''));
+    if (computeMode()) window.location.pathname = pathname.replace('/test', '');
     else window.location.replace('/test' + pathname);
   };
   const [mode, setMode] = React.useState<AppModeType>({ switchMode } as AppModeType);

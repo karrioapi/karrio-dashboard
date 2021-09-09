@@ -18,7 +18,7 @@ type ResultType = WebhookList & {
 };
 export const Webhooks = React.createContext<ResultType>({} as ResultType);
 
-const WebhooksQuery: React.FC = ({ children }) => {
+const WebhooksProvider: React.FC = ({ children }) => {
   const purplship = useContext(RestContext);
   const { testMode } = useContext(AppMode);
   const [result, setValue] = useState<WebhookList>(DEFAULT_PAGINATED_RESULT);
@@ -60,4 +60,4 @@ const WebhooksQuery: React.FC = ({ children }) => {
   );
 };
 
-export default WebhooksQuery;
+export default WebhooksProvider;

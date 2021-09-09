@@ -5,7 +5,6 @@ import { isNone } from '@/lib/helper';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { Collection } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
-import { FeatureFlags } from '@/context/feature-flags';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 
@@ -21,7 +20,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   const ref = React.useRef<HTMLInputElement | null>(null);
   const container = React.useRef<HTMLDivElement | null>(null);
   const { countries } = useContext(APIReference);
-  const { ADDRESS_AUTO_COMPLETE } = useContext(FeatureFlags);
+  const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
   const [key] = useState<string>(`predictions_${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<QueryAutocompletePrediction[]>([]);
@@ -70,8 +69,8 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   };
 
   useEffect(() => {
-    initPredictor(initDebouncedPrediction(ADDRESS_AUTO_COMPLETE));
-  }, [ADDRESS_AUTO_COMPLETE]);
+    initPredictor(initDebouncedPrediction(address_auto_complete));
+  }, [address_auto_complete]);
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
   }, [isActive]);
@@ -86,7 +85,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
         <div className={`dropdown input is-fullwidth p-0 ${isActive ? 'is-active' : ''} ${dropdownClass}`}
           style={{ border: 'none' }}
           key={`dropdown-input-${key}`}>
-          <input onInput={onInput} onClick={onClick} autoComplete={ADDRESS_AUTO_COMPLETE?.is_enabled ? key : "on"} className="input is-fullwidth" required={required} ref={ref} {...props} />
+          <input onInput={onInput} onClick={onClick} autoComplete={address_auto_complete?.is_enabled ? key : "on"} className="input is-fullwidth" required={required} ref={ref} {...props} />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">

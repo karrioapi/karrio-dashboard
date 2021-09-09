@@ -12,17 +12,17 @@ type SystemConnectionsQueryResult = LazyQueryResult<get_system_connections, any>
 
 export const SystemConnections = React.createContext<SystemConnectionsQueryResult>({} as SystemConnectionsQueryResult);
 
-const SystemConnectionsQuery: React.FC = ({ children }) => {
+const SystemConnectionsProvider: React.FC = ({ children }) => {
   const [initialLoad, result] = useLazyQuery<get_system_connections>(GET_SYSTEM_CONNECTIONS);
 
   const extract = (results: any[]): SystemConnectionType[] => (results).filter(r => r !== null);
   const load = (options?: any) => result.called ? result.fetchMore({}) : initialLoad(options);
 
   return (
-    <SystemConnections.Provider  value={{ load, system_connections: extract(result.data?.system_connections || []), ...result }}>
+    <SystemConnections.Provider value={{ load, system_connections: extract(result.data?.system_connections || []), ...result }}>
       {children}
     </SystemConnections.Provider>
   );
 };
 
-export default SystemConnectionsQuery;
+export default SystemConnectionsProvider;

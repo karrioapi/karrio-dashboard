@@ -17,7 +17,7 @@ export type ParcelTemplatesType = LazyQueryResult<get_parcel_templates, any> & {
 
 export const ParcelTemplates = React.createContext<ParcelTemplatesType>({} as ParcelTemplatesType);
 
-const ParcelTemplatesQuery: React.FC = ({ children }) => {
+const ParcelTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_parcel_templates>(GET_PARCEL_TEMPLATES, { notifyOnNetworkStatusChange: true });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
@@ -46,4 +46,4 @@ const ParcelTemplatesQuery: React.FC = ({ children }) => {
   );
 };
 
-export default ParcelTemplatesQuery;
+export default ParcelTemplatesProvider;

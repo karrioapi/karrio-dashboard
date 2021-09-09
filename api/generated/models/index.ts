@@ -1,4 +1,3 @@
-export * from './AccessToken';
 export * from './Address';
 export * from './AddressData';
 export * from './AddressList';

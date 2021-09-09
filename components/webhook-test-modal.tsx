@@ -1,0 +1,244 @@
+import React, { useContext, useState } from 'react';
+import { NotificationType } from '@/lib/types';
+import ButtonField from '@/components/generic/button-field';
+import WebhookMutation from '@/context/webhook-mutation';
+import { Webhook } from '@/api/index';
+import Notifier, { Notify } from '@/components/notifier';
+import { Loading } from '@/components/loader';
+import SelectField from './generic/select-field';
+import hljs from 'highlight.js/lib/core';
+import json from 'highlight.js/lib/languages/json';
+
+hljs.registerLanguage('json', json);
+
+const PLAIN_EVENT = JSON.stringify({
+  event: "all",
+  data: {
+    "message": "this is a plain notification"
+  }
+}, null, 2);
+
+
+interface WebhookTestModalComponent {
+  webhook: Webhook;
+  className?: string;
+}
+
+const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<WebhookTestModalComponent>(
+  ({ webhook, children, className, testWebhook }) => {
+    const { notify } = useContext(Notify);
+    const { setLoading, loading } = useContext(Loading);
+    const [isActive, setIsActive] = useState<boolean>(false);
+    const [key, setKey] = useState<string>(`webhook-test-${Date.now()}`);
+    const [payload, setPayload] = useState<string>(PLAIN_EVENT);
+    const NOTIFICATION_SAMPLE = testPayloadSample();
+
+    const open = () => {
+      setIsActive(true);
+      setPayload(PLAIN_EVENT);
+    };
+    const close = (_?: React.MouseEvent) => {
+      setPayload(PLAIN_EVENT);
+      setIsActive(false);
+      setKey(`webhook-test-${Date.now()}`);
+    };
+    const handleChange = (event: React.ChangeEvent<any>) => {
+      event.preventDefault();
+      setPayload(event.target.value);
+    };
+    const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
+      setLoading(true);
+      try {
+        await testWebhook(webhook?.id as string, JSON.parse(payload));
+        notify({ type: NotificationType.success, message: `Webhook successfully Notified` });
+      } catch (err) {
+        notify({ type: NotificationType.error, message: err });
+      }
+      setLoading(false);
+    };
+
+    return (
+      <Notifier>
+        <button className={className} onClick={open}>{children}</button>
+
+        <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
+          <div className="modal-background" onClick={close}></div>
+          <form className="modal-card" onSubmit={handleSubmit}>
+            <section className="modal-card-body">
+              <h3 className="subtitle is-3">Test a Webhook endpoint</h3>
+
+              <p className="is-subtitle is-size-6 has-text-weight-bold has-text-grey my-2">{webhook.url}</p>
+
+              <SelectField label="Notification Payload" onChange={handleChange} className="is-fullwidth">
+                <option key="plain" value={PLAIN_EVENT}>plain event</option>
+
+                {Object.entries(NOTIFICATION_SAMPLE).map(([key, value]) => (
+                  <option key={key} value={value}>{key}</option>
+                ))}
+              </SelectField>
+
+              <div className="card-content py-3 px-0">
+                <pre style={{ height: '30vh', maxHeight: '30vh' }}>
+                  <code
+                    dangerouslySetInnerHTML={{
+                      __html: hljs.highlight(payload, { language: 'json' }).value,
+                    }}
+                  />
+                </pre>
+              </div>
+
+              <ButtonField
+                type="submit"
+                className={`is-primary ${loading ? 'is-loading' : ''}`}
+                fieldClass="has-text-centered mt-3"
+                disabled={loading}>
+                <span>Test Notification</span>
+              </ButtonField>
+            </section>
+          </form>
+          <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>
+        </div>
+      </Notifier>
+    )
+  });
+
+export default WebhookTestModal;
+
+
+function testPayloadSample() {
+  return {
+    "shipment purchased": JSON.stringify({
+      event: "shipment.purchased",
+      data: {
+        "id": "shp_4998174814864a0690a1d0d626c101e1",
+        "status": "purchased",
+        "carrier_name": "canadapost",
+        "carrier_id": "canadapost",
+        "label": "JVBERiqrnC --- truncated base64 label ---",
+        "tracking_number": "123456789012",
+        "shipment_identifier": "123456789012",
+        "selected_rate": {
+          "id": "rat_fe4608bfc02445b387ada33e0da8d1f1",
+          "carrier_name": "canadapost",
+          "carrier_id": "canadapost",
+          "currency": "CAD",
+          "service": "canadapost_regular_parcel",
+          "discount": 1.22,
+          "base_charge": 39.17,
+          "total_charge": 46.45,
+          "duties_and_taxes": 6.06,
+          "transit_days": 10,
+          "extra_charges": [
+            {
+              "name": "Fuel surcharge",
+              "amount": 4.17,
+              "currency": "CAD"
+            },
+            {
+              "name": "SMB Savings",
+              "amount": -2.95,
+              "currency": "CAD"
+            }
+          ],
+          "meta": null,
+          "carrier_ref": "car_773f4a5577e4471e8918a9a1d47b208b",
+          "test_mode": true
+        },
+        "selected_rate_id": "rat_fe4608bfc02445b387ada33e0da8d1f1",
+        "rates": [
+          {
+            "id": "rat_fe4608bfc02445b387ada33e0da8d1f1",
+            "carrier_name": "canadapost",
+            "carrier_id": "canadapost",
+            "currency": "CAD",
+            "service": "canadapost_regular_parcel",
+            "discount": 1.22,
+            "base_charge": 39.17,
+            "total_charge": 46.45,
+            "duties_and_taxes": 6.06,
+            "transit_days": 10,
+            "extra_charges": [
+              {
+                "name": "Fuel surcharge",
+                "amount": 4.17,
+                "currency": "CAD"
+              },
+              {
+                "name": "SMB Savings",
+                "amount": -2.95,
+                "currency": "CAD"
+              }
+            ],
+            "meta": null,
+            "carrier_ref": "car_773f4a5577e4471e8918a9a1d47b208b",
+            "test_mode": true
+          }
+        ],
+        "tracking_url": "/v1/trackers/canadapost/123456789012?test",
+        "service": "canadapost_priority",
+        "shipper": {
+          "id": "adr_ab7bf955708c4d82bfe314e56a00c12a",
+          "postal_code": "V6M2V9",
+          "city": "Vancouver",
+          "person_name": "Jane Doe",
+          "company_name": "B corp.",
+          "country_code": "CA",
+          "email": null,
+          "phone_number": "+1 514-000-0000",
+          "state_code": "BC",
+          "residential": false,
+          "address_line1": "5840 Oak St",
+          "address_line2": null,
+          "validate_location": false,
+        },
+        "recipient": {
+          "id": "adr_b0abf7fc21534e6280ddbd4df33b2326",
+          "postal_code": "E1C4Z8",
+          "city": "Moncton",
+          "person_name": "John Doe",
+          "company_name": "A corp.",
+          "country_code": "CA",
+          "email": null,
+          "phone_number": "+1 514-000-0000",
+          "state_code": "NB",
+          "residential": false,
+          "address_line1": "125 Church St",
+          "address_line2": null,
+          "validate_location": false,
+        },
+        "parcels": [
+          {
+            "id": "pcl_eecb90bb2c9c4f18acdb1b5eab8ea22a",
+            "weight": 1,
+            "width": 46,
+            "height": 46,
+            "length": 40.6,
+            "packaging_type": null,
+            "package_preset": "canadapost_corrugated_large_box",
+            "description": null,
+            "content": null,
+            "is_document": false,
+            "weight_unit": "KG",
+            "dimension_unit": "CM"
+          }
+        ],
+        "services": [],
+        "options": {},
+        "payment": {
+          "paid_by": "sender",
+          "currency": "CAD",
+          "account_number": null
+        },
+        "customs": null,
+        "reference": null,
+        "label_type": "PDF",
+        "carrier_ids": [],
+        "meta": {},
+        "created_at": "2021-05-15 02:25:18.785392+00:00",
+        "test_mode": true,
+        "messages": []
+      }
+    }, null, 2)
+  };
+}

@@ -2,18 +2,24 @@ import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 import { useSession } from 'next-auth/client';
 import UserProvider from '@/context/user-provider';
+import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
 import { isNone } from '@/lib/helper';
 import { AuthToken, RestContext } from '@/client/context';
 import { PurplshipClient, TokenPair } from '@/api';
 import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
+import TokenProvider from '@/context/token-provider';
+import Notifier from '@/components/notifier';
 
 
 const DATA_CONTEXTS = [
+  OrganizationsProvider,
   APIReferenceProvider,
   AppModeProvider,
   LoadingProvider,
+  TokenProvider,
+  Notifier,
 ];
 
 
@@ -37,11 +43,13 @@ const AuthorizedPage = (Component: React.FC) => {
   };
 
   useEffect(() => {
-    if (session === null) router.push('/login?next=' + window.location.pathname);
+    if (session === null || session?.error === "RefreshAccessTokenError") {
+      router.push('/login?next=' + window.location.pathname);
+    }
+    if (!isNone(session?.accessToken)) {
+      AuthToken.next({ access: session?.accessToken } as TokenPair);
+    }
   }, [session, router]);
-  useEffect(() => {
-    !isNone(session?.accessToken) && AuthToken.next({ access: session?.accessToken } as TokenPair);
-  }, [session]);
 
   if (!session) return <></>;
 

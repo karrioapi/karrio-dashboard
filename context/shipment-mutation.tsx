@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Customs, OperationResponse, Shipment, Address, ShipmentData, Parcel } from '@/api/index';
 import { handleFailure } from '@/lib/helper';
-import { LabelData } from '@/context/shipment-query';
+import { LabelData } from '@/context/shipment-provider';
 import { CommodityType } from '@/lib/types';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';

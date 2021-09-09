@@ -11,7 +11,7 @@ export type UserMutator<T> = T & {
 export type UserUpdateType = (data: UserMutationInput) => Promise<FetchResult<GetUser_user, Record<string, any>, Record<string, any>>>;
 
 const UserMutation = <T extends {}>(Component: React.FC<UserMutator<T>>) => (
-  ({ children, ...props }: any) => {
+  function UserMutationWrapper({ children, ...props }: any) {
     const [updateMutation, update] = useMutation<GetUser_user, mutate_userVariables>(MUTATE_USER);
 
     const updateUser = (data: UserMutationInput) => updateMutation({ variables: { data } });

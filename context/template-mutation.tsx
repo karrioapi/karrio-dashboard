@@ -11,7 +11,7 @@ export type TemplateMutator<T> = T & {
 }
 
 const TemplateMutation = <T extends {}>(Component: React.FC<TemplateMutator<T>>) => (
-  ({ children, ...props }: any) => {
+  function TemplateMutationWrapper({ children, ...props }: any) {
     const [createMutation] = useMutation<CreateTemplateInput, create_templateVariables>(CREATE_TEMPLATE);
     const [updateMutation] = useMutation<UpdateTemplateInput, update_templateVariables>(UPDATED_TEMPLATE);
     const [deleteMutation] = useMutation<{ id: string }, delete_templateVariables>(DELETE_TEMPLATE);

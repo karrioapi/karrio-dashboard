@@ -31,6 +31,13 @@ export interface TokenRefresh {
      * @memberof TokenRefresh
      */
     readonly access?: string;
+    /**
+     * 
+     * **should be specified only in a multi-org deployment.**
+     * @type {string}
+     * @memberof TokenRefresh
+     */
+    org_id?: string;
 }
 
 export function TokenRefreshFromJSON(json: any): TokenRefresh {
@@ -45,6 +52,7 @@ export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'refresh': json['refresh'],
         'access': !exists(json, 'access') ? undefined : json['access'],
+        'org_id': !exists(json, 'org_id') ? undefined : json['org_id'],
     };
 }
 
@@ -58,6 +66,7 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     return {
         
         'refresh': value.refresh,
+        'org_id': value.org_id,
     };
 }
 

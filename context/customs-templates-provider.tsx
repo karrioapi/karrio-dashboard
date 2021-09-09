@@ -17,7 +17,7 @@ type CustomInfoTemplatesQueryResult = LazyQueryResult<get_customs_info_templates
 
 export const CustomInfoTemplates = React.createContext<CustomInfoTemplatesQueryResult>({} as CustomInfoTemplatesQueryResult);
 
-const CustomInfoTemplatesQuery: React.FC = ({ children }) => {
+const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, { notifyOnNetworkStatusChange: true });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
@@ -46,4 +46,4 @@ const CustomInfoTemplatesQuery: React.FC = ({ children }) => {
   );
 };
 
-export default CustomInfoTemplatesQuery;
+export default CustomInfoTemplatesProvider;

@@ -11,7 +11,7 @@ const AppLink: React.FC<AppLinkProps> = ({ href, className, children }) => {
   const { basePath, testMode } = useContext(AppMode);
 
   return (
-    <Link href={(testMode ? basePath : "/") + href}>
+    <Link href={(testMode && basePath !== href ? basePath : "") + href}>
       <a className={className}>{children}</a>
     </Link>
   )
