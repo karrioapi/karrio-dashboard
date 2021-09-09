@@ -15,9 +15,6 @@
 
 import * as runtime from '../runtime';
 import {
-    AccessToken,
-    AccessTokenFromJSON,
-    AccessTokenToJSON,
     References,
     ReferencesFromJSON,
     ReferencesToJSON,
@@ -125,7 +122,7 @@ export class APIApi extends runtime.BaseAPI {
      * Authenticate the user and return a token pair
      * Refresh auth token
      */
-    async refreshTokenRaw(requestParameters: RefreshTokenRequest): Promise<runtime.ApiResponse<AccessToken>> {
+    async refreshTokenRaw(requestParameters: RefreshTokenRequest): Promise<runtime.ApiResponse<TokenPair>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling refreshToken.');
         }
@@ -148,14 +145,14 @@ export class APIApi extends runtime.BaseAPI {
             body: TokenRefreshToJSON(requestParameters.data),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => AccessTokenFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TokenPairFromJSON(jsonValue));
     }
 
     /**
      * Authenticate the user and return a token pair
      * Refresh auth token
      */
-    async refreshToken(requestParameters: RefreshTokenRequest): Promise<AccessToken> {
+    async refreshToken(requestParameters: RefreshTokenRequest): Promise<TokenPair> {
         const response = await this.refreshTokenRaw(requestParameters);
         return await response.value();
     }

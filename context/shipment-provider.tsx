@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Address, Parcel, Shipment } from '@/api/index';
+import { Address, Parcel, PurplshipClient, Shipment } from '@/api/index';
 import { handleFailure } from '@/lib/helper';
 import { RequestError } from '@/lib/types';
 import { RestContext } from '@/client/context';
@@ -21,7 +21,7 @@ type LabelDataContext = {
 
 export const LabelData = React.createContext<LabelDataContext>({} as LabelDataContext);
 
-const LabelDataQuery: React.FC = ({ children }) => {
+const ShipmentProvider: React.FC = ({ children }) => {
   const purplship = useContext(RestContext);
   const [error, setError] = useState<RequestError>();
   const [shipment, setValue] = useState<Shipment>(DEFAULT_SHIPMENT_DATA);
@@ -39,7 +39,7 @@ const LabelDataQuery: React.FC = ({ children }) => {
       }
 
       await handleFailure(
-        (purplship as any).shipments.retrieve(id as string)
+        (purplship as PurplshipClient).shipments.retrieve({ id: id as string }),
       )
         .then(r => { setValue(r as any); resolve(r as any); })
         .catch(e => { setError(e); setValue({} as Shipment); })
@@ -67,4 +67,4 @@ const LabelDataQuery: React.FC = ({ children }) => {
   );
 };
 
-export default LabelDataQuery;
+export default ShipmentProvider;

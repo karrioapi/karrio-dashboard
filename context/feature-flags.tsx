@@ -24,7 +24,7 @@ function collectFeatureFlags(): FeatureFlagType {
 
 export const FeatureFlags = React.createContext<FeatureFlagType>(collectFeatureFlags());
 
-const FeatureFlagsContext: React.FC = ({ children }) => {
+const FeatureFlagsProvider: React.FC = ({ children }) => {
   const [features, update] = useState<FeatureFlagType>(collectFeatureFlags());
 
   useEffect(() => { update(collectFeatureFlags()); }, []);
@@ -36,4 +36,4 @@ const FeatureFlagsContext: React.FC = ({ children }) => {
   );
 };
 
-export default FeatureFlagsContext;
+export default FeatureFlagsProvider;

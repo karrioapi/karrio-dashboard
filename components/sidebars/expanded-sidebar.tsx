@@ -1,15 +1,15 @@
 import React, { useContext, useRef } from 'react';
 import Image from 'next/image';
 import { AppMode } from '@/context/app-mode-provider';
-import { FeatureFlags } from '@/context/feature-flags';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
 import AppLink from '@/components/app-link';
+import { APIReference } from '@/context/references-provider';
 
 interface ExpandedSidebarComponent { }
 
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const { testMode, basePath, switchMode } = useContext(AppMode);
-  const { MULTI_ORGANIZATIONS } = useContext(FeatureFlags);
+  const { multi_organizations } = useContext(APIReference);
   const sidebar = useRef<HTMLDivElement>(null);
 
   const dismiss = (e: React.MouseEvent) => {
@@ -17,20 +17,21 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
     sidebar.current?.classList.remove('is-mobile-active');
   };
   const isActive = (path: string) => {
-    return window.location.pathname === `${basePath}${path}` ? 'is-active' : '';
+    if (path === basePath && path === window.location.pathname) return 'is-active';
+    return window.location.pathname === `${basePath}${path}`.replace('//', '/') ? 'is-active' : '';
   };
 
   return (
     <div className="plex-sidebar" ref={sidebar}>
       <div className="sidebar-header pl-5">
-        <Image src="/logo.svg" width="80" height="40" alt="logo" />
-        {MULTI_ORGANIZATIONS && <OrganizationDropdown />}
+        {!multi_organizations && <Image src="/logo.svg" width="80" height="40" alt="logo" />}
+        {multi_organizations && <OrganizationDropdown />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>
       </div>
       <div className="sidebar-menu has-slimscroll py-4" style={{ height: "calc(100% - 60px)" }}>
-        <AppLink href="" className={"menu-item " + isActive("")}>
+        <AppLink href={basePath} className={"menu-item " + isActive(basePath)}>
           <span>Shipments</span>
         </AppLink>
 
@@ -50,7 +51,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span>Parcels</span>
         </AppLink>
 
-        <AppLink href="/templates/customs_infos" className={"menu-item " + isActive("/templates/customs_infos")}>
+        <AppLink href="/templates/customs-infos" className={"menu-item " + isActive("/templates/customs-infos")}>
           <span>Customs</span>
         </AppLink>
 

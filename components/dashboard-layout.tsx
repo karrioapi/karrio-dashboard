@@ -2,13 +2,11 @@ import React from 'react';
 import Navbar from '@/components/navbar/navbar';
 import Notifier from '@/components/notifier';
 import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
-import LocationTitle from '@/components/location-title';
 
 
 const DashboardLayout: React.FC = ({ children }) => {
   return (
     <>
-      <LocationTitle />
       <ExpandedSidebar />
 
       <div className="plex-wrapper pb-6">

@@ -33,6 +33,18 @@ export interface References {
     app_version: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof References
+     */
+    multi_organizations: boolean;
+    /**
+     * 
+     * @type {object}
+     * @memberof References
+     */
+    address_auto_complete: object;
+    /**
+     * 
      * @type {object}
      * @memberof References
      */
@@ -129,6 +141,8 @@ export function ReferencesFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         
         'app_name': json['APP_NAME'],
         'app_version': json['APP_VERSION'],
+        'multi_organizations': json['MULTI_ORGANIZATIONS'],
+        'address_auto_complete': json['ADDRESS_AUTO_COMPLETE'],
         'countries': json['countries'],
         'currencies': json['currencies'],
         'carriers': json['carriers'],
@@ -157,6 +171,8 @@ export function ReferencesToJSON(value?: References | null): any {
         
         'APP_NAME': value.app_name,
         'APP_VERSION': value.app_version,
+        'MULTI_ORGANIZATIONS': value.multi_organizations,
+        'ADDRESS_AUTO_COMPLETE': value.address_auto_complete,
         'countries': value.countries,
         'currencies': value.currencies,
         'carriers': value.carriers,

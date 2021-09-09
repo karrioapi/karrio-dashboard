@@ -6,28 +6,28 @@ import { isNone } from '@/lib/helper';
 
 
 export class DefaultTemplates {
-    constructor(private templates: TemplateType[]) { }
+  constructor(private templates: TemplateType[]) { }
 
-    get default_customs(): CustomsType | null {
-        const template = this.templates.find(
-            template => template.customs !== undefined && template.customs !== null
-        );
-        return (template || {}).customs || null
-    }
+  get default_customs(): CustomsType | null {
+    const template = this.templates.find(
+      template => template.customs !== undefined && template.customs !== null
+    );
+    return (template || {}).customs || null
+  }
 
-    get default_address(): AddressType | null {
-        const template = this.templates.find(
-            template => template.address !== undefined && template.address !== null
-        );
-        return (template || {}).address || null
-    }
+  get default_address(): AddressType | null {
+    const template = this.templates.find(
+      template => template.address !== undefined && template.address !== null
+    );
+    return (template || {}).address || null
+  }
 
-    get default_parcel(): ParcelType | null {
-        const template = this.templates.find(
-            template => template.parcel !== undefined && template.parcel !== null
-        );
-        return (template || {}).parcel || null
-    }
+  get default_parcel(): ParcelType | null {
+    const template = this.templates.find(
+      template => template.parcel !== undefined && template.parcel !== null
+    );
+    return (template || {}).parcel || null
+  }
 }
 
 
@@ -41,7 +41,7 @@ export type DefaultTemplatesType = LazyQueryResult<DefaultTemplate, any> & {
 
 export const DefaultTemplatesData = React.createContext<DefaultTemplatesType>({} as DefaultTemplatesType);
 
-const TemplatesQuery: React.FC = ({ children }) => {
+const TemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, result] = useLazyQuery<DefaultTemplate>(GET_DEFAULT_TEMPLATES);
 
   const extract = (templates?: TemplateType[]) => {
@@ -62,4 +62,4 @@ const TemplatesQuery: React.FC = ({ children }) => {
   );
 };
 
-export default TemplatesQuery;
+export default TemplatesProvider;

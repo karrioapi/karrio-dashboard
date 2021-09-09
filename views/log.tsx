@@ -24,7 +24,7 @@ export default function LogPage() {
       const [response, setResponse] = useState<string>();
       const [data, setData] = useState<string>();
       const { id } = router.query;
-      console.log(id);
+
       useEffect(() => { setLoading(loading); });
       useEffect(() => { (!isNone(loadLog) && !loading) && loadLog(id as string); }, [id]);
       useEffect(() => {

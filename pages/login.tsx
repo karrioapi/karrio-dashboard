@@ -10,7 +10,7 @@ const Login: React.FC = () => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = signIn('credentials', {
+    signIn('credentials', {
       email: email.current?.value,
       password: password.current?.value,
       callbackUrl: `${(new URLSearchParams(location.search)).get('next') || '/'}`,

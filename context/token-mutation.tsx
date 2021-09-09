@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
 import { GetToken, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from '@/graphql';
-import { TokenData } from '@/context/token-query';
+import { TokenData } from '@/context/token-provider';
 
 type TemplateMutator<T> = T & {
   updateToken: (data: TokenMutationInput) => Promise<FetchResult<GetToken, Record<string, any>, Record<string, any>>>;
@@ -10,7 +10,7 @@ type TemplateMutator<T> = T & {
 export type TokenUpdateType = (data: TokenMutationInput) => Promise<FetchResult<GetToken, Record<string, any>, Record<string, any>>>;
 
 const TokenMutation = <T extends {}>(Component: React.FC<TemplateMutator<T>>) => (
-  ({ children, ...props }: any) => {
+  function TokenMutationWrapper({ children, ...props }: any) {
     const [mutateToken] = useMutation<GetToken, mutate_tokenVariables>(MUTATE_TOKEN);
     const { load } = useContext(TokenData);
 
