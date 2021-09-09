@@ -1,7 +1,7 @@
 # purplship-dashboard
 
-purplship-server is an On-prem or cloud Multi-carrier Shipping API. The server is in Python, but you can use any 
-programming language to send API requests to any supported shipping carriers (Canada Post, DHL, FedEx, UPS, Purolator...), 
+purplship-server is an On-prem or cloud Multi-carrier Shipping API. The server is in Python, but you can use any
+programming language to send API requests to any supported shipping carriers (Canada Post, DHL, FedEx, UPS, Purolator...),
 from your application.
 
 **This project hosts the dashboard app. Please file issues at [/purplship-server](https://github.com/purplship/purplship-server),
