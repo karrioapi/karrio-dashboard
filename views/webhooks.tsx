@@ -9,12 +9,13 @@ import WebhookEditModal, { WebhookEditContext } from "@/components/webhook-edit-
 import WebhookTestModal from "@/components/webhook-test-modal";
 import WebhookMutation from "@/context/webhook-mutation";
 import WebhooksProvider, { Webhooks } from "@/context/webhooks-provider";
+import { withSessionCookies } from "@/lib/middleware";
 import { NotificationType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
 
-export default function WebhooksPage() {
+export default withSessionCookies(function() {
   const Component: React.FC<any> = ({ removeWebhook, updateWebhook }) => {
     const { notify } = useContext(Notify)
     const { setLoading } = useContext(Loading);
@@ -30,13 +31,13 @@ export default function WebhooksPage() {
     const toggle = ({ disabled, id }: Webhook) => async () => {
       try {
         const data = { id, disabled: !disabled };
-        await updateWebhook({ id, ...data });
+        await updateWebhook({ ...data });
         notify({
           type: NotificationType.success,
           message: `webhook ${disabled ? 'activated' : 'deactivated'}!`
         });
         update();
-      } catch (message) {
+      } catch (message: any) {
         notify({ type: NotificationType.error, message });
       }
     };
@@ -153,4 +154,4 @@ export default function WebhooksPage() {
 
     return <Wrapped />;
   })
-}
+})

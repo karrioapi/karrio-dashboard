@@ -9,13 +9,14 @@ import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { LabelData } from "@/context/shipment-provider";
 import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
+import { withSessionCookies } from "@/lib/middleware";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
 
-export default function ShipmentPage() {
+export default withSessionCookies(function() {
   const Component: React.FC = () => {
     const router = useRouter();
     const { basePath } = useContext(AppMode);
@@ -296,4 +297,4 @@ export default function ShipmentPage() {
       </DashboardLayout>
     );
   });
-}
+})

@@ -31,7 +31,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
         message: `carrier connection ${!active ? 'activated' : 'deactivated'}!`
       });
       onUpdate();
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };
@@ -43,7 +43,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
         message: `carrier connection deleted!`
       });
       onUpdate();
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };

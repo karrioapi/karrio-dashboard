@@ -15,12 +15,13 @@ import TrackerMutation from "@/context/tracker-mutation";
 import TrackersProvider, { Trackers } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
 import { isNone } from "@/lib/helper";
+import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
 
-export default function TrackersPage() {
+export default withSessionCookies(function() {
   const Component: React.FC<any> = ({ removeTracker }) => {
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -176,7 +177,7 @@ export default function TrackersPage() {
 
     return <Wrapped />;
   })
-}
+})
 
 function formatEventDescription(last_event?: TrackingEvent): string {
   return last_event?.description || '';

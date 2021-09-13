@@ -21,9 +21,10 @@ import DashboardLayout from '@/components/dashboard-layout';
 import AuthorizedPage from '@/components/authorized-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';
+import { withSessionCookies } from '@/lib/middleware';
 
 
-export default function BuyLabelPage() {
+export default withSessionCookies(function() {
   const Component: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -125,7 +126,7 @@ export default function BuyLabelPage() {
       </DashboardLayout>
     );
   });
-}
+})
 
 
 function filterDisabled(tabs: string[], shipment: Shipment) {

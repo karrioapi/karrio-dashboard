@@ -10,11 +10,12 @@ import { useRouter } from "next/dist/client/router";
 import LogProvider, { Log } from "@/context/log-provider";
 import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
+import { withSessionCookies } from "@/lib/middleware";
 
 hljs.registerLanguage('json', json);
 
 
-export default function LogPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC = () => {
       const router = useRouter();
@@ -138,4 +139,4 @@ export default function LogPage() {
       </DashboardLayout>
     );
   })
-}
+})

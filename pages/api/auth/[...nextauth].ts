@@ -1,14 +1,24 @@
 import { TokenPair } from '@/api';
 import { authenticate, refreshToken, AuthToken } from '@/client/context';
+import { isNone, parseJwt } from '@/lib/helper';
 import { NextApiRequest } from 'next';
 import NextAuth, { User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
+import { BehaviorSubject } from 'rxjs';
 
 const secret = process.env.JWT_SECRET;
+export const orgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 
 
 const auth = NextAuth({
+  pages: {
+    signIn: '/login',
+  },
+  jwt: {
+    secret,
+    encryption: true,
+  },
   providers: [
     Providers.Credentials({
       name: 'Credentials',
@@ -37,14 +47,24 @@ const auth = NextAuth({
         token.refreshToken = user.refreshToken;
       }
 
+      if (!isNone(orgToken.value)) {
+        const { access, refresh } = orgToken.value as TokenPair;
+        return {
+          ...token,
+          accessToken: access,
+          refreshToken: refresh,
+        };
+      }
+
       // Return previous token if the access token has not expired yet
       if (Date.now() < (token.exp as number)) {
         return token;
       }
-
-      // Access token has expired, try to update it
+      
+      // Access token has expired, try to update it OR orgId has changed
       try {
-        const { access, refresh } = await processRefreshToken(token);
+        const { access, refresh } = await refreshToken(token.refreshToken as string);
+
         return {
           ...token,
           accessToken: access,
@@ -69,29 +89,7 @@ const auth = NextAuth({
 
       return session
     }
-  },
-  pages: {
-    signIn: '/login',
-  },
-  jwt: {
-    secret,
-    encryption: true,
   }
 });
-
-
-export async function processRefreshToken(token: JWT) {
-  return refreshToken(token.refreshToken as string)
-}
-
-const parseJwt = (token: string) => {
-  try {
-    const content = Buffer.from(token.split('.')[1], 'base64').toString();
-    return JSON.parse(content);
-  } catch (e) {
-    console.log(e);
-    return {};
-  }
-};
 
 export default auth;

@@ -36,8 +36,8 @@ const OrganizationDropdown: React.FC = () => {
     if (org.id === selected?.id) return;
     setLoading(true);
     setSelected(org);
-    await authenticateOrg(org.id, org.token);
-    setLoading(false);
+    authenticateOrg(org.id).then(() => setLoading(false));
+    setActive(false);
   };
 
   useEffect(() => { (!loading && load) && load(); }, []);

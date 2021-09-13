@@ -5,11 +5,12 @@ import Tabs from "@/components/generic/tabs";
 import Head from "next/head";
 import { useContext } from "react";
 import ProfileUpdateInput from "@/components/profile-update-input";
-import OrganizationManagement from "@/views/organization-management";
+import OrganizationManagement from "@/components/organization-management";
 import { APIReference } from "@/context/references-provider";
+import { withSessionCookies } from "@/lib/middleware";
 
 
-export default function AccountPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC = () => {
       const { multi_organizations } = useContext(APIReference);
@@ -78,4 +79,4 @@ export default function AccountPage() {
       </DashboardLayout>
     );
   })
-}
+})

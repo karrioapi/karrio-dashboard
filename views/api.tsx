@@ -3,11 +3,12 @@ import DashboardLayout from "@/components/dashboard-layout";
 import GenerateAPIModal from "@/components/generate-api-dialog";
 import { Loading } from "@/components/loader";
 import { TokenData } from "@/context/token-provider";
+import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import { useContext, useEffect, useRef, useState } from "react";
 
 
-export default function APIPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC<any> = () => {
       const { setLoading } = useContext(Loading);
@@ -77,4 +78,4 @@ export default function APIPage() {
       </DashboardLayout>
     );
   })
-}
+})

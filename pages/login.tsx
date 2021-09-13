@@ -1,19 +1,22 @@
 import SectionLayout from "@/components/section-layout";
+import { getCookie, isNone } from "@/lib/helper";
+import { NextPage } from "next";
 import { signIn } from "next-auth/client";
 import Head from "next/head";
 import React, { FormEvent, useRef } from "react";
 
-
-const Login: React.FC = () => {
+const Login: NextPage<{}> = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const org_id = getCookie('org_id');
     signIn('credentials', {
       email: email.current?.value,
       password: password.current?.value,
       callbackUrl: `${(new URLSearchParams(location.search)).get('next') || '/'}`,
+      ...(isNone(org_id) ? {}: {org_id})
     });
   };
 

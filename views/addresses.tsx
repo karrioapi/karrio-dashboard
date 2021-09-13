@@ -7,11 +7,12 @@ import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
 import TemplateMutation from "@/context/template-mutation";
 import { isNone } from "@/lib/helper";
+import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
 
-export default function AddressesPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC<any> = ({ deleteTemplate }) => {
       const { setLoading } = useContext(Loading);
@@ -132,4 +133,4 @@ export default function AddressesPage() {
       return <Wrapped />;
     });
   })
-}
+})

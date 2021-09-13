@@ -140,31 +140,30 @@ export function formatParcelLabel(parcel?: ParcelType): string {
   return '';
 }
 
-
 export const COUNTRY_WITH_POSTAL_CODE = [
   'CA', 'US', 'UK', 'FR', //TODO:: Add more countries with postal code here.
 ];
 
 export function getCookie(name: string): string {
-  var cookieValue = "";
-  if (document.cookie && document.cookie !== '') {
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
+    var cookieValue = "";
+    if (document?.cookie && document?.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-  }
-  return cookieValue;
+    return cookieValue;
 }
 
 export async function handleFailure<T>(request: Promise<T>): Promise<T> {
   try {
     const response = await request;
     return response
-  } catch (err) {
+  } catch (err: any) {
     if (err.message === 'Failed to fetch') {
       throw new Error('Oups! Looks like you are offline');
     } else if (err instanceof Response) {
@@ -173,7 +172,6 @@ export async function handleFailure<T>(request: Promise<T>): Promise<T> {
     throw err
   }
 }
-
 
 export function getCursorPagination(cursor?: string): { limit?: number; offset?: number; } {
   const [_, queryString] = (cursor || '').split('?');
@@ -191,3 +189,13 @@ export function getCursorPagination(cursor?: string): { limit?: number; offset?:
 export function shipmentCarrier(shipment: Shipment) {
   return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
 }
+
+export const parseJwt = (token: string): any => {
+  try {
+    const content = Buffer.from(token.split('.')[1], 'base64').toString();
+    return JSON.parse(content);
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
+};

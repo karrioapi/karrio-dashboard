@@ -10,11 +10,12 @@ import SystemConnectionsProvider, { SystemConnections } from "@/context/system-c
 import UserConnectionsProvider, { UserConnections } from "@/context/user-connections-provider";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
-import SystemConnectionList from "@/views/system-carrier-list";
-import UserConnectionList from "@/views/user-carrier-list";
+import SystemConnectionList from "@/components/system-carrier-list";
+import UserConnectionList from "@/components/user-carrier-list";
+import { withSessionCookies } from "@/lib/middleware";
 
 
-export default function ConnectionsPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC = () => {
       const { setLoading } = useContext(Loading);
@@ -75,4 +76,4 @@ export default function ConnectionsPage() {
       </DashboardLayout>
     );
   })
-}
+})

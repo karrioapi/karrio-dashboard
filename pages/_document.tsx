@@ -29,4 +29,4 @@ class AppDocument extends Document {
   }
 }
 
-export default AppDocument
+export default AppDocument;

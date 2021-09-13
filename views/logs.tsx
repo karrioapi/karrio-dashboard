@@ -7,12 +7,13 @@ import StatusCode from "@/components/status-code-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import LogsProvider, { Logs } from "@/context/logs-provider";
 import { formatDateTimeLong, isNone } from "@/lib/helper";
+import { withSessionCookies } from "@/lib/middleware";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 
 
-export default function LogsPage() {
+export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Component: React.FC = () => {
       const router = useRouter();
@@ -116,4 +117,4 @@ export default function LogsPage() {
       </DashboardLayout>
     );
   })
-}
+})

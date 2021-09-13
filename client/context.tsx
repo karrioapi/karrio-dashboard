@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { PurplshipClient, TokenPair } from "@/api/index";
+import { PurplshipClient, TokenObtainPair, TokenPair } from "@/api/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/client";
 
-const PURPLSHIP_API_URL = process.env.NEXT_PUBLIC_PURPLSHIP_API_URL || 'https://api.purplship.com';
+const PURPLSHIP_API_URL = process.env.NEXT_PUBLIC_PURPLSHIP_API_URL || 'https://cloud.purplship.com';
 
 export const AuthToken = new Subject<TokenPair>();
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
@@ -41,17 +41,22 @@ export const ClientsProvider: React.FC = ({ children }) => {
 };
 
 
-export async function authenticate(credentials: { email: string, password: string }) {
-  const token = await restClient.getValue().API.authenticate({ data: credentials });
+export async function authenticate(data: TokenObtainPair) {
+  const token = await restClient.getValue().API.authenticate({ data });
 
   AuthToken.next(token);
 
   return token;
 }
 
-export async function refreshToken(refresh: string) {
-  const response = await restClient.getValue().API.refreshToken({ data: { refresh } });
-  const token = { refresh, access: response.access } as TokenPair;
+export async function refreshToken(refresh: string, org_id?: string) {
+  const response = await restClient.getValue().API.refreshToken({ 
+    data: { refresh, ...(isNone(org_id) ? {} : { org_id }) } 
+  });
+  const token = { 
+    refresh: response.refresh,
+    access: response.access 
+  } as TokenPair;
 
   AuthToken.next(token);
 
