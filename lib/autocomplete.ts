@@ -1,5 +1,4 @@
 import { Address, AddressCountryCodeEnum } from "@/api/index";
-import { FeatureFlagType } from "@/context/feature-flags";
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { isNone } from "@/lib/helper";
@@ -34,6 +33,14 @@ type CanadaPostPrediction = {
     Next: string,
 }
 
+
+export type AutocompleteConfig = {
+    is_enabled: boolean;
+    provider?: string;
+    url?: string;
+    key?: string;
+};
+
 type PredictionCallback = (predictions: QueryAutocompletePrediction[]) => void;
 type PredictionInput = { input: string };
 
@@ -42,7 +49,7 @@ export interface AutocompleteService {
     formatPrediction: (prediction: QueryAutocompletePrediction, countries: Collection) => Partial<Address>;
 }
 
-export function initDebouncedPrediction(data: FeatureFlagType['ADDRESS_AUTO_COMPLETE']) {
+export function initDebouncedPrediction(data: AutocompleteConfig) {
     if (!data?.is_enabled) return undefined;
 
     const request: Subject<{ params: PredictionInput, callback: PredictionCallback }> = new Subject();
@@ -111,7 +118,7 @@ function initGoogleService(): AutocompleteService {
     };
 }
 
-function initCanadaPostService(data: FeatureFlagType['ADDRESS_AUTO_COMPLETE']): AutocompleteService {
+function initCanadaPostService(data: AutocompleteConfig): AutocompleteService {
 
     return {
         getPlacePredictions(params, callback) {

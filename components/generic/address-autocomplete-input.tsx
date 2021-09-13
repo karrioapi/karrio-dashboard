@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
-import InputField, { InputFieldComponent } from '@/components/generic/input-field';
+import { InputFieldComponent } from '@/components/generic/input-field';
 import { Address } from '@/api/index';
 import { isNone } from '@/lib/helper';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { Collection } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import Head from 'next/head';
 
 interface AddressAutocompleteInputComponent extends InputFieldComponent {
   onValueChange: (value: Partial<Address>) => void;
@@ -19,8 +19,7 @@ interface AddressAutocompleteInputComponent extends InputFieldComponent {
 const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, children, ...props }) => {
   const ref = React.useRef<HTMLInputElement | null>(null);
   const container = React.useRef<HTMLDivElement | null>(null);
-  const { countries } = useContext(APIReference);
-  const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
+  const { countries, address_auto_complete } = useContext(APIReference);
   const [key] = useState<string>(`predictions_${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<QueryAutocompletePrediction[]>([]);
@@ -69,8 +68,12 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   };
 
   useEffect(() => {
-    initPredictor(initDebouncedPrediction(address_auto_complete));
-  }, [address_auto_complete]);
+    if (address_auto_complete && (
+      (address_auto_complete.provider !== 'google') || (address_auto_complete.provider === 'google' && !isNone((window as any).google))
+    )) {
+      initPredictor(initDebouncedPrediction(address_auto_complete));
+    }
+  }, [address_auto_complete, ]);
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
   }, [isActive]);

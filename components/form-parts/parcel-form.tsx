@@ -70,7 +70,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
       let value: stateValue = target.type === 'checkbox' ? target.checked : target.value;
 
       if (name === 'parcel_type') {
-        const template = templates.find(p => p.id === value)?.parcel;
+        const template = (templates || []).find(p => p.id === value)?.parcel;
         const preset = { ...parcel, package_preset: undefined } as Partial<Parcel>;
 
         setParcelType(value as string);
@@ -101,7 +101,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
             new CustomEvent('label-select-tab', { bubbles: true, detail: { nextTab } })
           );
         }
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       }
     };
@@ -136,7 +136,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         dispatch({ name: 'template', value: { ...(preset || {}), ...default_parcel } as Parcel });
         setKey(`parcel-${Date.now()}`);
       }
-    }, [templates]);
+    }, [templates, load]);
 
     return (
       <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>

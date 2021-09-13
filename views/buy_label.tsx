@@ -22,6 +22,9 @@ import AuthorizedPage from '@/components/authorized-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';
 import { withSessionCookies } from '@/lib/middleware';
+import GoogleGeocodingScript from '@/components/google-geocoding-script';
+import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
+import AddressTemplatesProvider from '@/context/address-templates-provider';
 
 
 export default withSessionCookies(function() {
@@ -43,7 +46,6 @@ export default withSessionCookies(function() {
     };
 
     useEffect(() => {
-      console.log(id, "<<<<<<<<<<<<<")
       if (!loading && shipment?.id !== id) {
         loadShipment(id as string)
           .then(({ status, messages }) => {
@@ -115,12 +117,17 @@ export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     return (
       <DashboardLayout>
+        <GoogleGeocodingScript />
         <Head><title>Buy Label</title></Head>
         <ShipmentProvider>
           <TemplatesProvider>
+            <ParcelTemplatesProvider>
+            <AddressTemplatesProvider>
 
             <Component />
 
+            </AddressTemplatesProvider>
+            </ParcelTemplatesProvider>
           </TemplatesProvider>
         </ShipmentProvider>
       </DashboardLayout>

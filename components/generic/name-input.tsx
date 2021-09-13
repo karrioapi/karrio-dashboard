@@ -12,15 +12,15 @@ interface NameInputComponent extends InputFieldComponent {
 
 const NameInput: React.FC<NameInputComponent> = ({ disableSuggestion, onValueChange, ...props }) => {
   const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
-  const { templates, called, loading, load } = useContext(AddressTemplates);
+  const { templates, loading, load } = useContext(AddressTemplates);
   const onInput = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    const template = templates.find(t => t.address?.person_name === e.target.value);
+    const template = (templates || []).find(t => t.address?.person_name === e.target.value);
     let value = template?.address || { person_name: e.target.value };
     onValueChange(value as Partial<Address>, !isNone(template));
   };
 
-  useEffect(() => { if (!loading && load) load(); }, [templates]);
+  useEffect(() => { if (!loading && load) load(); }, [templates, load]);
 
   return (
     <InputField onInput={onInput} onClick={onClick} list="address_templates" {...props}>
