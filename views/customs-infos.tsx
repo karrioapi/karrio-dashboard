@@ -119,7 +119,7 @@ export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
-        <Head><title>Parcel Templates</title></Head>
+        <Head><title>Customs Templates</title></Head>
         <CustomInfoTemplatesProvider>
           <ConfirmModal>
             <CustomsInfoEditModal>

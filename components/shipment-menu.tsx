@@ -16,7 +16,7 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 }
 
 
-const ShipmentMenu: React.FC<ShipmentMenuComponent> = ShipmentMutation<ShipmentMenuComponent>(({ shipment, voidLabel, className, ...props }) => {
+const ShipmentMenu: React.FC<ShipmentMenuComponent> = ShipmentMutation<ShipmentMenuComponent>(({ shipment, voidLabel, className }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
@@ -51,13 +51,13 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ShipmentMutation<ShipmentM
       await voidLabel(shipment);
       notify({ type: NotificationType.success, message: 'Shipment successfully cancelled!' });
       shipments.refetch();
-    } catch (err) {
+    } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
   };
 
   return (
-    <div className={`buttons has-addons ${className}`} {...props}>
+    <div className={`buttons has-addons ${className}`}>
 
       {!isNone(shipment.label) && <>
         <a className="button is-small" onClick={() => printLabel(shipment)} style={{ width: '70%' }}>

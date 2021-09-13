@@ -118,7 +118,7 @@ export default withSessionCookies(function() {
     const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
         <GoogleGeocodingScript />
-        <Head><title>Parcel Templates</title></Head>
+        <Head><title>Address Templates</title></Head>
         <AddressTemplatesProvider>
           <ConfirmModal>
             <AddressEditModal>

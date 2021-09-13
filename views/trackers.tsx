@@ -89,7 +89,7 @@ export default withSessionCookies(function() {
               {results.map(tracker => (
                 <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
                   <td className="carrier is-vcentered has-text-centered">
-                    <Image src={`/carriers/${tracker.carrier_name}_logo.svg`} height={25} width={25} alt="carrier logo" />
+                    <Image src={`/carriers/${tracker.carrier_name}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
                   </td>
                   <td className="tracking-number is-vcentered p-1">
                     <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>
@@ -158,7 +158,7 @@ export default withSessionCookies(function() {
   return AuthorizedPage(() => {
     const Wrapped = TrackerMutation<{}>(({ removeTracker }) => (
       <DashboardLayout>
-        <Head><title>Shipments</title></Head>
+        <Head><title>Trackers</title></Head>
         <TrackersProvider>
           <UserConnectionsProvider>
             <SystemConnectionsProvider>

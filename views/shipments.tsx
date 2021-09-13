@@ -92,10 +92,10 @@ export default withSessionCookies(function() {
                 <tr key={shipment.id} className="items" onClick={viewShipment(shipment.id as string)}>
                   <td className="carrier is-vcentered has-text-centered">
                     {!isNone(shipment.carrier_name) &&
-                      <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={25} alt="carrier logo" />
+                      <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
                     }
                     {isNone(shipment.carrier_name) &&
-                      <Image src={`/logo.svg`} height={25} width={25} alt="logo" />
+                      <Image src={`/logo.svg`} height={25} width={'100%'} alt="logo" />
                     }
                   </td>
                   <td className="service is-vcentered p-1">

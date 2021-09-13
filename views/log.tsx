@@ -132,7 +132,7 @@ export default withSessionCookies(function() {
 
     return (
       <DashboardLayout>
-        <Head><title>Logs</title></Head>
+        <Head><title>Log</title></Head>
         <LogProvider>
           <Component />
         </LogProvider>

@@ -60,7 +60,7 @@ const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesCompon
 
         notify({ type: NotificationType.warning, message });
       }
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     } finally {
       setLoading(false);
@@ -80,7 +80,7 @@ const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesCompon
       update(shipment as Shipment);
       notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
       router.push(basePath);
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     } finally {
       setLoading(false);
