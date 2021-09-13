@@ -17,7 +17,7 @@ export default async function OrgAPI(req: NextApiRequest, res: NextApiResponse) 
   
     await getSession({ req });
   
-    res.status(200).redirect('/');
+    res.status(200).json({ orgId });
   } catch(err) {
     res.status(500).json({ error: JSON.stringify(err) });
   }

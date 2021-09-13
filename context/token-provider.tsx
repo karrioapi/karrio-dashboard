@@ -20,7 +20,7 @@ const TokenProvider: React.FC = ({ children }) => {
   const load = () => result.called ? fetchMore({}) : initialLoad({});
   const authenticateOrg = async (org_id: string) => {
     await fetch(`/api/orgauth?org_id=${org_id}`);
-    // setTimeout(() => location.pathname = location.pathname, 1000);
+    setTimeout(() => location.reload(), 1000);
   };
 
   return (
