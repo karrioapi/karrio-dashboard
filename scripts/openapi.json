@@ -5877,6 +5877,7 @@
                     "ADDRESS_AUTO_COMPLETE",
                     "APP_NAME",
                     "APP_VERSION",
+                    "APP_WEBSITE",
                     "MULTI_ORGANIZATIONS",
                     "carrier_capabilities",
                     "carriers",
@@ -5902,6 +5903,11 @@
                     },
                     "APP_VERSION": {
                         "title": "App version",
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "APP_WEBSITE": {
+                        "title": "App website",
                         "minLength": 1,
                         "type": "string"
                     },
