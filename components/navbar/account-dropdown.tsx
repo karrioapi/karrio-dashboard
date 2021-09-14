@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from 'react';
 import { UserData } from '@/context/user-provider';
 import Link from 'next/link';
 import { signOut } from 'next-auth/client';
+import { PURPLSHIP_API_URL } from '@/client/context';
 
 
 interface AccountDropdownComponent { }
@@ -53,12 +54,15 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
               </a>
             </Link>
 
-            {user?.is_staff && <a href="/admin" className="options-item">
+            {user?.is_staff && <a href={`${PURPLSHIP_API_URL}/admin`} target="_blank" className="options-item">
               <i className="fas fa-tools"></i>
               <div className="option-content">
                 <span>Admin Console</span>
                 <span>Access the Administration panel</span>
               </div>
+              <span className="icon is-small mt-2 ml-4">
+                <i className="fas fa-external-link-alt"></i>
+              </span>
             </a>}
 
             <a className="options-item" onClick={() => signOut()}>
