@@ -1,5 +1,5 @@
 import AddressEditModal, { AddressEditContext } from "@/components/address-edit-modal";
-import AuthorizedPage from "@/components/authorized-page";
+import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/components/dashboard-layout";
 import AddressDescription from "@/components/descriptions/address-description";

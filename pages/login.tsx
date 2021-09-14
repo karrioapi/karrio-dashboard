@@ -1,4 +1,4 @@
-import SectionLayout from "@/components/section-layout";
+import SectionLayout from "@/components/layouts/section-layout";
 import { getCookie, isNone } from "@/lib/helper";
 import { NextPage } from "next";
 import { signIn } from "next-auth/client";

@@ -1,7 +1,7 @@
 import { TrackingEvent } from "@/api";
 import { ListStatusEnum } from "@/api/generated/apis/TrackersApi";
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/components/authorized-page";
+import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/components/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";

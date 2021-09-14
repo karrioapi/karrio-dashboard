@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/components/authorized-page";
+import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal from "@/components/confirm-modal";
 import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/connect-provider-modal";
 import DashboardLayout from "@/components/dashboard-layout";

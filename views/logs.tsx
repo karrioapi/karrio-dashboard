@@ -1,5 +1,5 @@
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/components/authorized-page";
+import AuthorizedPage from "@/components/layouts/authorized-page";
 import DashboardLayout from "@/components/dashboard-layout";
 import { Loading } from "@/components/loader";
 import Spinner from "@/components/spinner";
