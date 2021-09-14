@@ -22,7 +22,7 @@ const CAPABILITY_DETAILS: any = {
 };
 
 const ConnectionDescription: React.FC<ConnectionDescriptionComponent> = ({ connection }) => {
-  const [key] = React.useState<string>(`connection-${connection.id}-${Date.now()}`);
+  const [key] = React.useState<string>(`description-${connection.id}-${Date.now()}`);
   const { carrier_capabilities } = useContext(APIReference);
   const [raw_capabilities, setRawCapabilities] = React.useState<string[]>([]);
 
@@ -33,19 +33,21 @@ const ConnectionDescription: React.FC<ConnectionDescriptionComponent> = ({ conne
   }, [carrier_capabilities]);
 
   return (
-    <div className="content is-small">
-      <ul key={key}>
-        <li key={key}>
+    <div className="content is-small" key={key}>
+      <ul>
+        <li key={`carrier_id-${key}`}>
           <span className="is-size-7 my-1 has-text-weight-semibold">carrier id: {connection.carrier_id}</span>
         </li>
 
         {(connection?.capabilities || []).map((capability: any, index: number) => {
           if ((raw_capabilities || []).filter(raw_capability => raw_capability.includes(CAPABILITY_KEYS[capability])).length > 0) {
             return (
-              <li key={`${index}-${Date.now()}`} className="is-size-7 my-1 has-text-weight-semibold">{CAPABILITY_DETAILS[capability]}</li>
+              <li key={`${index}-${key}`}>
+                <span className="is-size-7 my-1 has-text-weight-semibold">{CAPABILITY_DETAILS[capability]}</span>
+              </li>
             );
           }
-          return <></>;
+          return <React.Fragment key={`${index}-${key}`}></React.Fragment>;
         })}
 
       </ul>

@@ -21,7 +21,7 @@ const SystemConnectionList: React.FC<SystemConnectionListView> = SystemConnectio
         message: `system carrier connection ${!enabled ? 'enabled' : 'disabled'}!`
       });
       onUpdate();
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };

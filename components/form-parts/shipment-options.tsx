@@ -51,7 +51,7 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ShipmentMutation<Shi
       } else {
         update({ changes: { options } });
       }
-    } catch (err) {
+    } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
     setLoading(false);

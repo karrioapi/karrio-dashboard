@@ -5,7 +5,7 @@ import WebhookMutation from '@/context/webhook-mutation';
 import { Webhook } from '@/api/index';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import SelectField from './generic/select-field';
+import SelectField from '@/components/generic/select-field';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
 
@@ -52,7 +52,7 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
       try {
         await testWebhook(webhook?.id as string, JSON.parse(payload));
         notify({ type: NotificationType.success, message: `Webhook successfully Notified` });
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       }
       setLoading(false);

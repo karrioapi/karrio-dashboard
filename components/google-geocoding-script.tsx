@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Image from 'next/image';
 import { APIReference } from '@/context/references-provider';
 import Head from 'next/head';
 

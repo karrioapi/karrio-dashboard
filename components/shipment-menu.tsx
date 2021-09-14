@@ -7,7 +7,7 @@ import { Notify } from '@/components/notifier';
 import { Shipments } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
-import { CustomInvoicePrinterContext } from './descriptions/custom-invoice-printer';
+import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
 
 

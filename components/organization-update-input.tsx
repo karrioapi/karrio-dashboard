@@ -34,7 +34,7 @@ const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = Orga
         notify({
           type: NotificationType.success, message: `${propertyValue} updated successfully!`
         });
-      } catch (message) {
+      } catch (message: any) {
         notify({ type: NotificationType.error, message });
       }
     };

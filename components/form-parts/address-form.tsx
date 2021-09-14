@@ -77,7 +77,7 @@ const AddressForm: React.FC<AddressFormComponent> = ShipmentMutation<AddressForm
           );
         }
         setKey(`address-${Date.now()}`);
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       }
       setLoading(false);

@@ -7,7 +7,7 @@ import SelectField from '@/components/generic/select-field';
 import { Collection, NotificationType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import ConnectionMutation from '@/context/connection-mutation';
-import { UserConnectionType } from '@/context/user-connections-query';
+import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { deepEqual, isNone } from '@/lib/helper';
@@ -69,7 +69,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = Connection
         });
         setTimeout(() => close(), 500);
         operation.onConfirm && operation.onConfirm();
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       } finally {
         setLoading(false);

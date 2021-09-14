@@ -84,7 +84,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
             new CustomEvent('label-select-tab', { bubbles: true, detail: { nextTab: 'options' } })
           );
         }
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       }
       setLoading(false);
@@ -99,7 +99,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
         } else {
           update({ changes: { customs: undefined } });
         }
-      } catch (err) {
+      } catch (err: any) {
         notify({ type: NotificationType.error, message: err });
       }
       setLoading(false);

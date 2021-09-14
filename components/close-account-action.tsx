@@ -17,7 +17,7 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<C
     try {
       await closeAccount();
       window.location.pathname = '/logout';
-    } catch (err) {
+    } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
   };

@@ -54,7 +54,7 @@ const CommodityForm: React.FC<CommodityTypeFormComponent> = ShipmentMutation<Com
     try {
       update(commodity);
       setKey(`commodity-${Date.now()}`);
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
     setLoading(false);

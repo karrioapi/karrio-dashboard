@@ -6,7 +6,6 @@ import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/auto
 import { Collection } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { Subject } from 'rxjs/internal/Subject';
-import Head from 'next/head';
 
 interface AddressAutocompleteInputComponent extends InputFieldComponent {
   onValueChange: (value: Partial<Address>) => void;
