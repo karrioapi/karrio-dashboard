@@ -1,7 +1,7 @@
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal from "@/components/confirm-modal";
 import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/connect-provider-modal";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import Tabs from "@/components/generic/tabs";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";

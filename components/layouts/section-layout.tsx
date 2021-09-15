@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import Image from 'next/image';
-import { APIReference, APIReferenesType } from '@/context/references-provider';
+import { APIReference } from '@/context/references-provider';
+import { References } from '@/api';
 
 
 const SectionLayout: React.FC = ({ children }) => {
   const {
     app_name,
     app_website,
-  } = useContext(APIReference) as APIReferenesType & { app_website: string };
+  } = useContext(APIReference) as References & { app_website: string };
 
   return (
     <section className="hero is-fullheight">

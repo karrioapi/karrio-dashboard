@@ -1,7 +1,7 @@
 import AddressEditModal, { AddressEditContext } from "@/components/address-edit-modal";
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";

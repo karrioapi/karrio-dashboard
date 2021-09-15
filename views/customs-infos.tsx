@@ -1,7 +1,7 @@
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";

@@ -3,7 +3,7 @@ import { ListStatusEnum } from "@/api/generated/apis/TrackersApi";
 import AppLink from "@/components/app-link";
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";

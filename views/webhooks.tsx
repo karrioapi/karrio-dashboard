@@ -1,7 +1,7 @@
 import { Webhook } from "@/api";
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";
 import { Notify } from "@/components/notifier";

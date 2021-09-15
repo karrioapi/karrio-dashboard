@@ -17,7 +17,7 @@ import ModeIndicator from '@/components/mode-indicator';
 import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
-import DashboardLayout from '@/components/dashboard-layout';
+import DashboardLayout from '@/components/layouts/dashboard-layout';
 import AuthorizedPage from '@/components/layouts/authorized-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';

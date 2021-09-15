@@ -1,6 +1,6 @@
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import CloseAccountAction from "@/components/close-account-action";
-import DashboardLayout from "@/components/dashboard-layout";
+import DashboardLayout from "@/components/layouts/dashboard-layout";
 import Tabs from "@/components/generic/tabs";
 import Head from "next/head";
 import { useContext } from "react";
