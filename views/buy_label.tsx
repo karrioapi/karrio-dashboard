@@ -27,7 +27,7 @@ import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -114,25 +114,23 @@ export default withSessionCookies(function() {
     )
   };
 
-  return AuthorizedPage(() => {
-    return (
-      <DashboardLayout>
-        <GoogleGeocodingScript />
-        <Head><title>Buy Label</title></Head>
-        <ShipmentProvider>
-          <TemplatesProvider>
-            <ParcelTemplatesProvider>
+  return AuthorizedPage(() => (
+    <DashboardLayout>
+      <GoogleGeocodingScript />
+      <Head><title>Buy Label</title></Head>
+      <ShipmentProvider>
+        <TemplatesProvider>
+          <ParcelTemplatesProvider>
             <AddressTemplatesProvider>
 
-            <Component />
+              <Component />
 
             </AddressTemplatesProvider>
-            </ParcelTemplatesProvider>
-          </TemplatesProvider>
-        </ShipmentProvider>
-      </DashboardLayout>
-    );
-  });
+          </ParcelTemplatesProvider>
+        </TemplatesProvider>
+      </ShipmentProvider>
+    </DashboardLayout>
+  ), pageProps);
 })
 
 

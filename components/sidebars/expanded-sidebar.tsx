@@ -24,8 +24,9 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   return (
     <div className="plex-sidebar" ref={sidebar}>
       <div className="sidebar-header pl-5">
-        {!multi_organizations && <Image src="/logo.svg" width="80" height="40" alt="logo" />}
-        {multi_organizations && <OrganizationDropdown />}
+        {multi_organizations
+        ? <OrganizationDropdown />
+        : <Image src="/logo.svg" width="80" height="40" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>

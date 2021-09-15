@@ -16,7 +16,7 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { basePath } = useContext(AppMode);
@@ -281,20 +281,18 @@ export default withSessionCookies(function() {
     );
   };
 
-  return AuthorizedPage(() => {
-    return (
-      <DashboardLayout>
-        <Head><title>Shipment</title></Head>
-        <ShipmentProvider>
-          <LabelPrinter>
-            <CustomInvoicePrinter>
+  return AuthorizedPage(() => (
+    <DashboardLayout>
+      <Head><title>Shipment</title></Head>
+      <ShipmentProvider>
+        <LabelPrinter>
+          <CustomInvoicePrinter>
 
-              <Component />
+            <Component />
 
-            </CustomInvoicePrinter>
-          </LabelPrinter>
-        </ShipmentProvider>
-      </DashboardLayout>
-    );
-  });
+          </CustomInvoicePrinter>
+        </LabelPrinter>
+      </ShipmentProvider>
+    </DashboardLayout>
+  ), pageProps);
 })

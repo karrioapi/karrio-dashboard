@@ -20,7 +20,7 @@ import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
@@ -151,21 +151,18 @@ export default withSessionCookies(function() {
     );
   };
 
+  return AuthorizedPage(() => (
+    <DashboardLayout>
+      <Head><title>Shipments</title></Head>
+      <LabelPrinter>
+        <CustomInvoicePrinter>
+          <ShipmentsProvider>
 
-  return AuthorizedPage(() => {
-    return (
-      <DashboardLayout>
-        <Head><title>Shipments</title></Head>
-        <LabelPrinter>
-          <CustomInvoicePrinter>
-            <ShipmentsProvider>
+            <Component />
 
-              <Component />
-
-            </ShipmentsProvider>
-          </CustomInvoicePrinter>
-        </LabelPrinter >
-      </DashboardLayout>
-    );
-  })
+          </ShipmentsProvider>
+        </CustomInvoicePrinter>
+      </LabelPrinter >
+    </DashboardLayout>
+  ), pageProps)
 });

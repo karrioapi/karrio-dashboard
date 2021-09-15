@@ -4,11 +4,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Loading } from '@/components/loader';
 import Image from 'next/image';
 
+
 const OrganizationDropdown: React.FC = () => {
   const btn = useRef<HTMLButtonElement>(null);
   const { authenticateOrg, token, ...state } = useContext(TokenData);
-  const { organizations, organization, load, loading } = useContext(Organizations);
-  const { setLoading } = useContext(Loading)
+  const { load, organizations, organization, loading } = useContext(Organizations);
+  const { setLoading } = useContext(Loading);
   const [active, setActive] = useState<boolean>(false);
   const [selected, setSelected] = useState<OrganizationType>();
 
@@ -40,7 +41,6 @@ const OrganizationDropdown: React.FC = () => {
     setActive(false);
   };
 
-  useEffect(() => { (!loading && load) && load(); }, []);
   useEffect(() => { setSelected(organization); }, [organization]);
   useEffect(() => {
     if (!(loading || state.loading) && (selected?.token !== token?.key)) {
@@ -73,7 +73,7 @@ const OrganizationDropdown: React.FC = () => {
       </div>}
 
       {(!loading && (organizations || []).length === 0) &&
-        <Image src="/logo.svg" width={80} height={40} alt="" />}
+        <Image src="/logo.svg" width="80" height="40" alt="logo" />}
     </>
   );
 };

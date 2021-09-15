@@ -15,7 +15,7 @@ import Head from "next/head";
 import { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC<any> = ({ removeWebhook, updateWebhook }) => {
     const { notify } = useContext(Notify)
     const { setLoading } = useContext(Loading);
@@ -153,5 +153,5 @@ export default withSessionCookies(function() {
     ));
 
     return <Wrapped />;
-  })
+  }, pageProps)
 })

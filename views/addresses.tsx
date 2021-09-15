@@ -13,7 +13,7 @@ import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function(pageProps) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -132,5 +132,5 @@ export default withSessionCookies(function() {
     ));
 
     return <Wrapped />;
-  });
+  }, pageProps);
 })

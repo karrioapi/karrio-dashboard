@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetToken, GetToken_token, GET_TOKEN } from '@/graphql';
-import { AppMode } from '@/context/app-mode-provider';
 
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {
@@ -13,7 +12,6 @@ type TokenDataType = LazyQueryResult<GetToken, any> & {
 export const TokenData = React.createContext<TokenDataType>({ token: { key: '' } } as TokenDataType);
 
 const TokenProvider: React.FC = ({ children }) => {
-  const { basePath } = useContext(AppMode);
   const [initialLoad, result] = useLazyQuery<GetToken>(GET_TOKEN, { notifyOnNetworkStatusChange: true });
 
   const fetchMore = (options: any) => result.called ? result.fetchMore(options) : initialLoad(options);

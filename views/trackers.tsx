@@ -21,7 +21,7 @@ import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function() {
+export default withSessionCookies(function(pageProps) {
   const Component: React.FC<any> = ({ removeTracker }) => {
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -176,7 +176,7 @@ export default withSessionCookies(function() {
     ));
 
     return <Wrapped />;
-  })
+  }, pageProps)
 })
 
 function formatEventDescription(last_event?: TrackingEvent): string {
