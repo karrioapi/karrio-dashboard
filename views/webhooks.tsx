@@ -139,7 +139,7 @@ export default withSessionCookies(function (pageProps) {
   return AuthorizedPage(() => {
     const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
       <DashboardLayout>
-        <Head><title>Webhooks</title></Head>
+        <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
 
         <WebhooksProvider>
           <WebhookEditModal>

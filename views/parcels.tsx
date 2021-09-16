@@ -119,7 +119,7 @@ export default withSessionCookies(function (pageProps) {
   return AuthorizedPage(() => {
     const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
-        <Head><title>Parcel Templates</title></Head>
+        <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
         <ParcelTemplatesProvider>
           <ConfirmModal>
             <ParcelEditModal>

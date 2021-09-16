@@ -118,7 +118,7 @@ export default withSessionCookies(function(pageProps) {
     const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
         <GoogleGeocodingScript />
-        <Head><title>Address Templates</title></Head>
+        <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
         <AddressTemplatesProvider>
           <ConfirmModal>
             <AddressEditModal>

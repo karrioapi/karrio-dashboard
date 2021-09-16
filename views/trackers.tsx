@@ -158,7 +158,7 @@ export default withSessionCookies(function(pageProps) {
   return AuthorizedPage(() => {
     const Wrapped = TrackerMutation<{}>(({ removeTracker }) => (
       <DashboardLayout>
-        <Head><title>Trackers</title></Head>
+        <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
         <TrackersProvider>
           <UserConnectionsProvider>
             <SystemConnectionsProvider>

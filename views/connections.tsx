@@ -60,7 +60,7 @@ export default withSessionCookies(function (pageProps) {
 
   return AuthorizedPage(() => (
     <DashboardLayout>
-      <Head><title>Carrier Connections</title></Head>
+      <Head><title>Carrier Connections - {(pageProps as any).references?.app_name}</title></Head>
       <ConfirmModal>
         <ConnectProviderModal>
           <SystemConnectionsProvider>

@@ -20,7 +20,7 @@ const Tracking: NextPage<{ references: References, tracker: TrackingStatus }> = 
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number}</title></Head>
+      <Head><title>Tracking - {tracker?.tracking_number} - {references.app_name}</title></Head>
 
       {!isNone(tracker) && <section className="hero is-fullheight p-2">
 
@@ -103,7 +103,7 @@ const Tracking: NextPage<{ references: References, tracker: TrackingStatus }> = 
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: true }
-}
+};
 
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
@@ -116,6 +116,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: { id, references, tracker: JSON.parse(JSON.stringify(tracker)) }
   }
-}
+};
 
 export default Tracking;

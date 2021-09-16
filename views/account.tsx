@@ -71,7 +71,7 @@ export default withSessionCookies(function (pageProps) {
 
   return AuthorizedPage(() => (
     <DashboardLayout>
-      <Head><title>Account Settings</title></Head>
+      <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 
       <Component />
 

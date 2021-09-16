@@ -72,7 +72,7 @@ export default withSessionCookies(function (pageProps) {
 
   return AuthorizedPage(() => (
     <DashboardLayout>
-      <Head><title>API Keys</title></Head>
+      <Head><title>API Keys - {(pageProps as any).references?.app_name}</title></Head>
       <Component />
     </DashboardLayout>
   ), pageProps)

@@ -117,7 +117,7 @@ export default withSessionCookies(function (pageProps) {
   return AuthorizedPage(() => (
     <DashboardLayout>
       <GoogleGeocodingScript />
-      <Head><title>Buy Label</title></Head>
+      <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentProvider>
         <TemplatesProvider>
           <ParcelTemplatesProvider>

@@ -109,7 +109,7 @@ export default withSessionCookies(function (pageProps) {
 
   return AuthorizedPage(() => (
     <DashboardLayout>
-      <Head><title>Logs</title></Head>
+      <Head><title>Logs - {(pageProps as any).references?.app_name}</title></Head>
       <LogsProvider>
         <Component />
       </LogsProvider>

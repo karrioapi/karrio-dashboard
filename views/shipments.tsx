@@ -153,7 +153,7 @@ export default withSessionCookies(function (pageProps) {
 
   return AuthorizedPage(() => (
     <DashboardLayout>
-      <Head><title>Shipments</title></Head>
+      <Head><title>Shipments - {(pageProps as any).references?.app_name}</title></Head>
       <LabelPrinter>
         <CustomInvoicePrinter>
           <ShipmentsProvider>
