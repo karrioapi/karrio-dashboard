@@ -41,7 +41,7 @@ query get_address_templates($offset: Int, $first: Int) {
 export const GET_CUSTOMS_TEMPLATES = gql`
 query get_customs_info_templates($offset: Int, $first: Int) {
   customs_templates(offset: $offset, first: $first) {
-    pageInfo { 
+    pageInfo {
       hasNextPage
       hasPreviousPage
       startCursor
@@ -571,9 +571,9 @@ export const GET_USER_CONNECTIONS = gql`
   }
 `;
 
-export const MUTATE_USER = gql`
-mutation mutate_user($data: UserMutationInput!) {
-  mutate_user(input: $data) {
+export const UPDATE_USER = gql`
+mutation update_user($data: UpdateUserInput!) {
+  update_user(input: $data) {
     email
     full_name
     is_staff
@@ -595,6 +595,22 @@ query GetUser {
     is_staff
     last_login
     date_joined
+  }
+}
+`;
+
+export const REGISTER_USER = gql`
+mutation register_user($data: RegisterUserInput!) {
+  register_user(input: $data) {
+    user {
+      email
+      is_staff
+      date_joined
+    }
+    errors {
+      field
+      messages
+    }
   }
 }
 `;

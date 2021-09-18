@@ -915,29 +915,29 @@ export interface get_user_connectionsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: mutate_user
+// GraphQL mutation operation: update_user
 // ====================================================
 
-export interface mutate_user_mutate_user_errors {
+export interface update_user_update_user_errors {
   field: string;
   messages: string[];
 }
 
-export interface mutate_user_mutate_user {
+export interface update_user_update_user {
   email: string | null;
   full_name: string | null;
   is_staff: boolean | null;                                  // Designates whether the user can log into this admin site.
   last_login: any | null;
   date_joined: any | null;
-  errors: (mutate_user_mutate_user_errors | null)[] | null;  // May contain more than one error for same field.
+  errors: (update_user_update_user_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
-export interface mutate_user {
-  mutate_user: mutate_user_mutate_user | null;
+export interface update_user {
+  update_user: update_user_update_user | null;
 }
 
-export interface mutate_userVariables {
-  data: UserMutationInput;
+export interface update_userVariables {
+  data: UpdateUserInput;
 }
 
 
@@ -958,6 +958,38 @@ export interface GetUser_user {
 
 export interface GetUser {
   user: GetUser_user | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: register_user
+// ====================================================
+
+export interface register_user_register_user_user {
+  email: string;
+  is_staff: boolean;  // Designates whether the user can log into this admin site.
+  date_joined: any;
+}
+
+export interface register_user_register_user_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface register_user_register_user {
+  user: register_user_register_user_user | null;
+  errors: (register_user_register_user_errors | null)[] | null;
+}
+
+export interface register_user {
+  register_user: register_user_register_user | null;
+}
+
+export interface register_userVariables {
+  data: RegisterUserInput;
 }
 
 /* tslint:disable */
@@ -2681,10 +2713,19 @@ export interface TokenMutationInput {
 }
 
 // null
-export interface UserMutationInput {
+export interface UpdateUserInput {
   email?: string | null;
   full_name?: string | null;
   is_active?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface RegisterUserInput {
+  email: string;
+  full_name?: string | null;
+  password1: string;
+  password2: string;
   clientMutationId?: string | null;
 }
 

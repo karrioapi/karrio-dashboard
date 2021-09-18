@@ -1,15 +1,13 @@
-import { References } from "@/api";
-import { restClient } from "@/client/context";
 import SectionLayout from "@/components/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
-import { getCookie, isNone } from "@/lib/helper";
-import { GetStaticProps, NextPage } from "next";
+import { getCookie } from "@/lib/helper";
+import { withReferences } from "@/lib/middleware";
 import { signIn } from "next-auth/client";
 import Head from "next/head";
 import React, { FormEvent, useRef } from "react";
 
 
-const Login: NextPage<{ references: References }> = ({ references }) => {
+const Login = withReferences(({ references }) => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -20,7 +18,7 @@ const Login: NextPage<{ references: References }> = ({ references }) => {
       email: email.current?.value,
       password: password.current?.value,
       callbackUrl: `${(new URLSearchParams(location.search)).get('next') || '/'}`,
-      ...(isNone(org_id) ? {} : { org_id })
+      ...((org_id || '').length == 0 ? {} : { org_id })
     });
   };
 
@@ -70,15 +68,6 @@ const Login: NextPage<{ references: References }> = ({ references }) => {
       </APIReferenceProvider>
     </>
   )
-};
-
-
-export const getStaticProps: GetStaticProps = async (_) => {
-  const references = await  restClient.value.API.data()
-
-  return {
-    props: { references }
-  }
-};
+});
 
 export default Login;
