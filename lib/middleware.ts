@@ -34,17 +34,17 @@ async function setOrgHeader(ctx: NextPageContext, session: Session | null) {
 async function loadData(session: Session | null) {
   const [references, { user, organizations }] = await Promise.all([
     restClient.value.API.data(),
-    graphqlClient.value.query({ 
+    graphqlClient.value.query({
       query: dataQuery(session?.org_id as string),
       variables: { "org_id": session?.org_id }
     }).then(({ data }) => data)
   ]);
-  
+
   return { references, user, organizations };
 }
 
 function dataQuery(org_id?: string) {
-  const organizationQueries = isNone(org_id) ? '': `
+  const organizationQueries = isNone(org_id) ? '' : `
   organizations {
     id
     name
