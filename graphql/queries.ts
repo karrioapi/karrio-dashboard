@@ -571,6 +571,18 @@ export const GET_USER_CONNECTIONS = gql`
   }
 `;
 
+export const GET_USER = gql`
+query GetUser {
+  user {
+    email
+    full_name
+    is_staff
+    last_login
+    date_joined
+  }
+}
+`;
+
 export const UPDATE_USER = gql`
 mutation update_user($data: UpdateUserInput!) {
   update_user(input: $data) {
@@ -587,14 +599,13 @@ mutation update_user($data: UpdateUserInput!) {
 }
 `;
 
-export const GET_USER = gql`
-query GetUser {
-  user {
-    email
-    full_name
-    is_staff
-    last_login
-    date_joined
+export const CHANGE_PASSWORD = gql`
+mutation change_password($data: ChangePasswordInput!) {
+  change_password(input: $data) {
+    errors {
+      field
+      messages
+    }
   }
 }
 `;
@@ -607,6 +618,36 @@ mutation register_user($data: RegisterUserInput!) {
       is_staff
       date_joined
     }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CONFIRM_EMAIL = gql`
+mutation confirm_email($data: ConfirmEmailInput!) {
+  confirm_email(input: $data) {
+    success
+  }
+}
+`;
+
+export const REQUEST_PASSWORD_RESET = gql`
+mutation request_password_reset($data: RequestPasswordResetInput!) {
+  request_password_reset(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CONFIRM_PASSWORD_RESET = gql`
+mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
+  confirm_password_reset(input: $data) {
     errors {
       field
       messages

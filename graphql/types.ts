@@ -915,6 +915,26 @@ export interface get_user_connectionsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GetUser
+// ====================================================
+
+export interface GetUser_user {
+  email: string;
+  full_name: string;
+  is_staff: boolean;  // Designates whether the user can log into this admin site.
+  last_login: any | null;
+  date_joined: any;
+}
+
+export interface GetUser {
+  user: GetUser_user | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: update_user
 // ====================================================
 
@@ -945,19 +965,24 @@ export interface update_userVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetUser
+// GraphQL mutation operation: change_password
 // ====================================================
 
-export interface GetUser_user {
-  email: string;
-  full_name: string;
-  is_staff: boolean;  // Designates whether the user can log into this admin site.
-  last_login: any | null;
-  date_joined: any;
+export interface change_password_change_password_errors {
+  field: string;
+  messages: string[];
 }
 
-export interface GetUser {
-  user: GetUser_user | null;
+export interface change_password_change_password {
+  errors: (change_password_change_password_errors | null)[] | null;
+}
+
+export interface change_password {
+  change_password: change_password_change_password | null;
+}
+
+export interface change_passwordVariables {
+  data: ChangePasswordInput;
 }
 
 
@@ -990,6 +1015,76 @@ export interface register_user {
 
 export interface register_userVariables {
   data: RegisterUserInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: confirm_email
+// ====================================================
+
+export interface confirm_email_confirm_email {
+  success: boolean;
+}
+
+export interface confirm_email {
+  confirm_email: confirm_email_confirm_email | null;
+}
+
+export interface confirm_emailVariables {
+  data: ConfirmEmailInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: request_password_reset
+// ====================================================
+
+export interface request_password_reset_request_password_reset_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface request_password_reset_request_password_reset {
+  errors: (request_password_reset_request_password_reset_errors | null)[] | null;
+}
+
+export interface request_password_reset {
+  request_password_reset: request_password_reset_request_password_reset | null;
+}
+
+export interface request_password_resetVariables {
+  data: RequestPasswordResetInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: confirm_password_reset
+// ====================================================
+
+export interface confirm_password_reset_confirm_password_reset_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface confirm_password_reset_confirm_password_reset {
+  errors: (confirm_password_reset_confirm_password_reset_errors | null)[] | null;
+}
+
+export interface confirm_password_reset {
+  confirm_password_reset: confirm_password_reset_confirm_password_reset | null;
+}
+
+export interface confirm_password_resetVariables {
+  data: ConfirmPasswordResetInput;
 }
 
 /* tslint:disable */
@@ -2721,11 +2816,41 @@ export interface UpdateUserInput {
 }
 
 // null
+export interface ChangePasswordInput {
+  old_password: string;
+  new_password1: string;
+  new_password2: string;
+  clientMutationId?: string | null;
+}
+
+// null
 export interface RegisterUserInput {
   email: string;
   full_name?: string | null;
   password1: string;
   password2: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ConfirmEmailInput {
+  token: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface RequestPasswordResetInput {
+  email: string;
+  redirect_url: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ConfirmPasswordResetInput {
+  new_password1: string;
+  new_password2: string;
+  uid: string;
+  token: string;
   clientMutationId?: string | null;
 }
 
