@@ -84,7 +84,7 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
         });
         setTimeout(() => close(), 2000);
         operation?.onConfirm && operation.onConfirm();
-      } catch (message) {
+      } catch (message: any) {
         notify({ type: NotificationType.error, message });
       }
       setLoading(false);

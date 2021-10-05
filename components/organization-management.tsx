@@ -14,7 +14,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
 
         <div className="column is-7">
 
-          <OrganizationUpdateInput label="name" propertyKey="name" inputType="text" />
+          <OrganizationUpdateInput label="Name" propertyKey="name" inputType="text" />
 
         </div>
       </div>

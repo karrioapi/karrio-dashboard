@@ -32,7 +32,7 @@ const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<P
       notify({
         type: NotificationType.success, message: `${propertyValue} updated successfully!`
       });
-    } catch (error) {
+    } catch (error: any) {
       notify({ type: NotificationType.error, message: error });
     }
   };
@@ -43,7 +43,7 @@ const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<P
 
   return (
     <form className="field" onSubmit={handleSubmit} key={key}>
-      <label className="label">{label}</label>
+      <label className="label is-capitalized" style={{ fontSize: ".8em" }}>{label}</label>
       <div className="control">
         <input
           className="input is-small mr-1"

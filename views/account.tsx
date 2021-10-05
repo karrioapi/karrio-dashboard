@@ -8,11 +8,12 @@ import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import { APIReference } from "@/context/references-provider";
 import { withSessionCookies } from "@/lib/middleware";
+import PasswordManagement from "@/components/password-management";
 
 
 export default withSessionCookies(function (pageProps) {
   const Component: React.FC = () => {
-    const { multi_organizations } = useContext(APIReference);
+    const { multi_organizations, app_name } = useContext(APIReference);
 
     return (
       <>
@@ -24,19 +25,25 @@ export default withSessionCookies(function (pageProps) {
           <div>
             <div className="columns py-6">
               <div className="column is-5 pr-6">
-                <p className="subtitle is-6 py-1">Login</p>
-                <p className="is-size-7 pr-6">Your email address is your identity on Purplship and is used to log in.</p>
+                <p className="subtitle is-6 py-1">Profile</p>
+                <p className="is-size-7 pr-6">Your email address is your identity on {app_name} and is used to log in.</p>
               </div>
 
               <div className="column is-7">
                 <ProfileUpdateInput label="Email Address" propertyKey="email" inputType="email" />
                 <ProfileUpdateInput label="Name (Optional)" propertyKey="full_name" inputType="text" />
-
-                <label className="label">Password</label>
-                <div className="control">
-                  <a href="/password_change" className="button is-primary is-small">Change your password</a>
-                </div>
               </div>
+            </div>
+
+            <hr style={{ height: '1px' }} />
+
+            <div className="columns py-6">
+              <div className="column is-5 pr-6">
+                <p className="subtitle is-6 py-1">Password</p>
+                <p className="is-size-7 pr-6">You can change your password.</p>
+              </div>
+
+              <PasswordManagement />
             </div>
           </div>
 
@@ -45,7 +52,7 @@ export default withSessionCookies(function (pageProps) {
 
               <OrganizationManagement />
 
-              <hr />
+              <hr style={{ height: '1px' }} />
 
             </>}
 
