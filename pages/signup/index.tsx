@@ -29,7 +29,7 @@ function reducer(state: Partial<RegisterUserInput>, { name, value }: { name: str
 }
 
 
-const SignUp = withReferences(({ references }) => {
+export default withReferences(({ references }) => {
 
   const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
     const router = useRouter();
@@ -83,7 +83,7 @@ const SignUp = withReferences(({ references }) => {
 
               <InputField
                 label="Password" name="password1" type="password"
-                placeholder="Password Confirmation" fieldClass="mt-3"
+                placeholder="Password" fieldClass="mt-3"
                 onChange={handleChange} value={user.password1} required>
                 {errors.filter(error => error.field === 'password1').map(({ messages }) => (
                   messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
@@ -91,8 +91,8 @@ const SignUp = withReferences(({ references }) => {
               </InputField>
 
               <InputField
-                label="Password Confirmation" name="password2" type="password"
-                placeholder="Password Confirmation" fieldClass="mt-3"
+                label="Confirm Password" name="password2" type="password"
+                placeholder="Confirm Password" fieldClass="mt-3"
                 onChange={handleChange} value={user.password2} required>
                 {errors.filter(error => error.field === 'password2').map(({ messages }) => (
                   messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
@@ -133,6 +133,3 @@ const SignUp = withReferences(({ references }) => {
     </>
   )
 });
-
-
-export default SignUp;

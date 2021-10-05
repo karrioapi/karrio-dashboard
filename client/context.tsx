@@ -6,7 +6,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/client";
 
-export const PURPLSHIP_API_URL = process.env.NEXT_PUBLIC_PURPLSHIP_API_URL || 'https://cloud.purplship.com';
+export const PURPLSHIP_API_URL = process.env.NEXT_PUBLIC_PURPLSHIP_API_URL || 'https://api.purplship.com';
 
 export const AuthToken = new Subject<TokenPair>();
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());

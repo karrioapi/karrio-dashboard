@@ -43,7 +43,7 @@ const Login = withReferences(({ references }) => {
                 <div className="field mt-5">
                   <label className="label level" htmlFor="id_password">
                     <span>Password</span>
-                    <a className="is-size-7" href="/password/reset" tabIndex={-1}>Forgot your password?</a>
+                    <a className="is-size-7" href="/password/reset/request" tabIndex={-1}>Forgot your password?</a>
                   </label>
 
                   <div className="control">

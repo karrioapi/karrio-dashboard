@@ -25,13 +25,15 @@ export function withSessionCookies(page: NextPage) {
   return page;
 }
 
-export function withReferences(page: NextPage<{ references: References }>) {
+export type RefPage<T> = T & { references: References };
+
+export function withReferences<T extends {}>(page: NextPage<any, RefPage<T>>) {
   const getInitialProps = page.getInitialProps;
 
   page.getInitialProps = async ctx => ({
     references: await restClient.value.API.data(),
     ...(getInitialProps ? await getInitialProps(ctx) : {}),
-  });
+  }) as RefPage<T>;
 
   return page;
 }
