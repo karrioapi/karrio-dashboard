@@ -6,6 +6,8 @@ import { getSession } from "next-auth/client";
 import { isNone } from "@/lib/helper";
 import { References } from "@/api";
 
+const API_INSTANCE_ERROR = { error: 'Server unreachable. Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance' }
+
 
 export function withSessionCookies(page: NextPage) {
   const getInitialProps = page.getInitialProps;
@@ -25,15 +27,25 @@ export function withSessionCookies(page: NextPage) {
   return page;
 }
 
-export type RefPage<T> = T & { references: References };
+export type RefPage<T> = T & { references: References, error?: string };
 
 export function withReferences<T extends {}>(page: NextPage<any, RefPage<T>>) {
   const getInitialProps = page.getInitialProps;
 
-  page.getInitialProps = async ctx => ({
-    references: await restClient.value.API.data(),
-    ...(getInitialProps ? await getInitialProps(ctx) : {}),
-  }) as RefPage<T>;
+  page.getInitialProps = async ctx => {
+    try {
+      const [references, props] = await Promise.all([
+        await restClient.value.API.data(),
+        getInitialProps ? await getInitialProps(ctx) : {},
+      ]);
+    
+      return { references, ...props } as RefPage<T>;
+    } catch(e) {
+      console.error('Failed to load initial data', e);
+  
+      return API_INSTANCE_ERROR as RefPage<T>;
+    }
+  }
 
   return page;
 }
@@ -49,15 +61,21 @@ async function setOrgHeader(ctx: NextPageContext, session: Session | null) {
 async function loadData(session: Session | null) {
   if (session === null) return {};
 
-  const [references, { user, organizations }] = await Promise.all([
-    restClient.value.API.data(),
-    graphqlClient.value.query({
-      query: dataQuery(session?.org_id as string),
-      variables: { "org_id": session?.org_id }
-    }).then(({ data }) => data)
-  ]);
+  try {
+    const [references, { user, organizations }] = await Promise.all([
+      restClient.value.API.data(),
+      graphqlClient.value.query({
+        query: dataQuery(session?.org_id as string),
+        variables: { "org_id": session?.org_id }
+      }).then(({ data }) => data)
+    ]);
+  
+    return { references, user, organizations };
+  } catch(e) {
+    console.error('Failed to load initial data', e);
 
-  return { references, user, organizations };
+    return API_INSTANCE_ERROR;
+  }
 }
 
 function dataQuery(org_id?: string) {

@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <meta name="viewport" content="viewport-fit=cover" />
         </Head>
-        <MainLayout>
+        <MainLayout error={pageProps?.error}>
           <Component {...pageProps} />
         </MainLayout>
       </ClientsProvider>
