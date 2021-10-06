@@ -1,32 +1,61 @@
-# purplship-dashboard
+# purplship-dashboar
 
-purplship-server is an On-prem or cloud Multi-carrier Shipping API. The server is in Python, but you can use any
-programming language to send API requests to any supported shipping carriers (Canada Post, DHL, FedEx, UPS, Purolator...),
-from your application.
-
-**This project hosts the dashboard app. Please file issues at [/purplship-server](https://github.com/purplship/purplship-server),
-which hosts the server code.**
+<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg"/>
 
 
-## Screenshots
-
-<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg">
-<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/tracking-dashboard.jpeg">
-
+A Next.js dashboard for [purplship-server](https://github.com/purplship/purplship-server)
 
 ## Deployment
 
 ### `Docker`
 
-Use our Docker image [purplship/purplship-server](https://hub.docker.com/repository/docker/purplship/purplship-server)
- 
+Use our Docker image [purplship/dashboard](https://hub.docker.com/repository/docker/purplship/dashboard)
 
-### `Heroku`
 
-Host your own purplship server for FREE with [One-Click Deploy](https://heroku.com/deploy).
+## Getting Started
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/purplship/purplship-heroku/tree/main/)
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
+### Prerequisites
+
+- Node.js v14+
+- A running instance of [purplship-server](https://github.com/purplship/purplship-server).
+
+### Installing
+
+Clone the repository
+
+```terminal
+git clone https://github.com/purplship/purplship-dashboard.git
+
+cd purplship-dashboard
+```
+
+### Configuration
+
+Use the following environment variables to configure the dashboard:
+
+- `NEXT_PUBLIC_PURPLSHIP_API_URL` (**required**) - URL of a running instance of purplship-server. If you are running purplship-server locally with the default settings, set `NEXT_PUBLIC_PURPLSHIP_API_URL` to: `http://localhost:5002`.
+
+- `JWT_SECRET` - A secret to use for JWT key generation - you should set this explicitly.
+
+### Development
+
+Start the development server
+
+```bash
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Production
+
+Build the application bundle
+
+```bash
+yarn build
+```
 
 
 ## Resources
@@ -38,48 +67,10 @@ Host your own purplship server for FREE with [One-Click Deploy](https://heroku.c
 - **Twitter** - Follow [purplship](https://twitter.com/purplship).
 
 
-## Developing
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-### Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-### Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-### Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-
 ## License
 
 This project is licensed under the terms of the `Apache 2` license.
 
 See the [LICENSE file](/LICENSE) for license rights and limitations.
 
-Any other questions, mail us at hello@purplship.com. We’d love to meet you!
+Any other questions, mail us at hello@purplship.com We’d love to meet you!
