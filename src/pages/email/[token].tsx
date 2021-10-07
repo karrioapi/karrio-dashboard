@@ -1,16 +1,18 @@
+import { References } from "@/api";
 import SectionLayout from "@/components/layouts/section-layout";
 import Spinner from "@/components/spinner";
 import APIReferenceProvider from "@/context/references-provider";
 import { CONFIRM_EMAIL } from "@/graphql";
 import { isNone } from "@/lib/helper";
-import { withReferences } from "@/lib/middleware";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useEffect } from "react";
 
+export { getStaticProps } from '@/static/references';
 
-export default withReferences(({ references }) => {
+
+export default function Page({ references }: { references: References }) {
   const router = useRouter();
   const { token } = router.query;
   const [confirm, { data, loading }] = useMutation(CONFIRM_EMAIL);
@@ -44,4 +46,4 @@ export default withReferences(({ references }) => {
       </APIReferenceProvider>
     </>
   )
-});
+}

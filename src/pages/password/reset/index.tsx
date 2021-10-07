@@ -1,3 +1,4 @@
+import { References } from "@/api";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/components/layouts/section-layout";
@@ -5,10 +6,11 @@ import LoadingProvider, { Loading } from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
 import UserMutation from "@/context/user-mutation";
 import { ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset_errors } from "@/graphql";
-import { withReferences } from "@/lib/middleware";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
+
+export { getStaticProps } from '@/static/references';
 
 const DEFAULT_VALUE: Partial<ConfirmPasswordResetInput> = {
   new_password1: "",
@@ -27,7 +29,7 @@ function reducer(state: Partial<ConfirmPasswordResetInput>, { name, value }: { n
 }
 
 
-export default withReferences(({ references }) => {
+export default function Page({ references }: { references: References }) {
 
   const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
     const router = useRouter();
@@ -124,4 +126,4 @@ export default withReferences(({ references }) => {
       </APIReferenceProvider>
     </>
   )
-});
+}

@@ -1,11 +1,14 @@
+import { References } from "@/api";
 import SectionLayout from "@/components/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
-import { withReferences } from "@/lib/middleware";
+import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 
+export { getStaticProps } from '@/static/references';
 
-const SignUpSuccess = withReferences(({ references }) => {
+
+const SignUpSuccess: NextPage<any, { references: References }> = ({ references }) => {
 
   return (
     <>
@@ -30,7 +33,7 @@ const SignUpSuccess = withReferences(({ references }) => {
       </APIReferenceProvider>
     </>
   )
-});
+};
 
 
 export default SignUpSuccess;

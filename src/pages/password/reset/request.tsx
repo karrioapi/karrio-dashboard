@@ -1,15 +1,18 @@
+import { References } from "@/api";
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/components/layouts/section-layout";
 import LoadingProvider from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
 import { request_password_reset, REQUEST_PASSWORD_RESET } from "@/graphql";
-import { withReferences } from "@/lib/middleware";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { FormEvent, useRef } from "react";
 
-export default withReferences(({ references }) => {
+export { getStaticProps } from '@/static/references';
+
+
+export default function Page({ references }: { references: References }) {
 
   const Component: React.FC<{}> = () => {
     const router = useRouter();
@@ -74,4 +77,4 @@ export default withReferences(({ references }) => {
       </APIReferenceProvider>
     </>
   )
-});
+}

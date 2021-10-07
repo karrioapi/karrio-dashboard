@@ -4,9 +4,8 @@ import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
 import { isNone } from "@/lib/helper";
-import { References } from "@/api";
 
-const API_INSTANCE_ERROR = { error: 'Server unreachable. Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance' }
+export const API_INSTANCE_ERROR = { error: 'Server unreachable. Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance' }
 
 
 export function withSessionCookies(page: NextPage) {
@@ -23,29 +22,6 @@ export function withSessionCookies(page: NextPage) {
       ...(getInitialProps ? await getInitialProps(ctx) : {}),
     };
   };
-
-  return page;
-}
-
-export type RefPage<T> = T & { references: References, error?: string };
-
-export function withReferences<T extends {}>(page: NextPage<any, RefPage<T>>) {
-  const getInitialProps = page.getInitialProps;
-
-  page.getInitialProps = async ctx => {
-    try {
-      const [references, props] = await Promise.all([
-        await restClient.value.API.data(),
-        getInitialProps ? await getInitialProps(ctx) : {},
-      ]);
-    
-      return { references, ...props } as RefPage<T>;
-    } catch(e) {
-      console.error('Failed to load initial data', e);
-  
-      return API_INSTANCE_ERROR as RefPage<T>;
-    }
-  }
 
   return page;
 }

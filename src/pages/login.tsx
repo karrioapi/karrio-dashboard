@@ -1,13 +1,16 @@
+import { References } from "@/api";
 import SectionLayout from "@/components/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import { getCookie } from "@/lib/helper";
-import { withReferences } from "@/lib/middleware";
+import { NextPage } from "next";
 import { signIn } from "next-auth/client";
 import Head from "next/head";
 import React, { FormEvent, useRef } from "react";
 
+export { getStaticProps } from '@/static/references';
 
-const Login = withReferences(({ references }) => {
+
+const LoginPage: NextPage<any, { references: References }> = ({ references }) => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -68,6 +71,6 @@ const Login = withReferences(({ references }) => {
       </APIReferenceProvider>
     </>
   )
-});
+};
 
-export default Login;
+export default LoginPage;
