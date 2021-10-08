@@ -11,7 +11,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
 
-export { getStaticProps } from '@/static/references';
+export { getServerSideProps } from '@/static/references';
 
 const DEFAULT_VALUE: Partial<ConfirmPasswordResetInput> = {
   new_password1: "",

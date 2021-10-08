@@ -8,7 +8,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 
-export { getStaticProps } from '@/static/references';
+export { getServerSideProps } from '@/static/references';
 
 
 const LoginPage: NextPage<any, { references: References }> = ({ references }) => {
@@ -47,7 +47,7 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
                 <div className="field mt-5">
                   <label className="label level" htmlFor="id_password">
                     <span>Password</span>
-                    <Link href="/password/reset/request" passHref><span className="is-size-7">Forgot your password?</span></Link>
+                    <Link href="/password/reset/request"><a className="is-size-7">Forgot your password?</a></Link>
                   </label>
 
                   <div className="control">
@@ -66,7 +66,7 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
           </div>
 
           <div className="has-text-centered my-4 is-size-6">
-            Dont have an account? <Link href="/signup" passHref>Sign Up</Link>
+            Dont have an account? <Link href="/signup"><a>Sign Up</a></Link>
           </div>
         </SectionLayout>
       </APIReferenceProvider>

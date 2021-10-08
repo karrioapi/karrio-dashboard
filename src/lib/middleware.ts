@@ -1,11 +1,16 @@
-import { graphqlClient, restClient } from "@/client/context";
+import { graphqlClient, PURPLSHIP_API_URL, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
 import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
 import { isNone } from "@/lib/helper";
 
-export const API_INSTANCE_ERROR = { error: 'Server unreachable. Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance' }
+export const API_INSTANCE_ERROR = {
+  error: `
+    Server (${PURPLSHIP_API_URL}) unreachable.
+    Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
+  `
+}
 
 
 export function withSessionCookies(page: NextPage) {
@@ -45,9 +50,9 @@ async function loadData(session: Session | null) {
         variables: { "org_id": session?.org_id }
       }).then(({ data }) => data)
     ]);
-  
+
     return { references, user, organizations };
-  } catch(e) {
+  } catch (e) {
     console.error('Failed to load initial data', e);
 
     return API_INSTANCE_ERROR;

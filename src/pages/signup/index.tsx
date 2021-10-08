@@ -12,7 +12,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useReducer, useState } from "react";
 
-export { getStaticProps } from '@/static/references';
+export { getServerSideProps } from '@/static/references';
 
 const DEFAULT_VALUE: Partial<RegisterUserInput> = {
   email: "",
@@ -67,7 +67,8 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
           <form method="post" onSubmit={onSubmit}>
 
             <InputField
-              label="Email" name="email" fieldClass="mt-3"
+              label="Email" name="email"
+              placeholder="Email" fieldClass="mt-3"
               onChange={handleChange} value={user.email} required>
               {errors.filter(error => error.field === 'email').map(({ messages }) => (
                 messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
@@ -75,7 +76,8 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
             </InputField>
 
             <InputField
-              label="Full Name" name="full_name" fieldClass="mt-3"
+              label="Full Name" name="full_name"
+              placeholder="Full Name" fieldClass="mt-3"
               onChange={handleChange} value={user.full_name as string} required>
               {errors.filter(error => error.field === 'full_name').map(({ messages }) => (
                 messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)

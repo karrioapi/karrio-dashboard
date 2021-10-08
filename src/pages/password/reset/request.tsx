@@ -10,7 +10,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 
-export { getStaticProps } from '@/static/references';
+export { getServerSideProps } from '@/static/references';
 
 
 export default function Page({ references }: { references: References }) {

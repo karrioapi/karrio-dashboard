@@ -1,16 +1,14 @@
 import { restClient } from "@/client/context";
 import { API_INSTANCE_ERROR } from "@/lib/middleware";
-import { GetStaticPaths, GetStaticProps } from "next"
+import { GetServerSideProps } from "next"
 
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const props = await restClient.value.API.data()
     .then(references => ({ references }))
     .catch(() => API_INSTANCE_ERROR);
 
-  return { props, revalidate: 30 };
-}
+  res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59')
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: true };
+  return { props };
 }

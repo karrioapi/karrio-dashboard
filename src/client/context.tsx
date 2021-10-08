@@ -50,12 +50,12 @@ export async function authenticate(data: TokenObtainPair) {
 }
 
 export async function refreshToken(refresh: string, org_id?: string) {
-  const response = await restClient.getValue().API.refreshToken({ 
-    data: { refresh, ...(isNone(org_id) ? {} : { org_id }) } 
+  const response = await restClient.getValue().API.refreshToken({
+    data: { refresh, ...(isNone(org_id) ? {} : { org_id }) }
   });
-  const token = { 
+  const token = {
     refresh: response.refresh,
-    access: response.access 
+    access: response.access
   } as TokenPair;
 
   AuthToken.next(token);
