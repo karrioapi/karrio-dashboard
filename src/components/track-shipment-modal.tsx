@@ -42,7 +42,7 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
         await createTracker(trackingNumber as string, carrier?.carrier_name as string, carrier?.test as boolean);
         notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
         close();
-      } catch (message) {
+      } catch (message: any) {
         notify({ type: NotificationType.error, message });
       }
       setLoading(false);
@@ -53,8 +53,8 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
       setCarrier(carrier);
     };
 
-    useEffect(() => { if (!user.loading) user.load(); }, []);
-    useEffect(() => { if (!system.loading) system.load(); }, []);
+    useEffect(() => { if (!user.loading) user.load(); }, [user]);
+    useEffect(() => { if (!system.loading) system.load(); }, [system]);
 
     return (
       <Notifier>

@@ -46,7 +46,7 @@ const OrganizationDropdown: React.FC = () => {
     if (!(loading || state.loading) && (selected?.token !== token?.key)) {
       load();
     }
-  }, [token]);
+  }, [token, selected, state, loading, load]);
 
   return (
     <>

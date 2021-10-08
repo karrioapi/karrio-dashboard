@@ -30,7 +30,7 @@ const ConnectionDescription: React.FC<ConnectionDescriptionComponent> = ({ conne
     if (isNone(carrier_capabilities)) return;
 
     setRawCapabilities((carrier_capabilities as any)[connection.carrier_name]);
-  }, [carrier_capabilities]);
+  }, [carrier_capabilities, connection]);
 
   return (
     <div className="content is-small" key={key}>

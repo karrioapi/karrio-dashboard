@@ -7,9 +7,10 @@ import { isNone } from "@/lib/helper";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
+import Link from "next/link";
 import React, { useEffect } from "react";
 
-export { getStaticProps } from '@/static/references';
+export { getStaticProps, getStaticPaths } from '@/static/references';
 
 
 export default function Page({ references }: { references: References }) {
@@ -19,7 +20,7 @@ export default function Page({ references }: { references: References }) {
 
   const isConfirmed = (value?: any) => value?.success;
 
-  useEffect(() => { !isNone(token) && confirm({variables: { data: {token} }}) }, [token]);
+  useEffect(() => { !isNone(token) && confirm({ variables: { data: { token } } }) }, [token, confirm]);
 
   return (
     <>
@@ -30,16 +31,16 @@ export default function Page({ references }: { references: References }) {
           <div className="card isolated-card my-6">
             <div className="card-content has-text-centered ">
 
-            {loading && <Spinner/>}
+              {loading && <Spinner />}
 
-            {(!loading && isConfirmed(data?.confirm_email)) && <p>Your account is verified!</p>}
-            {(!loading && !isConfirmed(data?.confirm_email)) && <p>Error, invalid or expired account activation token!</p>}
+              {(!loading && isConfirmed(data?.confirm_email)) && <p>Your account is verified!</p>}
+              {(!loading && !isConfirmed(data?.confirm_email)) && <p>Error, invalid or expired account activation token!</p>}
 
             </div>
           </div>
 
           <div className="has-text-centered my-4 is-size-6">
-            <a href="/login">Sign in</a>
+            <Link href="/login">Sign in</Link>
           </div>
 
         </SectionLayout>

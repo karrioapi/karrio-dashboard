@@ -88,7 +88,7 @@ const AddressForm: React.FC<AddressFormComponent> = ShipmentMutation<AddressForm
         dispatch({ name: "full", value: default_value as object });
         setKey(`address-${Date.now()}`);
       }
-    }, [default_value !== undefined]);
+    }, [default_value, value]);
 
     return (
       <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>

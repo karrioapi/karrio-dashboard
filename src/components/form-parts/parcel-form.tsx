@@ -122,7 +122,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
           dispatch({ name: "package_preset", value: preset });
         }
       }
-    }, [package_presets]);
+    }, [package_presets, parcel]);
 
     useEffect(() => {
       if (!state.loading && load) load();
@@ -136,7 +136,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         dispatch({ name: 'template', value: { ...(preset || {}), ...default_parcel } as Parcel });
         setKey(`parcel-${Date.now()}`);
       }
-    }, [templates, load]);
+    }, [templates, default_parcel, value, package_presets, parcel, shipment, state, load]);
 
     return (
       <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>

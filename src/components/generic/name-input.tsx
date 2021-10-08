@@ -20,7 +20,7 @@ const NameInput: React.FC<NameInputComponent> = ({ disableSuggestion, onValueCha
     onValueChange(value as Partial<Address>, !isNone(template));
   };
 
-  useEffect(() => { if (!loading && load) load(); }, [templates, load]);
+  useEffect(() => { if (!loading && load) load(); }, [templates, loading, load]);
 
   return (
     <InputField onInput={onInput} onClick={onClick} list="address_templates" {...props}>

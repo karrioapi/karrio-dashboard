@@ -7,6 +7,7 @@ import { request_password_reset, REQUEST_PASSWORD_RESET } from "@/graphql";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
+import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 
 export { getStaticProps } from '@/static/references';
@@ -57,7 +58,7 @@ export default function Page({ references }: { references: References }) {
         </div>
 
         <div className="has-text-centered my-4 is-size-6">
-          <span>Return to <a href="/login">Sign in</a></span>
+          <span>Return to <Link href="/login">Sign in</Link></span>
         </div>
       </>
     )

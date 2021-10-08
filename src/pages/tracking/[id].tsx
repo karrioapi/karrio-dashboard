@@ -1,10 +1,12 @@
 import { References, TrackingEvent, TrackingStatus } from "@/api";
 import { restClient } from "@/client/context";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
 import { isNone } from "@/lib/helper";
+
+export { getStaticPaths } from '@/static/references';
 
 type DayEvents = { [k: string]: TrackingEvent[] };
 
@@ -20,7 +22,7 @@ const Tracking: NextPage<{ references: References, tracker: TrackingStatus }> = 
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number} - {references.app_name}</title></Head>
+      <Head><title>Tracking - {tracker?.tracking_number} - {app_name}</title></Head>
 
       {!isNone(tracker) && <section className="hero is-fullheight p-2">
 
@@ -100,11 +102,6 @@ const Tracking: NextPage<{ references: References, tracker: TrackingStatus }> = 
     </>
   )
 };
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: true }
-};
-
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;

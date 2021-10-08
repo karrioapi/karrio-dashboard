@@ -44,7 +44,7 @@ Use the following environment variables to configure the dashboard:
 Start the development server
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -54,7 +54,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Build the application bundle
 
 ```bash
-yarn build
+npm run build
 ```
 
 

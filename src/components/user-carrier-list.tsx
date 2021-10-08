@@ -19,7 +19,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
   const { confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { user_connections, loading, refetch } = useContext(UserConnections);
-  const [viewOtherMode, showOther] = useState<boolean>(computeMode());
+  const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
   const onUpdate = async () => refetch && await refetch();
   const toggle = ({ __typename, active, id }: UserConnectionType) => async () => {

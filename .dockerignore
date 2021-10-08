@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+!/public/
+!/src/
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/next.config.js
+!/LICENSE

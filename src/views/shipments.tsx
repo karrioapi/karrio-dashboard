@@ -1,4 +1,4 @@
-import { ListStatusEnum } from "@/api/generated";
+import { ListStatusEnum } from "@/api/generated/apis/ShipmentsApi";
 import AppLink from "@/components/app-link";
 import AuthorizedPage from "@/components/layouts/authorized-page";
 import DashboardLayout from "@/components/layouts/dashboard-layout";

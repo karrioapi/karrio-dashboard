@@ -2,6 +2,7 @@ import { References } from "@/api";
 import SectionLayout from "@/components/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
 
 export { getStaticProps } from '@/static/references';
@@ -25,7 +26,7 @@ export default function Page({ references }: { references: References }) {
           </div>
 
           <div className="has-text-centered my-4 is-size-6">
-            <a href="/login">Sign in</a>
+            <Link href="/login">Sign in</Link>
           </div>
 
         </SectionLayout>

@@ -17,19 +17,19 @@ const Footer: React.FC = () => {
           </a>
         </div>
         <div className="column has-text-right-desktop">
-          <a className="button is-white footer-api-reference-link" target="_blank" href={`${PURPLSHIP_API_URL}/openapi`}>
+          <a className="button is-white footer-api-reference-link" target="_blank" rel="noreferrer" href={`${PURPLSHIP_API_URL}/openapi`}>
             <span>API Reference</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>
             </span>
           </a>
-          <a className="button is-white footer-api-reference-link" target="_blank" href={`${PURPLSHIP_API_URL}/graphql`}>
+          <a className="button is-white footer-api-reference-link" target="_blank" rel="noreferrer" href={`${PURPLSHIP_API_URL}/graphql`}>
             <span>GraphQL</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>
             </span>
           </a>
-          <a className="button is-white footer-docs-link" target="_blank" href="https://docs.purplship.com">
+          <a className="button is-white footer-docs-link" target="_blank" rel="noreferrer" href="https://docs.purplship.com">
             <span>Docs</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>

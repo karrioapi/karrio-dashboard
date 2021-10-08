@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { InputFieldComponent } from '@/components/generic/input-field';
-import { Address } from '@/api/index';
+import { Address, References } from '@/api/index';
 import { isNone } from '@/lib/helper';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { Collection } from '@/lib/types';
@@ -18,7 +18,7 @@ interface AddressAutocompleteInputComponent extends InputFieldComponent {
 const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, children, ...props }) => {
   const ref = React.useRef<HTMLInputElement | null>(null);
   const container = React.useRef<HTMLDivElement | null>(null);
-  const { countries, address_auto_complete } = useContext(APIReference);
+  const { countries, address_auto_complete } = useContext(APIReference) as References & { address_auto_complete: any };
   const [key] = useState<string>(`predictions_${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<QueryAutocompletePrediction[]>([]);
@@ -59,12 +59,12 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
     if (ref.current !== null) ref.current.value = prediction.description;
     updater.next(address as Partial<Address>);
   };
-  const onBodyClick = (e: MouseEvent) => {
+  const onBodyClick = useCallback((e: MouseEvent) => {
     if (container.current !== null && !container.current.contains(e.target as Element)) {
       setIsActive(false);
       document.removeEventListener('click', onBodyClick);
     }
-  };
+  }, [container, setIsActive]);
 
   useEffect(() => {
     if (address_auto_complete && (
@@ -72,10 +72,10 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
     )) {
       initPredictor(initDebouncedPrediction(address_auto_complete));
     }
-  }, [address_auto_complete, ]);
+  }, [address_auto_complete,]);
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
-  }, [isActive]);
+  }, [isActive, onBodyClick]);
 
   const content = (_: any) => (
     <div className={`field ${fieldClass}`} key={key} ref={container}>
