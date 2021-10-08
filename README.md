@@ -2,6 +2,7 @@
 
 <img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg"/>
 
+[![puprlship-dashboard](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml)
 
 A Next.js dashboard for [purplship-server](https://github.com/purplship/purplship-server)
 
@@ -29,6 +30,8 @@ Clone the repository
 git clone https://github.com/purplship/purplship-dashboard.git
 
 cd purplship-dashboard
+
+npm install
 ```
 
 ### Configuration
