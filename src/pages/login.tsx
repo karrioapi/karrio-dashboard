@@ -47,7 +47,7 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
                 <div className="field mt-5">
                   <label className="label level" htmlFor="id_password">
                     <span>Password</span>
-                    <Link href="/password/reset/request"><a className="is-size-7">Forgot your password?</a></Link>
+                    <Link href="/password/reset/request"><a className="is-size-7" tabIndex={-1}>Forgot your password?</a></Link>
                   </label>
 
                   <div className="control">
