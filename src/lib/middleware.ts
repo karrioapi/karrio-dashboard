@@ -4,13 +4,14 @@ import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
 import { isNone } from "@/lib/helper";
+import { References } from "@/api";
 
 export const API_INSTANCE_ERROR = {
   error: `
     Server (${PURPLSHIP_API_URL}) unreachable.
     Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
   `
-}
+};
 
 
 export function withSessionCookies(page: NextPage) {
@@ -31,6 +32,25 @@ export function withSessionCookies(page: NextPage) {
   return page;
 }
 
+export async function connectAPI(): Promise<{ references?: References }> {
+  // Attempt connection to the purplship API to retrieve the refereneces (API metadata)
+  return new Promise(async (resolve, reject) => {
+    try {
+      const references = await restClient.value.API.data();
+
+      // TODO:: implement version compatibility check here.
+
+      resolve({ references });
+    } catch (e) {
+      reject({
+        error: `
+          Server (${PURPLSHIP_API_URL}) unreachable.
+          Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
+        `
+      })
+    }
+  });
+}
 
 async function setOrgHeader(ctx: NextPageContext, session: Session | null) {
   // Sets the authentication org_id cookie if the session has one
@@ -43,19 +63,21 @@ async function loadData(session: Session | null) {
   if (session === null) return {};
 
   try {
-    const [references, { user, organizations }] = await Promise.all([
-      restClient.value.API.data(),
-      graphqlClient.value.query({
+    const metadata = await connectAPI();
+
+    return await graphqlClient.value
+      .query({
         query: dataQuery(session?.org_id as string),
         variables: { "org_id": session?.org_id }
-      }).then(({ data }) => data)
-    ]);
+      })
+      .then(({ data }) => ({ ...metadata, ...data }))
+      .catch((e) => {
+        console.error('Failed to load initial data', e);
 
-    return { references, user, organizations };
+        return { error: 'Failed to load intial data...' };
+      });
   } catch (e) {
-    console.error('Failed to load initial data', e);
-
-    return API_INSTANCE_ERROR;
+    return e;
   }
 }
 

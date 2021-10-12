@@ -1,16 +1,16 @@
 import { References, TrackingEvent, TrackingStatus } from "@/api";
-import { restClient } from "@/client/context";
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
 import { isNone } from "@/lib/helper";
-import { API_INSTANCE_ERROR } from "@/lib/middleware";
+
+export { getServerSideProps } from '@/lib/static/tracker';
 
 type DayEvents = { [k: string]: TrackingEvent[] };
 
-const Tracking: NextPage<{ references: References, tracker?: TrackingStatus, message?: string }> = ({ references, tracker, message }) => {
-  const { app_name } = references || {};
+const Tracking: NextPage<{ id: string, references: References, tracker?: TrackingStatus, message?: string }> = ({ references, id, tracker, message }) => {
+  const { app_name, app_website } = references || {};
 
   const computeEvents = (tracker: TrackingStatus): DayEvents => {
     return (tracker?.events || []).reduce((days, event: TrackingEvent) => {
@@ -21,7 +21,7 @@ const Tracking: NextPage<{ references: References, tracker?: TrackingStatus, mes
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number} - {app_name}</title></Head>
+      <Head><title>Tracking - {tracker?.tracking_number || id} - {app_name}</title></Head>
 
       <section className="hero is-fullheight p-2">
 
@@ -102,7 +102,7 @@ const Tracking: NextPage<{ references: References, tracker?: TrackingStatus, mes
         <div className="hero-footer mb-4">
           <div className="content has-text-centered">
             <p>
-              <a href="{{ app_website }}" className="button is-white">Powered by &copy; {app_name}</a>
+              <a href={app_website} className="button is-white">Powered by &copy; {app_name}</a>
             </p>
           </div>
         </div>
@@ -110,26 +110,6 @@ const Tracking: NextPage<{ references: References, tracker?: TrackingStatus, mes
       </section>
     </>
   )
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
-  const id = params?.id as string;
-  const data = await Promise.all([
-
-    // Retrieve tracker by id
-    restClient.value.trackers.retrieves({ idOrTrackingNumber: id })
-      .then(tracker => ({ tracker: JSON.parse(JSON.stringify(tracker)) }))
-      .catch(() => ({ message: `No Tracker ID nor Tracking Number found for ${id}` })),
-
-    // Fetch API metadata
-    restClient.value.API.data(),
-  ])
-    .then(([track, references]) => ({ ...track, references }))
-    .catch(() => API_INSTANCE_ERROR);
-
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
-
-  return { props: { id, ...data } };
 };
 
 export default Tracking;
