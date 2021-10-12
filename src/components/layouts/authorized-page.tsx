@@ -14,7 +14,7 @@ import Notifier from '@/components/notifier';
 import Footer from '@/components/footer';
 
 
-const DATA_CONTEXTS: React.FC<any>[] = [
+const CONTEXT_PROVIDERS: React.FC<any>[] = [
   OrganizationsProvider,
   APIReferenceProvider,
   AppModeProvider,
@@ -25,7 +25,7 @@ const DATA_CONTEXTS: React.FC<any>[] = [
 
 
 const ContextProviders: React.FC = ({ children, ...props }) => {
-  const NestedContexts = DATA_CONTEXTS.reduce((_, Ctx) => <Ctx {...props}>{_}</Ctx>, children);
+  const NestedContexts = CONTEXT_PROVIDERS.reduce((_, Ctx) => <Ctx {...props}>{_}</Ctx>, children);
 
   return (
     <>
@@ -55,7 +55,7 @@ const AuthorizedPage = (Component: React.FC, pageProps?: any | {}) => {
   if (!session) return <></>;
 
   return (
-    <ContextProviders { ...(pageProps || {}) }>
+    <ContextProviders {...(pageProps || {})}>
       {isReady(purplship) && <>
 
         <Component />

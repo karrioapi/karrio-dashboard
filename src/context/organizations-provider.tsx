@@ -26,8 +26,8 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
   return (
     <Organizations.Provider value={{
       load,
-      organization: extractCurrent(result.data?.organizations || organizations),
-      organizations: extractList(result.data?.organizations || organizations),
+      organization: extractCurrent(result.data?.organizations || organizations || []),
+      organizations: extractList(result.data?.organizations || organizations || []),
       ...result
     }}>
       {children}
