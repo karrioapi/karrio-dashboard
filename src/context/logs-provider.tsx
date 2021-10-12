@@ -23,21 +23,20 @@ const LogsProvider: React.FC = ({ children }) => {
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as LogType);
-  const fetchMore = (options: any) => query?.fetchMore && query.fetchMore({
-    ...options,
-    updateQuery: (previous, { fetchMoreResult, variables }) => {
-      const data = fetchMoreResult || previous;
-      setVariables(variables);
-      return { logs: { ...data.logs, pageInfo: { ...data.logs?.pageInfo, hasPreviousPage: variables?.offset > 0 } } }
-    }
-  });
+  const fetchMore = (options: any) => query?.fetchMore && query.fetchMore(options);
+
   const loadMore = (options: get_logsVariables = {}) => {
     const { offset, status } = options;
-    const params = {
-      offset: offset || 0,
-      ...(isNone(status) ? {} : { status })
-    };
-    return (query.called ? fetchMore : initialLoad)({ variables: { ...variables, ...params } });
+    const params = { offset: offset || 0, ...(isNone(status) ? {} : { status }) };
+
+    if (query.called) {
+      return fetchMore({ variables: { ...variables, ...params } })?.then(response => {
+        setVariables(options);
+        return response;
+      });
+    }
+
+    return initialLoad({ variables: { ...variables, ...params } })
   };
   const load = (options?: get_logsVariables) => loadMore(options);
 

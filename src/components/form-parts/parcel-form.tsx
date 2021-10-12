@@ -1,5 +1,5 @@
 import { Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, Shipment } from '@/api/index';
-import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { FormEvent, useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import SelectField from '@/components/generic/select-field';
 import ButtonField from '@/components/generic/button-field';
@@ -112,21 +112,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         isNone(parcel.length)
       );
     };
-
-    useEffect(() => {
-      if (!isNone(package_presets)) {
-        setPresets(package_presets as PresetCollection);
-        const preset = findPreset(package_presets as PresetCollection, parcel.package_preset) as Partial<Parcel>;
-        if (!isNone(preset)) {
-          setDimension(formatDimension(preset));
-          dispatch({ name: "package_preset", value: preset });
-        }
-      }
-    }, [package_presets, parcel]);
-
-    useEffect(() => {
-      if (!state.called && !state.loading && load) load();
-      // Load parcel template if we are creating a new shipment and there is a default parcel preset
+    const loadTemplate = useCallback((parcel_templates: typeof templates) => {
       if (
         !isNone(package_presets) && !isNone(shipment) && isNone(shipment?.id) &&
         !isNone(default_parcel) && !deepEqual(default_parcel, parcel)
@@ -139,7 +125,20 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         dispatch({ name: 'template', value: { ...(preset || {}), ...default_parcel } as Parcel });
         setKey(`parcel-${Date.now()}`);
       }
-    }, [templates, default_parcel, value, package_presets, parcel, shipment, state, load]);
+    }, [default_parcel, package_presets, parcel, shipment])
+
+    useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
+    useEffect(() => { loadTemplate(templates) }, [templates, loadTemplate]);
+    useEffect(() => {
+      if (!isNone(package_presets)) {
+        setPresets(package_presets as PresetCollection);
+        const preset = findPreset(package_presets as PresetCollection, parcel.package_preset) as Partial<Parcel>;
+        if (!isNone(preset)) {
+          setDimension(formatDimension(preset));
+          dispatch({ name: "package_preset", value: preset });
+        }
+      }
+    }, [package_presets, parcel]);
 
     return (
       <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>

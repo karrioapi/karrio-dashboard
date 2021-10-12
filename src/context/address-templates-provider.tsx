@@ -22,16 +22,15 @@ const AddressTemplatesProvider: React.FC = ({ children }) => {
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as AddressTemplate);
-  const fetchMore = (options: any) => query?.fetchMore && query.fetchMore({
-    ...options,
-    // updateQuery: (previous, { fetchMoreResult, variables }) => {
-    //   const data = fetchMoreResult || previous;
-    //   setVariables(variables);
-    //   return { address_templates: { ...data.address_templates, pageInfo: { ...data.address_templates?.pageInfo, hasPreviousPage: variables?.offset > 0 } } }
-    // }
-  });
+  const fetchMore = (options: any) => query?.fetchMore && query.fetchMore(options);
   const load = () => query.called ? fetchMore({ variables: PAGINATION }) : initialLoad({ variables });
-  const loadMore = (offset?: number | null) => fetchMore({ variables: { ...variables, offset: offset || 0 } });
+  const loadMore = (offset?: number | null) => {
+    const options = { ...variables, offset: offset || 0 };
+    return fetchMore({ variables: options })?.then(response => {
+      setVariables(options);
+      return response;
+    });
+  };
 
   return (
     <AddressTemplates.Provider value={{
