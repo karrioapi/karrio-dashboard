@@ -1,14 +1,15 @@
 import { Organizations, OrganizationType } from '@/context/organizations-provider';
 import { TokenData } from '@/context/token-provider';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Loading } from '@/components/loader';
 import Image from 'next/image';
+import { isNone } from '@/lib/helper';
 
 
 const OrganizationDropdown: React.FC = () => {
   const btn = useRef<HTMLButtonElement>(null);
-  const { authenticateOrg, token, ...state } = useContext(TokenData);
-  const { load, organizations, organization, loading } = useContext(Organizations);
+  const { authenticateOrg, ...token } = useContext(TokenData);
+  const { load, organizations, organization, loading, called } = useContext(Organizations);
   const { setLoading } = useContext(Loading);
   const [active, setActive] = useState<boolean>(false);
   const [selected, setSelected] = useState<OrganizationType>();
@@ -40,13 +41,15 @@ const OrganizationDropdown: React.FC = () => {
     authenticateOrg(org.id).then(() => setLoading(false));
     setActive(false);
   };
-
-  useEffect(() => { setSelected(organization); }, [organization]);
-  useEffect(() => {
-    if (!(loading || state.loading) && (selected?.token !== token?.key)) {
+  const checkTokenChange = useCallback((key?: string) => {
+    if (called && !isNone(key) && !token.loading && (selected?.token !== key)) {
       load();
     }
-  }, [token, selected, state, loading, load]);
+  }, [called, selected, token, load]);
+
+  useEffect(() => { setSelected(organization); }, [organization]);
+  useEffect(() => { (!called && !loading && load) && load(); }, [called, loading, load]);
+  useEffect(() => { checkTokenChange(token?.token?.key) }, [token, checkTokenChange]);
 
   return (
     <>

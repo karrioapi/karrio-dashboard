@@ -28,15 +28,17 @@ const LogsProvider: React.FC = ({ children }) => {
   const loadMore = (options: get_logsVariables = {}) => {
     const { offset, status } = options;
     const params = { offset: offset || 0, ...(isNone(status) ? {} : { status }) };
+    const requestVariables = { ...variables, ...params };
 
     if (query.called) {
-      return fetchMore({ variables: { ...variables, ...params } })?.then(response => {
-        setVariables(options);
+      return fetchMore({ variables: requestVariables })?.then(response => {
+        setVariables(requestVariables);
         return response;
       });
     }
 
-    return initialLoad({ variables: { ...variables, ...params } })
+    setVariables(requestVariables);
+    return initialLoad({ variables: requestVariables })
   };
   const load = (options?: get_logsVariables) => loadMore(options);
 

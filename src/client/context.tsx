@@ -88,6 +88,23 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
 
   return new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({ addTypename: false })
+    cache: new InMemoryCache({
+      addTypename: false,
+      typePolicies: {
+        Query: {
+          fields: {
+            ...(['logs', 'customs_templates', 'address_templates', 'parcel_templates'].reduce((fields, field) => ({
+              ...fields,
+              [field]: {
+                keyArgs: false,
+                merge(existing = {}, incoming = {}) {
+                  return { ...existing, ...incoming };
+                },
+              }
+            }), {}))
+          },
+        },
+      },
+    })
   });
 }
