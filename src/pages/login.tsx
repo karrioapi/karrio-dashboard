@@ -8,7 +8,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 
-export { getServerSideProps } from '@/static/references';
+export { getServerSideProps } from '@/lib/static/references';
 
 
 const LoginPage: NextPage<any, { references: References }> = ({ references }) => {

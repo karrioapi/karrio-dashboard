@@ -12,7 +12,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useReducer, useState } from "react";
 
-export { getServerSideProps } from '@/static/references';
+export { getServerSideProps } from '@/lib/static/references';
 
 const DEFAULT_VALUE: Partial<RegisterUserInput> = {
   email: "",

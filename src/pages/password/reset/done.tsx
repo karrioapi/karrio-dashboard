@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 
-export { getServerSideProps } from '@/static/references';
+export { getServerSideProps } from '@/lib/static/references';
 
 
 export default function Page({ references }: { references: References }) {
