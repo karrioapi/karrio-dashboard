@@ -1,6 +1,6 @@
 import { References } from "@/api";
 import ButtonField from "@/components/generic/button-field";
-import SectionLayout from "@/components/layouts/section-layout";
+import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
 import { request_password_reset, REQUEST_PASSWORD_RESET } from "@/graphql";

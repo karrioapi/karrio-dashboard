@@ -1,5 +1,5 @@
 import { References } from "@/api";
-import SectionLayout from "@/components/layouts/section-layout";
+import SectionLayout from "@/layouts/section-layout";
 import Spinner from "@/components/spinner";
 import APIReferenceProvider from "@/context/references-provider";
 import { CONFIRM_EMAIL } from "@/graphql";

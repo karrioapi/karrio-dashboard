@@ -24,11 +24,11 @@ const AddressTemplatesProvider: React.FC = ({ children }) => {
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as AddressTemplate);
   const fetchMore = (options: any) => query?.fetchMore && query.fetchMore({
     ...options,
-    updateQuery: (previous, { fetchMoreResult, variables }) => {
-      const data = fetchMoreResult || previous;
-      setVariables(variables);
-      return { address_templates: { ...data.address_templates, pageInfo: { ...data.address_templates?.pageInfo, hasPreviousPage: variables?.offset > 0 } } }
-    }
+    // updateQuery: (previous, { fetchMoreResult, variables }) => {
+    //   const data = fetchMoreResult || previous;
+    //   setVariables(variables);
+    //   return { address_templates: { ...data.address_templates, pageInfo: { ...data.address_templates?.pageInfo, hasPreviousPage: variables?.offset > 0 } } }
+    // }
   });
   const load = () => query.called ? fetchMore({ variables: PAGINATION }) : initialLoad({ variables });
   const loadMore = (offset?: number | null) => fetchMore({ variables: { ...variables, offset: offset || 0 } });

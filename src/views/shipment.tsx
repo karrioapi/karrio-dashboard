@@ -1,7 +1,7 @@
 import { Customs, ShipmentStatusEnum } from "@/api";
-import AuthorizedPage from "@/components/layouts/authorized-page";
+import AuthorizedPage from "@/layouts/authorized-page";
 import CopiableLink from "@/components/copiable-link";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter, { CustomInvoicePrinterContext } from "@/components/descriptions/custom-invoice-printer";
 import LabelPrinter, { LabelPrinterContext } from "@/components/label/label-printer";
 import { Loading } from "@/components/loader";

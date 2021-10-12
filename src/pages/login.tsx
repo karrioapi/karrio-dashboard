@@ -1,5 +1,5 @@
 import { References } from "@/api";
-import SectionLayout from "@/components/layouts/section-layout";
+import SectionLayout from "@/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import { getCookie } from "@/lib/helper";
 import { NextPage } from "next";

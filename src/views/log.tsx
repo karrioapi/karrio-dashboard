@@ -1,5 +1,5 @@
-import AuthorizedPage from "@/components/layouts/authorized-page";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import AuthorizedPage from "@/layouts/authorized-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
 import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";

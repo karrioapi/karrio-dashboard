@@ -1,7 +1,7 @@
 import { References } from "@/api";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
-import SectionLayout from "@/components/layouts/section-layout";
+import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
 import UserMutation from "@/context/user-mutation";

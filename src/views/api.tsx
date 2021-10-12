@@ -1,5 +1,5 @@
-import AuthorizedPage from "@/components/layouts/authorized-page";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import AuthorizedPage from "@/layouts/authorized-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import GenerateAPIModal from "@/components/generate-api-dialog";
 import { Loading } from "@/components/loader";
 import { TokenData } from "@/context/token-provider";

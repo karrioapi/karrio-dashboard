@@ -1,7 +1,7 @@
 import AddressEditModal, { AddressEditContext } from "@/components/address-edit-modal";
-import AuthorizedPage from "@/components/layouts/authorized-page";
+import AuthorizedPage from "@/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";
@@ -13,7 +13,7 @@ import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function(pageProps) {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);

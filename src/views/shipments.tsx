@@ -1,7 +1,7 @@
 import { ListStatusEnum } from "@/api/generated/apis/ShipmentsApi";
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/components/layouts/authorized-page";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import AuthorizedPage from "@/layouts/authorized-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter from "@/components/descriptions/custom-invoice-printer";
 import LabelPrinter from "@/components/label/label-printer";
 import { Loading } from "@/components/loader";

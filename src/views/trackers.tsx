@@ -1,9 +1,9 @@
 import { TrackingEvent } from "@/api";
 import { ListStatusEnum } from "@/api/generated/apis/TrackersApi";
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/components/layouts/authorized-page";
+import AuthorizedPage from "@/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";
@@ -21,7 +21,7 @@ import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function(pageProps) {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC<any> = ({ removeTracker }) => {
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);

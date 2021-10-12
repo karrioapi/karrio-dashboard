@@ -1,6 +1,6 @@
-import AuthorizedPage from "@/components/layouts/authorized-page";
+import AuthorizedPage from "@/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";

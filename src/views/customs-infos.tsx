@@ -1,7 +1,7 @@
-import AuthorizedPage from "@/components/layouts/authorized-page";
+import AuthorizedPage from "@/layouts/authorized-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
-import DashboardLayout from "@/components/layouts/dashboard-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
@@ -13,7 +13,7 @@ import Head from "next/head";
 import { useContext, useEffect } from "react";
 
 
-export default withSessionCookies(function(pageProps) {
+export default withSessionCookies(function (pageProps) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
