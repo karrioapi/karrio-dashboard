@@ -1,179 +1,229 @@
-import { Address, AddressCountryCodeEnum } from "@/api/index";
+import { Address } from "@/api";
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
-import { isNone } from "@/lib/helper";
-import { Collection } from "@/lib/types";
 
 export interface QueryAutocompletePrediction {
-    description: string;
-    location: string;
-    id: string;
-    details: any;
+  id: string;
+  description: string;
+  details: any;
 }
 
 type GooglePrediction = {
-    place_id: string;
-    description: string;
-    structured_formatting: {
-        main_text: string;
-        secondary_text: string;
-    };
-    terms: {
-        offset: number;
-        value: string;
-    }[]
+  place_id: string;
+  description: string;
+  structured_formatting: {
+    main_text: string;
+    secondary_text: string;
+  };
+  terms: {
+    offset: number;
+    value: string;
+  }[]
+}
+
+type GooglePlace = {
+  address_components: Array<any>
 }
 
 type CanadaPostPrediction = {
-    Id: string,
-    Text: string,
-    Highlight: string,
-    Cursor: string,
-    Description: string,
-    Next: string,
+  Id: string,
+  Text: string,
+  Highlight: string,
+  Cursor: string,
+  Description: string,
+  Next: string,
 }
-
 
 export type AutocompleteConfig = {
-    is_enabled: boolean;
-    provider?: string;
-    url?: string;
-    key?: string;
+  is_enabled: boolean;
+  provider?: string;
+  url?: string;
+  key?: string;
 };
 
+type AddressCallback = (address: Partial<Address>) => void;
 type PredictionCallback = (predictions: QueryAutocompletePrediction[]) => void;
-type PredictionInput = { input: string };
+type PredictionInput = { input: string, country_code: string | undefined };
 
 export interface AutocompleteService {
-    getPlacePredictions: (params: PredictionInput, callback: PredictionCallback) => void;
-    formatPrediction: (prediction: QueryAutocompletePrediction, countries: Collection) => Partial<Address>;
+  getPlacePredictions: (params: PredictionInput, callback: PredictionCallback) => void;
+  formatPrediction: (prediction: QueryAutocompletePrediction, callback: AddressCallback) => void;
 }
 
-export function initDebouncedPrediction(data: AutocompleteConfig) {
-    if (!data?.is_enabled) return undefined;
+export function initDebouncedPrediction(data: any) {
+  if (!data?.is_enabled) return undefined;
 
-    const request: Subject<{ params: PredictionInput, callback: PredictionCallback }> = new Subject();
-    const serviceType = {
-        google: initGoogleService,
-        canadapost: initCanadaPostService
-    }[data.provider as string];
-    const service = serviceType !== undefined ? serviceType(data) : undefined;
+  const request: Subject<{ params: PredictionInput, callback: PredictionCallback }> = new Subject();
+  const serviceType = {
+    google: initGoogleService,
+    canadapost: initCanadaPostService
+  }[data.provider as string];
+  const service = serviceType !== undefined ? serviceType(data) : undefined;
 
-    request.pipe(debounceTime(500)).subscribe((data) => {
-        service?.getPlacePredictions(data.params, data.callback);
-    });
+  request.pipe(debounceTime(500)).subscribe((data) => {
+    service?.getPlacePredictions(data.params, data.callback);
+  });
 
-    return {
-        getPlacePredictions: (params: PredictionInput, callback: PredictionCallback) => {
-            request.next({ params, callback });
-        },
-        formatPrediction: (prediction: QueryAutocompletePrediction, countries: Collection) => {
-            return service?.formatPrediction(prediction, countries)
-        }
-    };
+  return {
+    getPlacePredictions: (params: PredictionInput, callback: PredictionCallback) => {
+      request.next({ params, callback });
+    },
+    formatPrediction: (prediction: QueryAutocompletePrediction, callback: AddressCallback) => {
+      return service?.formatPrediction(prediction, callback);
+    }
+  };
 }
 
 function initGoogleService(): AutocompleteService {
-    const service = new (window as any).google.maps.places.AutocompleteService();
+  const autocomplete = new (window as any).google.maps.places.AutocompleteService();
+  const placesService = new (window as any).google.maps.places.PlacesService(document.createElement('div'));
 
-    return {
-        getPlacePredictions(params, callback) {
-            service.getPlacePredictions(params, (result: GooglePrediction[], status: string) => {
-                if (status === "OK") {
-                    const predictions: QueryAutocompletePrediction[] = result.map(prediction => {
-                        return {
-                            id: prediction.place_id,
-                            description: prediction.structured_formatting.main_text,
-                            location: prediction.structured_formatting.secondary_text,
-                            details: prediction
-                        }
-                    });
-                    callback(predictions);
-                } else {
-                    callback([])
-                }
-            });
+  return {
+    getPlacePredictions(params, callback) {
+      autocomplete.getPlacePredictions({
+        input: params.input,
+        componentRestrictions: {
+          country: params.country_code
         },
-        formatPrediction(prediction: QueryAutocompletePrediction, countries: Collection): Partial<Address> {
-            const details: GooglePrediction = prediction.details;
-            let content = details.description.split(', ');
-            let address: Partial<Address> = { address_line1: content[0] };
-
-            if (content.length >= 3) {
-                const country = content[content.length - 1]
-                const [country_code, _] = Object.entries(countries).find(([code, name]) => (
-                    name.toLowerCase() === country || code.toLowerCase() == country.slice(0, 2).toLowerCase()
-                )) || [];
-                if (country_code !== undefined) address.country_code = country_code as AddressCountryCodeEnum;
-
-                const state = content[content.length - 2];
-                if (state !== undefined) address.state_code = state;
-
-                const city = content[content.length - 3];
-                if (city !== undefined) address.city = city;
+        types: ['address'] // Maybe places also can be used
+      }, (result: GooglePrediction[], status: string) => {
+        if (status === "OK") {
+          const predictions: QueryAutocompletePrediction[] = result.map(prediction => {
+            return {
+              id: prediction.place_id,
+              description: prediction.description,
+              details: prediction
             }
-
-            return address;
+          });
+          callback(predictions);
+        } else {
+          callback([])
         }
-    };
+      });
+    },
+    formatPrediction(prediction: QueryAutocompletePrediction, callback) {
+      placesService.getDetails({ placeId: prediction.id }, (place: GooglePlace, status: string) => {
+        if (status === "OK") {
+          let address: Partial<Address> = {};
+
+          for (const component of place.address_components) {
+            const componentType = component.types[0];
+
+            switch (componentType) {
+              case "street_number": {
+                address.address_line1 = component.long_name;
+                break;
+              }
+
+              case "route": {
+                address.address_line1 = [component.short_name, address.address_line1]
+                  .filter(v => v).join(' ');
+                break;
+              }
+
+              case "postal_code": {
+                address.postal_code = component.long_name;
+                break;
+              }
+
+              case "postal_code_suffix": {
+                address.postal_code = `${address.postal_code}-${component.long_name}`;
+                break;
+              }
+              case "locality":
+                address.city = component.long_name;
+                break;
+
+              case "administrative_area_level_1": {
+                address.state_code = component.short_name;
+                break;
+              }
+              case "country":
+                address.country_code = component.short_name
+                break;
+            }
+          }
+          callback(address);
+        }
+      });
+    }
+  };
 }
 
 function initCanadaPostService(data: AutocompleteConfig): AutocompleteService {
 
-    return {
-        getPlacePredictions(params, callback) {
-            try {
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", "http://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws", true);
-                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                const queryString = new URLSearchParams({
-                    key: encodeURIComponent(data.key as string),
-                    SearchTerm: encodeURIComponent(params.input),
-                    SearchFor: encodeURIComponent('Everything'),
-                    LanguagePreference: encodeURIComponent('EN'),
-                    MaxSuggestions: encodeURIComponent('7'),
-                    MaxResults: encodeURIComponent('7')
-                }).toString();
+  const request = (url: string, formData: Object, callback: (response: any) => void) => {
+    const xhr = new XMLHttpRequest();
+    const payload = Object.entries(formData).reduce((formData: any, [key, value]) => {
+      return key && value ?
+        `${formData}&${encodeURIComponent(key)}=${encodeURIComponent(value || '')}` : formData;
+    }, `Key=${data.key}`);
 
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
-                            callback([]);
-                        } else {
-                            const predictions: QueryAutocompletePrediction[] = response.Items.map((prediction: CanadaPostPrediction) => {
-                                const country = (prediction.Id || '').split('|')[0].slice(0, 2);
-
-                                return {
-                                    id: prediction.Id,
-                                    description: prediction.Text,
-                                    location: [prediction.Description, country].filter(a => !isNone(a) && a !== "").join(', '),
-                                    details: prediction
-                                }
-                            });
-                            callback(predictions)
-                        }
-                    }
-                };
-
-                xhr.send(queryString);
-            } catch (e) {
-                callback([]);
-            }
-        },
-        formatPrediction(prediction: QueryAutocompletePrediction, countries: Collection): Partial<Address> {
-            let details: CanadaPostPrediction = prediction.details;
-            let content = details.Description.split(', ');
-            let address: Partial<Address> = {
-                address_line1: details.Text,
-                country_code: (details.Id || '').split('|')[0].slice(0, 2) as AddressCountryCodeEnum
-            };
-
-            ((part?: string) => { if (!isNone(part) && part !== "") address.city = part })(content.slice(0, 1)[0]);
-            ((part?: string) => { if (!isNone(part) && part !== "") address.state_code = part })(content.slice(1, 2)[0]);
-            ((part?: string) => { if (!isNone(part) && part !== "") address.postal_code = part })(content.slice(2, 3)[0]);
-
-            return address;
-        }
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        const response = JSON.parse(xhr.responseText);
+        callback(response);
+      }
     };
+    xhr.send(payload);
+  }
+
+  return {
+    getPlacePredictions(params, callback) {
+      try {
+        const url = "http://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws";
+        const formData = {
+          SearchTerm: params.input,
+          Country: params.country_code,
+          SearchFor: 'Places',
+          LanguagePreference: 'EN',
+          MaxSuggestions: 7,
+          MaxResults: 7
+        };
+
+        request(url, formData, response => {
+          if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+            callback([]);
+          } else {
+            const predictions: QueryAutocompletePrediction[] = response.Items.map((prediction: CanadaPostPrediction) => {
+              const country = (prediction.Id || '').split('|')[0].slice(0, 2);
+
+              return {
+                id: prediction.Id,
+                description: `${prediction.Text}, ${prediction.Description}`,
+                details: prediction
+              }
+            });
+            callback(predictions)
+          }
+        });
+      } catch (e) {
+        callback([]);
+      }
+    },
+    formatPrediction(prediction: QueryAutocompletePrediction, callback) {
+      let url = "http://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Retrieve/v2.11/json3.ws";
+      let formData = { Id: prediction.id };
+
+      request(url, formData, response => {
+        const place = response.Items[0];
+
+        if (place && !place.Error) {
+          const address: Partial<Address> = {
+            address_line1: place.Line1,
+            address_line2: place.Line2,
+            city: place.City,
+            country_code: place.CountryIso2,
+            postal_code: place.PostalCode,
+            state_code: place.ProvinceCode,
+            residential: place.Type === "Residential"
+          };
+
+          callback(address);
+        }
+      });
+    }
+  };
 }

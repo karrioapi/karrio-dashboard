@@ -54,7 +54,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
     const { notify } = useContext(Notify);
     const { loading, setLoading } = useContext(Loading);
     const { packaging_types, package_presets } = useContext(APIReference);
-    const { templates, called, load, ...state } = useContext(ParcelTemplates);
+    const { templates, load, ...state } = useContext(ParcelTemplates);
     const { default_parcel } = useContext(DefaultTemplatesData);
     const form = useRef<HTMLFormElement>(null);
     const [key, setKey] = useState<string>(`parcel-${Date.now()}`);
@@ -125,9 +125,12 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
     }, [package_presets, parcel]);
 
     useEffect(() => {
-      if (!state.loading && load) load();
+      if (!state.called && !state.loading && load) load();
       // Load parcel template if we are creating a new shipment and there is a default parcel preset
-      if (!isNone(package_presets) && !isNone(shipment) && isNone(shipment?.id) && !isNone(default_parcel) && !deepEqual(default_parcel, parcel)) {
+      if (
+        !isNone(package_presets) && !isNone(shipment) && isNone(shipment?.id) &&
+        !isNone(default_parcel) && !deepEqual(default_parcel, parcel)
+      ) {
         const preset = findPreset(package_presets as PresetCollection, default_parcel?.package_preset as string) as Partial<Parcel>;
         if (!isNone(preset)) {
           setDimension(formatDimension(preset));

@@ -12,7 +12,6 @@ interface StateInputComponent extends InputFieldComponent {
 
 const StateInput: React.FC<StateInputComponent> = ({ name, onValueChange, value, country_code, ...props }) => {
   const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
-  const input = useRef<HTMLInputElement>(null);
   const { states } = useContext(APIReference);
   const fname = (code_or_name?: string) => {
     const [_, name] = find(states as Collection<Collection<string>>, code_or_name, country_code);
@@ -29,7 +28,7 @@ const StateInput: React.FC<StateInputComponent> = ({ name, onValueChange, value,
   useEffect(() => { }, [states]);
 
   return (
-    <InputField onChange={onChange} onClick={onClick} value={fname(value)} list="state_or_provinces" {...props} ref={input}>
+    <InputField onChange={onChange} onClick={onClick} value={fname(value)} list="state_or_provinces" {...props}>
       <datalist id="state_or_provinces">
         {Object
           .entries(states || {})

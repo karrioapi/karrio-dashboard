@@ -17,9 +17,9 @@ import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
 export const DEFAULT_ADDRESS_CONTENT = {
-  residential: false,
-  country_code: AddressCountryCodeEnum.Ca,
-  state_code: 'QC'
+  address_line1: '',
+  address_line2: '',
+  residential: false
 } as Partial<Address>;
 
 const NEXT_TAB_MAPPING: Collection = { "shipper": "recipient", "recipient": "parcel" };

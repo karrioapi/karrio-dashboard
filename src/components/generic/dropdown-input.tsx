@@ -72,7 +72,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
       </label>}
       <div className={`control ${controlClass}`}>
         <div className={`dropdown select is-fullwidth ${isActive ? 'is-active' : ''} ${dropdownClass}`} key={`dropdown-input-${key}`}>
-          <input name={name} onChange={onRefChange} value={country} className="input is-fullwidth" style={{ position: 'absolute', zIndex: -1 }} required={required} />
+          <input name={name} onChange={onRefChange} value={country || ''} className="input is-fullwidth" style={{ position: 'absolute', zIndex: -1 }} required={required} />
           <a onClick={handleOnClick} aria-haspopup="true" className="dropdown-trigger input is-fullwidth px-2" style={{ justifyContent: 'left' }} aria-controls={`dropdown-input-`} ref={btn}>
             <span>{country}</span>
           </a>
@@ -82,7 +82,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
 
               <div className="panel-block px-1 py-1">
                 <p className="control">
-                  <input className="input" type="text" defaultValue={search} onInput={onSearch} ref={control} />
+                  <input className="input" type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
                 </p>
               </div>
               <nav className="panel dropped-panel">
