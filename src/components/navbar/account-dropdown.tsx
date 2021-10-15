@@ -54,7 +54,7 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
               </a>
             </Link>
 
-            {user?.is_staff && <a href={PURPLSHIP_API_URL} target="_blank" rel="noreferrer" className="options-item">
+            {user?.is_staff && <a href={`${PURPLSHIP_API_URL}/admin`} target="_blank" rel="noreferrer" className="options-item">
               <i className="fas fa-tools"></i>
               <div className="option-content">
                 <span>Admin Console</span>

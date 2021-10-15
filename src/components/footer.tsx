@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
           </a>
         </div>
         <div className="column has-text-right-desktop">
-          <a className="button is-white footer-api-reference-link" target="_blank" rel="noreferrer" href={`${PURPLSHIP_API_URL}/openapi`}>
+          <a className="button is-white footer-api-reference-link" target="_blank" rel="noreferrer" href={`${PURPLSHIP_API_URL}`}>
             <span>API Reference</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>
