@@ -185,7 +185,8 @@ export default withSessionCookies(function (pageProps) {
               </div>
             </div>
 
-            <div className="columns mt-6 mb-0">
+            <div className="columns mt-6 mb-0 is-multiline">
+
               {!isNone(shipment.customs) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">CUSTOMS DECLARATION</p>
 
@@ -216,22 +217,21 @@ export default withSessionCookies(function (pageProps) {
                 </p>
               </div>}
 
-              {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) &&
-                <div className="column is-6 is-size-6 py-1">
-                  <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
+              {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
+                <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
 
-                  {(shipment.customs?.commodities || []).map((commodity) => <>
-                    <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                    <p className="is-size-7 my-1 has-text-weight-semibold">{commodity.sku}</p>
-                    <p className="is-size-7 my-1">{commodity.description}</p>
-                    <p className="is-size-7 my-1 has-text-grey">
-                      {isNone(commodity?.value_amount) ? '' : <>
-                        <span>Value: {commodity?.quantity} x {commodity?.value_amount} {commodity?.value_currency}</span>
-                      </>}
-                    </p>
-                    <p className="is-size-7 my-1 has-text-grey">{formatWeight(commodity)}</p>
-                  </>)}
-                </div>}
+                {(shipment.customs?.commodities || []).map((commodity) => <>
+                  <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                  <p className="is-size-7 my-1 has-text-weight-semibold">{commodity.sku}</p>
+                  <p className="is-size-7 my-1">{commodity.description}</p>
+                  <p className="is-size-7 my-1 has-text-grey">
+                    {isNone(commodity?.value_amount) ? '' : <>
+                      <span>Value: {commodity?.quantity} x {commodity?.value_amount} {commodity?.value_currency}</span>
+                    </>}
+                  </p>
+                  <p className="is-size-7 my-1 has-text-grey">{formatWeight(commodity)}</p>
+                </>)}
+              </div>}
 
               {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">SHIPMENT OPTIONS</p>
@@ -262,6 +262,7 @@ export default withSessionCookies(function (pageProps) {
                     </>}
                   </p>
                 </>)}
+
               </div>}
             </div>
 
