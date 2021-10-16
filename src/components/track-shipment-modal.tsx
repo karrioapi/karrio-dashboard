@@ -28,12 +28,12 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
     const [carrier, setCarrier] = useState<Connection>();
     const [trackingNumber, setTrackingNumber] = useState<string>();
 
-    const close = (_?: React.MouseEvent) => {
+    const close = ({ updated }: any | { updated?: boolean }) => {
       setCarrier(undefined);
       setTrackingNumber(undefined);
       setKey(`tracker-${Date.now()}`);
       setIsActive(false);
-      onUpdate && onUpdate();
+      (updated && onUpdate) && onUpdate();
     };
     const create = async (evt: React.FormEvent<HTMLFormElement>) => {
       evt.preventDefault();
@@ -41,7 +41,7 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
       try {
         await createTracker(trackingNumber as string, carrier?.carrier_name as string, carrier?.test as boolean);
         notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
-        close();
+        close({ updated: true });
       } catch (message: any) {
         notify({ type: NotificationType.error, message });
       }
