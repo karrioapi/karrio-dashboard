@@ -19,7 +19,6 @@ export const DEFAULT_PARCEL_CONTENT: Partial<Parcel> = {
   is_document: false,
   weight_unit: ParcelWeightUnitEnum.Kg,
   dimension_unit: ParcelDimensionUnitEnum.Cm,
-  package_preset: undefined,
 };
 
 interface ParcelFormComponent {
@@ -112,33 +111,21 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         isNone(parcel.length)
       );
     };
-    const loadTemplate = useCallback((parcel_templates: typeof templates) => {
-      if (
-        !isNone(package_presets) && !isNone(shipment) && isNone(shipment?.id) &&
-        !isNone(default_parcel) && !deepEqual(default_parcel, parcel)
-      ) {
-        const preset = findPreset(package_presets as PresetCollection, default_parcel?.package_preset as string) as Partial<Parcel>;
-        if (!isNone(preset)) {
-          setDimension(formatDimension(preset));
-          setParcelType('preset');
-        }
-        dispatch({ name: 'template', value: { ...(preset || {}), ...default_parcel } as Parcel });
-        setKey(`parcel-${Date.now()}`);
-      }
-    }, [default_parcel, package_presets, parcel, shipment])
+    const shouldShowDimension = (parcel_type: string) => {
+      if (parcel_type === 'custom') return false;
+      if (parcel_type !== 'preset') return true;
+      if ((parcel.package_preset || "") !== "") return true;
+      return false
+    };
 
     useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
-    useEffect(() => { loadTemplate(templates) }, [templates, loadTemplate]);
     useEffect(() => {
-      if (!isNone(package_presets)) {
-        setPresets(package_presets as PresetCollection);
-        const preset = findPreset(package_presets as PresetCollection, parcel.package_preset) as Partial<Parcel>;
-        if (!isNone(preset)) {
-          setDimension(formatDimension(preset));
-          dispatch({ name: "package_preset", value: preset });
-        }
-      }
-    }, [package_presets, parcel]);
+      if (!isNone(value)) return;
+      dispatch({ name: 'template', value: default_parcel as Parcel });
+      setDimension(formatDimension(default_parcel as Partial<Parcel>));
+      setParcelType(default_parcel?.package_preset ? 'preset' : 'customs');
+    }, [default_parcel, value]);
+
 
     return (
       <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>
@@ -158,18 +145,19 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
             <option value='custom'>Custom Measurements</option>
             <option value='preset'>Carrier Parcel Presets</option>
           </optgroup>
-          <optgroup label="Load your custom parcel template">
-            {(templates || []).map(template => <option key={template.id} value={template.id}>{template.label}</option>)}
-          </optgroup>
+          {(!isNone(shipment) && (templates || []).length > 0) &&
+            <optgroup label="Load your custom parcel template">
+              {(templates || []).map(template => <option key={template.id} value={template.id}>{template.label}</option>)}
+            </optgroup>}
         </SelectField>
 
-        {parcel_type === 'preset' && <>
+        {(parcel_type === 'preset') && <>
 
           <SelectField name="package_preset" onChange={handleChange} value={parcel.package_preset} className="is-fullwidth is-capitalized" required>
             <option value="">Select a Carrier Provided Parcel</option>
 
             {Object
-              .entries(presets)
+              .entries(package_presets || {})
               .map(([key, value]) => (
                 <optgroup key={key} label={formatRef(key)}>
                   {Object.keys(value as object).map((preset) => (
@@ -182,7 +170,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
 
         </>}
 
-        {parcel_type !== 'custom' && <div className="is-size-7 mt-1 mb-2 has-text-grey">{dimension || ""}</div>}
+        {shouldShowDimension(parcel_type) && <div className="is-size-7 mt-1 mb-2 has-text-grey">{dimension || ""}</div>}
 
         <div style={{ display: `${parcel_type === 'custom' ? 'block' : 'none'}` }}>
           <h6 className="is-size-7 my-2 has-text-weight-semibold">Dimensions</h6>
@@ -223,7 +211,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
 
         <div className="columns mb-4 px-2">
 
-          <InputField type="number" step="any" min="0" name="weight" onChange={handleChange} value={parcel.weight} className="is-small" fieldClass="column is-2 mb-0 px-1 py-2" required />
+          <InputField type="number" step="any" min="0" name="weight" onChange={handleChange} value={parcel.weight || ""} className="is-small" fieldClass="column is-2 mb-0 px-1 py-2" required />
 
           <SelectField name="weight_unit" onChange={handleChange} value={parcel.weight_unit || ParcelWeightUnitEnum.Kg} className="is-small is-fullwidth" fieldClass="column is-2 mb-0 px-1 py-2" required>
             {WEIGHT_UNITS.map(unit => <option key={unit} value={unit}>{unit}</option>)}

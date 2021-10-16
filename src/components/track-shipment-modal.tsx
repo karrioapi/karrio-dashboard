@@ -68,7 +68,7 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
             <section className="modal-card-body">
               <h3 className="subtitle is-3">Track a Shipment</h3>
 
-              <InputField label="Tracking Number" defaultValue={trackingNumber} onChange={e => setTrackingNumber(e.target.value)} fieldClass="mt-6" required />
+              <InputField label="Tracking Number" value="" onChange={e => setTrackingNumber(e.target.value)} fieldClass="mt-6" required />
 
               <SelectField label="Carrier" onChange={e => updateCarrier(e.target.value)} className="is-fullwidth" required>
                 <option value="">Select a carrier</option>

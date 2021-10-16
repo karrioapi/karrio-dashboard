@@ -59,7 +59,7 @@ const auth = NextAuth({
       }
 
       // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.exp as number) * 1000) {
+      if (Date.now() < (token.expiration as number) * 1000) {
         return token;
       }
 

@@ -8,11 +8,12 @@ export interface InputFieldComponent extends React.InputHTMLAttributes<HTMLInput
   ref?: RefObject<HTMLInputElement>;
 }
 
-const InputField: React.FC<InputFieldComponent> = ({ label, required, className, fieldClass, controlClass, children, ref, value, ...props }) => {
+const InputField: React.FC<InputFieldComponent> = ({ label, required, className, fieldClass, controlClass, children, ref, ...props }) => {
   const Ref = isNone(ref) ? { ref } : {};
   const Props = {
     required,
-    ...props
+    ...props,
+    ...(Object.keys(props).includes('value') ? { value: props.value || "" } : {}),
   };
 
   return (
@@ -22,7 +23,7 @@ const InputField: React.FC<InputFieldComponent> = ({ label, required, className,
         {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
       </label>}
       <div className={`control ${controlClass}`}>
-        <input type="text" value={value || ''} className={`input ${className}`} {...Props} {...Ref} />
+        <input type="text" className={`input ${className}`} {...Props} {...Ref} />
         {children}
       </div>
     </div>
