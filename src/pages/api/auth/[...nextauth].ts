@@ -2,13 +2,15 @@ import { TokenPair } from '@/api';
 import { authenticate, refreshToken, AuthToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
 import { NextApiRequest } from 'next';
+import getConfig from 'next/config';
 import NextAuth, { User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
 import { BehaviorSubject } from 'rxjs';
 
-const secret = process.env.JWT_SECRET;
 export const orgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
+const { serverRuntimeConfig } = getConfig();
+const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 const auth = NextAuth({

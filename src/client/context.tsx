@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import getConfig from 'next/config';
 import { PurplshipClient, TokenObtainPair, TokenPair } from "@/api/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
@@ -6,7 +7,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/client";
 
-export const PURPLSHIP_API_URL = process.env.NEXT_PUBLIC_PURPLSHIP_API_URL || 'https://api.purplship.com';
+const { publicRuntimeConfig } = getConfig();
 
 export const AuthToken = new Subject<TokenPair>();
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
@@ -66,7 +67,7 @@ export async function refreshToken(refresh: string, org_id?: string) {
 
 function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
-    basePath: PURPLSHIP_API_URL,
+    basePath: publicRuntimeConfig?.PURPLSHIP_API_URL,
     apiKey: accessToken ? `Bearer ${accessToken}` : "",
     ...(typeof window !== 'undefined' ? {} : { fetchApi: require('node-fetch') }),
   });
@@ -74,7 +75,7 @@ function createRestContext(accessToken?: string): PurplshipClient {
 
 function createGrapQLContext(accessToken?: string): ApolloClient<any> {
   const httpLink = createHttpLink({
-    uri: `${PURPLSHIP_API_URL}/graphql`,
+    uri: `${publicRuntimeConfig?.PURPLSHIP_API_URL}/graphql`,
   });
 
   const authLink = setContext((_, { headers }) => {
