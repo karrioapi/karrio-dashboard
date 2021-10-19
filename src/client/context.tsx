@@ -6,6 +6,7 @@ import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/client";
+import logger from "@/lib/logger";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -19,6 +20,7 @@ AuthToken.subscribe(async ({ access }: { access?: string }) => {
   restClient.next(createRestContext(access));
 });
 
+logger.debug("API clients initialized for Server: " + publicRuntimeConfig?.PURPLSHIP_API_URL);
 
 export const ClientsProvider: React.FC = ({ children }) => {
   const [session] = useSession();

@@ -6,6 +6,7 @@ import getConfig from 'next/config';
 import { getSession } from "next-auth/client";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { References } from "@/api";
+import logger from "@/lib/logger";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -37,6 +38,8 @@ export async function connectAPI(): Promise<{ references?: References }> {
 
       resolve({ references });
     } catch (e) {
+      logger.error('Failed to fetch API metadata', e);
+
       reject(createServerError({
         code: ServerErrorCode.API_CONNECTION_ERROR,
         message: `
@@ -68,7 +71,7 @@ async function loadData(session: Session | null) {
       })
       .then(({ data }) => ({ ...metadata, ...data }))
       .catch((e) => {
-        console.error('Failed to load initial data', e);
+        logger.error('Failed to load initial data', e);
 
         return createServerError({ message: 'Failed to load intial data...' });
       });

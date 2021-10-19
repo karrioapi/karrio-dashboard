@@ -11,6 +11,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useReducer, useState } from "react";
+import logger from "@/lib/logger";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -53,7 +54,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
 
       if ((response.errors || []).length === 0) router.push('/signup/success');
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
     }
     setLoading(false);
   };

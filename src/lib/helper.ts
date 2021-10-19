@@ -205,7 +205,6 @@ export const parseJwt = (token: string): any => {
     const content = Buffer.from(token.split('.')[1], 'base64').toString();
     return JSON.parse(content);
   } catch (e) {
-    console.log(e);
     return {};
   }
 };

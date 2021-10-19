@@ -7,6 +7,7 @@ import NextAuth, { User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
 import { BehaviorSubject } from 'rxjs';
+import logger from '@/lib/logger';
 
 export const orgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 const { serverRuntimeConfig } = getConfig();
@@ -34,7 +35,7 @@ const auth = NextAuth({
 
           return { accessToken: token.access, refreshToken: token.refresh };
         } catch (err) {
-          console.error(err);
+          logger.error(err);
         }
 
         // Return null if user data could not be retrieved
@@ -76,7 +77,7 @@ const auth = NextAuth({
           expiration: parseJwt(access).exp
         };
       } catch (error) {
-        console.log(error);
+        logger.log(error);
 
         AuthToken.next({} as TokenPair);
 

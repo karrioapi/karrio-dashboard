@@ -10,6 +10,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
+import logger from "@/lib/logger";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -51,7 +52,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
       setErrors(errors as confirm_password_reset_confirm_password_reset_errors[] || []);
       if ((errors || []).length === 0) router.push('/password/reset/done');
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
     }
     setLoading(false);
   };

@@ -1,4 +1,4 @@
-# purplship-dashboar
+# purplship-dashboard
 
 <img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg"/>
 

@@ -7,6 +7,7 @@ import UserMutation from '@/context/user-mutation';
 import { isNone } from '@/lib/helper';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
+import logger from '@/lib/logger';
 
 const DEFAULT_VALUE: Partial<ChangePasswordInput> = {
   old_password: "",
@@ -48,7 +49,7 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
         notify({ type: NotificationType.success, message: `Password changed successfully.` });
       }
     } catch (error: any) {
-      console.error(error);
+      logger.error(error);
     }
     setLoading(false);
   };
