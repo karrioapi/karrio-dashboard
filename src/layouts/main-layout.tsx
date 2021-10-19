@@ -1,15 +1,15 @@
-import { isNone } from '@/lib/helper';
+import { isNone, ServerError, ServerErrorCode } from '@/lib/helper';
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 
-const MainLayout: React.FC<{ error?: string }> = ({ children, error }) => {
+const MainLayout: React.FC<{ error?: ServerError }> = ({ children, error }) => {
   return (
     <>
       <noscript>You need to enable JavaScript to run this app.</noscript>
 
       <div id="root" style={{ minHeight: "100vh" }} >
-        {isNone(error)
+        {(error?.code !== ServerErrorCode.API_CONNECTION_ERROR)
           ? children
           : <section className="hero is-fullheight">
             <div className="container">
@@ -21,7 +21,7 @@ const MainLayout: React.FC<{ error?: string }> = ({ children, error }) => {
 
               <div className="card isolated-card my-6">
                 <div className="card-content has-text-centered ">
-                  <p>{error}</p>
+                  <p>{error?.message}</p>
                 </div>
               </div>
             </div>

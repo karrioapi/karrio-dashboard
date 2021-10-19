@@ -76,8 +76,9 @@ const auth = NextAuth({
       } catch (error) {
         console.log(error);
 
+        AuthToken.next({} as TokenPair);
+
         return {
-          ...token,
           error: "RefreshAccessTokenError",
         }
       }

@@ -145,18 +145,18 @@ export const COUNTRY_WITH_POSTAL_CODE = [
 ];
 
 export function getCookie(name: string): string {
-    var cookieValue = "";
-    if (document?.cookie && document?.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+  var cookieValue = "";
+  if (document?.cookie && document?.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
     }
-    return cookieValue;
+  }
+  return cookieValue;
 }
 
 export async function handleFailure<T>(request: Promise<T>): Promise<T> {
@@ -171,6 +171,16 @@ export async function handleFailure<T>(request: Promise<T>): Promise<T> {
     }
     throw err
   }
+}
+
+export enum ServerErrorCode {
+  API_CONNECTION_ERROR
+}
+
+export type ServerError = { code?: ServerErrorCode; message?: string; };
+
+export function createServerError(error: ServerError) {
+  return error;
 }
 
 export function getCursorPagination(cursor?: string): { limit?: number; offset?: number; } {

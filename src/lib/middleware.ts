@@ -3,15 +3,8 @@ import { gql } from "@apollo/client";
 import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
-import { isNone } from "@/lib/helper";
+import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { References } from "@/api";
-
-export const API_INSTANCE_ERROR = {
-  error: `
-    Server (${PURPLSHIP_API_URL}) unreachable.
-    Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
-  `
-};
 
 
 export function withSessionCookies(page: NextPage) {
@@ -42,12 +35,13 @@ export async function connectAPI(): Promise<{ references?: References }> {
 
       resolve({ references });
     } catch (e) {
-      reject({
-        error: `
+      reject(createServerError({
+        code: ServerErrorCode.API_CONNECTION_ERROR,
+        message: `
           Server (${PURPLSHIP_API_URL}) unreachable.
           Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
         `
-      })
+      }))
     }
   });
 }
@@ -74,7 +68,7 @@ async function loadData(session: Session | null) {
       .catch((e) => {
         console.error('Failed to load initial data', e);
 
-        return { error: 'Failed to load intial data...' };
+        return createServerError({ message: 'Failed to load intial data...' });
       });
   } catch (e) {
     return e;

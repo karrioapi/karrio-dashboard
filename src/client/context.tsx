@@ -13,7 +13,7 @@ export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQL
 export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
 export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
 
-AuthToken.subscribe(async ({ access }) => {
+AuthToken.subscribe(async ({ access }: { access?: string }) => {
   graphqlClient.next(createGrapQLContext(access));
   restClient.next(createRestContext(access));
 });
