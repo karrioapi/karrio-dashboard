@@ -38,15 +38,16 @@ export async function connectAPI(): Promise<{ references?: References }> {
 
       resolve({ references });
     } catch (e) {
-      logger.error('Failed to fetch API metadata', e);
-
-      reject(createServerError({
+      logger.error(`Failed to fetch API metadata from (${publicRuntimeConfig?.PURPLSHIP_API_URL})`, e);
+      const error = createServerError({
         code: ServerErrorCode.API_CONNECTION_ERROR,
         message: `
           Server (${publicRuntimeConfig?.PURPLSHIP_API_URL}) unreachable.
           Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
         `
-      }))
+      })
+
+      reject({ error });
     }
   });
 }
@@ -72,10 +73,12 @@ async function loadData(session: Session | null) {
       .then(({ data }) => ({ ...metadata, ...data }))
       .catch((e) => {
         logger.error('Failed to load initial data', e);
+        const error = createServerError({ message: 'Failed to load intial data...' });
 
-        return createServerError({ message: 'Failed to load intial data...' });
+        return { ...metadata, error };
       });
   } catch (e) {
+    logger.error(e)
     return e;
   }
 }

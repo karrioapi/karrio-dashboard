@@ -9,7 +9,7 @@
     "lint": "next lint",
     "gen:rest": "./scripts/generate-pship-client.sh",
     "gen:graph": "./scripts/generate-pship-graphql-types.sh",
-    "build:image": "docker build -t purplship/dashboard -f ./docker/Dockerfile ./"
+    "build:image": "./scripts/build-image.sh"
   },
   "dependencies": {
     "@apollo/client": "^3.4.5",
