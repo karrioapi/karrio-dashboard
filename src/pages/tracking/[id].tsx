@@ -27,8 +27,8 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
 
         <div className="container">
 
-          <div className="has-text-centered my-6">
-            <Image src="/logo.svg" width="100" height="100" alt={app_name} />
+          <div className="has-text-centered my-4">
+            <Image src="/logo.svg" width="130" height="100%" alt={app_name} />
           </div>
 
           {!isNone(tracker) && <>

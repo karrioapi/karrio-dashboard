@@ -76,7 +76,7 @@ const OrganizationDropdown: React.FC = () => {
       </div>}
 
       {(!loading && (organizations || []).length === 0) &&
-        <Image src="/logo.svg" width="80" height="40" alt="logo" />}
+        <Image src="/icon.svg" className="mt-2" width="70" height="100%" alt="logo" />}
     </>
   );
 };

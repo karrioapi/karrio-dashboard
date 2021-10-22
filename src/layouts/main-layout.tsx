@@ -15,7 +15,7 @@ const MainLayout: React.FC<{ error?: ServerError }> = ({ children, error }) => {
             <div className="container">
               <div className="has-text-centered mt-4 mb-5">
                 <Link href="/" passHref>
-                  <Image src="/logo.svg" width="100" height="100" alt="" />
+                  <Image src="/logo.svg" width="130" height="100" alt="" />
                 </Link>
               </div>
 

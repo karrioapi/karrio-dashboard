@@ -15,9 +15,9 @@ const SectionLayout: React.FC = ({ children }) => {
     <section className="hero is-fullheight">
 
       <div className="container">
-        <div className="has-text-centered mt-4 mb-5">
+        <div className="has-text-centered mt-6 mb-4">
           <Link href="/" passHref>
-            <Image src="/logo.svg" width="100" height="100" alt={app_name} />
+            <Image src="/logo.svg" width="130" height="100%" alt={app_name} />
           </Link>
         </div>
 

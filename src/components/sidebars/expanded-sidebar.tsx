@@ -25,13 +25,13 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
     <div className="plex-sidebar" ref={sidebar}>
       <div className="sidebar-header pl-5">
         {multi_organizations
-        ? <OrganizationDropdown />
-        : <Image src="/logo.svg" width="80" height="40" alt="logo" />}
+          ? <OrganizationDropdown />
+          : <Image src="/icon.svg" className="mt-2" width="70" height="100%" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>
       </div>
-      <div className="sidebar-menu has-slimscroll py-4" style={{ height: "calc(100% - 60px)" }}>
+      <div className="sidebar-menu has-slimscroll py-6" style={{ height: "calc(100% - 60px)" }}>
         <AppLink href={basePath} className={"menu-item " + isActive(basePath)}>
           <span>Shipments</span>
         </AppLink>

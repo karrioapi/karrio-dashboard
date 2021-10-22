@@ -95,7 +95,7 @@ export default withSessionCookies(function (pageProps) {
                       <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
                     }
                     {isNone(shipment.carrier_name) &&
-                      <Image src={`/logo.svg`} height={25} width={'100%'} alt="logo" />
+                      <Image src={`/logo.svg`} width="100%" height="25" alt="logo" />
                     }
                   </td>
                   <td className="service is-vcentered p-1">
