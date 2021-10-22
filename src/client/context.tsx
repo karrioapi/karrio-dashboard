@@ -69,7 +69,7 @@ export async function refreshToken(refresh: string, org_id?: string) {
 
 function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
-    basePath: publicRuntimeConfig?.PURPLSHIP_API_URL,
+    basePath: publicRuntimeConfig?.PURPLSHIP_API_URL || '',
     apiKey: accessToken ? `Bearer ${accessToken}` : "",
     ...(typeof window !== 'undefined' ? {} : { fetchApi: require('node-fetch') }),
   });
@@ -77,7 +77,7 @@ function createRestContext(accessToken?: string): PurplshipClient {
 
 function createGrapQLContext(accessToken?: string): ApolloClient<any> {
   const httpLink = createHttpLink({
-    uri: `${publicRuntimeConfig?.PURPLSHIP_API_URL}/graphql`,
+    uri: `${publicRuntimeConfig?.PURPLSHIP_API_URL || ''}/graphql`,
   });
 
   const authLink = setContext((_, { headers }) => {
