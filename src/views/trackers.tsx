@@ -35,7 +35,7 @@ export default withSessionCookies(function (pageProps) {
       update();
     };
 
-    useEffect(() => { setLoading(loading); });
+    useEffect(() => { setLoading && setLoading(loading); }, [loading]);
     useEffect(() => {
       const newStatus = (new URLSearchParams(location.search)).get('status') as ListStatusEnum || undefined;
 
@@ -132,7 +132,7 @@ export default withSessionCookies(function (pageProps) {
               <button className="button is-small" onClick={() => loadMore({ cursor: previous, status })} disabled={isNone(previous)}>
                 <span>Previous</span>
               </button>
-              <button className="button is-small" onClick={() => loadMore({ cursor: previous, status })} disabled={isNone(next)}>
+              <button className="button is-small" onClick={() => loadMore({ cursor: next, status })} disabled={isNone(next)}>
                 <span>Next</span>
               </button>
             </div>
