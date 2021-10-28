@@ -1,28 +1,27 @@
-# purplship-dashboard
+# Purplship Dashboard
 
-<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg"/>
+<picture><img alt="Purplship Dashboard" src="./screenshots/dashboard.png" /></picture>
 
 [![puprlship-dashboard](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml)
 
-A Next.js dashboard for [purplship-server](https://github.com/purplship/purplship-server)
-
-## Deployment
-
-### `Docker`
-
-Use our Docker image [purplship/dashboard](https://hub.docker.com/repository/docker/purplship/dashboard)
-
+Purplship Dashboard is a browser-based logistics and shipping orchestration dashboard for [purplship](https://github.com/purplship/purplship).
 
 ## Getting Started
 
+### Using a Purplship Dashboard Release
+
+If you just want to try Kibana out, check out the our [purplship/dashboard Docker Image](https://hub.docker.com/repository/docker/purplship/dashboard) to give it a whirl.
+
+### Building and Running Purplship Dashboard
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
+#### Prerequisites
 
 - Node.js v14+
-- A running instance of [purplship-server](https://github.com/purplship/purplship-server).
+- A running instance of [purplship server](https://github.com/purplship/purplship).
 
-### Installing
+#### Installing
 
 Clone the repository
 
@@ -34,7 +33,7 @@ cd purplship-dashboard
 npm install
 ```
 
-### Configuration
+#### Configuration
 
 Use the following environment variables to configure the dashboard:
 
@@ -42,7 +41,7 @@ Use the following environment variables to configure the dashboard:
 
 - `JWT_SECRET` - A secret to use for JWT key generation - you should set this explicitly.
 
-### Development
+#### Development
 
 Start the development server
 
@@ -50,9 +49,9 @@ Start the development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Purplship Dashboard should now be running at [http://localhost:3000](http://localhost:3000).
 
-### Production
+#### Production
 
 Build the application bundle
 
@@ -60,15 +59,14 @@ Build the application bundle
 npm run build
 ```
 
-
 ## Resources
 
-- **Documentation** - Learn more at [docs.purplship.com](https://docs.purplship.com)
-- **Community** - Feature requests, general questions on [Discord](https://discord.gg/kXEa3UMRHd)
-- **Bug Tracker** - [File bugs](https://github.com/purplship/purplship-server/issues)
-- **Blog** - Get the latest updates from the [purplship blog](https://blog.purplship.com).
-- **Twitter** - Follow [purplship](https://twitter.com/purplship).
+- [**Documentation**](https://docs.purplship.com)
+- [**Github Community**](https://github.com/purplship/purplship/discussions)
+- [**Issue Tracker**](https://github.com/purplship/purplship-dashboard/issues)
+- [**Blog**](https://blog.purplship.com)
 
+> [Join us on Discord](https://discord.gg/gS88uE7sEx)
 
 ## License
 
