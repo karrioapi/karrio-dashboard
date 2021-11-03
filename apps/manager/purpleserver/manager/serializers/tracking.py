@@ -9,6 +9,7 @@ from purpleserver.core.serializers import TrackingDetails, TrackingRequest, Ship
 import purpleserver.manager.models as models
 
 logger = logging.getLogger(__name__)
+DEFAULT_CARRIER_FILTER = dict(active=True, capability='tracking')
 
 
 @owned_model_serializer
@@ -19,9 +20,9 @@ class TrackingSerializer(TrackingDetails):
     pending = BooleanField(required=False)
 
     def create(self, validated_data: dict, context, **kwargs) -> models.Tracking:
-        carrier_filters = validated_data['carrier_filters']
+        carrier_filter = validated_data['carrier_filter']
         tracking_number = validated_data['tracking_number']
-        carrier = Carriers.first(context=context, **carrier_filters)
+        carrier = Carriers.first(context=context, **{'raise_not_found': True, **DEFAULT_CARRIER_FILTER, **carrier_filter})
 
         response = Shipments.track(
             TrackingRequest(dict(tracking_numbers=[tracking_number])).data,
@@ -42,8 +43,11 @@ class TrackingSerializer(TrackingDetails):
         last_fetch = (timezone.now() - instance.updated_at).seconds / 60  # minutes since last fetch
 
         if last_fetch >= 30 and instance.delivered is not True:
-            carrier_filters = validated_data['carrier_filters']
-            carrier = (Carriers.first(context=context, **carrier_filters) or instance.tracking_carrier)
+            carrier_filter = validated_data['carrier_filter']
+            carrier = (
+                Carriers.first(context=context, **{**DEFAULT_CARRIER_FILTER, **carrier_filter}) or
+                instance.tracking_carrier
+            )
 
             response = Shipments.track(
                 payload=TrackingRequest(dict(tracking_numbers=[instance.tracking_number])).data,

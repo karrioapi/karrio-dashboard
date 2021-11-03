@@ -38,6 +38,7 @@ from purpleserver.manager.serializers.rate import RateSerializer
 import purpleserver.manager.models as models
 
 logger = logging.getLogger(__name__)
+DEFAULT_CARRIER_FILTER = dict(active=True, capability='shipping')
 
 
 @owned_model_serializer
@@ -56,10 +57,10 @@ class ShipmentSerializer(ShipmentData):
 
     @transaction.atomic
     def create(self, validated_data: dict, context: dict, **kwargs) -> models.Shipment:
-        carrier_filters = (validated_data.get('carrier_filters') or {})
+        carrier_filter = (validated_data.get('carrier_filter') or {})
         carrier_ids = (validated_data.get('carrier_ids') or [])
         carriers = Carriers.list(
-            context=context, active=True, capability='shipping', carrier_ids=carrier_ids, **carrier_filters)
+            context=context, carrier_ids=carrier_ids, **{'raise_not_found': True, **DEFAULT_CARRIER_FILTER, **carrier_filter})
 
         # Get live rates
         rate_response: datatypes.RateResponse = SerializerDecorator[RateSerializer]\
@@ -151,7 +152,7 @@ class ShipmentRateData(Serializer):
     """)
     carrier_ids = StringListField(required=False, allow_null=True, help_text="""
     The list of configured carriers you wish to get rates from.
-    
+
     *Note that the request will be sent to all carriers in nothing is specified*
     """)
     reference = CharField(required=False, allow_blank=True, allow_null=True, help_text="The shipment reference")

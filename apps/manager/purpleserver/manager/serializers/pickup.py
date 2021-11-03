@@ -14,6 +14,7 @@ from purpleserver.core.serializers import (
 from purpleserver.manager.serializers import AddressSerializer
 import purpleserver.manager.models as models
 
+DEFAULT_CARRIER_FILTER = dict(active=True, capability='pickup')
 
 def shipment_exists(value):
     validation = {key: models.Shipment.objects.filter(tracking_number=key) for key in value}
@@ -81,7 +82,9 @@ class PickupSerializer(PickupRequest):
 @owned_model_serializer
 class PickupData(PickupSerializer):
     def create(self, validated_data: dict, context: dict, **kwargs) -> models.Pickup:
-        carrier = Carriers.first(context=context, **validated_data["carrier_filter"])
+        carrier_filter = validated_data['carrier_filter']
+        carrier = Carriers.first(context=context, **{'raise_not_found': True, **DEFAULT_CARRIER_FILTER, **carrier_filter})
+
         request_data = PickupRequest({
             **validated_data,
             "parcels": sum([list(s.parcels.all()) for s in self._shipments], [])
@@ -112,7 +115,7 @@ class PickupUpdateData(PickupSerializer):
     confirmation_number = serializers.CharField(required=True, help_text="pickup identification number")
     pickup_date = serializers.CharField(required=False, help_text="""
     The expected pickup date
-    
+
     Date Format: YYYY-MM-DD
     """)
     ready_time = serializers.CharField(
@@ -121,12 +124,12 @@ class PickupUpdateData(PickupSerializer):
         required=False, allow_blank=True, allow_null=True, help_text="The closing or late time of the pickup")
     instruction = serializers.CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The pickup instruction.
-    
+
     eg: Handle with care.
     """)
     package_location = serializers.CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The package(s) location.
-    
+
     eg: Behind the entrance door.
     """)
     tracking_numbers = StringListField(

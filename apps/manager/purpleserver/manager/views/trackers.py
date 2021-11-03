@@ -87,8 +87,7 @@ class TrackersCreate(APIView):
         This API creates or retrieves (if existent) a tracking status object containing the
         details and events of a shipping in progress.
         """
-        data = dict(tracking_number=tracking_number)
-        carrier_filters = {
+        carrier_filter = {
             **SerializerDecorator[TestFilters](data=request.query_params).data,
             "carrier_name": carrier_name
         }
@@ -96,7 +95,7 @@ class TrackersCreate(APIView):
 
         instance = SerializerDecorator[TrackingSerializer]\
             (tracking, data=dict(tracking_number=tracking_number), context=request)\
-            .save(carrier_filters=carrier_filters)\
+            .save(carrier_filter=carrier_filter)\
             .instance
 
         return Response(TrackingStatus(instance).data)

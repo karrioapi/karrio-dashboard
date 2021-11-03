@@ -125,11 +125,11 @@ class ShipmentList(GenericAPIView):
         """
         Create a new shipment instance.
         """
-        carrier_filters = {
+        carrier_filter = {
             **SerializerDecorator[ShipmentMode](data=request.query_params).data
         }
         shipment = SerializerDecorator[ShipmentSerializer](
-            data=request.data, context=request).save(carrier_filters=carrier_filters).instance
+            data=request.data, context=request).save(carrier_filter=carrier_filter).instance
 
         return Response(Shipment(shipment).data, status=status.HTTP_201_CREATED)
 
