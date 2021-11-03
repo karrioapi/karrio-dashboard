@@ -189,12 +189,12 @@ class Shipments:
 
         # The request call is wrapped in identity to simplify mocking in tests
         confirmation, messages = (
-            identity(lambda: request.from_(gateway).parse())
+            identity(lambda: request.from_(carrier.gateway).parse())
             if 'cancel_shipment' in carrier.gateway.capabilities else
             (
                 datatypes.Confirmation(
-                    carrier_name=gateway.settings.carrier_name,
-                    carrier_id=gateway.settings.carrier_id,
+                    carrier_name=carrier.gateway.settings.carrier_name,
+                    carrier_id=carrier.gateway.settings.carrier_id,
                     success=True,
                     operation="Safe cancellation allowed"
                 ),
@@ -301,12 +301,12 @@ class Pickups:
 
         # The request call is wrapped in identity to simplify mocking in tests
         confirmation, messages = (
-            identity(lambda: request.from_(gateway).parse())
+            identity(lambda: request.from_(carrier.gateway).parse())
             if 'cancel_shipment' in carrier.gateway.features else
             (
                 datatypes.Confirmation(
-                    carrier_name=gateway.settings.carrier_name,
-                    carrier_id=gateway.settings.carrier_id,
+                    carrier_name=carrier.gateway.settings.carrier_name,
+                    carrier_id=carrier.gateway.settings.carrier_id,
                     success=True,
                     operation="Safe cancellation allowed"
                 ),
