@@ -22,7 +22,7 @@ from django.core.management.utils import get_random_secret_key
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 with open(BASE_DIR / 'purpleserver' / 'VERSION', "r") as v:
-    VERSION = v.read()
+    VERSION = v.read().strip()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -264,7 +264,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
@@ -306,14 +306,14 @@ SWAGGER_SETTINGS = {
             'in': 'header',
             'description': """
                 API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.
-    
-                Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret 
+
+                Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret
                 API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
-                
+
                 Authentication to the API is performed via HTTP Bearer Auth. You do not need to provide a password.
-                To authenticate via bearer auth (e.g., for a cross-origin request), 
+                To authenticate via bearer auth (e.g., for a cross-origin request),
                 use `-H "Authorization: Token 19707922d97cef7a5d5e17c331ceeff66f226660"`.
-                
+
                 API requests without authentication will also fail.
             """
         }
