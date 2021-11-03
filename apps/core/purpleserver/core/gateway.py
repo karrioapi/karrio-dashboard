@@ -3,9 +3,10 @@ import logging
 from datetime import datetime
 from typing import List, Callable, Dict, Any
 
+from django.conf import settings
 from django.db.models import Q
 from rest_framework import status
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 
 import purplship
 from purplship.core.utils import DP
@@ -25,8 +26,9 @@ class Carriers:
         query = tuple()
         list_filter: Dict[str: Any] = kwargs
         user_filter = (get_access_filter(context) if context is not None else [])
-        active_key = ('active_orgs__id' if hasattr(models.Carrier, 'org') else 'active_users__id')
-        access_id = getattr(context.org if hasattr(models.Carrier, 'org') else context.user, 'id', None)
+        active_key = ('active_orgs__id' if settings.MULTI_ORGANIZATIONS else 'active_users__id')
+        access_entity = getattr(context, 'org' if settings.MULTI_ORGANIZATIONS else 'user', None)
+        access_id = getattr(access_entity, 'id', None)
         system_carrier_user = (
             Q(**{'active': True, 'created_by__isnull': True, active_key: access_id})
             if access_id is not None else
@@ -34,7 +36,7 @@ class Carriers:
         )
         creator_filter = (
             Q(created_by__id=context.user.id, **(
-                dict(org=None) if hasattr(models.Carrier, 'org') else {}
+                dict(org=None) if settings.MULTI_ORGANIZATIONS else {}
             ))
             if getattr(context, 'user', None) is not None
             else Q()
@@ -80,6 +82,10 @@ class Carriers:
         else:
             carriers = models.Carrier.objects.filter(*query)
 
+        # Raise an error if no carrier is found
+        if list_filter.get('raise_not_found') and len(carriers) == 0:
+            raise NotFound('No active carrier connection found to process the request')
+
         return carriers
 
     @staticmethod
@@ -115,7 +121,11 @@ class Shipments:
                 f'Please select one of the following: [ {", ".join([r.get("id") for r in payload.get("rates")])} ]'
             )
 
-        carrier = carrier or models.Carrier.objects.get(carrier_id=selected_rate.carrier_id)
+        carrier = carrier or models.Carrier.objects.get(carrier_id=selected_rate.carrier_id, active=True)
+
+        if carrier is None:
+            raise NotFound('No active carrier connection found to process the request')
+
         request = datatypes.ShipmentRequest(**{**DP.to_dict(payload), 'service': selected_rate.service})
 
         # The request is wrapped in identity to simplify mocking in tests
@@ -170,7 +180,7 @@ class Shipments:
 
     @staticmethod
     def cancel(payload: dict, carrier: models.Carrier = None, **carrier_filters) -> datatypes.ConfirmationResponse:
-        carrier = carrier or Carriers.first(active=True, capability='shipping', **carrier_filters)
+        carrier = carrier or Carriers.first(**{**dict(active=True, capability='shipping', raise_not_found=True), **carrier_filters})
 
         if carrier is None:
             raise NotFound('No active carrier connection found to process the request')
@@ -200,7 +210,7 @@ class Shipments:
 
     @staticmethod
     def track(payload: dict, carrier: models.Carrier = None, **carrier_filters) -> datatypes.TrackingResponse:
-        carrier = carrier or Carriers.first(active=True, capability='tracking', **carrier_filters)
+        carrier = carrier or Carriers.first(**{**dict(active=True, capability='tracking', raise_not_found=True), **carrier_filters})
 
         if carrier is None:
             raise NotFound('No active carrier connection found to process the request')
@@ -231,7 +241,7 @@ class Shipments:
 class Pickups:
     @staticmethod
     def schedule(payload: dict, carrier: models.Carrier = None, **carrier_filters) -> datatypes.PickupResponse:
-        carrier = carrier or Carriers.first(active=True, capability='pickup', **carrier_filters)
+        carrier = carrier or Carriers.first(**{**dict(active=True, capability='pickup', raise_not_found=True), **carrier_filters})
 
         if carrier is None:
             raise NotFound('No active carrier connection found to process the request')
@@ -257,7 +267,7 @@ class Pickups:
 
     @staticmethod
     def update(payload: dict, carrier: models.Carrier = None, **carrier_filters) -> datatypes.PickupResponse:
-        carrier = carrier or Carriers.first(active=True, capability='pickup', **carrier_filters)
+        carrier = carrier or Carriers.first(**{**dict(active=True, capability='pickup', raise_not_found=True), **carrier_filters})
 
         if carrier is None:
             raise NotFound('No active carrier connection found to process the request')
@@ -282,7 +292,7 @@ class Pickups:
 
     @staticmethod
     def cancel(payload: dict, carrier: models.Carrier = None, **carrier_filters) -> datatypes.ConfirmationResponse:
-        carrier = carrier or Carriers.first(active=True, capability='pickup', **carrier_filters)
+        carrier = carrier or Carriers.first(**{**dict(active=True, capability='pickup', raise_not_found=True), **carrier_filters})
 
         if carrier is None:
             raise NotFound('No active carrier connection found to process the request')
@@ -318,7 +328,7 @@ class Rates:
     @staticmethod
     def fetch(payload: dict, carriers: List[models.Carrier] = None, **carrier_filters) -> datatypes.RateResponse:
         carrier_ids = payload.get('carrier_ids', [])
-        carriers = carriers or Carriers.list(active=True, carrier_ids=carrier_ids, capability='rating', **carrier_filters)
+        carriers = carriers or Carriers.list(**{**dict(active=True, capability='rating', carrier_ids=carrier_ids), **carrier_filters})
 
         gateways = [c.gateway for c in carriers if 'get_rates' in c.gateway.capabilities]
 
