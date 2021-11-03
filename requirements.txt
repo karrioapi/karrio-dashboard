@@ -60,7 +60,7 @@ psycopg2-binary==2.9.1
 purplship==2021.7
 purplship-server==2021.7.1
 purplship-server.client==2021.7.1
-purplship-server.core==2021.7.1
+purplship-server.core==2021.7.2
 purplship-server.events==2021.7.1
 purplship-server.graph==2021.7
 purplship-server.manager==2021.7.1
