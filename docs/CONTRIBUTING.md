@@ -1,5 +1,10 @@
 ## Contribute to purplship server
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 ### **Did you find a bug?**
 
 * **Do not open up a GitHub issue if the bug is a security vulnerability
@@ -7,8 +12,8 @@
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/purplship/purplship-server/issues).
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/purplship/purplship-server/issues/new). 
-    Be sure to include a **title and clear description**, as much relevant information as possible, 
+* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/purplship/purplship-server/issues/new).
+    Be sure to include a **title and clear description**, as much relevant information as possible,
     and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 ### **Did you write a patch that fixes a bug?**

@@ -1,5 +1,10 @@
 # Shipping
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 With purplship carrier connections, you can get live quotes and purchase shipping labels using the purplship API.
 The web app uses purplship' API to streamline manual shipping processes.
 
@@ -15,7 +20,7 @@ The typical shipping process flow is
 Getting shipping rates from the purplship Web App.
 
 !!! info "Get shipping rates"
-   
+
     - navigate to `> Shipments`
     - click on the `Create Label` button
     - Fill in the shipping details (shipper address, recipient address, parcel measurements...)
@@ -28,7 +33,7 @@ Getting shipping rates from the purplship Web App.
 
 
 !!! note ""
-    You can always go back to edit any shipment details or add options and refresh the rates. 
+    You can always go back to edit any shipment details or add options and refresh the rates.
 
 
 ## Buy a label
@@ -83,7 +88,7 @@ Void shipping labels from the purplship Web App.
 !!! info "Shipping customs declaration"
 
     - from the `> Shipments` panel
-    - Click `Cancel Shipment` option on the shipment action dropdown 
+    - Click `Cancel Shipment` option on the shipment action dropdown
 
 !!! quote ""
     <figure>

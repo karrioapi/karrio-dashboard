@@ -1,5 +1,10 @@
 # Developing
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 - A bash compatible shell (OSX, Linux or Windows Linux subsystem)
 - Docker and docker-compose
 
@@ -25,7 +30,7 @@ env:reset
 
 !!! info
     This command will:
-    
+
     - create a Python virtual environment using `venv` in a `.env/purplship-server` directory at the root of the project
     - activate the python virtual env
     - install the dev dependencies using `pip install -r requirements.dev.txt`
@@ -65,7 +70,7 @@ First, make sure you set up your environment as described above, that will insta
 
 The documentation uses [MkDocs](https://www.mkdocs.org/)
 
-You can start a local doc server using 
+You can start a local doc server using
 
 ```bash
 docs

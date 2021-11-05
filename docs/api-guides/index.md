@@ -1,5 +1,10 @@
 # Reference
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 The purplship API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies,
 returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 
@@ -73,7 +78,7 @@ API requests without authentication will also fail.
 
     ```php
     require_once(__DIR__ . '/vendor/autoload.php');
-    
+
     $purplship = new \purplship\purplship('<api_key>', 'https://<server_address>');
     ```
 
@@ -81,7 +86,7 @@ API requests without authentication will also fail.
 
     ```javascript
     import purplship from 'purplship';
-    
+
     const purplship = new purplship('API_KEY', 'https://<server_address>');
     ```
     ```

@@ -1,8 +1,13 @@
 # Heroku
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 ## purplship Deployment
 
-To deploy purplship to Heroku, create a new Heroku app and configure your 
+To deploy purplship to Heroku, create a new Heroku app and configure your
 [purplship-heroku](https://github.com/purplship/purplship-heroku) git repository with
 Heroku app using:
 
@@ -18,8 +23,8 @@ heroku config:set DEBUG_MODE=True
 heroku config:set SECRET_KEY='<your secret key here>'
 ```
 
-`ALLOWED_HOSTS are required to properly setup CORS headers. 
-SECRET_KEY is used by Django to store your secret data, 
+`ALLOWED_HOSTS are required to properly setup CORS headers.
+SECRET_KEY is used by Django to store your secret data,
 it should have a cryptographically strong amount of entropy in case of production deployments.`
 
 You can now deploy using
@@ -38,5 +43,5 @@ heroku run -a '<purplship-app name>' purplship createsuperuser
 
 ## How to log in to purplship Dashboard
 
-Once the purplship Server app has been created on Heroku, you can log in via the URL 
+Once the purplship Server app has been created on Heroku, you can log in via the URL
 <purplship-app name>.herokuapp.com using the admin account.

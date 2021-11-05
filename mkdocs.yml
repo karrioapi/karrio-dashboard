@@ -8,6 +8,7 @@ repo_name: purplship/purplship-server
 edit_uri: edit/main/docs/
 
 theme:
+  custom_dir: docs/overrides
   name: material
   features:
     - navigation.sections
@@ -20,27 +21,27 @@ theme:
 nav:
   - Overview: index.md
   - User Guides:
-    - user-guides/index.md
-    - user-guides/shipping.md
-    - user-guides/tracking.md
-    - Admin: user-guides/admin.md
+      - user-guides/index.md
+      - user-guides/shipping.md
+      - user-guides/tracking.md
+      - Admin: user-guides/admin.md
   - API Guides:
-    - api-guides/index.md
+      - api-guides/index.md
   - Developer Guides:
-    - developer-guides/index.md
-    - Architecture: developer-guides/architecture.md
-    - developer-guides/installing.md
-    - developer-guides/rest-api.md
-    - developer-guides/graphql.md
-    - developer-guides/extensibility.md
-    - Deploy purplship:
-      - developer-guides/configuration.md
-      - developer-guides/docker.md
-      - developer-guides/heroku.md
-    - Community:
-      - FAQ: developer-guides/FAQ.md
-      - developer-guides/support.md
-      - developer-guides/developing.md
+      - developer-guides/index.md
+      - Architecture: developer-guides/architecture.md
+      - developer-guides/installing.md
+      - developer-guides/rest-api.md
+      - developer-guides/graphql.md
+      - developer-guides/extensibility.md
+      - Deploy purplship:
+          - developer-guides/configuration.md
+          - developer-guides/docker.md
+          - developer-guides/heroku.md
+      - Community:
+          - FAQ: developer-guides/FAQ.md
+          - developer-guides/support.md
+          - developer-guides/developing.md
 #  - Insiders: insiders.md
 
 extra:

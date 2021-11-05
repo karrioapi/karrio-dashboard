@@ -1,5 +1,10 @@
 # Getting Started
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 Once purplship is up and running, the first thing to do is to register your carrier accounts.
 
 ## Carrier connections
@@ -19,11 +24,11 @@ Adding carrier connection can be done from the purplship Web App.
       <img src="/tutos/carrier-connection.gif" height="200" />
     </figure>
 
-## Test vs Live Mode 
+## Test vs Live Mode
 
-purplship' first goal is to make shipping services integration and automation easy. 
+purplship' first goal is to make shipping services integration and automation easy.
 
-The `test mode` option here is suited for development. By checking the during your connection, 
+The `test mode` option here is suited for development. By checking the during your connection,
 you are instructing purplship to connect to the carrier sandbox server.
 
 !!! hint

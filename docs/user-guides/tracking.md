@@ -1,5 +1,10 @@
 # Tracking
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 The purplship server exposes a shipment' tracker API that can watch and store the latest known status
 of a package during it's transportation journey.
 
@@ -8,7 +13,7 @@ of a package during it's transportation journey.
 Adding a shipment tracker from the purplship Web App.
 
 !!! info "Track a shipment"
-   
+
     - navigate to `> Trackers`
     - click on the `Track a Shipment` button
     - Enter your tracking number
@@ -26,7 +31,7 @@ The purplship server tracking API give you access to the full shipment tracking 
 The purplship web app comes with a basic branded tracking.
 
 !!! info "Share a Branded Tracking page"
-   
+
     - navigate to `> Trackers`
     - click on the `preview` action of your tracker
     - Copy the link to share with a customer

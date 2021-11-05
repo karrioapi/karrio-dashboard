@@ -1,9 +1,14 @@
 # REST API
 
+!!! caution
+    **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
+
+    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+
 
 ## The Multi-carrier Shipping API
 
-purplship shipping API is powered by REST. Rather than dealing with non-standardized, 
+purplship shipping API is powered by REST. Rather than dealing with non-standardized,
 often poorly documented carrier webservices and arcane technologies such as SOAP. purplship
 proposes a unified and intuitive REST API compatible for all supported carriers services.
 
@@ -21,8 +26,8 @@ for the full description of the service APIs from your browser.
 
 ## Playground
 
-You can download the purplship `OpenAPI` specification to quickly familiarize yourself with the 
-REST API and perform example requests by importing it in tools such as [Insomnia](https://insomnia.rest/download) or 
+You can download the purplship `OpenAPI` specification to quickly familiarize yourself with the
+REST API and perform example requests by importing it in tools such as [Insomnia](https://insomnia.rest/download) or
 [Postman](https://www.postman.com/product/rest-client/)
 
 
