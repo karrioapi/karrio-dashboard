@@ -1,0 +1,325 @@
+/* ==========================================================================
+Purplship custom styling
+========================================================================== */
+
+@import "./plex/main.scss";
+
+.card {
+    border-radius: 6px;
+    box-shadow: none;
+    border: 1px solid #e5e5e5;
+}
+
+.options-item,
+.form-icon {
+    color: #a9abac;
+}
+
+.purplship-loader {
+    top: 0;
+    left: 0;
+    animation-duration: 3s !important;
+    position: absolute;
+    z-index: 100;
+    margin: 0 !important;
+    height: 0.10rem !important;
+}
+
+.purplship-notification-loader {
+    top: 0;
+    left: 0;
+    animation-duration: 10s !important;
+    position: absolute;
+    z-index: 100;
+    margin: 0 !important;
+    height: 0.10rem !important;
+}
+
+.shipments-table {
+    .carrier {
+        width: 8%;
+        min-width: 83px;
+    }
+    .service {
+        width: 20%;
+    }
+    .status {
+        width: 10%;
+    }
+    .recipient {
+        min-width: 40%;
+    }
+    .date {
+        width: 13%;
+    }
+    .action {
+        width: 15%;
+        min-width: 160px;
+    }
+
+    tbody > tr.items {
+        cursor: pointer;
+    }
+
+    tbody > tr.items:hover {
+        background-color: #eeeeee;
+    }
+}
+
+.connections-table {
+    .carrier {
+        width: 24%;
+        text-align: center !important;
+    }
+    .mode {
+        width: 6%;
+    }
+    .active {
+        width: 6%;
+    }
+    .details {
+    }
+    .action {
+        width: 15%;
+    }
+}
+
+.system-connections-table {
+    .carrier {
+        width: 24%;
+        text-align: center !important;
+    }
+    .mode {
+        width: 6%;
+    }
+    .details {
+        width: 64%;
+    }
+    .action {
+        width: 6%;
+    }
+}
+
+.templates-table {
+    .template {
+    }
+    .default {
+        width: 20%;
+    }
+    .action {
+        width: 15%;
+    }
+}
+
+.commodities-table {
+    .commodity {
+    }
+    .action {
+        width: 115px;
+    }
+}
+
+.logs-table {
+    .status {
+        width: 8%;
+    }
+    .description {
+    }
+    .date {
+        width: 20%;
+    }
+}
+
+.trackers-table {
+    .carrier {
+        width: 8%;
+        min-width: 83px;
+    }
+    .tracking-number {
+        width: 20%;
+    }
+    .status {
+        width: 10%;
+    }
+    .last-event {
+        min-width: 40%;
+    }
+    .date {
+        width: 15%;
+    }
+    .action {
+        width: 5%;
+        min-width: 50px;
+    }
+
+    tbody > tr.items {
+        cursor: pointer;
+    }
+
+    tbody > tr.items:hover {
+        background-color: #eeeeee;
+    }
+}
+
+.webhooks-table {
+    .url {
+        width: 55%;
+    }
+    .mode {
+        width: 10%;
+    }
+    .last-event {
+        width: 15%;
+    }
+    .action {
+        width: 20%;
+        min-width: 185px;
+    }
+}
+
+hr {
+    background-color: #dddddd;
+}
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.plex-sidebar {
+    z-index: 30;
+}
+
+.log-card-header {
+    border-bottom: 1px solid #ddd;
+}
+
+.bottom-menu-item {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+}
+
+.mode-menu-item {
+    color: rgb(196, 76, 52) !important;
+}
+
+.purplship-notifier {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    opacity: 0.9;
+    border-radius: 0;
+    font-weight: 700;
+}
+
+.static-nav {
+    top: 0;
+    z-index: 1;
+    position: sticky;
+    background-color: white;
+}
+
+.mode-indicator {    
+    position: sticky;
+    top: 60px;
+    z-index: 1;
+    border-top: 1px solid rgb(196,76,52);
+    padding: 0;
+    text-align: center;
+    width: 100%;
+    display: flex;
+
+    .mode-indicator-label {
+        margin: 0 auto;
+        background: rgb(196,76,52);
+        display: inline;
+        padding: 2px 14px;
+        border-radius: 0 0 5px 5px;
+        color: white;
+        font-size: .55em;
+        font-weight: bold;
+    }
+}
+
+.table-container {
+    overflow: visible;
+}
+
+td > div.dropdown.is-active .dropdown-menu {
+    top: 75%;
+}
+
+.dropdown-content {
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 240px;
+    overflow: hidden;
+}
+
+.dropdown-panel {
+    max-height: 190px;
+}
+
+.label-container {
+    width: 90%;
+    height: 90%;
+    z-index: 1;
+}
+
+.fullscreen {
+    background: #f7f7f7;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.small-icon > svg {
+    width: 0.8em !important;
+    height: 0.8em !important;
+}
+
+.tab-content {
+    display: none;
+    overflow: hidden;
+
+    &.is-active {
+        display: block;
+    }
+}
+
+.dropped-panel {
+    max-height: 20.5rem;
+    overflow-y: auto;
+}
+
+.form-floating-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.form-floating-footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    background: white;
+}
+
+.rates-list-box {
+    max-height: 11em;
+    overflow: hidden;
+    &:hover {
+        overflow-y: scroll;
+    }
+}

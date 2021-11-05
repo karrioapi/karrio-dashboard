@@ -1,0 +1,11 @@
+# Ignore everything
+*
+
+!/public/
+!/src/
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/.eslintrc
+!/next.config.js
+!/LICENSE
