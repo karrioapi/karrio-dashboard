@@ -1,7 +1,11 @@
 # Ignore everything
 *
 
-!/.docker
-!/requirements.txt
-!/gunicorn-cfg.py
-!/licenses/APACHE-LICENSE-2.0
+!/public/
+!/src/
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/.eslintrc
+!/next.config.js
+!/LICENSE

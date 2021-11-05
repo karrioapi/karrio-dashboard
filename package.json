@@ -1,0 +1,39 @@
+{
+  "name": "purplship-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "gen:rest": "./scripts/generate-pship-client.sh",
+    "gen:graph": "./scripts/generate-pship-graphql-types.sh",
+    "build:image": "./scripts/build-image.sh"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.4.5",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@reactivex/rxjs": "^6.6.7",
+    "@types/next-auth": "^3.15.0",
+    "@types/node-fetch": "^2.5.12",
+    "bulma": "^0.9.3",
+    "graphql": "^15.5.1",
+    "highlight.js": "^11.2.0",
+    "libphonenumber-js": "^1.9.23",
+    "next": "^11.1.2",
+    "next-auth": "^3.29.0",
+    "node-fetch": "^2.6.1",
+    "pino": "^7.0.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "rxjs": "^7.3.0",
+    "sass": "^1.37.5"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.16",
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.0.1",
+    "typescript": "4.3.5"
+  }
+}
