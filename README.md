@@ -10,7 +10,7 @@ Purplship Dashboard is a browser-based logistics and shipping orchestration dash
 
 ### Using a Purplship Dashboard Release
 
-If you just want to try Kibana out, check out the our [purplship/dashboard Docker Image](https://hub.docker.com/repository/docker/purplship/dashboard) to give it a whirl.
+If you just want to try Purplship out, check out the our [purplship/dashboard Docker Image](https://hub.docker.com/repository/docker/purplship/dashboard) to give it a whirl.
 
 ### Building and Running Purplship Dashboard
 
@@ -61,10 +61,10 @@ npm run build
 
 ## Resources
 
-- [**Documentation**](https://docs.purplship.com)
+- [**Documentation**](https://next.purplship.com/docs)
 - [**Github Community**](https://github.com/purplship/purplship/discussions)
 - [**Issue Tracker**](https://github.com/purplship/purplship-dashboard/issues)
-- [**Blog**](https://blog.purplship.com)
+- [**Blog**](https://next.purplship.com/blog)
 
 > [Join us on Discord](https://discord.gg/gS88uE7sEx)
 
