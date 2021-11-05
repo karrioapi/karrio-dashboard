@@ -1,18 +1,15 @@
 <p align="center">
   <p align="center">
-    <a href="https://purplship.com" target="_blank">
-      <img src="https://github.com/purplship/purplship-server/raw/main/purpleserver/purpleserver/static/extra/branding/icon.png" alt="purplship" height="100">
-    </a>
+    <a href="https://purplship.com" target="_blank"><picture><img alt="Purplship" src="./purpleserver/purpleserver/static/extra/branding/icon.png" height="100" /></picture></a>
   </p>
   <h2 align="center">
     The Open Source Multi-carrier Shipping API
   </h2>
   <p align="center">
-    <a href="https://github.com/purplship/purplship-server/actions"><img src="https://github.com/purplship/purplship-server/workflows/puprlship-server/badge.svg" alt="CI" style="max-width:100%;"></a>
+    <a href="https://github.com/purplship/purplship-server/actions/workflows/pythonpackage.yml"><img src="https://github.com/purplship/purplship-server/actions/workflows/pythonpackage.yml/badge.svg?branch=legacy" alt="legacy-test" style="max-width:100%;"></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow"><img src="https://camo.githubusercontent.com/cb1d26ec555a33e9f09fe279b5edc49996a3bb3b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4147504c25323076332d626c75652e737667" alt="License: AGPL v3" data-canonical-src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" style="max-width:100%;"></a>
   </p>
 </p>
-
 
 ## What's purplship server?
 
@@ -39,8 +36,9 @@ Help us outâ€¦ If you love Open standard and great software, give us a star! ðŸŒ
 - **Cloud**: Optimized for deployments using Docker
 
 
-<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/shipping-dashboard.jpeg">
-<img src="https://github.com/purplship/purplship-server/raw/main/artifacts/tracking-dashboard.jpeg">
+<picture><img alt="Purplship" src="./artifacts/shipping-dashboard.jpeg" height="50%" /></picture>
+<picture><img alt="Purplship" src="./artifacts/tracking-dashboard.jpeg" height="50%" /></picture>
+
 
 
 ## Deployment
@@ -147,29 +145,6 @@ Access the application at http://0.0.0.0:5002
 Host your own purplship server for FREE with One-Click Deploy.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/purplship/purplship-heroku/tree/main/)
-
-
-## Editions
-
-purplship is available in two editions - **OSS** and **Enterprise**.
-
-The Open Source Edition is under the `Apache 2` License.
-
-To get the quotation of our Enterprise Edition, please visit [purplship.com](https://purplship.com) and contact us.
-
-- [Book a Live Demo at purplship.com](https://purplship.com/schedule-demo/)
-
-
-|                                          | OSS         | Enterprise   |
-| ---------------------------------------- | ----------- | ------------ |
-| Multi-carrier shipping APIs              | Yes         | Yes          |
-| Carrier accounts                         | Unlimited   | Unlimited    |
-| Hosting                                  | Self-hosted | Self-hosted  |
-| Maintenance & support                    | Community   | Dedicated    |
-| Whitelabel                               | No          | Yes          |
-| Multi-tenant & Multi-org                 | No          | Yes          |
-| Reporting & Analytics (soon)             | No          | Yes          |
-| Shipping billing data (soon)             | No          | Yes          |
 
 
 ## Official Client Libraries
