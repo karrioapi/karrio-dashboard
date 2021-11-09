@@ -97,10 +97,10 @@ class CarrierSettings(Serializer):
     carrier_name = ChoiceField(choices=CARRIERS, required=True, help_text="Indicates a carrier (type)")
     carrier_id = CharField(required=True, help_text="Indicates a specific carrier configuration name.")
     test = BooleanField(required=True, help_text="""
-    The test flag indicates whether to use a carrier configured for test. 
+    The test flag indicates whether to use a carrier configured for test.
     """)
     active = BooleanField(required=True, help_text="""
-    The active flag indicates whether the carrier account is active or not. 
+    The active flag indicates whether the carrier account is active or not.
     """)
 
 
@@ -128,19 +128,19 @@ class AddressData(AugmentedAddressSerializer):
 
     postal_code = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The address postal code
-    
+
     **(required for shipment purchase)**
     """)
     city = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The address city.
-    
+
     **(required for shipment purchase)**
     """)
     federal_tax_id = CharField(required=False, allow_blank=True, allow_null=True, help_text="The party frederal tax id")
     state_tax_id = CharField(required=False, allow_blank=True, allow_null=True, help_text="The party state id")
     person_name = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     attention to
-    
+
     **(required for shipment purchase)**
     """)
     company_name = CharField(required=False, allow_blank=True, allow_null=True, help_text="The company name if the party is a company")
@@ -191,16 +191,16 @@ class ParcelData(PresetSerializer):
     length = FloatField(required=False, allow_null=True, help_text="The parcel's length")
     packaging_type = CharField(required=False, allow_blank=True, allow_null=True, help_text=f"""
     The parcel's packaging type.
-    
+
     **Note that the packaging is optional when using a package preset**
-    
+
     values: <br/>- {'<br/>- '.join([f'**{pkg}**' for pkg, _ in PACKAGING_UNIT])}
-    
+
     For specific carriers packaging type, please consult [the reference](#operation/references).
     """)
     package_preset = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The parcel's package preset.
-    
+
     For specific carriers package preset, please consult [the reference](#operation/references).
     """)
     description = CharField(required=False, allow_blank=True, allow_null=True, help_text="The parcel's description")
@@ -267,7 +267,7 @@ class Notification(Serializer):
 
     email = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The alternative notification email.
-    
+
     Note that by default the recipient email will be used.
     """)
     locale = CharField(required=False, allow_blank=True, allow_null=True, default='en')
@@ -293,13 +293,13 @@ class Charge(Serializer):
 class RateRequest(Serializer):
     shipper = AddressData(required=True, help_text="""
     The address of the party
-    
+
     Origin address (ship from) for the **shipper**<br/>
     Destination address (ship to) for the **recipient**
     """)
     recipient = AddressData(required=True, help_text="""
     The address of the party
-    
+
     Origin address (ship from) for the **shipper**<br/>
     Destination address (ship to) for the **recipient**
     """)
@@ -308,7 +308,7 @@ class RateRequest(Serializer):
     services = StringListField(required=False, allow_null=True, help_text="""
     The requested carrier service for the shipment.<br/>
     Please consult [the reference](#operation/references) for specific carriers services.
-    
+
     Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.
     """)
     options = PlainDictField(required=False, allow_null=True, help_text=f"""
@@ -336,29 +336,29 @@ class PickupRequest(Serializer):
 
     pickup_date = CharField(required=True, validators=[valid_date_format], help_text="""
     The expected pickup date
-    
+
     Date Format: `YYYY-MM-DD`
     """)
     address = AddressData(required=True, help_text="The pickup address")
     parcels = ParcelData(required=True, many=True, allow_null=True, help_text="The shipment parcels to pickup.")
     ready_time = CharField(required=True, validators=[valid_time_format], help_text="""
     The ready time for pickup.
-    
+
     Time Format: `HH:MM`
     """)
     closing_time = CharField(required=True, validators=[valid_time_format], help_text="""
     The closing or late time of the pickup
-    
+
     Time Format: `HH:MM`
     """)
     instruction = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The pickup instruction.
-    
+
     eg: Handle with care.
     """)
     package_location = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The package(s) location.
-    
+
     eg: Behind the entrance door.
     """)
     options = PlainDictField(required=False, allow_null=True, help_text="Advanced carrier specific pickup options")
@@ -370,7 +370,7 @@ class PickupRequest(Serializer):
 class PickupUpdateRequest(Serializer):
     pickup_date = CharField(required=True, help_text="""
     The expected pickup date
-    
+
     Date Format: `YYYY-MM-DD`
     """)
     address = Address(required=True, help_text="The pickup address")
@@ -378,22 +378,22 @@ class PickupUpdateRequest(Serializer):
     confirmation_number = CharField(required=True, help_text="pickup identification number")
     ready_time = CharField(required=True, validators=[valid_time_format], help_text="""
     The ready time for pickup.
-    
+
     Time Format: `HH:MM`
     """)
     closing_time = CharField(required=True, validators=[valid_time_format], help_text="""
     The closing or late time of the pickup
-    
+
     Time Format: `HH:MM`
     """)
     instruction = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The pickup instruction.
-    
+
     eg: Handle with care.
     """)
     package_location = CharField(required=False, allow_blank=True, allow_null=True, help_text="""
     The package(s) location.
-    
+
     eg: Behind the entrance door.
     """)
     options = PlainDictField(required=False, allow_null=True, help_text="Advanced carrier specific pickup options")
@@ -424,7 +424,7 @@ class PickupCancelRequest(Serializer):
     address = AddressData(required=False, help_text="The pickup address")
     pickup_date = CharField(required=False, allow_null=True, validators=[valid_date_format], help_text="""
     The pickup date
-    
+
     Date Format: `YYYY-MM-DD`
     """)
     reason = CharField(required=False, help_text="The reason of the pickup cancellation")
@@ -488,13 +488,13 @@ class TrackingStatus(EntitySerializer, TrackingDetails):
 class ShippingData(Serializer):
     shipper = AddressData(required=True, help_text="""
     The address of the party
-    
+
     Origin address (ship from) for the **shipper**<br/>
     Destination address (ship to) for the **recipient**
     """)
     recipient = AddressData(required=True, help_text="""
     The address of the party
-    
+
     Origin address (ship from) for the **shipper**<br/>
     Destination address (ship to) for the **recipient**
     """)
@@ -527,7 +527,7 @@ class ShipmentData(ShippingData):
     """)
     carrier_ids = StringListField(required=False, allow_null=True, default=[], help_text="""
     The list of configured carriers you wish to get rates from.
-    
+
     *Note that the request will be sent to all carriers in nothing is specified*
     """)
 
@@ -593,7 +593,7 @@ class ShipmentContent(Serializer):
     tracker_id = CharField(required=False, allow_blank=True, allow_null=True, help_text="The attached tracker id")
     created_at = CharField(required=True, help_text="""
     The shipment creation datetime
-    
+
     Date Format: `YYYY-MM-DD HH:MM:SS.mmmmmmz`
     """)
     test_mode = BooleanField(required=True, help_text="Specified whether it was created with a carrier in test mode")
