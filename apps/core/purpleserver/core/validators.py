@@ -56,19 +56,21 @@ class PresetSerializer(serializers.Serializer):
 
     def validate(self, data):
         dimensions_required_together(data)
-        preset = next((
-            presets[data['package_preset']] for _, presets
-            in dataunits.REFERENCE_MODELS["package_presets"].items()
-            if data['package_preset'] in presets
-        ), {})
 
-        data.update({
-            **data,
-            "width": data.get("width", preset.get("width")),
-            "length": data.get("length", preset.get("length")),
-            "height": data.get("height", preset.get("height")),
-            "dimension_unit": data.get("dimension_unit", preset.get("dimension_unit"))
-        })
+        if data is not None and 'package_preset' in data:
+            preset = next((
+                presets[data['package_preset']] for _, presets
+                in dataunits.REFERENCE_MODELS["package_presets"].items()
+                if data['package_preset'] in presets
+            ), {})
+
+            data.update({
+                **data,
+                "width": data.get("width", preset.get("width")),
+                "length": data.get("length", preset.get("length")),
+                "height": data.get("height", preset.get("height")),
+                "dimension_unit": data.get("dimension_unit", preset.get("dimension_unit"))
+            })
 
         return data
 
