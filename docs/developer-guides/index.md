@@ -3,7 +3,7 @@
 !!! caution
     **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
 
-    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+    **Please visit [purplship.com/docs](https://next.purplship.com/docs) for the latest documentation.**
 
 Whether you're building a custom branded shipping software or looking for ways to extend purplship server,
 the following guide will help you achieve your goals.

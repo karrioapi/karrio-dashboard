@@ -3,7 +3,7 @@
 !!! caution
     **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
 
-    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+    **Please visit [purplship.com/docs](https://next.purplship.com/docs) for the latest documentation.**
 
 *If you don't find an answer below or if you have a different question, please email us at
 [hello@purplship.com](mailto:hello@purplship.com).*

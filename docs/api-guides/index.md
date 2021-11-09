@@ -3,7 +3,7 @@
 !!! caution
     **This documentation is a for legacy version of the purplship-server (up to 2021.7).**
 
-    **Please visit [purplship.com/docs](https://purplship.com/docs) for the latest documentation.**
+    **Please visit [purplship.com/docs](https://next.purplship.com/docs) for the latest documentation.**
 
 The purplship API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies,
 returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
