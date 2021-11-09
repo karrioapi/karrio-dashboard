@@ -45,7 +45,7 @@ huey==2.4.1
 idna==3.3
 inflection==0.5.1
 itypes==1.2.0
-Jinja2==3.0.2
+Jinja2==3.0.3
 jsonfield==3.1.0
 jstruct==2021.7.1
 lxml==4.6.4
@@ -57,7 +57,7 @@ phonenumbers==8.12.36
 Pillow==8.4.0
 promise==2.3
 psycopg2-binary==2.9.1
-purplship==2021.7
+purplship==2021.8
 purplship-server==2021.7.1
 purplship-server.client==2021.7.1
 purplship-server.core==2021.7.3
