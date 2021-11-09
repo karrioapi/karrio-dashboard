@@ -52,19 +52,19 @@ def valid_datetime_format(value):
         )
 
 
-class PresetSerializer:
+class PresetSerializer(serializers.Serializer):
 
-    def __init__(self, *args, **kwargs):
-        data = kwargs.get('data')
+    def validate(self, data):
+        dimensions_required_together(data)
+
         if data is not None and 'package_preset' in data:
-            dimensions_required_together(data)
             preset = next((
-                presets[data['package_preset']] for carrier, presets
+                presets[data['package_preset']] for _, presets
                 in dataunits.REFERENCE_MODELS["package_presets"].items()
                 if data['package_preset'] in presets
             ), {})
 
-            kwargs.update(data={
+            data.update({
                 **data,
                 "width": data.get("width", preset.get("width")),
                 "length": data.get("length", preset.get("length")),
@@ -72,50 +72,45 @@ class PresetSerializer:
                 "dimension_unit": data.get("dimension_unit", preset.get("dimension_unit"))
             })
 
-        super().__init__(*args, **kwargs)
+        return data
 
 
-class AugmentedAddressSerializer:
+class AugmentedAddressSerializer(serializers.Serializer):
 
-    def __init__(self, *args, **kwargs):
-        data = kwargs.get('data')
-        if data is not None:
+    def validate(self, data):
+        # Format and validate Postal Code
+        if all(data.get(key) is not None for key in ['country_code', 'postal_code']):
+            postal_code = data['postal_code']
+            country_code = data['country_code']
 
-            # Format and validate Postal Code
-            if all(data.get(key) is not None for key in ['country_code', 'postal_code']):
-                postal_code = data['postal_code']
-                country_code = data['country_code']
+            if country_code == units.Country.CA.name:
+                formatted = ''.join([c for c in postal_code.split() if c not in ['-', '_']]).upper()
+                if not re.match(r'^([A-Za-z]\d[A-Za-z][-]?\d[A-Za-z]\d)', formatted):
+                    raise serializers.ValidationError({'postal_code': 'The Canadian postal code must match Z9Z9Z9'})
 
-                if country_code == units.Country.CA.name:
-                    formatted = ''.join([c for c in postal_code.split() if c not in ['-', '_']]).upper()
-                    if not re.match(r'^([A-Za-z]\d[A-Za-z][-]?\d[A-Za-z]\d)', formatted):
-                        raise serializers.ValidationError('The Canadian postal code must match Z9Z9Z9')
+            elif country_code == units.Country.US.name:
+                formatted = ''.join(postal_code.split())
+                if not re.match(r'^\d{5}(-\d{4})?$', formatted):
+                    raise serializers.ValidationError({'postal_code': 'The American postal code must match 9999 or 99999'})
 
-                elif country_code == units.Country.US.name:
-                    formatted = ''.join(postal_code.split())
-                    if not re.match(r'^\d{5}(-\d{4})?$', formatted):
-                        raise serializers.ValidationError('The American postal code must match 9999 or 99999')
+            else:
+                formatted = postal_code
 
-                else:
-                    formatted = postal_code
+            data.update({**data, 'postal_code': formatted})
 
-                data.update({**data, 'postal_code': formatted})
+        # Format and validate Phone Number
+        if all(data.get(key) is not None and data.get(key) != "" for key in ['country_code', 'phone_number']):
+            phone_number = data['phone_number']
+            country_code = data['country_code']
 
-            # Format and validate Phone Number
-            if all(data.get(key) is not None and data.get(key) != "" for key in ['country_code', 'phone_number']):
-                phone_number = data['phone_number']
-                country_code = data['country_code']
+            try:
+                formatted = phonenumbers.parse(phone_number, country_code)
+                data.update({**data, 'phone_number': phonenumbers.format_number(formatted, phonenumbers.PhoneNumberFormat.INTERNATIONAL)})
+            except Exception as e:
+                logger.warning(e)
+                raise serializers.ValidationError({'postal_code': 'Invalid phone number format'})
 
-                try:
-                    formatted = phonenumbers.parse(phone_number, country_code)
-                    data.update({**data, 'phone_number': phonenumbers.format_number(formatted, phonenumbers.PhoneNumberFormat.INTERNATIONAL)})
-                except Exception as e:
-                    logger.warning(e)
-                    raise serializers.ValidationError("Invalid phone number format")
-
-            kwargs.update(data=data)
-
-        super().__init__(*args, **kwargs)
+        return data
 
 
 class AddressValidatorAbstract:
