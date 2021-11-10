@@ -4,7 +4,8 @@ FROM node:alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN export NODE_OPTIONS=--openssl-legacy-provider && \
+  npm ci
 
 # Rebuild the source code only when needed
 FROM node:alpine AS builder
