@@ -1,7 +1,7 @@
 purplship==2021.8
 purplship-server==2021.7.1
 purplship-server.client==2021.7.1
-purplship-server.core==2021.7.3
+purplship-server.core==2021.7.4
 purplship-server.events==2021.7.1
 purplship-server.graph==2021.7
 purplship-server.manager==2021.7.1
