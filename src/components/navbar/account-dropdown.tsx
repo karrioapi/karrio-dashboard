@@ -1,8 +1,8 @@
 import React, { useState, useRef, useContext } from 'react';
 import { UserData } from '@/context/user-provider';
 import Link from 'next/link';
-import getConfig from 'next/config';
 import { signOut } from 'next-auth/client';
+import { APIReference } from '@/context/references-provider';
 
 
 interface AccountDropdownComponent { }
@@ -10,7 +10,7 @@ interface AccountDropdownComponent { }
 
 const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
   const { user } = useContext(UserData);
-  const { publicRuntimeConfig } = getConfig();
+  const { admin } = useContext(APIReference);
   const [isActive, setIsActive] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const handleOnClick = (e: React.MouseEvent) => {
@@ -55,7 +55,7 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
               </a>
             </Link>
 
-            {user?.is_staff && <a href={`${publicRuntimeConfig?.PURPLSHIP_API_URL}/admin`} target="_blank" rel="noreferrer" className="options-item">
+            {user?.is_staff && <a href={admin} target="_blank" rel="noreferrer" className="options-item">
               <i className="fas fa-tools"></i>
               <div className="option-content">
                 <span>Admin Console</span>
