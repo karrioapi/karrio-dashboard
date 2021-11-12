@@ -9,6 +9,7 @@ docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
   --additional-properties=modelPropertyNaming=snake_case \
   --additional-properties=useSingleRequestParameter=True
 
-rm -rf src/api/generated/apis/index.ts \
+rm -rf src/api/generated/index.ts \
+  src/api/generated/apis/index.ts \
   src/api/generated/.openapi-generator-ignore \
   src/api/generated/.openapi-generator/
