@@ -16,73 +16,74 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface WebhookData
+ * @interface Metadata
  */
-export interface WebhookData {
+export interface Metadata {
     /**
-     * The URL of the webhook endpoint.
+     * 
      * @type {string}
-     * @memberof WebhookData
+     * @memberof Metadata
      */
-    url: string;
+    app_name: string;
     /**
-     * An optional description of what the webhook is used for.
+     * 
      * @type {string}
-     * @memberof WebhookData
+     * @memberof Metadata
      */
-    description?: string | null;
+    app_version: string;
     /**
-     * The list of events to enable for this endpoint.
-     * @type {Array<string>}
-     * @memberof WebhookData
+     * 
+     * @type {string}
+     * @memberof Metadata
      */
-    enabled_events: Array<WebhookDataEnabledEventsEnum>;
+    app_website: string;
     /**
-     * Specified whether it was created with a carrier in test mode
+     * 
      * @type {boolean}
-     * @memberof WebhookData
+     * @memberof Metadata
      */
-    test_mode: boolean;
+    multi_organizations: boolean;
     /**
-     * Indicates that the webhook is disabled
-     * @type {boolean}
-     * @memberof WebhookData
+     * 
+     * @type {string}
+     * @memberof Metadata
      */
-    disabled?: boolean | null;
+    admin: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Metadata
+     */
+    openapi: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Metadata
+     */
+    graphql: string;
 }
 
-/**
-* @export
-* @enum {string}
-*/
-export enum WebhookDataEnabledEventsEnum {
-    All = 'all',
-    ShipmentPurchased = 'shipment.purchased',
-    ShipmentCancelled = 'shipment.cancelled',
-    ShipmentFulfilled = 'shipment.fulfilled',
-    TrackerCreated = 'tracker.created',
-    TrackerUpdated = 'tracker.updated'
+export function MetadataFromJSON(json: any): Metadata {
+    return MetadataFromJSONTyped(json, false);
 }
 
-export function WebhookDataFromJSON(json: any): WebhookData {
-    return WebhookDataFromJSONTyped(json, false);
-}
-
-export function WebhookDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): WebhookData {
+export function MetadataFromJSONTyped(json: any, ignoreDiscriminator: boolean): Metadata {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'url': json['url'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'enabled_events': json['enabled_events'],
-        'test_mode': json['test_mode'],
-        'disabled': !exists(json, 'disabled') ? undefined : json['disabled'],
+        'app_name': json['APP_NAME'],
+        'app_version': json['APP_VERSION'],
+        'app_website': json['APP_WEBSITE'],
+        'multi_organizations': json['MULTI_ORGANIZATIONS'],
+        'admin': json['ADMIN'],
+        'openapi': json['OPENAPI'],
+        'graphql': json['GRAPHQL'],
     };
 }
 
-export function WebhookDataToJSON(value?: WebhookData | null): any {
+export function MetadataToJSON(value?: Metadata | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -91,11 +92,13 @@ export function WebhookDataToJSON(value?: WebhookData | null): any {
     }
     return {
         
-        'url': value.url,
-        'description': value.description,
-        'enabled_events': value.enabled_events,
-        'test_mode': value.test_mode,
-        'disabled': value.disabled,
+        'APP_NAME': value.app_name,
+        'APP_VERSION': value.app_version,
+        'APP_WEBSITE': value.app_website,
+        'MULTI_ORGANIZATIONS': value.multi_organizations,
+        'ADMIN': value.admin,
+        'OPENAPI': value.openapi,
+        'GRAPHQL': value.graphql,
     };
 }
 

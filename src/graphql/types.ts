@@ -2176,7 +2176,9 @@ export interface CreateConnectionInput {
   dhlexpresssettings?: DHLExpressSettingsInput | null;
   dhluniversalsettings?: DHLUniversalSettingsInput | null;
   dicomsettings?: DicomSettingsInput | null;
+  eshippersettings?: EShipperSettingsInput | null;
   fedexsettings?: FedexSettingsInput | null;
+  freightcomsettings?: FreightcomSettingsInput | null;
   purolatorsettings?: PurolatorSettingsInput | null;
   royalmailsettings?: RoyalMailSettingsInput | null;
   sendlesettings?: SendleSettingsInput | null;
@@ -2187,8 +2189,6 @@ export interface CreateConnectionInput {
   uspsinternationalsettings?: USPSInternationalSettingsInput | null;
   yanwensettings?: YanwenSettingsInput | null;
   yunexpresssettings?: YunExpressSettingsInput | null;
-  eshippersettings?: EShipperSettingsInput | null;
-  freightcomsettings?: FreightcomSettingsInput | null;
   clientMutationId?: string | null;
 }
 
@@ -2273,16 +2273,36 @@ export interface DicomSettingsInput {
 }
 
 // null
+export interface EShipperSettingsInput {
+  id?: string | null;
+  carrier_id: string;
+  test?: boolean | null;
+  active?: boolean | null;
+  username: string;
+  password: string;
+}
+
+// null
 export interface FedexSettingsInput {
   id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
-  user_key: string;
   password: string;
   meter_number: string;
   account_number: string;
+  user_key?: string | null;
+}
+
+// null
+export interface FreightcomSettingsInput {
+  id?: string | null;
+  carrier_id: string;
+  test?: boolean | null;
+  active?: boolean | null;
+  username: string;
+  password: string;
 }
 
 // null
@@ -2399,26 +2419,6 @@ export interface YunExpressSettingsInput {
 }
 
 // null
-export interface EShipperSettingsInput {
-  id?: string | null;
-  carrier_id: string;
-  test?: boolean | null;
-  active?: boolean | null;
-  username: string;
-  password: string;
-}
-
-// null
-export interface FreightcomSettingsInput {
-  id?: string | null;
-  carrier_id: string;
-  test?: boolean | null;
-  active?: boolean | null;
-  username: string;
-  password: string;
-}
-
-// null
 export interface UpdateConnectionInput {
   id?: string | null;
   aramexsettings?: PartialAramexSettingsInput | null;
@@ -2428,7 +2428,9 @@ export interface UpdateConnectionInput {
   dhlexpresssettings?: PartialDHLExpressSettingsInput | null;
   dhluniversalsettings?: PartialDHLUniversalSettingsInput | null;
   dicomsettings?: PartialDicomSettingsInput | null;
+  eshippersettings?: PartialEShipperSettingsInput | null;
   fedexsettings?: PartialFedexSettingsInput | null;
+  freightcomsettings?: PartialFreightcomSettingsInput | null;
   purolatorsettings?: PartialPurolatorSettingsInput | null;
   royalmailsettings?: PartialRoyalMailSettingsInput | null;
   sendlesettings?: PartialSendleSettingsInput | null;
@@ -2439,8 +2441,6 @@ export interface UpdateConnectionInput {
   uspsinternationalsettings?: PartialUSPSInternationalSettingsInput | null;
   yanwensettings?: PartialYanwenSettingsInput | null;
   yunexpresssettings?: PartialYunExpressSettingsInput | null;
-  eshippersettings?: PartialEShipperSettingsInput | null;
-  freightcomsettings?: PartialFreightcomSettingsInput | null;
   clientMutationId?: string | null;
 }
 
@@ -2525,16 +2525,36 @@ export interface PartialDicomSettingsInput {
 }
 
 // null
+export interface PartialEShipperSettingsInput {
+  id?: string | null;
+  carrier_id?: string | null;
+  test?: boolean | null;
+  active?: boolean | null;
+  username?: string | null;
+  password?: string | null;
+}
+
+// null
 export interface PartialFedexSettingsInput {
   id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
-  user_key?: string | null;
   password?: string | null;
   meter_number?: string | null;
   account_number?: string | null;
+  user_key?: string | null;
+}
+
+// null
+export interface PartialFreightcomSettingsInput {
+  id?: string | null;
+  carrier_id?: string | null;
+  test?: boolean | null;
+  active?: boolean | null;
+  username?: string | null;
+  password?: string | null;
 }
 
 // null
@@ -2648,26 +2668,6 @@ export interface PartialYunExpressSettingsInput {
   active?: boolean | null;
   customer_number?: string | null;
   api_secret?: string | null;
-}
-
-// null
-export interface PartialEShipperSettingsInput {
-  id?: string | null;
-  carrier_id?: string | null;
-  test?: boolean | null;
-  active?: boolean | null;
-  username?: string | null;
-  password?: string | null;
-}
-
-// null
-export interface PartialFreightcomSettingsInput {
-  id?: string | null;
-  carrier_id?: string | null;
-  test?: boolean | null;
-  active?: boolean | null;
-  username?: string | null;
-  password?: string | null;
 }
 
 // null

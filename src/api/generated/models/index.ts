@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 export * from './Address';
 export * from './AddressData';
 export * from './AddressList';
@@ -13,6 +15,7 @@ export * from './CustomsList';
 export * from './Duty';
 export * from './ErrorResponse';
 export * from './Message';
+export * from './Metadata';
 export * from './Operation';
 export * from './OperationConfirmation';
 export * from './OperationResponse';
