@@ -45,7 +45,7 @@ const AuthorizedPage = (Component: React.FC, pageProps?: any | {}) => {
 
   useEffect(() => {
     if (session === null || session?.error === "RefreshAccessTokenError") {
-      router.push('/login?next=' + window.location.pathname);
+      router.push('/login?callbackUrl=' + location.href);
     }
     if (!isNone(session?.accessToken)) {
       AuthToken.next({ access: session?.accessToken } as TokenPair);

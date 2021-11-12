@@ -21,7 +21,7 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
     await signIn('credentials', {
       email: email.current?.value,
       password: password.current?.value,
-      callbackUrl: `${(new URLSearchParams(location.search)).get('next') || '/'}`,
+      callbackUrl: `${(new URLSearchParams(location.search)).get('callbackUrl') || '/'}`,
       ...((org_id || '').length == 0 ? {} : { org_id })
     });
   };
