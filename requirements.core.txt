@@ -15,7 +15,7 @@ purplship.dhl-express==2021.8
 purplship.dhl-universal==2021.8
 purplship.dicom==2021.8
 purplship.eshipper==2021.7
-purplship.fedex==2021.8.1
+purplship.fedex==2021.8.2
 purplship.freightcom==2021.7
 purplship.purolator==2021.8
 purplship.royalmail==2021.8
