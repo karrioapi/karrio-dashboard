@@ -6,7 +6,7 @@ import { getCursorPagination, isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
-type RequestOptions = { cursor?: string } & any;
+type RequestOptions = { cursor?: string | null } & any;
 
 type ResultType = TrackerList & {
   error?: RequestError;

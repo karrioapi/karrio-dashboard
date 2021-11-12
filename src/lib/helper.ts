@@ -183,7 +183,7 @@ export function createServerError(error: ServerError) {
   return error;
 }
 
-export function getCursorPagination(cursor?: string): { limit?: number; offset?: number; } {
+export function getCursorPagination(cursor?: string | null): { limit?: number; offset?: number; } {
   const [_, queryString] = (cursor || '').split('?');
   const params = (queryString || '').split('&');
 

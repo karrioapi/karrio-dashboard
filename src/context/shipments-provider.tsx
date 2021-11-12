@@ -7,7 +7,7 @@ import { AppMode } from '@/context/app-mode-provider';
 import { ListRequest } from '@/api/generated/apis/ShipmentsApi';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
-type RequestOptions = { cursor?: string } & ListRequest;
+type RequestOptions = { cursor?: string | null } & ListRequest;
 
 type ResultType = ShipmentList & {
   error?: RequestError;

@@ -2,6 +2,7 @@ import { Operation, TrackingStatus } from '@/api/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';
+import { CreateCarrierNameEnum } from '@/api/generated/apis/TrackersApi';
 
 
 type TrackerMutator<T> = T & {
@@ -14,7 +15,7 @@ const TrackerMutation = <T extends {}>(Component: React.FC<TrackerMutator<T>>) =
     const purplship = useContext(RestContext);
 
     const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(
-      purplship!.trackers.create({ carrierName: carrier_name, trackingNumber: tracking_number, test })
+      purplship!.trackers.create({ carrierName: carrier_name as CreateCarrierNameEnum, trackingNumber: tracking_number, test })
     );
     const removeTracker = async (idOrTrackingNumber: string) => handleFailure(
       purplship!.trackers.remove({ idOrTrackingNumber })
