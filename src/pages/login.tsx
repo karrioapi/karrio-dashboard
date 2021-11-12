@@ -7,23 +7,37 @@ import { signIn } from "next-auth/client";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
+import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from '@/lib/static/references';
 
 
 const LoginPage: NextPage<any, { references: References }> = ({ references }) => {
+  const router = useRouter();
+  const [showError, setShowError] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setShowError(false);
+    setIsLoading(true);
+
     const org_id = getCookie('org_id');
-    await signIn('credentials', {
+    const response: any = await signIn('credentials', {
+      redirect: false,
       email: email.current?.value,
       password: password.current?.value,
-      callbackUrl: `${(new URLSearchParams(location.search)).get('callbackUrl') || '/'}`,
       ...((org_id || '').length == 0 ? {} : { org_id })
     });
+
+    if (response.ok) {
+      router.push(`${(new URLSearchParams(location.search)).get('next') || '/'}`);
+    } else {
+      setIsLoading(false);
+      setShowError(true);
+    }
   };
 
   return (
@@ -35,6 +49,11 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
           <div className="card isolated-card">
             <div className="card-content">
               <p className="subtitle has-text-centered">Sign in to your account</p>
+
+              {showError && <p className="has-text-danger is-size-6 has-text-centered">
+                Please enter a correct email address and password. <br />
+                Note that both fields may be case-sensitive.
+              </p>}
 
               <form method="post" onSubmit={onSubmit}>
 
@@ -57,7 +76,11 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
 
                 <div className="field mt-6">
                   <div className="control">
-                    <input className="button is-primary is-fullwidth" type="submit" value="Log in" />
+                    <input
+                      className={"button is-primary is-fullwidth" + (isLoading ? " is-loading" : "")}
+                      type="submit"
+                      value="Log in"
+                    />
                   </div>
                 </div>
 
