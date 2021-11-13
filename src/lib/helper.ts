@@ -88,7 +88,7 @@ export function formatValues(separator: string, ...args: any[]): string {
 }
 
 export function formatDimension(parcel?: Partial<ParcelType>): string {
-  if (parcel !== undefined) {
+  if (parcel !== undefined && parcel !== null) {
 
     const { dimension_unit, height, length, width } = parcel;
     let formatted = formatValues(' x ', width, height, length);
@@ -99,7 +99,7 @@ export function formatDimension(parcel?: Partial<ParcelType>): string {
 }
 
 export function formatWeight(parcel?: Partial<ParcelType> | Partial<CommodityType>): string {
-  if (parcel !== undefined) {
+  if (parcel !== undefined && parcel !== null) {
 
     const { weight, weight_unit } = parcel;
 

@@ -56,8 +56,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
     const { templates, load, ...state } = useContext(ParcelTemplates);
     const { default_parcel } = useContext(DefaultTemplatesData);
     const form = useRef<HTMLFormElement>(null);
-    const [key, setKey] = useState<string>(`parcel-${Date.now()}`);
-    const [presets, setPresets] = useState<PresetCollection>(package_presets as PresetCollection);
+    const [key] = useState<string>(`parcel-${Date.now()}`);
     const [parcel, dispatch] = useReducer(reducer, value, () => value || DEFAULT_PARCEL_CONTENT);
     const [parcel_type, setParcelType] = useState<string>(isNone(value?.package_preset) ? 'custom' : 'preset');
     const [dimension, setDimension] = useState<string | undefined>(formatDimension(isNone(value?.package_preset) ? undefined : value));
@@ -73,12 +72,12 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
         const preset = { ...parcel, package_preset: undefined } as Partial<Parcel>;
 
         setParcelType(value as string);
-        setDimension(formatDimension(value === 'customs' ? undefined : template || preset));
+        setDimension(formatDimension(value === 'custom' ? undefined : template || preset));
         value = { ...(template || preset as any), id: parcel.id };
         name = isNone(template) ? name : 'template';
       }
       else if (name === 'package_preset') {
-        const preset = findPreset(presets, value as string) || parcel;
+        const preset = findPreset(package_presets as PresetCollection, value as string) || parcel;
         setDimension(formatDimension(preset));
         value = preset;
       }
@@ -123,7 +122,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ShipmentMutation<ParcelFormCom
       if (!isNone(value)) return;
       dispatch({ name: 'template', value: default_parcel as Parcel });
       setDimension(formatDimension(default_parcel as Partial<Parcel>));
-      setParcelType(default_parcel?.package_preset ? 'preset' : 'customs');
+      setParcelType(default_parcel?.package_preset ? 'preset' : 'custom');
     }, [default_parcel, value]);
 
 

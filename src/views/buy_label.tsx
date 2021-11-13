@@ -67,7 +67,7 @@ export default withSessionCookies(function (pageProps) {
       }
     }, []);
     useEffect(() => { if (!template.loading) template.load(); }, []);
-    useEffect(() => { if (!isNone(countries) && !isNone(default_address)) setReady(true); }, [countries, default_address]);
+    useEffect(() => { if (!isNone(countries) && template.called) setReady(true); }, [countries, template]);
 
     return (
       <>
