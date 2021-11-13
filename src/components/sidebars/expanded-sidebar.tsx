@@ -69,6 +69,10 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span>Webhooks</span>
         </AppLink>
 
+        <AppLink href="/developers/events" className={"menu-item ml-6 " + isActive("/developers/events")}>
+          <span>Events</span>
+        </AppLink>
+
         <AppLink href="/developers/logs" className={"menu-item ml-6 " + isActive("/developers/logs")}>
           <span>Logs</span>
         </AppLink>

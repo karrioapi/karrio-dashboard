@@ -1087,6 +1087,74 @@ export interface confirm_password_resetVariables {
   data: ConfirmPasswordResetInput;
 }
 
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_event
+// ====================================================
+
+export interface get_event_event {
+  id: string;  // The ID of the object.
+  type: string;
+  data: any | null;
+  test_mode: boolean;
+  pending_webhooks: number;
+  created_at: any;
+}
+
+export interface get_event {
+  event: get_event_event | null;
+}
+
+export interface get_eventVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_events
+// ====================================================
+
+export interface get_events_events_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_events_events_edges_node {
+  id: string;  // The ID of the object.
+  type: string;
+  data: any | null;
+  test_mode: boolean;
+  pending_webhooks: number;
+  created_at: any;
+}
+
+export interface get_events_events_edges {
+  node: get_events_events_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_events_events {
+  pageInfo: get_events_events_pageInfo;       // Pagination data for this connection.
+  edges: (get_events_events_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_events {
+  events: get_events_events | null;
+}
+
+export interface get_eventsVariables {
+  offset?: number | null;
+  first?: number | null;
+  type?: string | null;
+}
+
 /* tslint:disable */
 // This file was automatically generated and should not be edited.
 

@@ -655,3 +655,39 @@ mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
   }
 }
 `;
+
+export const GET_EVENT = gql`
+query get_event($id: String!) {
+  event(id: $id) {
+    id
+    type
+    data
+    test_mode
+    pending_webhooks
+    created_at
+  }
+}
+`;
+
+export const GET_EVENTS = gql`
+query get_events($offset: Int, $first: Int, $type: String) {
+  events(offset: $offset, first: $first, type: $type) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        type
+        data
+        test_mode
+        pending_webhooks
+        created_at
+      }
+    }
+  }
+}
+`;
