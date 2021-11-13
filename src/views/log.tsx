@@ -5,7 +5,6 @@ import StatusCode from "@/components/status-code-badge";
 import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect, useState } from "react";
-import AppLink from "@/components/app-link";
 import { useRouter } from "next/dist/client/router";
 import LogProvider, { Log } from "@/context/log-provider";
 import hljs from "highlight.js";
@@ -37,21 +36,19 @@ export default withSessionCookies(function (pageProps) {
 
     return (
       <>
-        <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-          <ul>
-            <li><AppLink href="/developers/logs">Logs</AppLink></li>
-            <li className="is-active"><a href="#" aria-current="page">details</a></li>
-          </ul>
-        </nav>
+        {log !== undefined && <>
 
-        {log !== undefined && <div className="card">
-
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="subtitle is-6">Request</p>
-            <p className="title is-4">{log.method} {log.path} <StatusCode code={log.status_code as number} /></p>
+          <div className="columns my-1">
+            <div className="column is-8">
+              <span className="subtitle is-size-7 has-text-weight-semibold">LOG</span>
+              <br />
+              <span className="title is-5 mr-2">{log.method} {log.path} <StatusCode code={log.status_code as number} /></span>
+            </div>
           </div>
 
-          <div className="card-content py-3">
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+          <div className="py-3">
             <div className="columns my-0">
               <div className="column is-3 py-1">ID</div>
               <div className="column is-8 py-1">{log.id}</div>
@@ -61,70 +58,70 @@ export default withSessionCookies(function (pageProps) {
               <div className="column is-8 py-1">{formatDateTimeLong(log.requested_at)}</div>
             </div>
             <div className="columns my-0">
-              <div className="column is-3 py-1">IP Address</div>
+              <div className="column is-3 py-1">Origin</div>
               <div className="column is-8 py-1">{log.host}</div>
             </div>
             <div className="columns my-0">
-              <div className="column is-3 py-1">Origin</div>
+              <div className="column is-3 py-1">IP Address</div>
               <div className="column is-8 py-1">{log.remote_addr}</div>
             </div>
           </div>
 
-        </div>}
 
-        {notEmptyJSON(query_params) && query_params !== data && <div className="card my-3">
+          {notEmptyJSON(response) && <>
 
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Request query params</p>
-          </div>
+            <h2 className="title is-5 my-4">Response body</h2>
+            <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-          <div className="card-content py-3">
-            <pre>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(query_params as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+            <div className="py-3">
+              <pre>
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html: hljs.highlight(response as string, { language: 'json' }).value,
+                  }}
+                />
+              </pre>
+            </div>
 
-        </div>}
+          </>}
 
-        {notEmptyJSON(data) && <div className="card my-3">
 
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Request {log?.method} body</p>
-          </div>
+          {notEmptyJSON(data) && <>
 
-          <div className="card-content py-3">
-            <pre>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(data as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+            <h2 className="title is-5 my-4">Request {log?.method} body</h2>
+            <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-        </div>}
+            <div className="py-3">
+              <pre>
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html: hljs.highlight(data as string, { language: 'json' }).value,
+                  }}
+                />
+              </pre>
+            </div>
 
-        {notEmptyJSON(response) && <div className="card my-3">
+          </>}
 
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Response body</p>
-          </div>
 
-          <div className="card-content py-3">
-            <pre>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(response as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+          {notEmptyJSON(query_params) && query_params !== data && <>
 
-        </div>}
+            <h2 className="title is-5 my-4">Request query params</h2>
+            <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+            <div className="py-3">
+              <pre>
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html: hljs.highlight(query_params as string, { language: 'json' }).value,
+                  }}
+                />
+              </pre>
+            </div>
+
+          </>}
+
+        </>}
       </>
     );
   };
