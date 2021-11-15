@@ -95,7 +95,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = TemplateMutation<A
           <div className="modal-background" onClick={close}></div>
           <div className="modal-card">
 
-            <form className="modal-card-body">
+            <section className="modal-card-body">
               <div className="form-floating-header p-4">
                 <h3 className="subtitle is-3">{isNew ? 'New' : 'Update'} Address</h3>
               </div>
@@ -106,7 +106,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = TemplateMutation<A
                 <Extension />
 
               </AddressForm>}
-            </form>
+            </section>
 
           </div>
 
