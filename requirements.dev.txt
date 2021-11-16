@@ -2,16 +2,23 @@ wheel
 
 # carrier datatype libraries
 
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.aramex&subdirectory=aramex
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.australiapost&subdirectory=australiapost
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.dhl_universal&subdirectory=dhl_universal
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.dicom&subdirectory=dicom
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.royalmail&subdirectory=royalmail
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.sendle&subdirectory=sendle
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.sf_express&subdirectory=sf_express
-# -e git+https://github.com/purplship/purplship-carriers.git@adding-tnt-schemas-lib#egg=carrier.usps&subdirectory=usps
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.yanwen&subdirectory=yanwen
-# -e git+https://github.com/purplship/purplship-carriers.git@carrier-schema-libs-update#egg=carrier.yunexpress&subdirectory=yunexpress
+carrier.aramex==2021.2
+carrier.australiapost==2021.2.1
+carrier.canadapost==2021.7
+carrier.canpar==2021.2
+carrier.dhl-express==2021.4
+carrier.dhl-universal==2021.2.1
+carrier.dicom==2021.2.1
+carrier.fedex==2021.4
+carrier.purolator==2020.4.1
+carrier.royalmail==2021.2.1
+carrier.sendle==2021.2.1
+carrier.sf-express==2021.2
+carrier.tnt==2021.3
+carrier.ups==2020.3.1
+carrier.usps==2021.6
+carrier.yanwen==2021.2.1
+carrier.yunexpress==2021.2.1
 
 
 # purplship sdk carrier extensions
@@ -47,7 +54,7 @@ wheel
 
 
 # Installed versions
-purplship==2021.8
+purplship==2021.8.1
 purplship.aramex==2021.8
 purplship.australiapost==2021.8
 purplship.canadapost==2021.8.1
@@ -56,7 +63,7 @@ purplship.dhl-express==2021.8
 purplship.dhl-universal==2021.8
 purplship.dicom==2021.8
 purplship.eshipper==2021.7
-purplship.fedex==2021.8.2
+purplship.fedex==2021.8.3
 purplship.freightcom==2021.7
 purplship.purolator==2021.8
 purplship.royalmail==2021.8
