@@ -11,6 +11,7 @@ const THEME: Collection = {
   'canpar': 'is-canpar',
   'dicom': 'is-dicom',
   'dhl_express': 'is-dhl',
+  'dhl_poland': 'is-dhl',
   'dhl_universal': 'is-dhl',
   'eshipper': 'is-eshipper',
   'fedex': 'is-fedex',
