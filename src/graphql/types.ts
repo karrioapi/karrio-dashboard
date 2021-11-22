@@ -718,6 +718,37 @@ export interface get_user_connections_user_connections_DHLExpressSettings {
   account_country_code: string;
 }
 
+export interface get_user_connections_user_connections_DHLPolandSettings_services {
+  id: string;  // The ID of the object.
+  service_name: string;
+  service_code: string;
+  description: string | null;
+  cost: number | null;
+  currency: ServiceLevelCurrency | null;
+  estimated_transit_days: number | null;
+  max_weight: number | null;
+  max_width: number | null;
+  max_height: number | null;
+  max_length: number | null;
+  weight_unit: ServiceLevelWeightUnit | null;
+  dimension_unit: ServiceLevelDimensionUnit | null;
+  domicile: boolean | null;
+  international: boolean | null;
+}
+
+export interface get_user_connections_user_connections_DHLPolandSettings {
+  __typename: "DHLPolandSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;
+  active: boolean;
+  username: string;
+  password: string;
+  account_number: string;
+  services: (get_user_connections_user_connections_DHLPolandSettings_services | null)[] | null;
+}
+
 export interface get_user_connections_user_connections_DHLUniversalSettings {
   __typename: "DHLUniversalSettings";
   id: string;
@@ -900,7 +931,7 @@ export interface get_user_connections_user_connections_YunExpressSettings {
   api_secret: string;
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
+export type get_user_connections_user_connections = get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
 
 export interface get_user_connections {
   user_connections: (get_user_connections_user_connections | null)[] | null;
@@ -2234,6 +2265,165 @@ export enum dimension_unit {
   IN = "IN",
 }
 
+// An enumeration.
+export enum ServiceLevelCurrency {
+  AED = "AED",
+  AMD = "AMD",
+  ANG = "ANG",
+  AOA = "AOA",
+  ARS = "ARS",
+  AUD = "AUD",
+  AWG = "AWG",
+  AZN = "AZN",
+  BAM = "BAM",
+  BBD = "BBD",
+  BDT = "BDT",
+  BGN = "BGN",
+  BHD = "BHD",
+  BIF = "BIF",
+  BMD = "BMD",
+  BND = "BND",
+  BOB = "BOB",
+  BRL = "BRL",
+  BSD = "BSD",
+  BTN = "BTN",
+  BWP = "BWP",
+  BYN = "BYN",
+  BZD = "BZD",
+  CAD = "CAD",
+  CDF = "CDF",
+  CHF = "CHF",
+  CLP = "CLP",
+  CNY = "CNY",
+  COP = "COP",
+  CRC = "CRC",
+  CUC = "CUC",
+  CVE = "CVE",
+  CZK = "CZK",
+  DJF = "DJF",
+  DKK = "DKK",
+  DOP = "DOP",
+  DZD = "DZD",
+  EGP = "EGP",
+  ERN = "ERN",
+  ETB = "ETB",
+  EUR = "EUR",
+  FJD = "FJD",
+  GBP = "GBP",
+  GEL = "GEL",
+  GHS = "GHS",
+  GMD = "GMD",
+  GNF = "GNF",
+  GTQ = "GTQ",
+  GYD = "GYD",
+  HKD = "HKD",
+  HNL = "HNL",
+  HRK = "HRK",
+  HTG = "HTG",
+  HUF = "HUF",
+  IDR = "IDR",
+  ILS = "ILS",
+  INR = "INR",
+  IRR = "IRR",
+  ISK = "ISK",
+  JMD = "JMD",
+  JOD = "JOD",
+  JPY = "JPY",
+  KES = "KES",
+  KGS = "KGS",
+  KHR = "KHR",
+  KMF = "KMF",
+  KPW = "KPW",
+  KRW = "KRW",
+  KWD = "KWD",
+  KYD = "KYD",
+  KZT = "KZT",
+  LAK = "LAK",
+  LKR = "LKR",
+  LRD = "LRD",
+  LSL = "LSL",
+  LYD = "LYD",
+  MAD = "MAD",
+  MDL = "MDL",
+  MGA = "MGA",
+  MKD = "MKD",
+  MMK = "MMK",
+  MNT = "MNT",
+  MOP = "MOP",
+  MRO = "MRO",
+  MUR = "MUR",
+  MVR = "MVR",
+  MWK = "MWK",
+  MXN = "MXN",
+  MYR = "MYR",
+  MZN = "MZN",
+  NAD = "NAD",
+  NGN = "NGN",
+  NIO = "NIO",
+  NOK = "NOK",
+  NPR = "NPR",
+  NZD = "NZD",
+  OMR = "OMR",
+  PEN = "PEN",
+  PGK = "PGK",
+  PHP = "PHP",
+  PKR = "PKR",
+  PLN = "PLN",
+  PYG = "PYG",
+  QAR = "QAR",
+  RSD = "RSD",
+  RUB = "RUB",
+  RWF = "RWF",
+  SAR = "SAR",
+  SBD = "SBD",
+  SCR = "SCR",
+  SDG = "SDG",
+  SEK = "SEK",
+  SGD = "SGD",
+  SHP = "SHP",
+  SLL = "SLL",
+  SOS = "SOS",
+  SRD = "SRD",
+  SSP = "SSP",
+  STD = "STD",
+  SYP = "SYP",
+  SZL = "SZL",
+  THB = "THB",
+  TJS = "TJS",
+  TND = "TND",
+  TOP = "TOP",
+  TRY = "TRY",
+  TTD = "TTD",
+  TWD = "TWD",
+  TZS = "TZS",
+  UAH = "UAH",
+  USD = "USD",
+  UYU = "UYU",
+  UZS = "UZS",
+  VEF = "VEF",
+  VND = "VND",
+  VUV = "VUV",
+  WST = "WST",
+  XAF = "XAF",
+  XCD = "XCD",
+  XOF = "XOF",
+  XPF = "XPF",
+  YER = "YER",
+  ZAR = "ZAR",
+}
+
+// An enumeration.
+export enum ServiceLevelWeightUnit {
+  KG = "KG",
+  LB = "LB",
+}
+
+// An enumeration.
+export enum ServiceLevelDimensionUnit {
+  CM = "CM",
+  IN = "IN",
+}
+
 // null
 export interface CreateConnectionInput {
   id?: string | null;
@@ -2242,6 +2432,7 @@ export interface CreateConnectionInput {
   canadapostsettings?: CanadaPostSettingsInput | null;
   canparsettings?: CanparSettingsInput | null;
   dhlexpresssettings?: DHLExpressSettingsInput | null;
+  dhlpolandsettings?: DHLPolandSettingsInput | null;
   dhluniversalsettings?: DHLUniversalSettingsInput | null;
   dicomsettings?: DicomSettingsInput | null;
   eshippersettings?: EShipperSettingsInput | null;
@@ -2317,6 +2508,37 @@ export interface DHLExpressSettingsInput {
   site_id: string;
   password: string;
   account_number?: string | null;
+}
+
+// null
+export interface DHLPolandSettingsInput {
+  id?: string | null;
+  services?: (ServiceLevelModelSerializerInput | null)[] | null;
+  carrier_id: string;
+  test?: boolean | null;
+  active?: boolean | null;
+  username: string;
+  password: string;
+  account_number?: string | null;
+}
+
+// null
+export interface ServiceLevelModelSerializerInput {
+  id?: string | null;
+  dimension_unit?: string | null;
+  weight_unit?: string | null;
+  currency?: string | null;
+  service_name: string;
+  service_code: string;
+  description?: string | null;
+  cost?: number | null;
+  estimated_transit_days?: number | null;
+  max_weight?: number | null;
+  max_width?: number | null;
+  max_height?: number | null;
+  max_length?: number | null;
+  domicile?: boolean | null;
+  international?: boolean | null;
 }
 
 // null
@@ -2494,6 +2716,7 @@ export interface UpdateConnectionInput {
   canadapostsettings?: PartialCanadaPostSettingsInput | null;
   canparsettings?: PartialCanparSettingsInput | null;
   dhlexpresssettings?: PartialDHLExpressSettingsInput | null;
+  dhlpolandsettings?: PartialDHLPolandSettingsInput | null;
   dhluniversalsettings?: PartialDHLUniversalSettingsInput | null;
   dicomsettings?: PartialDicomSettingsInput | null;
   eshippersettings?: PartialEShipperSettingsInput | null;
@@ -2569,6 +2792,37 @@ export interface PartialDHLExpressSettingsInput {
   site_id?: string | null;
   password?: string | null;
   account_number?: string | null;
+}
+
+// null
+export interface PartialDHLPolandSettingsInput {
+  id?: string | null;
+  services?: (PartialServiceLevelModelSerializerInput | null)[] | null;
+  carrier_id?: string | null;
+  test?: boolean | null;
+  active?: boolean | null;
+  username?: string | null;
+  password?: string | null;
+  account_number?: string | null;
+}
+
+// null
+export interface PartialServiceLevelModelSerializerInput {
+  id?: string | null;
+  dimension_unit?: string | null;
+  weight_unit?: string | null;
+  currency?: string | null;
+  service_name?: string | null;
+  service_code?: string | null;
+  description?: string | null;
+  cost?: number | null;
+  estimated_transit_days?: number | null;
+  max_weight?: number | null;
+  max_width?: number | null;
+  max_height?: number | null;
+  max_length?: number | null;
+  domicile?: boolean | null;
+  international?: boolean | null;
 }
 
 // null

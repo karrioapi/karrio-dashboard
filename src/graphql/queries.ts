@@ -415,6 +415,33 @@ export const GET_USER_CONNECTIONS = gql`
         account_number
         account_country_code
       }
+      ... on DHLPolandSettings {
+        id
+        carrier_id
+        carrier_name
+        test
+        active
+        username
+        password
+        account_number
+        services {
+          id
+          service_name
+          service_code
+          description
+          cost
+          currency
+          estimated_transit_days
+          max_weight
+          max_width
+          max_height
+          max_length
+          weight_unit
+          dimension_unit
+          domicile
+          international
+        }
+      }
       ... on DHLUniversalSettings {
         id
         carrier_id
