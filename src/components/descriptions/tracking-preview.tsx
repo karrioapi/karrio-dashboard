@@ -111,6 +111,12 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
 
             </div>
 
+            {((tracker?.messages || []).length > 0) && <div className="notification is-warning">
+              <p className="is-size-6 my-1 has-text-weight-semibold has-text-grey">
+                {(tracker?.messages || [{}])[0].message}
+              </p>
+            </div>}
+
             <hr />
 
             <div className="field">
