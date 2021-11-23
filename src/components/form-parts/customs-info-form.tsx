@@ -20,8 +20,10 @@ import { Loading } from '@/components/loader';
 export const DEFAULT_CUSTOMS_CONTENT: Customs = {
   duty: undefined,
   certify: true,
+  commodities: [],
   incoterm: CustomsIncotermEnum.Ddu,
   content_type: CustomsContentTypeEnum.Merchandise,
+  options: {}
 };
 const DEFAULT_DUTY: Payment = {
   paid_by: PaymentPaidByEnum.Recipient,
@@ -57,6 +59,8 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
           return { ...state, [name]: value };
       }
     }, value, () => value);
+    const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
+    const [commoditiesExpanded, setCommoditiesExpanded] = useState<boolean>(false);
 
     const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: keyof Customs, value: object }>) => {
       const target = event.target;
@@ -143,11 +147,12 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
           </ButtonField>
         </div>}
 
-        {!isNone(customs) && <form className="px-1 py-2" onSubmit={handleSubmit} ref={form} style={{ display: `${!editCommodity ? 'block' : 'none'}` }}>
+        {!isNone(customs) && <form className="pl-1 pr-2 py-2" onSubmit={handleSubmit} ref={form} style={{ display: `${!editCommodity ? 'block' : 'none'}` }}>
 
           {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, customs, onChange: handleChange }))}
 
-          <div className="columns is-multiline mb-0">
+          {/* Customs Info */}
+          <div className="columns is-multiline mb-0 mt-4">
 
             <SelectField label="Content type" value={customs?.content_type} onChange={handleChange} name="content_type" className="is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
               {customs_content_type && Object
@@ -167,23 +172,27 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
               }
             </SelectField>
 
-            <InputField label="AES" value={customs?.aes} onChange={handleChange} name="aes" fieldClass="column mb-0 is-6 px-2 py-1" />
+          </div>
 
-            <InputField label="EEL / PFC" value={customs?.eel_pfc} onChange={handleChange} name="eel_pfc" fieldClass="column mb-0 is-6 px-2 py-1" />
-
-            <InputField label="certificate number" value={customs?.certificate_number} onChange={handleChange} name="certificate_number" fieldClass="column mb-0 is-6 px-2 py-1" />
+          {/* Commercial Invoice */}
+          <div className="columns is-multiline mb-0 pt-4">
 
             <CheckBoxField name="commercial_invoice" defaultChecked={customs?.commercial_invoice} onChange={handleChange} fieldClass="column mb-0 is-12 px-2 py-2">
               <span>Commercial Invoice</span>
             </CheckBoxField>
 
-            <InputField label="invoice number" value={customs?.invoice} onChange={handleChange} name="invoice" fieldClass="column mb-0 is-6 px-2 py-1" />
+            <div className="columns column is-multiline mb-0 ml-6 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd", display: `${customs?.commercial_invoice ? 'block' : 'none'}` }}>
 
-            <InputField label="invoice date" value={customs?.invoice_date} onChange={handleChange} name="invoice_date" type="date" fieldClass="column mb-0 is-6 px-2 py-1" />
+              <InputField label="invoice number" value={customs?.invoice} onChange={handleChange} name="invoice" className="is-small is-fullwidth" fieldClass="column mb-0 is-5 px-2 py-1" />
+
+              <InputField label="invoice date" value={customs?.invoice_date} onChange={handleChange} name="invoice_date" type="date" className="is-small is-fullwidth" fieldClass="column mb-0 is-5 px-2 py-1" />
+
+            </div>
 
           </div>
 
-          <div className="columns is-multiline mb-0 pt-2">
+          {/* Duties */}
+          <div className="columns is-multiline mb-0 pt-4">
 
             <CheckBoxField defaultChecked={!isNone(customs?.duty)} onChange={handleChange} name="hasDuty" fieldClass="column mb-0 is-12 px-2 py-2">
               <span>Duties</span>
@@ -191,82 +200,108 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
 
             <div className="columns column is-multiline mb-0 ml-6 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd", display: `${!isNone(customs?.duty) ? 'block' : 'none'}` }}>
 
-              <SelectField label="paid by" onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, paid_by: e.target.value, account_number: (e.target.value == PaymentPaidByEnum.ThirdParty) ? customs?.duty?.account_number : undefined } })} value={customs?.duty?.paid_by} name="paid_by" className="is-small is-fullwidth" fieldClass="column is-4 mb-0 px-1 py-2" required={!isNone(customs?.duty)}>
+              <SelectField label="paid by" value={customs?.duty?.paid_by} name="paid_by" className="is-small is-fullwidth" fieldClass="column is-5 mb-0 px-1 py-2" required={!isNone(customs?.duty)}
+                onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, paid_by: e.target.value, account_number: (e.target.value == PaymentPaidByEnum.ThirdParty) ? customs?.duty?.account_number : undefined } })}>
                 {PAYOR_OPTIONS.map(unit => <option key={unit} value={unit}>{formatRef(unit)}</option>)}
               </SelectField>
 
               {customs?.duty?.paid_by === PaymentPaidByEnum.ThirdParty &&
-                <InputField label="account number" onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, account_number: e.target.value } })} value={customs?.duty?.account_number} name="account_number" className="is-small" fieldClass="column mb-0 is-4 px-1 py-2" />}
+                <InputField label="account number" value={customs?.duty?.account_number} name="account_number" className="is-small" fieldClass="column mb-0 is-5 px-1 py-2"
+                  onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, account_number: e.target.value } })} />}
 
-              <SelectField label="prefered currency" onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, currency: e.target.value } })} value={customs?.duty?.currency} name="currency" className="is-small is-fullwidth" fieldClass="column is-4 mb-0 px-1 py-2">
+              <SelectField label="prefered currency" name="currency" className="is-small is-fullwidth" fieldClass="column is-5 mb-0 px-1 py-2"
+                onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, currency: e.target.value } })} value={customs?.duty?.currency}>
                 {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
               </SelectField>
 
-              <InputField label="Declared value" onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, declared_value: e.target.value } })} value={customs?.duty?.declared_value} name="declared_value" type="number" min={0} step="any" className="is-small" fieldClass="column mb-0 is-4 px-1 py-2" />
+              <InputField label="Declared value" name="declared_value" type="number" min={0} step="any" className="is-small" fieldClass="column mb-0 is-5 px-1 py-2"
+                onChange={e => dispatch({ name: 'duty', value: { ...customs.duty, declared_value: e.target.value } })} value={customs?.duty?.declared_value} />
 
             </div>
 
           </div>
 
-          <hr className="my-2" />
+          {/* Customs Options */}
+          <div className="columns p-2 my-2">
+            <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
+              <p className="panel-heading select is-fullwidth px-2 pt-3" onClick={() => setOptionsExpanded(!optionsExpanded)}>
+                <span className="is-size-6">Customs Identifications</span>
+              </p>
 
-          <div className="mb-0 pt-2">
+              <div className="columns column is-multiline mb-0 ml-6 my-2 px-2 py-2" style={{ borderLeft: "solid 2px #ddd", display: `${optionsExpanded ? 'block' : 'none'}` }}>
 
-            <div className="table-container">
-              <table className="table is-fullwidth">
+                <InputField label="AES" value={customs?.options?.aes} name="aes" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), aes: e.target.value } })} />
 
-                <thead className="commodities-table">
-                  <tr>
-                    <th className="commodity px-0">Customs Commodities</th>
-                    <th className="action">
-                      <button className="button is-small is-light is-success is-pulled-right" onClick={e => { e.preventDefault(); toggleCommodity(); return false; }}>
-                        <span className="icon is-small"><i className="fas fa-plus"></i></span>
-                      </button>
-                    </th>
-                  </tr>
-                </thead>
+                <InputField label="EEL / PFC" value={customs?.options?.eel_pfc} name="eel_pfc" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), eel_pfc: e.target.value } })} />
 
-                <tbody className="commodities-table">
-                  {(customs?.commodities || []).map((commodity: CommodityType) => (
+                <InputField label="certificate number" value={customs?.options?.certificate_number} name="certificate_number" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), certificate_number: e.target.value } })} />
 
-                    <tr key={`${commodity.id}-${Date.now()}`}>
-                      <td className="commodity px-0">
-                        <CommodityDescription commodity={commodity} />
-                      </td>
-                      <td className="action is-vcentered">
-                        <div className="buttons is-pulled-right">
-                          <button type="button" className="button is-small is-white" onClick={e => { e.preventDefault(); toggleCommodity(commodity); return false; }}>
-                            <span className="icon is-small"><i className="fas fa-pen"></i></span>
-                          </button>
-                          <button type="button" className="button is-small is-white" onClick={e => { e.preventDefault(); removeCommodity(commodity.id); return false; }}>
-                            <span className="icon is-small"><i className="fas fa-trash"></i></span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                <InputField label="license number" value={customs?.options?.license_number} name="license_number" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), license_number: e.target.value } })} />
 
-                  ))}
-                </tbody>
+                <InputField label="VAT registration number" value={customs?.options?.vat_registration_number} name="vat_registration_number" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), vat_registration_number: e.target.value } })} />
 
-              </table>
+                <InputField label="nip_number" value={customs?.options?.nip_number} name="nip_number" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), nip_number: e.target.value } })} />
 
-              {((customs?.commodities || []).length === 0) && <div className="card my-2">
+                <InputField label="eori_number" value={customs?.options?.eori_number} name="eori_number" fieldClass="column mb-0 is-5 px-2 py-1"
+                  onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), eori_number: e.target.value } })} />
 
-                <div className="card-content has-text-centered">
-                  <p>No commodity declared yet.</p>
-                  <p>Use the <span className="icon is-small"><i className="fas fa-plus"></i></span> button above to add</p>
+              </div>
+            </article>
+          </div>
+
+
+          {/* Commodities */}
+          <div className="columns p-2 my-2">
+            <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
+              <p className="panel-heading select is-fullwidth px-2 pt-3" onClick={() => setCommoditiesExpanded(!commoditiesExpanded)}>
+                <span className="is-size-6">Customs commodities</span>
+              </p>
+
+              {commoditiesExpanded && <div style={{ display: `${commoditiesExpanded ? 'block' : 'none'}` }}>
+
+                <div className="panel-block">
+                  <button className="button is-small is-light is-success is-pulled-right" onClick={e => { e.preventDefault(); toggleCommodity(); return false; }}>
+                    <span>Add</span>
+                  </button>
                 </div>
 
-              </div>}
+                {((customs?.commodities || []).length === 0) && <div className="panel-block is-justify-content-center">
+                  <div className="has-text-centered">
+                    <p>No commodity declared yet.</p>
+                    <p>Use the button above to add</p>
+                  </div>
+                </div>}
 
-            </div>
+                {(customs?.commodities || []).map((commodity: CommodityType) => (
+                  <div key={`${commodity.id}-${Date.now()}`} className="panel-block is-justify-content-space-between">
+                    <CommodityDescription commodity={commodity} />
+                    <div className="buttons">
+                      <button type="button" className="button is-small is-white" onClick={e => { e.preventDefault(); toggleCommodity(commodity); return false; }}>
+                        <span className="icon is-small"><i className="fas fa-pen"></i></span>
+                      </button>
+                      <button type="button" className="button is-small is-white" onClick={e => { e.preventDefault(); removeCommodity(commodity.id); return false; }}>
+                        <span className="icon is-small"><i className="fas fa-trash"></i></span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+              </div>}
+            </article>
           </div>
 
-          <hr className="my-2" />
 
+          {/* Customs Summary and signature */}
           <div className="columns is-multiline mb-6 pt-2">
 
-            <TextAreaField label="content description" value={customs?.content_description} onChange={handleChange} name="content_description" fieldClass="column mb-0 is-12 px-2 py-2" placeholder="Content type description" />
+            <TextAreaField label="content description" value={customs?.content_description} onChange={handleChange} name="content_description"
+              fieldClass="column mb-0 is-12 px-2 py-2" placeholder="Content type description" rows={2} />
 
             <UserData.Consumer>
               {({ user }) => (
