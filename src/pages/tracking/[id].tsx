@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
-import { isNone } from "@/lib/helper";
+import { formatDayDate, isNone } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/tracker';
 
@@ -14,7 +14,7 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
 
   const computeEvents = (tracker: TrackingStatus): DayEvents => {
     return (tracker?.events || []).reduce((days, event: TrackingEvent) => {
-      const daydate = new Date(event.date as string).toUTCString().split(' ').slice(0, 4).join(' ');
+      const daydate = formatDayDate(event.date as string);
       return { ...days, [daydate]: [...(days[daydate] || []), event] };
     }, {} as DayEvents);
   };
@@ -40,9 +40,14 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
                 </div>
 
 
-                <div className="subtitle has-text-centered is-6">
-                  <p><span>Tracking ID</span> <strong>{tracker?.tracking_number}</strong></p>
-                </div>
+                <p className="subtitle has-text-centered is-6 my-3">
+                  <span>Tracking ID</span> <strong>{tracker?.tracking_number}</strong>
+                </p>
+
+                {!isNone(tracker?.estimated_delivery) && <p className="subtitle has-text-centered is-6 mb-3">
+                  <span>{tracker?.delivered ? 'Delivered' : 'Estimated Delivery'}</span> {' '}
+                  <strong>{formatDayDate(tracker!.estimated_delivery as string)}</strong>
+                </p>}
 
               </div>
 

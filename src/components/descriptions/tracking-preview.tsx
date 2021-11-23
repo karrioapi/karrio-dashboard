@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { TrackingEvent, TrackingStatus } from '@/api/index';
-import { isNone } from '@/lib/helper';
+import { formatDayDate, isNone } from '@/lib/helper';
 import { ListStatusEnum } from '@/api/generated/apis/TrackersApi';
 import Image from 'next/image';
 
@@ -52,7 +52,7 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
   };
   const computeEvents = (tracker: TrackingStatus): DayEvents => {
     return (tracker?.events || []).reduce((days, event: TrackingEvent) => {
-      const daydate = new Date(event.date as string).toUTCString().split(' ').slice(0, 4).join(' ');
+      const daydate = formatDayDate(event.date as string);
       return { ...days, [daydate]: [...(days[daydate] || []), event] };
     }, {} as DayEvents);
   };
@@ -73,9 +73,14 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
               <Image src={`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
             </div>
 
-            <p className="subtitle has-text-centered is-6">
+            <p className="subtitle has-text-centered is-6 my-3">
               <span>Tracking ID</span> <strong>{tracker?.tracking_number}</strong>
             </p>
+
+            {!isNone(tracker?.estimated_delivery) && <p className="subtitle has-text-centered is-6 mb-3">
+              <span>{tracker?.delivered ? 'Delivered' : 'Estimated Delivery'}</span> {' '}
+              <strong>{formatDayDate(tracker!.estimated_delivery as string)}</strong>
+            </p>}
 
             <p className={computeColor(tracker as TrackingStatus) + " block has-text-centered has-text-white is-size-4 py-3"}>
               {computeStatus(tracker as TrackingStatus)}

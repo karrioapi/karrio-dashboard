@@ -23,6 +23,10 @@ export function formatDateTimeLong(date_string: string): string {
   return DATE_TIME_FORMAT_LONG.format(new Date(date_string));
 }
 
+export function formatDayDate(date_string: string): string {
+  return new Date(date_string).toUTCString().split(' ').slice(0, 4).join(' ')
+}
+
 export function notEmptyJSON(value?: string | null): boolean {
   return !isNone(value) && value !== JSON.stringify({});
 }
