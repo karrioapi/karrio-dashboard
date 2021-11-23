@@ -58,8 +58,25 @@ export interface ShipmentData {
     parcels: Array<ParcelData>;
     /**
      * 
-     * The options available for the shipment.<br/>
-     * Please consult [the reference](#operation/references) for additional specific carriers options.
+     * <details>
+     * <summary>The options available for the shipment.</summary>
+     * 
+     * ```
+     * {
+     *     "currency": "USD",
+     *     "insurance": 100.00,
+     *     "cash_on_delivery": 30.00,
+     *     "shipment_date": "2020-01-01",
+     *     "dangerous_good": true,
+     *     "declared_value": 150.00,
+     *     "email_notification": true,
+     *     "email_notification_to": shipper@mail.com,
+     *     "signature_confirmation": true,
+     * }
+     * ```
+     * 
+     * Please check the docs for carrier specific options.
+     * </details>
      * @type {object}
      * @memberof ShipmentData
      */

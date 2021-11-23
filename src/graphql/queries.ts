@@ -53,12 +53,9 @@ query get_customs_info_templates($offset: Int, $first: Int) {
         label
         is_default
         customs {
-          aes
-          eel_pfc
           incoterm
           content_type
           commercial_invoice
-          certificate_number
           content_description
           duty {
             paid_by

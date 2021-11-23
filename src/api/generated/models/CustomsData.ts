@@ -31,17 +31,17 @@ import {
  */
 export interface CustomsData {
     /**
-     * 
-     * @type {string}
+     * The parcel content items
+     * @type {Array<Commodity>}
      * @memberof CustomsData
      */
-    aes?: string | null;
+    commodities: Array<Commodity>;
     /**
      * 
-     * @type {string}
+     * @type {Duty}
      * @memberof CustomsData
      */
-    eel_pfc?: string | null;
+    duty?: Duty | null;
     /**
      * 
      * @type {string}
@@ -60,18 +60,6 @@ export interface CustomsData {
      * @memberof CustomsData
      */
     incoterm?: CustomsDataIncotermEnum;
-    /**
-     * The parcel content items
-     * @type {Array<Commodity>}
-     * @memberof CustomsData
-     */
-    commodities?: Array<Commodity> | null;
-    /**
-     * 
-     * @type {Duty}
-     * @memberof CustomsData
-     */
-    duty?: Duty | null;
     /**
      * The invoice reference number
      * @type {string}
@@ -104,12 +92,23 @@ export interface CustomsData {
     signer?: string | null;
     /**
      * 
-     * @type {string}
-     * @memberof CustomsData
-     */
-    certificate_number?: string | null;
-    /**
+     * <details>
+     * <summary>Customs identification options.</summary>
      * 
+     * ```
+     * {
+     *     "aes": "5218487281",
+     *     "eel_pfc": "5218487281",
+     *     "license_number": "5218487281",
+     *     "certificate_number": "5218487281",
+     *     "nip_number": "5218487281",
+     *     "eori_number": "5218487281",
+     *     "vat_registration_number": "5218487281",
+     * }
+     * ```
+     * 
+     * Please check the docs for carrier specific options.
+     * </details>
      * @type {object}
      * @memberof CustomsData
      */
@@ -157,19 +156,16 @@ export function CustomsDataFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'aes': !exists(json, 'aes') ? undefined : json['aes'],
-        'eel_pfc': !exists(json, 'eel_pfc') ? undefined : json['eel_pfc'],
+        'commodities': ((json['commodities'] as Array<any>).map(CommodityFromJSON)),
+        'duty': !exists(json, 'duty') ? undefined : DutyFromJSON(json['duty']),
         'content_type': !exists(json, 'content_type') ? undefined : json['content_type'],
         'content_description': !exists(json, 'content_description') ? undefined : json['content_description'],
         'incoterm': !exists(json, 'incoterm') ? undefined : json['incoterm'],
-        'commodities': !exists(json, 'commodities') ? undefined : (json['commodities'] === null ? null : (json['commodities'] as Array<any>).map(CommodityFromJSON)),
-        'duty': !exists(json, 'duty') ? undefined : DutyFromJSON(json['duty']),
         'invoice': !exists(json, 'invoice') ? undefined : json['invoice'],
         'invoice_date': !exists(json, 'invoice_date') ? undefined : json['invoice_date'],
         'commercial_invoice': !exists(json, 'commercial_invoice') ? undefined : json['commercial_invoice'],
         'certify': !exists(json, 'certify') ? undefined : json['certify'],
         'signer': !exists(json, 'signer') ? undefined : json['signer'],
-        'certificate_number': !exists(json, 'certificate_number') ? undefined : json['certificate_number'],
         'options': !exists(json, 'options') ? undefined : json['options'],
     };
 }
@@ -183,19 +179,16 @@ export function CustomsDataToJSON(value?: CustomsData | null): any {
     }
     return {
         
-        'aes': value.aes,
-        'eel_pfc': value.eel_pfc,
+        'commodities': ((value.commodities as Array<any>).map(CommodityToJSON)),
+        'duty': DutyToJSON(value.duty),
         'content_type': value.content_type,
         'content_description': value.content_description,
         'incoterm': value.incoterm,
-        'commodities': value.commodities === undefined ? undefined : (value.commodities === null ? null : (value.commodities as Array<any>).map(CommodityToJSON)),
-        'duty': DutyToJSON(value.duty),
         'invoice': value.invoice,
         'invoice_date': value.invoice_date,
         'commercial_invoice': value.commercial_invoice,
         'certify': value.certify,
         'signer': value.signer,
-        'certificate_number': value.certificate_number,
         'options': value.options,
     };
 }

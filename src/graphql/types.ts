@@ -110,12 +110,9 @@ export interface get_customs_info_templates_customs_templates_edges_node_customs
 }
 
 export interface get_customs_info_templates_customs_templates_edges_node_customs {
-  aes: string | null;
-  eel_pfc: string | null;
   incoterm: CustomsIncoterm;
   content_type: string | null;
   commercial_invoice: boolean | null;
-  certificate_number: string | null;
   content_description: string | null;
   duty: get_customs_info_templates_customs_templates_edges_node_customs_duty | null;
   invoice: string | null;
@@ -3057,11 +3054,8 @@ export interface PartialAddressModelSerializerInput {
 export interface PartialCustomsModelSerializerInput {
   id?: string | null;
   commodities?: (PartialCommodityModelSerializerInput | null)[] | null;
-  aes?: string | null;
-  eel_pfc?: string | null;
   certify?: boolean | null;
   commercial_invoice?: boolean | null;
-  certificate_number?: string | null;
   content_type?: string | null;
   content_description?: string | null;
   incoterm?: incoterm | null;
