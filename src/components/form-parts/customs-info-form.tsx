@@ -55,6 +55,10 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
           return value === true ? null : { ...(default_customs || DEFAULT_CUSTOMS_CONTENT) as Customs };
         case 'full':
           return { ...(value as object) };
+        case 'commercial_invoice':
+          return value === true ?
+            { ...state, [name]: value } :
+            { ...state, [name]: value, invoice: null, invoice_date: null };
         default:
           return { ...state, [name]: value };
       }
@@ -75,7 +79,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
           setLoading(true);
           await addCustoms(shipment.id, customs);
           update({ refresh: true });
-          notify({ type: NotificationType.success, message: 'Customs Declaration added updated!' });
+          notify({ type: NotificationType.success, message: 'Customs Declaration successfully added!' });
         } else if (customs.id !== undefined) {
           setLoading(true);
           await updateCustoms(customs);
@@ -255,7 +259,6 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
             </article>
           </div>
 
-
           {/* Commodities */}
           <div className="columns p-2 my-2">
             <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
@@ -296,7 +299,6 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
             </article>
           </div>
 
-
           {/* Customs Summary and signature */}
           <div className="columns is-multiline mb-6 pt-2">
 
@@ -309,7 +311,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
               )}
             </UserData.Consumer>
 
-            <CheckBoxField defaultChecked={customs?.certify} onChange={handleChange} name="certify" fieldClass="column mb-0 is-12 px-2 py-2">
+            <CheckBoxField defaultChecked={customs?.certify} onChange={handleChange} name="certify" fieldClass="column mb-0 is-12 px-2 pt-2 pb-4">
               <span>I certify this customs declaration.</span>
             </CheckBoxField>
 
@@ -317,7 +319,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
 
           <ButtonField type="submit"
             className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
-            fieldClass="form-floating-footer p-3"
+            fieldClass="form-floating-footer p-2"
             controlClass="has-text-centered"
             disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty)}>
             <span>Save</span>
