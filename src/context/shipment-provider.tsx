@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Address, Parcel, PurplshipClient, Shipment } from '@/api/index';
+import { Address, Customs, Parcel, PurplshipClient, Shipment } from '@/api/index';
 import { handleFailure } from '@/lib/helper';
 import { RequestError } from '@/lib/types';
 import { RestContext } from '@/client/context';
@@ -11,8 +11,10 @@ const DEFAULT_SHIPMENT_DATA = {
   options: {}
 } as Shipment;
 
+type ShipmentType = Shipment | Shipment & { customs: Customs & { options: any } };
+
 type LabelDataContext = {
-  shipment: Shipment;
+  shipment: ShipmentType;
   loading: boolean;
   error?: RequestError;
   loadShipment: (id?: string) => Promise<Shipment>;

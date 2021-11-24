@@ -192,10 +192,10 @@ export default withSessionCookies(function (pageProps) {
 
                 <p className="is-size-6 my-1">{formatCustomsLabel(shipment.customs as Customs)}</p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.aes) && <span>AES: <strong>{shipment.customs?.aes}</strong></span>}
+                  {!isNone(shipment.customs?.options?.aes) && <span>AES: <strong>{shipment.customs?.options?.aes}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.eel_pfc) && <span>EEL / PFC: <strong>{shipment.customs?.eel_pfc}</strong></span>}
+                  {!isNone(shipment.customs?.options?.eel_pfc) && <span>EEL / PFC: <strong>{shipment.customs?.options?.eel_pfc}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
                   {!isNone(shipment.customs?.invoice) && <span>Invoice Number: <strong>{shipment.customs?.invoice}</strong></span>}
@@ -204,7 +204,7 @@ export default withSessionCookies(function (pageProps) {
                   {!isNone(shipment.customs?.invoice_date) && <span>Invoice Date: <strong>{shipment.customs?.invoice_date}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.certificate_number) && <span>Certificate Number: <strong>{shipment.customs?.certificate_number}</strong></span>}
+                  {!isNone(shipment.customs?.options?.certificate_number) && <span>Certificate Number: <strong>{shipment.customs?.options?.certificate_number}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
                   {!isNone(shipment.customs?.duty) && <span>Duties paid by <strong>{formatRef('' + shipment.customs?.duty?.paid_by)}</strong></span>}

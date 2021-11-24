@@ -12,10 +12,10 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
 
       <p className="is-size-7 my-1 has-text-weight-semibold">{formatCustomsLabel(customs)}</p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.aes) ? '' : <span>AES: <strong>{customs.aes}</strong></span>}
+        {isNone(customs?.options?.aes) ? '' : <span>AES: <strong>{customs.options?.aes}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.eel_pfc) ? '' : <span>EEL / PFC: <strong>{customs.eel_pfc}</strong></span>}
+        {isNone(customs?.options?.eel_pfc) ? '' : <span>EEL / PFC: <strong>{customs.options?.eel_pfc}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {isNone(customs?.invoice) ? '' : <span>Invoice Number: <strong>{customs.invoice}</strong></span>}
@@ -24,7 +24,7 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
         {isNone(customs?.invoice_date) ? '' : <span>Invoice Date: <strong>{customs.invoice_date}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.certificate_number) ? '' : <span>Certificate Number: <strong>{customs.certificate_number}</strong></span>}
+        {isNone(customs?.options?.certificate_number) ? '' : <span>Certificate Number: <strong>{customs.options?.certificate_number}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {isNone(customs.duty) ? '' : <span>Duties paid by <strong>{formatRef('' + customs.duty?.paid_by)}</strong></span>}
