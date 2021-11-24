@@ -484,6 +484,7 @@ export const GET_USER_CONNECTIONS = gql`
         account_number
         services {
           id
+          active
           service_name
           service_code
           description

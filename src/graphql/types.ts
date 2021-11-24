@@ -846,6 +846,7 @@ export interface get_user_connections_user_connections_DHLExpressSettings {
 
 export interface get_user_connections_user_connections_DHLPolandSettings_services {
   id: string;  // The ID of the object.
+  active: boolean;
   service_name: string;
   service_code: string;
   description: string | null;
@@ -2782,6 +2783,7 @@ export interface ServiceLevelModelSerializerInput {
   service_name: string;
   service_code: string;
   description?: string | null;
+  active?: boolean | null;
   cost?: number | null;
   estimated_transit_days?: number | null;
   max_weight?: number | null;
@@ -3066,6 +3068,7 @@ export interface PartialServiceLevelModelSerializerInput {
   service_name?: string | null;
   service_code?: string | null;
   description?: string | null;
+  active?: boolean | null;
   cost?: number | null;
   estimated_transit_days?: number | null;
   max_weight?: number | null;
