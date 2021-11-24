@@ -5,7 +5,7 @@ import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
+import ParcelTemplateMutation from "@/context/parcel-template-mutation";
 import { isNone } from "@/lib/helper";
 import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
@@ -117,7 +117,7 @@ export default withSessionCookies(function (pageProps) {
   };
 
   return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
+    const Wrapped = ParcelTemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
         <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
         <ParcelTemplatesProvider>

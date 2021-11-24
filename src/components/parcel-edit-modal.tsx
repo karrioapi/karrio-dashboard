@@ -4,7 +4,7 @@ import { isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { NotificationType, ParcelTemplateType, ParcelType } from '@/lib/types';
-import TemplateMutation from '@/context/template-mutation';
+import ParcelTemplateMutation from '@/context/parcel-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -29,8 +29,8 @@ export const ParcelEditContext = React.createContext<ParcelEditContextType>({} a
 
 interface ParcelEditModalComponent { }
 
-const ParcelEditModal: React.FC<ParcelEditModalComponent> = TemplateMutation<ParcelEditModalComponent>(
-  ({ children, createTemplate, updateTemplate }) => {
+const ParcelEditModal: React.FC<ParcelEditModalComponent> = ParcelTemplateMutation<ParcelEditModalComponent>(
+  ({ children, createParcelTemplate, updateParcelTemplate }) => {
     const { notify } = useContext(Notify);
     const { setLoading } = useContext(Loading);
     const [isActive, setIsActive] = useState<boolean>(false);
@@ -59,11 +59,11 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = TemplateMutation<Par
       setLoading(true);
       const { label, is_default, ...parcel } = (changes as { parcels: ExtendedParcel[] }).parcels[0];
       if (isNew) {
-        await createTemplate({ label, is_default, parcel: parcel as any });
+        await createParcelTemplate({ label: label as string, is_default, parcel: parcel as any });
         notify({ type: NotificationType.success, message: 'Parcel successfully added!' });
       }
       else {
-        await updateTemplate({ label, is_default, id: operation?.parcelTemplate?.id as string, parcel: parcel as any });
+        await updateParcelTemplate({ label, is_default, id: operation?.parcelTemplate?.id as string, parcel: parcel as any });
         notify({ type: NotificationType.success, message: 'Parcel successfully updated!' });
       }
 

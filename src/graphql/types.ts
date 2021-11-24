@@ -120,6 +120,7 @@ export interface get_customs_info_templates_customs_templates_edges_node_customs
   signer: string | null;
   certify: boolean | null;
   commodities: (get_customs_info_templates_customs_templates_edges_node_customs_commodities | null)[] | null;
+  options: any | null;
 }
 
 export interface get_customs_info_templates_customs_templates_edges_node {
@@ -511,25 +512,29 @@ export interface mutate_system_connectionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: create_template
+// GraphQL mutation operation: create_address_template
 // ====================================================
 
-export interface create_template_create_template_errors {
+export interface create_address_template_create_address_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface create_address_template_create_address_template_errors {
   field: string;
   messages: string[];
 }
 
-export interface create_template_create_template {
-  id: string | null;
-  errors: (create_template_create_template_errors | null)[] | null;  // May contain more than one error for same field.
+export interface create_address_template_create_address_template {
+  template: create_address_template_create_address_template_template | null;
+  errors: (create_address_template_create_address_template_errors | null)[] | null;
 }
 
-export interface create_template {
-  create_template: create_template_create_template | null;
+export interface create_address_template {
+  create_address_template: create_address_template_create_address_template | null;
 }
 
-export interface create_templateVariables {
-  data: CreateTemplateInput;
+export interface create_address_templateVariables {
+  data: AddressTemplateInput;
 }
 
 
@@ -537,25 +542,149 @@ export interface create_templateVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: update_template
+// GraphQL mutation operation: create_customs_template
 // ====================================================
 
-export interface update_template_update_template_errors {
+export interface create_customs_template_create_customs_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface create_customs_template_create_customs_template_errors {
   field: string;
   messages: string[];
 }
 
-export interface update_template_update_template {
-  id: string | null;
-  errors: (update_template_update_template_errors | null)[] | null;  // May contain more than one error for same field.
+export interface create_customs_template_create_customs_template {
+  template: create_customs_template_create_customs_template_template | null;
+  errors: (create_customs_template_create_customs_template_errors | null)[] | null;
 }
 
-export interface update_template {
-  update_template: update_template_update_template | null;
+export interface create_customs_template {
+  create_customs_template: create_customs_template_create_customs_template | null;
 }
 
-export interface update_templateVariables {
-  data: UpdateTemplateInput;
+export interface create_customs_templateVariables {
+  data: CustomsTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: create_parcel_template
+// ====================================================
+
+export interface create_parcel_template_create_parcel_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface create_parcel_template_create_parcel_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface create_parcel_template_create_parcel_template {
+  template: create_parcel_template_create_parcel_template_template | null;
+  errors: (create_parcel_template_create_parcel_template_errors | null)[] | null;
+}
+
+export interface create_parcel_template {
+  create_parcel_template: create_parcel_template_create_parcel_template | null;
+}
+
+export interface create_parcel_templateVariables {
+  data: ParcelTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: update_address_template
+// ====================================================
+
+export interface update_address_template_update_address_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface update_address_template_update_address_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface update_address_template_update_address_template {
+  template: update_address_template_update_address_template_template | null;
+  errors: (update_address_template_update_address_template_errors | null)[] | null;
+}
+
+export interface update_address_template {
+  update_address_template: update_address_template_update_address_template | null;
+}
+
+export interface update_address_templateVariables {
+  data: PartialAddressTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: update_customs_template
+// ====================================================
+
+export interface update_customs_template_update_customs_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface update_customs_template_update_customs_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface update_customs_template_update_customs_template {
+  template: update_customs_template_update_customs_template_template | null;
+  errors: (update_customs_template_update_customs_template_errors | null)[] | null;
+}
+
+export interface update_customs_template {
+  update_customs_template: update_customs_template_update_customs_template | null;
+}
+
+export interface update_customs_templateVariables {
+  data: PartialCustomsTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: update_parcel_template
+// ====================================================
+
+export interface update_parcel_template_update_parcel_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface update_parcel_template_update_parcel_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface update_parcel_template_update_parcel_template {
+  template: update_parcel_template_update_parcel_template_template | null;
+  errors: (update_parcel_template_update_parcel_template_errors | null)[] | null;
+}
+
+export interface update_parcel_template {
+  update_parcel_template: update_parcel_template_update_parcel_template | null;
+}
+
+export interface update_parcel_templateVariables {
+  data: PartialParcelTemplateInput;
 }
 
 
@@ -2234,32 +2363,157 @@ export enum origin_country {
 }
 
 // An enumeration.
-export enum incoterm {
-  CFR = "CFR",
-  CIF = "CIF",
-  CIP = "CIP",
-  CPT = "CPT",
-  DAF = "DAF",
-  DDP = "DDP",
-  DDU = "DDU",
-  DEQ = "DEQ",
-  DES = "DES",
-  EXW = "EXW",
-  FAS = "FAS",
-  FCA = "FCA",
-  FOB = "FOB",
+export enum paid_by {
+  RECIPIENT = "RECIPIENT",
+  SENDER = "SENDER",
+  THIRD_PARTY = "THIRD_PARTY",
 }
 
 // An enumeration.
-export enum weight_unit {
-  KG = "KG",
-  LB = "LB",
-}
-
-// An enumeration.
-export enum dimension_unit {
-  CM = "CM",
-  IN = "IN",
+export enum currency {
+  AED = "AED",
+  AMD = "AMD",
+  ANG = "ANG",
+  AOA = "AOA",
+  ARS = "ARS",
+  AUD = "AUD",
+  AWG = "AWG",
+  AZN = "AZN",
+  BAM = "BAM",
+  BBD = "BBD",
+  BDT = "BDT",
+  BGN = "BGN",
+  BHD = "BHD",
+  BIF = "BIF",
+  BMD = "BMD",
+  BND = "BND",
+  BOB = "BOB",
+  BRL = "BRL",
+  BSD = "BSD",
+  BTN = "BTN",
+  BWP = "BWP",
+  BYN = "BYN",
+  BZD = "BZD",
+  CAD = "CAD",
+  CDF = "CDF",
+  CHF = "CHF",
+  CLP = "CLP",
+  CNY = "CNY",
+  COP = "COP",
+  CRC = "CRC",
+  CUC = "CUC",
+  CVE = "CVE",
+  CZK = "CZK",
+  DJF = "DJF",
+  DKK = "DKK",
+  DOP = "DOP",
+  DZD = "DZD",
+  EGP = "EGP",
+  ERN = "ERN",
+  ETB = "ETB",
+  EUR = "EUR",
+  FJD = "FJD",
+  GBP = "GBP",
+  GEL = "GEL",
+  GHS = "GHS",
+  GMD = "GMD",
+  GNF = "GNF",
+  GTQ = "GTQ",
+  GYD = "GYD",
+  HKD = "HKD",
+  HNL = "HNL",
+  HRK = "HRK",
+  HTG = "HTG",
+  HUF = "HUF",
+  IDR = "IDR",
+  ILS = "ILS",
+  INR = "INR",
+  IRR = "IRR",
+  ISK = "ISK",
+  JMD = "JMD",
+  JOD = "JOD",
+  JPY = "JPY",
+  KES = "KES",
+  KGS = "KGS",
+  KHR = "KHR",
+  KMF = "KMF",
+  KPW = "KPW",
+  KRW = "KRW",
+  KWD = "KWD",
+  KYD = "KYD",
+  KZT = "KZT",
+  LAK = "LAK",
+  LKR = "LKR",
+  LRD = "LRD",
+  LSL = "LSL",
+  LYD = "LYD",
+  MAD = "MAD",
+  MDL = "MDL",
+  MGA = "MGA",
+  MKD = "MKD",
+  MMK = "MMK",
+  MNT = "MNT",
+  MOP = "MOP",
+  MRO = "MRO",
+  MUR = "MUR",
+  MVR = "MVR",
+  MWK = "MWK",
+  MXN = "MXN",
+  MYR = "MYR",
+  MZN = "MZN",
+  NAD = "NAD",
+  NGN = "NGN",
+  NIO = "NIO",
+  NOK = "NOK",
+  NPR = "NPR",
+  NZD = "NZD",
+  OMR = "OMR",
+  PEN = "PEN",
+  PGK = "PGK",
+  PHP = "PHP",
+  PKR = "PKR",
+  PLN = "PLN",
+  PYG = "PYG",
+  QAR = "QAR",
+  RSD = "RSD",
+  RUB = "RUB",
+  RWF = "RWF",
+  SAR = "SAR",
+  SBD = "SBD",
+  SCR = "SCR",
+  SDG = "SDG",
+  SEK = "SEK",
+  SGD = "SGD",
+  SHP = "SHP",
+  SLL = "SLL",
+  SOS = "SOS",
+  SRD = "SRD",
+  SSP = "SSP",
+  STD = "STD",
+  SYP = "SYP",
+  SZL = "SZL",
+  THB = "THB",
+  TJS = "TJS",
+  TND = "TND",
+  TOP = "TOP",
+  TRY = "TRY",
+  TTD = "TTD",
+  TWD = "TWD",
+  TZS = "TZS",
+  UAH = "UAH",
+  USD = "USD",
+  UYU = "UYU",
+  UZS = "UZS",
+  VEF = "VEF",
+  VND = "VND",
+  VUV = "VUV",
+  WST = "WST",
+  XAF = "XAF",
+  XCD = "XCD",
+  XOF = "XOF",
+  XPF = "XPF",
+  YER = "YER",
+  ZAR = "ZAR",
 }
 
 // An enumeration.
@@ -3019,19 +3273,15 @@ export interface SystemCarrierMutationInput {
 }
 
 // null
-export interface CreateTemplateInput {
-  id?: string | null;
-  address?: PartialAddressModelSerializerInput | null;
-  customs?: PartialCustomsModelSerializerInput | null;
-  parcel?: PartialParcelModelSerializerInput | null;
-  label?: string | null;
+export interface AddressTemplateInput {
+  address: AddressTemplate;
+  label: string;
   is_default?: boolean | null;
   clientMutationId?: string | null;
 }
 
 // null
-export interface PartialAddressModelSerializerInput {
-  id?: string | null;
+export interface AddressTemplate {
   country_code?: string | null;
   postal_code?: string | null;
   city?: string | null;
@@ -3051,18 +3301,26 @@ export interface PartialAddressModelSerializerInput {
 }
 
 // null
-export interface PartialCustomsModelSerializerInput {
-  id?: string | null;
+export interface CustomsTemplateInput {
+  customs: CustomsTemplate;
+  label: string;
+  is_default?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface CustomsTemplate {
+  incoterm?: string | null;
   commodities?: (PartialCommodityModelSerializerInput | null)[] | null;
   certify?: boolean | null;
   commercial_invoice?: boolean | null;
   content_type?: string | null;
   content_description?: string | null;
-  incoterm?: incoterm | null;
   invoice?: string | null;
   invoice_date?: any | null;
   signer?: string | null;
-  duty?: any | null;
+  duty?: DutyInput | null;
+  options?: any | null;
 }
 
 // null
@@ -3079,8 +3337,26 @@ export interface PartialCommodityModelSerializerInput {
 }
 
 // null
-export interface PartialParcelModelSerializerInput {
-  id?: string | null;
+export interface DutyInput {
+  paid_by?: paid_by | null;
+  currency?: currency | null;
+  declared_value?: number | null;
+  account_number?: string | null;
+  bill_to?: string | null;
+}
+
+// null
+export interface ParcelTemplateInput {
+  parcel: ParcelTemplate;
+  label: string;
+  is_default?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ParcelTemplate {
+  weight_unit?: string | null;
+  dimension_unit?: string | null;
   weight?: number | null;
   width?: number | null;
   height?: number | null;
@@ -3090,19 +3366,83 @@ export interface PartialParcelModelSerializerInput {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
-  weight_unit?: weight_unit | null;
-  dimension_unit?: dimension_unit | null;
 }
 
 // null
-export interface UpdateTemplateInput {
-  id?: string | null;
-  address?: PartialAddressModelSerializerInput | null;
-  customs?: PartialCustomsModelSerializerInput | null;
-  parcel?: PartialParcelModelSerializerInput | null;
+export interface PartialAddressTemplateInput {
+  id: string;
+  address: PartialAddressTemplate;
   label?: string | null;
   is_default?: boolean | null;
   clientMutationId?: string | null;
+}
+
+// null
+export interface PartialAddressTemplate {
+  country_code?: string | null;
+  postal_code?: string | null;
+  city?: string | null;
+  federal_tax_id?: string | null;
+  state_tax_id?: string | null;
+  person_name?: string | null;
+  company_name?: string | null;
+  email?: string | null;
+  phone_number?: string | null;
+  state_code?: string | null;
+  suburb?: string | null;
+  residential?: boolean | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  validate_location?: boolean | null;
+  validation?: any | null;
+}
+
+// null
+export interface PartialCustomsTemplateInput {
+  id: string;
+  customs: PartialCustomsTemplate;
+  label?: string | null;
+  is_default?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface PartialCustomsTemplate {
+  incoterm?: string | null;
+  commodities?: (PartialCommodityModelSerializerInput | null)[] | null;
+  certify?: boolean | null;
+  commercial_invoice?: boolean | null;
+  content_type?: string | null;
+  content_description?: string | null;
+  invoice?: string | null;
+  invoice_date?: any | null;
+  signer?: string | null;
+  duty?: DutyInput | null;
+  options?: any | null;
+}
+
+// null
+export interface PartialParcelTemplateInput {
+  id: string;
+  parcel: PartialParcelTemplate;
+  label?: string | null;
+  is_default?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface PartialParcelTemplate {
+  weight_unit?: string | null;
+  dimension_unit?: string | null;
+  weight?: number | null;
+  width?: number | null;
+  height?: number | null;
+  length?: number | null;
+  packaging_type?: string | null;
+  package_preset?: string | null;
+  description?: string | null;
+  content?: string | null;
+  is_document?: boolean | null;
 }
 
 // null

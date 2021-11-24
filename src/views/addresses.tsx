@@ -6,7 +6,7 @@ import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
+import AddressTemplateMutation from "@/context/address-template-mutation";
 import { isNone } from "@/lib/helper";
 import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
@@ -115,7 +115,7 @@ export default withSessionCookies(function (pageProps) {
   };
 
   return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
+    const Wrapped = AddressTemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
         <GoogleGeocodingScript />
         <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>

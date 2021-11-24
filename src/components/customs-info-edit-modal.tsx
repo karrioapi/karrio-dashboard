@@ -3,7 +3,7 @@ import { isNone } from '@/lib/helper';
 import CustomsInfoForm from '@/components/form-parts/customs-info-form';
 import InputField from '@/components/generic/input-field';
 import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
-import TemplateMutation from '@/context/template-mutation';
+import CustomsTemplateMutation from '@/context/customs-template-mutation';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
@@ -30,8 +30,8 @@ export const CustomsInfoEditContext = React.createContext<CustomsInfoEditContext
 
 interface CustomsInfoEditModalComponent { }
 
-const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = TemplateMutation<CustomsInfoEditModalComponent>(
-  ({ children, createTemplate, updateTemplate, deleteCommodity }) => {
+const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = CustomsTemplateMutation<CustomsInfoEditModalComponent>(
+  ({ children, createCustomsTemplate, updateCustomsTemplate, deleteCommodity }) => {
     const { notify } = useContext(Notify);
     const { setLoading } = useContext(Loading);
     const [isActive, setIsActive] = useState<boolean>(false);
@@ -58,13 +58,13 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = TemplateMu
     const update = async ({ changes }: any) => {
       setLoading(true);
       const { label, is_default, duty, ...data } = (changes as { customs: ExtendedCustoms }).customs;
-      const payload = { ...data, ...(isNone(duty) ? { duty: null } : { duty: JSON.stringify(duty) }) };
+      const payload = { ...data };
       if (isNew) {
-        await createTemplate({ label, is_default, customs: payload as any });
+        await createCustomsTemplate({ label, is_default, customs: payload as any });
         notify({ type: NotificationType.success, message: 'Customs info successfully added!' });
       }
       else {
-        await updateTemplate({ label, is_default, customs: payload as any, id: operation?.customsTemplate?.id as string });
+        await updateCustomsTemplate({ label, is_default, customs: payload as any, id: operation?.customsTemplate?.id as string });
         notify({ type: NotificationType.success, message: 'Customs info successfully updated!' });
       }
 

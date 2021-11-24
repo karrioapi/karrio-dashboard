@@ -321,7 +321,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ShipmentMutation<Cus
             className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
             fieldClass="form-floating-footer p-2"
             controlClass="has-text-centered"
-            disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty)}>
+            disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty) && deepEqual(value?.options, customs?.options)}>
             <span>Save</span>
           </ButtonField>
 

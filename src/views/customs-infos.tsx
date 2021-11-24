@@ -5,7 +5,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
+import CustomsTemplateMutation from "@/context/customs-template-mutation";
 import { isNone } from "@/lib/helper";
 import { withSessionCookies } from "@/lib/middleware";
 import { CustomsType } from "@/lib/types";
@@ -117,7 +117,7 @@ export default withSessionCookies(function (pageProps) {
   };
 
   return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
+    const Wrapped = CustomsTemplateMutation<{}>(({ deleteTemplate }) => (
       <DashboardLayout>
         <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
         <CustomInfoTemplatesProvider>

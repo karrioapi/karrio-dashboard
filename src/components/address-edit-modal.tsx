@@ -5,7 +5,7 @@ import { isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from './generic/checkbox-field';
 import { AddressTemplate, NotificationType } from '@/lib/types';
-import TemplateMutation from '@/context/template-mutation';
+import AddressTemplateMutation from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -31,7 +31,7 @@ export const AddressEditContext = React.createContext<AddressEditContextType>({}
 
 interface AddressEditModalComponent { }
 
-const AddressEditModal: React.FC<AddressEditModalComponent> = TemplateMutation<AddressEditModalComponent>(
+const AddressEditModal: React.FC<AddressEditModalComponent> = AddressTemplateMutation<AddressEditModalComponent>(
   ({ children, createTemplate, updateTemplate }) => {
     const { notify } = useContext(Notify);
     const { setLoading } = useContext(Loading);

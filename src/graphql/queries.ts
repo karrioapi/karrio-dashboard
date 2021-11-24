@@ -94,6 +94,7 @@ query get_customs_info_templates($offset: Int, $first: Int) {
             value_currency
             origin_country
           }
+          options
         }
       }
     }
@@ -295,10 +296,12 @@ export const MUTATE_SYSTEM_CONNECTION = gql`
   }
 `;
 
-export const CREATE_TEMPLATE = gql`
-  mutation create_template($data: CreateTemplateInput!) {
-    create_template(input: $data) {
-      id
+export const CREATE_ADDRESS_TEMPLATE = gql`
+  mutation create_address_template($data: AddressTemplateInput!) {
+    create_address_template(input: $data) {
+      template {
+        id
+      }
       errors {
         field
         messages
@@ -307,10 +310,68 @@ export const CREATE_TEMPLATE = gql`
   }
 `;
 
-export const UPDATED_TEMPLATE = gql`
-  mutation update_template($data: UpdateTemplateInput!) {
-    update_template(input: $data) {
-      id
+export const CREATE_CUSTOMS_TEMPLATE = gql`
+  mutation create_customs_template($data: CustomsTemplateInput!) {
+    create_customs_template(input: $data) {
+      template {
+        id
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const CREATE_PARCEL_TEMPLATE = gql`
+  mutation create_parcel_template($data: ParcelTemplateInput!) {
+    create_parcel_template(input: $data) {
+      template {
+        id
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const UPDATED_ADDRESS_TEMPLATE = gql`
+  mutation update_address_template($data: PartialAddressTemplateInput!) {
+    update_address_template(input: $data) {
+      template {
+        id
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const UPDATED_CUSTOMS_TEMPLATE = gql`
+  mutation update_customs_template($data: PartialCustomsTemplateInput!) {
+    update_customs_template(input: $data) {
+      template {
+        id
+      }
+      errors {
+        field
+        messages
+      }
+    }
+  }
+`;
+
+export const UPDATED_PARCEL_TEMPLATE = gql`
+  mutation update_parcel_template($data: PartialParcelTemplateInput!) {
+    update_parcel_template(input: $data) {
+      template {
+        id
+      }
       errors {
         field
         messages
