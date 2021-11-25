@@ -1,14 +1,11 @@
-import { graphqlClient, restClient } from "@/client/context";
+import { graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
 import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
-import getConfig from 'next/config';
 import { getSession } from "next-auth/client";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { References } from "@/api";
 import logger from "@/lib/logger";
-
-const { publicRuntimeConfig } = getConfig();
 
 export function withSessionCookies(page: NextPage) {
   const getInitialProps = page.getInitialProps;
@@ -38,11 +35,11 @@ export async function connectAPI(): Promise<{ references?: References }> {
 
       resolve({ references });
     } catch (e) {
-      logger.error(`Failed to fetch API metadata from (${publicRuntimeConfig?.PURPLSHIP_API_URL})`, e);
+      logger.error(`Failed to fetch API metadata from (${PURPLSHIP_API})`, e);
       const error = createServerError({
         code: ServerErrorCode.API_CONNECTION_ERROR,
         message: `
-          Server (${publicRuntimeConfig?.PURPLSHIP_API_URL}) unreachable.
+          Server (${PURPLSHIP_API}) unreachable.
           Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
         `
       })

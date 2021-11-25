@@ -7,6 +7,7 @@ module.exports = {
   },
   serverRuntimeConfig: {
     JWT_SECRET: process.env.JWT_SECRET,
+    PURPLSHIP_HOSTNAME: process.env.PURPLSHIP_HOSTNAME || process.env.NEXT_PUBLIC_PURPLSHIP_API_URL,
   },
   publicRuntimeConfig: {
     PURPLSHIP_API_URL: process.env.NEXT_PUBLIC_PURPLSHIP_API_URL

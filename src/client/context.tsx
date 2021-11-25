@@ -8,7 +8,12 @@ import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/client";
 import logger from "@/lib/logger";
 
-const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
+export const PURPLSHIP_API = (
+  typeof window === 'undefined'
+    ? serverRuntimeConfig?.PURPLSHIP_HOSTNAME
+    : publicRuntimeConfig?.PURPLSHIP_API_URL
+)
 
 export const AuthToken = new Subject<TokenPair>();
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
@@ -20,7 +25,7 @@ AuthToken.subscribe(async ({ access }: { access?: string }) => {
   restClient.next(createRestContext(access));
 });
 
-logger.debug("API clients initialized for Server: " + publicRuntimeConfig?.PURPLSHIP_API_URL);
+logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
 
 export const ClientsProvider: React.FC = ({ children }) => {
   const [session] = useSession();
@@ -69,7 +74,7 @@ export async function refreshToken(refresh: string, org_id?: string) {
 
 function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
-    basePath: publicRuntimeConfig?.PURPLSHIP_API_URL || '',
+    basePath: PURPLSHIP_API || '',
     apiKey: accessToken ? `Bearer ${accessToken}` : "",
     ...(typeof window !== 'undefined' ? {} : { fetchApi: require('node-fetch') }),
   });
@@ -77,7 +82,7 @@ function createRestContext(accessToken?: string): PurplshipClient {
 
 function createGrapQLContext(accessToken?: string): ApolloClient<any> {
   const httpLink = createHttpLink({
-    uri: `${publicRuntimeConfig?.PURPLSHIP_API_URL || ''}/graphql`,
+    uri: `${PURPLSHIP_API || ''}/graphql`,
   });
 
   const authLink = setContext((_, { headers }) => {
