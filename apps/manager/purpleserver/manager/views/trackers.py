@@ -43,6 +43,7 @@ class TrackerList(GenericAPIView):
     pagination_class = type('CustomPagination', (LimitOffsetPagination,), dict(default_limit=20))
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = TrackerFilters
+    serializer_class = Trackers
     model = models.Tracking
 
     def get_queryset(self):
@@ -133,6 +134,7 @@ class TrackersDetails(APIView):
 
         tracker.delete(keep_parents=True)
         serializer = Operation(dict(operation="Discard a tracker", success=True))
+
         return Response(serializer.data)
 
 

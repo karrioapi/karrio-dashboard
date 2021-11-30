@@ -91,7 +91,7 @@ class AugmentedAddressSerializer(serializers.Serializer):
             elif country_code == units.Country.US.name:
                 formatted = ''.join(postal_code.split())
                 if not re.match(r'^\d{5}(-\d{4})?$', formatted):
-                    raise serializers.ValidationError({'postal_code': 'The American postal code must match 9999 or 99999'})
+                    raise serializers.ValidationError({'postal_code': 'The American postal code must match 12345 and 12345-6789'})
 
             else:
                 formatted = postal_code

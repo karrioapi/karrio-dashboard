@@ -1,6 +1,6 @@
 import logging
 
-from rest_framework import status, serializers
+from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -12,7 +12,6 @@ from django_filters import rest_framework as filters
 
 from purpleserver.core.views.api import GenericAPIView, APIView
 from purpleserver.core.serializers import (
-    FlagField,
     Pickup,
     ErrorResponse,
     OperationConfirmation,
@@ -42,6 +41,7 @@ class PickupList(GenericAPIView):
     pagination_class = type('CustomPagination', (LimitOffsetPagination,), dict(default_limit=20))
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = PickupFilters
+    serializer_class = Pickups
     model = models.Pickup
 
     @swagger_auto_schema(

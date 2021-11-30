@@ -46,6 +46,7 @@ def shipment_cancelled(sender, instance, *args, **kwargs):
     """Shipment related events:
         - shipment cancelled/deleted (label voided)
     """
+
     event = EventTypes.shipment_cancelled.value
     data = serializers.Shipment(instance)
     event_at = instance.updated_at

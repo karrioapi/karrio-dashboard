@@ -18,7 +18,6 @@ from purpleserver.core.exceptions import PurplShipApiException
 from purpleserver.serializers import SerializerDecorator, PaginatedResult
 from purpleserver.core.serializers import (
     MODELS,
-    CARRIERS,
     FlagField,
     ShipmentStatus,
     ErrorResponse,
@@ -82,6 +81,7 @@ class ShipmentList(GenericAPIView):
     pagination_class = type('CustomPagination', (LimitOffsetPagination,), dict(default_limit=20))
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ShipmentFilters
+    serializer_class = Shipments
     model = models.Shipment
 
     def get_queryset(self):
@@ -178,6 +178,7 @@ class ShipmentDetail(APIView):
             )
 
         confirmation = SerializerDecorator[ShipmentCancelSerializer](shipment, data={}, context=request).save()
+
         return Response(OperationResponse(confirmation.instance).data)
 
 
@@ -307,6 +308,7 @@ class ShipmentCustoms(APIView):
         )
 
         SerializerDecorator[ShipmentSerializer](shipment, data=payload, context=request).save()
+
         return Response(Shipment(shipment).data)
 
 
@@ -335,6 +337,7 @@ class ShipmentParcels(APIView):
         parcel = SerializerDecorator[ParcelSerializer](data=request.data, context=request).save().instance
         shipment.shipment_parcels.add(parcel)
         reset_related_shipment_rates(shipment)
+
         return Response(Shipment(shipment).data)
 
 

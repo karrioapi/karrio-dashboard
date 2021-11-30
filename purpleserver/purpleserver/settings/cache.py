@@ -14,6 +14,9 @@ if REDIS_HOST is not None:
             "LOCATION": REDIS_CONNECTION_URL,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient"
-            }
+            },
+            "KEY_PREFIX": "purplship",
         }
     }
+
+    print(f"Redis connection initialized at: {REDIS_CONNECTION_URL}")
