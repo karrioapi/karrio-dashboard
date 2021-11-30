@@ -17,12 +17,12 @@ carrier.yanwen==2021.2.1
 carrier.yunexpress==2021.2.1
 
 purplship==2021.8.1
-purplship-server==2021.7.1
+purplship-server==2021.7.7
 purplship-server.client==2021.7.2
-purplship-server.core==2021.7.4
-purplship-server.events==2021.7.1
+purplship-server.core==2021.7.7
+purplship-server.events==2021.7.7
 purplship-server.graph==2021.7
-purplship-server.manager==2021.7.1
+purplship-server.manager==2021.7.7
 purplship-server.pricing==2021.7
 purplship-server.proxy==2021.7
 purplship.aramex==2021.7
