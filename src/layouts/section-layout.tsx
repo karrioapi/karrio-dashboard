@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Image from 'next/image';
 import { APIReference } from '@/context/references-provider';
 import { References } from '@/api';
-import Link from 'next/link';
+import { p } from '@/lib/helper';
 
 
 const SectionLayout: React.FC = ({ children }) => {
@@ -16,9 +16,9 @@ const SectionLayout: React.FC = ({ children }) => {
 
       <div className="container">
         <div className="has-text-centered mt-6 mb-4">
-          <Link href="/" passHref>
-            <Image src="/logo.svg" width="130" height="100%" alt={app_name} />
-          </Link>
+          <a href={p`/`}>
+            <Image src={p`/logo.svg`} width="130" height="100%" alt={app_name} />
+          </a>
         </div>
 
         {children}

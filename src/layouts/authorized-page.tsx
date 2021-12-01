@@ -34,7 +34,7 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
   );
 };
 
-const AuthorizedPage = (Component: React.FC, pageProps?: any | {}) => {
+const AuthorizedPage = (children: any, pageProps?: any | {}) => {
   const router = useRouter();
   const [session] = useSession();
   const purplship = useContext(RestContext);
@@ -52,13 +52,11 @@ const AuthorizedPage = (Component: React.FC, pageProps?: any | {}) => {
     }
   }, [session, router]);
 
-  if (!session) return <></>;
-
   return (
     <ContextProviders {...(pageProps || {})}>
       {isReady(purplship) && <>
 
-        <Component />
+        {children}
         <Footer />
 
       </>}

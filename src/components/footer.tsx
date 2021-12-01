@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import { APIReference } from '@/context/references-provider';
+import { p } from '@/lib/helper';
 
 
 const Footer: React.FC = () => {
@@ -12,7 +13,7 @@ const Footer: React.FC = () => {
         <div className="column"></div>
         <div className="column has-text-centered">
           <a href={app_website}>
-            <Image src="/icon.svg" width="70" height="100%" alt={app_name} />
+            <Image src={p`/icon.svg`} width="70" height="100%" alt={app_name} />
           </a>
         </div>
         <div className="column has-text-right-desktop">

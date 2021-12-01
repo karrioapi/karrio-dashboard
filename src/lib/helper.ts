@@ -1,4 +1,5 @@
 import { Shipment } from "@/api/index";
+import { BASE_PATH } from "@/client/context";
 import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError } from "@/lib/types";
 
 
@@ -213,3 +214,12 @@ export const parseJwt = (token: string): any => {
     return {};
   }
 };
+
+export function p(strings: TemplateStringsArray, ...keys: any[]) {
+  const base = (keys || []).reduce((acc, key, i) => acc + strings[i] + key, '');
+  const template = `${base}${strings[strings.length - 1]}`;
+
+  return `${BASE_PATH}/${template}`
+    .replaceAll('///', '/')
+    .replaceAll('//', '/');
+}

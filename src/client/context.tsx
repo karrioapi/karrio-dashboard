@@ -9,6 +9,8 @@ import { useSession } from "next-auth/client";
 import logger from "@/lib/logger";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
+export const BASE_PATH = (publicRuntimeConfig.BASE_PATH || '/').replaceAll('//', '/');
+export const TEST_BASE_PATH = (publicRuntimeConfig.BASE_PATH + '/test').replaceAll('//', '/');
 export const PURPLSHIP_API = (
   typeof window === 'undefined'
     ? serverRuntimeConfig?.PURPLSHIP_HOSTNAME

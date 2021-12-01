@@ -7,11 +7,12 @@ import Head from 'next/head';
 import { Provider } from "next-auth/client";
 import MainLayout from '@/layouts/main-layout';
 import { ClientsProvider } from '@/client/context';
+import { p } from '@/lib/helper';
 
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider session={pageProps.session}>
+    <Provider session={pageProps.session} options={{ basePath: p`/api/auth` }}>
       <ClientsProvider>
         <Head>
           <meta name="viewport" content="viewport-fit=cover" />

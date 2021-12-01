@@ -3,7 +3,7 @@ import { TokenData } from '@/context/token-provider';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Loading } from '@/components/loader';
 import Image from 'next/image';
-import { isNone } from '@/lib/helper';
+import { isNone, p } from '@/lib/helper';
 
 
 const OrganizationDropdown: React.FC = () => {
@@ -76,7 +76,7 @@ const OrganizationDropdown: React.FC = () => {
       </div>}
 
       {(!loading && (organizations || []).length === 0) &&
-        <Image src="/icon.svg" className="mt-2" width="70" height="100%" alt="logo" />}
+        <Image src={p`/icon.svg`} className="mt-2" width="70" height="100%" alt="logo" />}
     </>
   );
 };

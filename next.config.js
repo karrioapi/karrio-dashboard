@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  basePath: process.env.BASE_PATH || '',
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, 'src', 'styles')],
@@ -10,6 +11,7 @@ module.exports = {
     PURPLSHIP_HOSTNAME: process.env.PURPLSHIP_HOSTNAME || process.env.NEXT_PUBLIC_PURPLSHIP_API_URL,
   },
   publicRuntimeConfig: {
+    BASE_PATH: process.env.BASE_PATH || '',
     PURPLSHIP_API_URL: process.env.NEXT_PUBLIC_PURPLSHIP_API_URL
   }
 }

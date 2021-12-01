@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
-import { formatDayDate, isNone } from "@/lib/helper";
+import { formatDayDate, isNone, p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/tracker';
 
@@ -28,7 +28,7 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
         <div className="container">
 
           <div className="has-text-centered my-4">
-            <Image src="/logo.svg" width="130" height="100%" alt={app_name} />
+            <Image src={p`/logo.svg`} width="130" height="100%" alt={app_name} />
           </div>
 
           {!isNone(tracker) && <>
@@ -36,7 +36,7 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
               <div className="card-content">
 
                 <div className="has-text-centered pb-4">
-                  <Image src={`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
+                  <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
                 </div>
 
 
@@ -94,13 +94,15 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
 
           </>}
 
-          {!isNone(message) && <div className="card isolated-card my-6">
-            <div className="card-content has-text-centered ">
-              <p>{message}</p>
+          {
+            !isNone(message) && <div className="card isolated-card my-6">
+              <div className="card-content has-text-centered ">
+                <p>{message}</p>
+              </div>
             </div>
-          </div>}
+          }
 
-        </div>
+        </div >
 
         <hr className="mt-4" />
 
@@ -112,7 +114,7 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
           </div>
         </div>
 
-      </section>
+      </section >
     </>
   )
 };

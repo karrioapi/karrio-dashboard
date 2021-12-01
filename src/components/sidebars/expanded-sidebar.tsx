@@ -4,6 +4,7 @@ import { AppMode } from '@/context/app-mode-provider';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
 import AppLink from '@/components/app-link';
 import { APIReference } from '@/context/references-provider';
+import { p } from '@/lib/helper';
 
 interface ExpandedSidebarComponent { }
 
@@ -26,7 +27,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
       <div className="sidebar-header pl-5">
         {multi_organizations
           ? <OrganizationDropdown />
-          : <Image src="/icon.svg" className="mt-2" width="70" height="100%" alt="logo" />}
+          : <Image src={p`/icon.svg`} className="mt-2" width="70" height="100%" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>

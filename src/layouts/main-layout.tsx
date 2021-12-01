@@ -1,5 +1,4 @@
-import { isNone, ServerError, ServerErrorCode } from '@/lib/helper';
-import Link from 'next/link';
+import { p, ServerError, ServerErrorCode } from '@/lib/helper';
 import Image from 'next/image';
 import React from 'react';
 
@@ -14,9 +13,9 @@ const MainLayout: React.FC<{ error?: ServerError }> = ({ children, error }) => {
           : <section className="hero is-fullheight">
             <div className="container">
               <div className="has-text-centered mt-4 mb-5">
-                <Link href="/" passHref>
-                  <Image src="/logo.svg" width="130" height="100" alt="" />
-                </Link>
+                <a href={p`/`}>
+                  <Image src={p`/logo.svg`} width="130" height="100" alt="" />
+                </a>
               </div>
 
               <div className="card isolated-card my-6">
