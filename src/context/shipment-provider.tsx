@@ -7,7 +7,12 @@ import { RestContext } from '@/client/context';
 const DEFAULT_SHIPMENT_DATA = {
   shipper: {} as Address,
   recipient: {} as Address,
-  parcels: [] as Parcel[],
+  parcels: [{
+    packaging_type: "envelope",
+    is_document: false,
+    weight_unit: "KG",
+    dimension_unit: "CM",
+  }] as Parcel[],
   options: {}
 } as Shipment;
 
