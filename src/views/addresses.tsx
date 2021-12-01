@@ -115,23 +115,21 @@ export default function AddressPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = AddressTemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <GoogleGeocodingScript />
-        <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
-        <AddressTemplatesProvider>
-          <ConfirmModal>
-            <AddressEditModal>
+  const Wrapped = AddressTemplateMutation<{}>(({ deleteTemplate }) => (
+    <DashboardLayout>
+      <GoogleGeocodingScript />
+      <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <AddressTemplatesProvider>
+        <ConfirmModal>
+          <AddressEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+            <Component deleteTemplate={deleteTemplate} />
 
-            </AddressEditModal>
-          </ConfirmModal>
-        </AddressTemplatesProvider>
-      </DashboardLayout>
-    ));
+          </AddressEditModal>
+        </ConfirmModal>
+      </AddressTemplatesProvider>
+    </DashboardLayout>
+  ));
 
-    return <Wrapped />;
-  }, pageProps);
+  return AuthorizedPage(<Wrapped />, pageProps);
 }

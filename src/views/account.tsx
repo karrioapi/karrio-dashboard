@@ -77,7 +77,7 @@ export default function AccountPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 

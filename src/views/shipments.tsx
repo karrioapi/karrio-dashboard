@@ -12,7 +12,7 @@ import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { Shipments } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatAddress, formatDateTime, formatRef, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -93,10 +93,10 @@ export default function ShipmentsPage(pageProps: any) {
                 <tr key={shipment.id} className="items" onClick={viewShipment(shipment.id as string)}>
                   <td className="carrier is-vcentered has-text-centered">
                     {!isNone(shipment.carrier_name) &&
-                      <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
+                      <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
                     }
                     {isNone(shipment.carrier_name) &&
-                      <Image src={`/logo.svg`} width="100%" height="25" alt="logo" />
+                      <Image src={p`/logo.svg`} width="100%" height="25" alt="logo" />
                     }
                   </td>
                   <td className="service is-vcentered p-1">
@@ -152,7 +152,7 @@ export default function ShipmentsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).references?.app_name}</title></Head>
       <LabelPrinter>

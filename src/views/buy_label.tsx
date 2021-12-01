@@ -115,7 +115,7 @@ export default function LabelPage(pageProps: any) {
     )
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>

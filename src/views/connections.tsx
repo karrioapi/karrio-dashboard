@@ -59,7 +59,7 @@ export default function ConnectionsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Carrier Connections - {(pageProps as any).references?.app_name}</title></Head>
       <ConfirmModal>

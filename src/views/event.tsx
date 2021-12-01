@@ -82,7 +82,7 @@ export default function EventPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Event - {(pageProps as any).references?.app_name}</title></Head>
       <EventProvider>

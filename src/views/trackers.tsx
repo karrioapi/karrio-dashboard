@@ -14,7 +14,7 @@ import SystemConnectionsProvider from "@/context/system-connections-provider";
 import TrackerMutation from "@/context/tracker-mutation";
 import TrackersProvider, { Trackers } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
-import { isNone } from "@/lib/helper";
+import { isNone, p } from "@/lib/helper";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
@@ -90,7 +90,7 @@ export default function TrackersPage(pageProps: any) {
               {results.map(tracker => (
                 <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
                   <td className="carrier is-vcentered has-text-centered">
-                    <Image src={`/carriers/${tracker.carrier_name}_logo.svg`} height="25" width="100%" alt="carrier logo" />
+                    <Image src={p`/carriers/${tracker.carrier_name}_logo.svg`} height="25" width="100%" alt="carrier logo" />
                   </td>
                   <td className="tracking-number is-vcentered p-1">
                     <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>
@@ -155,29 +155,27 @@ export default function TrackersPage(pageProps: any) {
     );
   };
 
+  const Wrapped = TrackerMutation<{}>(({ removeTracker }) => (
+    <DashboardLayout>
+      <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
+      <TrackersProvider>
+        <UserConnectionsProvider>
+          <SystemConnectionsProvider>
+            <TrackingPreview>
+              <ConfirmModal>
 
-  return AuthorizedPage(() => {
-    const Wrapped = TrackerMutation<{}>(({ removeTracker }) => (
-      <DashboardLayout>
-        <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
-        <TrackersProvider>
-          <UserConnectionsProvider>
-            <SystemConnectionsProvider>
-              <TrackingPreview>
-                <ConfirmModal>
+                <Component removeTracker={removeTracker} />
 
-                  <Component removeTracker={removeTracker} />
+              </ConfirmModal>
+            </TrackingPreview>
+          </SystemConnectionsProvider>
+        </UserConnectionsProvider>
+      </TrackersProvider>
+    </DashboardLayout>
+  ));
 
-                </ConfirmModal>
-              </TrackingPreview>
-            </SystemConnectionsProvider>
-          </UserConnectionsProvider>
-        </TrackersProvider>
-      </DashboardLayout>
-    ));
 
-    return <Wrapped />;
-  }, pageProps)
+  return AuthorizedPage(<Wrapped />, pageProps)
 }
 
 function formatEventDescription(last_event?: TrackingEvent): string {

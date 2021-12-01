@@ -136,23 +136,21 @@ export default function WebhooksPage(pageProps: any) {
     );
   };
 
+  const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
+    <DashboardLayout>
+      <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
 
-  return AuthorizedPage(() => {
-    const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
-      <DashboardLayout>
-        <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
+      <WebhooksProvider>
+        <WebhookEditModal>
+          <ConfirmModal>
+            <Component removeWebhook={removeWebhook} updateWebhook={updateWebhook} />
+          </ConfirmModal>
+        </WebhookEditModal>
+      </WebhooksProvider>
 
-        <WebhooksProvider>
-          <WebhookEditModal>
-            <ConfirmModal>
-              <Component removeWebhook={removeWebhook} updateWebhook={updateWebhook} />
-            </ConfirmModal>
-          </WebhookEditModal>
-        </WebhooksProvider>
+    </DashboardLayout>
+  ));
 
-      </DashboardLayout>
-    ));
 
-    return <Wrapped />;
-  }, pageProps)
+  return AuthorizedPage(<Wrapped />, pageProps)
 }

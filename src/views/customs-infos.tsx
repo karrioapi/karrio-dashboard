@@ -117,22 +117,20 @@ export default function CustomsInfoPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = CustomsTemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
-        <CustomInfoTemplatesProvider>
-          <ConfirmModal>
-            <CustomsInfoEditModal>
+  const Wrapped = CustomsTemplateMutation<{}>(({ deleteTemplate }) => (
+    <DashboardLayout>
+      <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <CustomInfoTemplatesProvider>
+        <ConfirmModal>
+          <CustomsInfoEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+            <Component deleteTemplate={deleteTemplate} />
 
-            </CustomsInfoEditModal>
-          </ConfirmModal>
-        </CustomInfoTemplatesProvider>
-      </DashboardLayout>
-    ));
+          </CustomsInfoEditModal>
+        </ConfirmModal>
+      </CustomInfoTemplatesProvider>
+    </DashboardLayout>
+  ));
 
-    return <Wrapped />;
-  }, pageProps);
+  return AuthorizedPage(<Wrapped />, pageProps);
 }

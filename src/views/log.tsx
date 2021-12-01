@@ -127,7 +127,7 @@ export default function LogPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Log - {(pageProps as any).references?.app_name}</title></Head>
       <LogProvider>

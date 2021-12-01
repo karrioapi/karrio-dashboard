@@ -117,22 +117,20 @@ export default function ParcelsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = ParcelTemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
-        <ParcelTemplatesProvider>
-          <ConfirmModal>
-            <ParcelEditModal>
+  const Wrapped = ParcelTemplateMutation<{}>(({ deleteTemplate }) => (
+    <DashboardLayout>
+      <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <ParcelTemplatesProvider>
+        <ConfirmModal>
+          <ParcelEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+            <Component deleteTemplate={deleteTemplate} />
 
-            </ParcelEditModal>
-          </ConfirmModal>
-        </ParcelTemplatesProvider>
-      </DashboardLayout>
-    ));
+          </ParcelEditModal>
+        </ConfirmModal>
+      </ParcelTemplatesProvider>
+    </DashboardLayout>
+  ));
 
-    return <Wrapped />;
-  }, pageProps);
+  return AuthorizedPage(<Wrapped />, pageProps);
 }

@@ -71,7 +71,7 @@ export default function ApiPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>API Keys - {(pageProps as any).references?.app_name}</title></Head>
       <Component />

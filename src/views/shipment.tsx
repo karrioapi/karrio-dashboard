@@ -8,7 +8,7 @@ import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { LabelData } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -74,7 +74,7 @@ export default function ShipmentPage(pageProps: any) {
               <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
               <div className="p-4 mr-4">
                 <span className="subtitle is-size-7 my-4">Courier</span><br />
-                <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={40} alt="logo" className="mt-1" />
+                <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={40} alt="logo" className="mt-1" />
               </div>
 
               <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
@@ -283,7 +283,7 @@ export default function ShipmentPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentProvider>
