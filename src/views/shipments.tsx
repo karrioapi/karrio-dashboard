@@ -13,14 +13,15 @@ import { AppMode } from "@/context/app-mode-provider";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { Shipments } from "@/context/shipments-provider";
 import { formatAddress, formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function ShipmentsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
@@ -165,4 +166,4 @@ export default withSessionCookies(function (pageProps) {
       </LabelPrinter >
     </DashboardLayout>
   ), pageProps)
-});
+};

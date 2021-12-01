@@ -8,13 +8,14 @@ import { useRouter } from "next/dist/client/router";
 import EventProvider, { Event } from "@/context/event-provider";
 import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
-import { withSessionCookies } from "@/lib/middleware";
 import CopiableLink from "@/components/copiable-link";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 hljs.registerLanguage('json', json);
 
 
-export default withSessionCookies(function (pageProps) {
+export default function EventPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
@@ -89,4 +90,4 @@ export default withSessionCookies(function (pageProps) {
       </EventProvider>
     </DashboardLayout>
   ), pageProps);
-})
+}

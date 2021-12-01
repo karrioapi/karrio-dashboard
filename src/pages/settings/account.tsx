@@ -1,3 +1,1 @@
-import AccountPage from "@/views/account";
-
-export default AccountPage;
+export { default, getServerSideProps } from "@/views/account";

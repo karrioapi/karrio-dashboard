@@ -12,10 +12,11 @@ import Head from "next/head";
 import { useContext, useEffect } from "react";
 import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
-import { withSessionCookies } from "@/lib/middleware";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 
-export default withSessionCookies(function (pageProps) {
+export default function ConnectionsPage(pageProps: any) {
   const Component: React.FC = () => {
     const { setLoading } = useContext(Loading);
     const { app_name } = useContext(APIReference);
@@ -74,4 +75,4 @@ export default withSessionCookies(function (pageProps) {
       </ConfirmModal>
     </DashboardLayout>
   ), pageProps);
-})
+}

@@ -1,3 +1,1 @@
-import APIPage from "@/views/api";
-
-export default APIPage;
+export { default, getServerSideProps } from "@/views/api";

@@ -1,29 +1,27 @@
 import { graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
-import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { References } from "@/api";
 import logger from "@/lib/logger";
 
-export function withSessionCookies(page: NextPage) {
-  const getInitialProps = page.getInitialProps;
 
-  page.getInitialProps = async ctx => {
-    const session = await getSession({ req: ctx.req });
-    await setOrgHeader(ctx, session);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  await setOrgHeader(ctx, session);
 
-    return {
-      pathname: ctx.pathname,
-      org_id: session?.org_id,
-      ...(await loadData(session)),
-      ...(getInitialProps ? await getInitialProps(ctx) : {}),
-    };
+  const pathname = ctx.resolvedUrl;
+  const org_id = session?.org_id || "";
+  const data = await loadData(session);
+
+  ctx.res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59');
+
+  return {
+    props: { pathname, org_id, ...data }
   };
-
-  return page;
-}
+};
 
 export async function connectAPI(): Promise<{ references?: References }> {
   // Attempt connection to the purplship API to retrieve the refereneces (API metadata)
@@ -49,7 +47,7 @@ export async function connectAPI(): Promise<{ references?: References }> {
   });
 }
 
-async function setOrgHeader(ctx: NextPageContext, session: Session | null) {
+async function setOrgHeader(ctx: GetServerSidePropsContext, session: Session | null) {
   // Sets the authentication org_id cookie if the session has one
   if (ctx.res && session?.org_id) {
     ctx.res.setHeader('Set-Cookie', `org_id=${session.org_id}`);

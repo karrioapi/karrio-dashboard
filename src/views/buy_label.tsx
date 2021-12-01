@@ -21,13 +21,14 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthorizedPage from '@/layouts/authorized-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';
-import { withSessionCookies } from '@/lib/middleware';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function LabelPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -131,7 +132,7 @@ export default withSessionCookies(function (pageProps) {
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);
-})
+}
 
 
 function filterDisabled(tabs: string[], shipment: Shipment) {

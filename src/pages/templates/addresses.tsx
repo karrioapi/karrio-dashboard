@@ -1,3 +1,1 @@
-import AddressesPage from "@/views/addresses";
-
-export default AddressesPage;
+export { default, getServerSideProps } from "@/views/addresses";

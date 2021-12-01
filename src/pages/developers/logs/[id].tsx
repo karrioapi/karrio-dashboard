@@ -1,3 +1,1 @@
-import LogPage from "@/views/log";
-
-export default LogPage;
+export { default, getServerSideProps } from "@/views/log";

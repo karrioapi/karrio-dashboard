@@ -1,3 +1,1 @@
-import EventPage from "@/views/event";
-
-export default EventPage;
+export { default, getServerSideProps } from "@/views/event";

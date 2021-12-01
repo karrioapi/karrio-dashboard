@@ -7,12 +7,13 @@ import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-mod
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
 import ParcelTemplateMutation from "@/context/parcel-template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function ParcelsPage(pageProps: any) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
@@ -134,4 +135,4 @@ export default withSessionCookies(function (pageProps) {
 
     return <Wrapped />;
   }, pageProps);
-})
+}

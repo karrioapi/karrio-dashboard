@@ -1,3 +1,1 @@
-import ParcelsPage from "@/views/parcels";
-
-export default ParcelsPage;
+export { default, getServerSideProps } from "@/views/parcels";

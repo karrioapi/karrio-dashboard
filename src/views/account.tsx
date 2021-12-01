@@ -7,11 +7,12 @@ import { useContext } from "react";
 import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import { APIReference } from "@/context/references-provider";
-import { withSessionCookies } from "@/lib/middleware";
 import PasswordManagement from "@/components/password-management";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function AccountPage(pageProps: any) {
   const Component: React.FC = () => {
     const { multi_organizations, app_name } = useContext(APIReference);
 
@@ -84,4 +85,4 @@ export default withSessionCookies(function (pageProps) {
 
     </DashboardLayout>
   ), pageProps)
-})
+}

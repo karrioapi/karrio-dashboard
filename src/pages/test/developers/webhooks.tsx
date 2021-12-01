@@ -1,3 +1,1 @@
-import WebhooksPage from "@/views/webhooks";
-
-export default WebhooksPage;
+export { default, getServerSideProps } from "@/views/webhooks";

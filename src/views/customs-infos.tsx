@@ -7,13 +7,14 @@ import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
 import CustomsTemplateMutation from "@/context/customs-template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function CustomsInfoPage(pageProps: any) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -134,4 +135,4 @@ export default withSessionCookies(function (pageProps) {
 
     return <Wrapped />;
   }, pageProps);
-})
+}

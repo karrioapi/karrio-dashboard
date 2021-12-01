@@ -9,14 +9,15 @@ import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { LabelData } from "@/context/shipment-provider";
 import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function ShipmentPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { basePath } = useContext(AppMode);
@@ -296,4 +297,4 @@ export default withSessionCookies(function (pageProps) {
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);
-})
+}

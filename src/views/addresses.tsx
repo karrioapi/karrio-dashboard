@@ -8,12 +8,13 @@ import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
 import AddressTemplateMutation from "@/context/address-template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 
+export { getServerSideProps } from '@/lib/middleware';
 
-export default withSessionCookies(function (pageProps) {
+
+export default function AddressPage(pageProps: any) {
   const Component: React.FC<any> = ({ deleteTemplate }) => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -133,4 +134,4 @@ export default withSessionCookies(function (pageProps) {
 
     return <Wrapped />;
   }, pageProps);
-})
+}

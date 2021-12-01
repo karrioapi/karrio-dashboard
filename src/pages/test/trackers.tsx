@@ -1,3 +1,1 @@
-import TrackersPage from "@/views/trackers";
-
-export default TrackersPage;
+export { default, getServerSideProps } from "@/views/trackers";
