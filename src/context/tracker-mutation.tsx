@@ -5,31 +5,28 @@ import React, { useContext } from 'react';
 import { CreateCarrierNameEnum } from '@/api/generated/apis/TrackersApi';
 
 
-type TrackerMutator<T> = T & {
+type TrackerMutator = {
   createTracker: (tracking_number: string, carrier_name: string, test: boolean) => Promise<TrackingStatus>;
   removeTracker: (id: string) => Promise<Operation>;
-}
+};
 
-const TrackerMutation = <T extends {}>(Component: React.FC<TrackerMutator<T>>) => (
-  function TrackerMutationWrapper({ children, ...props }: any) {
-    const purplship = useContext(RestContext);
+export const TrackerMutationContext = React.createContext<TrackerMutator>({} as TrackerMutator);
 
-    const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(
-      purplship!.trackers.create({ carrierName: carrier_name as CreateCarrierNameEnum, trackingNumber: tracking_number, test })
-    );
-    const removeTracker = async (idOrTrackingNumber: string) => handleFailure(
-      purplship!.trackers.remove({ idOrTrackingNumber })
-    );
+const TrackerMutationProvider: React.FC<{}> = ({ children }) => {
+  const purplship = useContext(RestContext);
 
-    return (
-      <Component {...props}
-        createTracker={createTracker}
-        removeTracker={removeTracker}
-      >
-        {children}
-      </Component>
-    );
-  }
-);
+  const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(
+    purplship!.trackers.create({ carrierName: carrier_name as CreateCarrierNameEnum, trackingNumber: tracking_number, test })
+  );
+  const removeTracker = async (idOrTrackingNumber: string) => handleFailure(
+    purplship!.trackers.remove({ idOrTrackingNumber })
+  );
 
-export default TrackerMutation;
+  return (
+    <TrackerMutationContext.Provider value={{ createTracker, removeTracker }}>
+      {children}
+    </TrackerMutationContext.Provider>
+  )
+};
+
+export default TrackerMutationProvider;

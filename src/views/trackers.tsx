@@ -9,24 +9,27 @@ import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
-import TrackShipmentModal from "@/components/track-shipment-modal";
+import TrackerModalProvider, { TrackerModalContext } from "@/components/track-shipment-modal";
 import SystemConnectionsProvider from "@/context/system-connections-provider";
-import TrackerMutation from "@/context/tracker-mutation";
+import { TrackerMutationContext } from "@/context/tracker-mutation";
 import TrackersProvider, { Trackers } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
 import { isNone, p } from "@/lib/helper";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
+import TrackerMutationProvider from "@/context/tracker-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function TrackersPage(pageProps: any) {
-  const Component: React.FC<any> = ({ removeTracker }) => {
+  const Component: React.FC<any> = () => {
+    const { setLoading } = useContext(Loading);
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
-    const { setLoading } = useContext(Loading);
+    const { removeTracker } = useContext(TrackerMutationContext);
+    const { addTracker } = useContext(TrackerModalContext);
     const { loading, results, called, load, loadMore, next, previous, refetch } = useContext(Trackers);
     const [status, setStatus] = React.useState<ListStatusEnum>();
 
@@ -50,9 +53,9 @@ export default function TrackersPage(pageProps: any) {
 
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Trackers</span>
-          <TrackShipmentModal className="button is-success is-pulled-right" onUpdate={update}>
+          <button className="button is-success is-pulled-right" onClick={() => addTracker({ onChange: update })}>
             <span>Track a Shipment</span>
-          </TrackShipmentModal>
+          </button>
         </header>
 
         <div className="tabs">
@@ -155,27 +158,29 @@ export default function TrackersPage(pageProps: any) {
     );
   };
 
-  const Wrapped = TrackerMutation<{}>(({ removeTracker }) => (
+
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
-      <TrackersProvider>
-        <UserConnectionsProvider>
-          <SystemConnectionsProvider>
-            <TrackingPreview>
-              <ConfirmModal>
+      <TrackerMutationProvider>
+        <TrackerModalProvider>
+          <TrackersProvider>
+            <UserConnectionsProvider>
+              <SystemConnectionsProvider>
+                <TrackingPreview>
+                  <ConfirmModal>
 
-                <Component removeTracker={removeTracker} />
+                    <Component />
 
-              </ConfirmModal>
-            </TrackingPreview>
-          </SystemConnectionsProvider>
-        </UserConnectionsProvider>
-      </TrackersProvider>
+                  </ConfirmModal>
+                </TrackingPreview>
+              </SystemConnectionsProvider>
+            </UserConnectionsProvider>
+          </TrackersProvider>
+        </TrackerModalProvider>
+      </TrackerMutationProvider>
     </DashboardLayout>
-  ));
-
-
-  return AuthorizedPage(<Wrapped />, pageProps)
+  ), pageProps)
 }
 
 function formatEventDescription(last_event?: TrackingEvent): string {

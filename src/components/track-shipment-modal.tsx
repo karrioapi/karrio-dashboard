@@ -6,62 +6,71 @@ import SelectField from '@/components/generic/select-field';
 import { APIReference } from '@/context/references-provider';
 import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
 import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
-import TrackerMutation from '@/context/tracker-mutation';
+import { TrackerMutationContext } from '@/context/tracker-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
 type Connection = UserConnectionType | SystemConnectionType;
-interface TrackShipmentModalComponent {
-  className?: string;
-  onUpdate?: () => void;
+type OperationType = {
+  onChange?: () => void;
+};
+interface TrackerModalInterface {
+  addTracker: (operation?: OperationType) => void;
 }
 
-const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutation<TrackShipmentModalComponent>(
-  ({ children, className, onUpdate, createTracker }) => {
-    const { notify } = useContext(Notify);
-    const { carriers } = useContext(APIReference);
-    const { loading, setLoading } = useContext(Loading);
-    const { user_connections, ...user } = useContext(UserConnections);
-    const { system_connections, ...system } = useContext(SystemConnections);
-    const [isActive, setIsActive] = useState<boolean>(false);
-    const [key, setKey] = useState<string>(`tracker-${Date.now()}`);
-    const [carrier, setCarrier] = useState<Connection>();
-    const [trackingNumber, setTrackingNumber] = useState<string>();
+export const TrackerModalContext = React.createContext<TrackerModalInterface>({} as TrackerModalInterface);
 
-    const close = ({ updated }: any | { updated?: boolean }) => {
-      setCarrier(undefined);
-      setTrackingNumber(undefined);
-      setKey(`tracker-${Date.now()}`);
-      setIsActive(false);
-      (updated && onUpdate) && onUpdate();
-    };
-    const create = async (evt: React.FormEvent<HTMLFormElement>) => {
-      evt.preventDefault();
-      setLoading(true);
-      try {
-        await createTracker(trackingNumber as string, carrier?.carrier_name as string, carrier?.test as boolean);
-        notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
-        close({ updated: true });
-      } catch (message: any) {
-        notify({ type: NotificationType.error, message });
-      }
-      setLoading(false);
-    };
-    const updateCarrier = (carrierId: string) => {
-      const all_carriers = [...(user_connections || []), ...(system_connections || [])];
-      const carrier = all_carriers.find(carrier => carrier?.carrier_id === carrierId);
-      setCarrier(carrier);
-    };
+const TrackerModalProvider: React.FC<{}> = ({ children }) => {
+  const { notify } = useContext(Notify);
+  const { carriers } = useContext(APIReference);
+  const { loading, setLoading } = useContext(Loading);
+  const { createTracker } = useContext(TrackerMutationContext);
+  const { user_connections, ...user } = useContext(UserConnections);
+  const { system_connections, ...system } = useContext(SystemConnections);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [key, setKey] = useState<string>(`tracker-${Date.now()}`);
+  const [carrier, setCarrier] = useState<Connection>();
+  const [trackingNumber, setTrackingNumber] = useState<string>();
+  const [operation, setOperation] = useState<OperationType>({} as OperationType);
 
-    useEffect(() => { if (!user.loading) user.load(); }, [user]);
-    useEffect(() => { if (!system.loading) system.load(); }, [system]);
+  const addTracker = (operation?: OperationType) => {
+    if (!user.loading && user.load) user.load();
+    if (!system.loading && system.load) system.load();
+    operation && setOperation(operation);
+    setIsActive(true);
+  };
+  const close = ({ updated }: any | { updated?: boolean }) => {
+    setIsActive(false);
+    setCarrier(undefined);
+    setTrackingNumber(undefined);
+    setKey(`tracker-${Date.now()}`);
+    (updated && operation?.onChange) && operation.onChange();
+  };
+  const create = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    setLoading(true);
+    try {
+      await createTracker(trackingNumber as string, carrier?.carrier_name as string, carrier?.test as boolean);
+      notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
+      close({ updated: true });
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
+    }
+    setLoading(false);
+  };
+  const updateCarrier = (carrierId: string) => {
+    const all_carriers = [...(user_connections || []), ...(system_connections || [])];
+    const carrier = all_carriers.find(carrier => carrier?.carrier_id === carrierId);
+    setCarrier(carrier);
+  };
 
-    return (
+  return (
+    <>
+      <TrackerModalContext.Provider value={{ addTracker }}>
+        {children}
+      </TrackerModalContext.Provider>
+
       <Notifier>
-        <button className={className} onClick={() => setIsActive(true)}>
-          {children}
-        </button>
-
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           {isActive && <form className="modal-card" onSubmit={create}>
@@ -95,7 +104,8 @@ const TrackShipmentModal: React.FC<TrackShipmentModalComponent> = TrackerMutatio
           <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>
         </div>
       </Notifier>
-    )
-  });
+    </>
+  )
+};
 
-export default TrackShipmentModal;
+export default TrackerModalProvider;
