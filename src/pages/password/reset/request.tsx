@@ -9,6 +9,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
+import { p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -24,11 +25,14 @@ export default function Page({ references }: { references: References }) {
       e.preventDefault();
       const { data } = await send_request({
         variables: {
-          data: { email: email.current?.value, redirect_url: `${location.origin}/password/reset` }
+          data: {
+            email: email.current?.value,
+            redirect_url: location.origin + p`/password/reset`
+          }
         }
       }) as { data: request_password_reset };
 
-      if ((data?.request_password_reset?.errors || []).length === 0) router.push('/password/reset/sent')
+      if ((data?.request_password_reset?.errors || []).length === 0) router.push(`/password/reset/sent`)
     };
 
     return (
@@ -47,6 +51,7 @@ export default function Page({ references }: { references: References }) {
               </div>
 
               <ButtonField type="submit"
+                disabled={loading}
                 className={`is-primary is-fullwidth ${loading ? 'is-loading' : ''} mt-6`}
                 controlClass="has-text-centered">
                 <span>Reset my password</span>
