@@ -3,32 +3,32 @@ import { FetchResult, useMutation } from '@apollo/client';
 import { AddressTemplateInput, CREATE_ADDRESS_TEMPLATE, create_address_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_ADDRESS_TEMPLATE, PartialAddressTemplateInput, update_address_templateVariables } from '@/graphql';
 
 
-export type TemplateMutator<T> = T & {
-  createTemplate: (data: AddressTemplateInput) => Promise<FetchResult<AddressTemplateInput, Record<string, any>, Record<string, any>>>;
-  updateTemplate: (data: PartialAddressTemplateInput) => Promise<FetchResult<PartialAddressTemplateInput, Record<string, any>, Record<string, any>>>;
-  deleteTemplate: (id: string) => Promise<FetchResult<{ id: string; }, Record<string, any>, Record<string, any>>>;
+export type TemplateMutator = {
+  createAddressTemplate: (data: AddressTemplateInput) => Promise<FetchResult<AddressTemplateInput, Record<string, any>, Record<string, any>>>;
+  updateAddressTemplate: (data: PartialAddressTemplateInput) => Promise<FetchResult<PartialAddressTemplateInput, Record<string, any>, Record<string, any>>>;
+  deleteAddressTemplate: (id: string) => Promise<FetchResult<{ id: string; }, Record<string, any>, Record<string, any>>>;
 }
 
-const AddressTemplateMutation = <T extends {}>(Component: React.FC<TemplateMutator<T>>) => (
-  function AddressTemplateMutationWrapper({ children, ...props }: any) {
-    const [createMutation] = useMutation<AddressTemplateInput, create_address_templateVariables>(CREATE_ADDRESS_TEMPLATE);
-    const [updateMutation] = useMutation<PartialAddressTemplateInput, update_address_templateVariables>(UPDATED_ADDRESS_TEMPLATE);
-    const [deleteMutation] = useMutation<{ id: string }, delete_templateVariables>(DELETE_TEMPLATE);
+export const AddressMutationContext = React.createContext<TemplateMutator>({} as TemplateMutator);
 
-    const createTemplate = (data: AddressTemplateInput) => createMutation({ variables: { data } });
-    const updateTemplate = (data: PartialAddressTemplateInput) => updateMutation({ variables: { data } });
-    const deleteTemplate = (id: string) => deleteMutation({ variables: { data: { id } } });
+const AddressMutationProvider: React.FC<{}> = ({ children }) => {
+  const [createMutation] = useMutation<AddressTemplateInput, create_address_templateVariables>(CREATE_ADDRESS_TEMPLATE);
+  const [updateMutation] = useMutation<PartialAddressTemplateInput, update_address_templateVariables>(UPDATED_ADDRESS_TEMPLATE);
+  const [deleteMutation] = useMutation<{ id: string }, delete_templateVariables>(DELETE_TEMPLATE);
 
-    return (
-      <Component {...props}
-        createTemplate={createTemplate}
-        updateTemplate={updateTemplate}
-        deleteTemplate={deleteTemplate}
-      >
-        {children}
-      </Component>
-    );
-  }
-);
+  const createAddressTemplate = (data: AddressTemplateInput) => createMutation({ variables: { data } });
+  const updateAddressTemplate = (data: PartialAddressTemplateInput) => updateMutation({ variables: { data } });
+  const deleteAddressTemplate = (id: string) => deleteMutation({ variables: { data: { id } } });
 
-export default AddressTemplateMutation;
+  return (
+    <AddressMutationContext.Provider value={{
+      createAddressTemplate,
+      updateAddressTemplate,
+      deleteAddressTemplate,
+    }}>
+      {children}
+    </AddressMutationContext.Provider>
+  )
+};
+
+export default AddressMutationProvider;

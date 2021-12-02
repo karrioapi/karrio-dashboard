@@ -5,7 +5,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
-import CustomsTemplateMutation from "@/context/customs-template-mutation";
+import CustomsMutationProvider, { CustomsMutationContext } from "@/context/customs-template-mutation";
 import { isNone } from "@/lib/helper";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
@@ -15,15 +15,16 @@ export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function CustomsInfoPage(pageProps: any) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
+    const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
     const { loading, templates, next, previous, load, loadMore, refetch } = useContext(CustomInfoTemplates);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteTemplate(id);
+      await deleteCustomsTemplate(id);
       update();
     };
 
@@ -117,20 +118,20 @@ export default function CustomsInfoPage(pageProps: any) {
     );
   };
 
-  const Wrapped = CustomsTemplateMutation<{}>(({ deleteTemplate }) => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
       <CustomInfoTemplatesProvider>
-        <ConfirmModal>
-          <CustomsInfoEditModal>
+        <CustomsMutationProvider>
+          <ConfirmModal>
+            <CustomsInfoEditModal>
 
-            <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
-          </CustomsInfoEditModal>
-        </ConfirmModal>
+            </CustomsInfoEditModal>
+          </ConfirmModal>
+        </CustomsMutationProvider>
       </CustomInfoTemplatesProvider>
     </DashboardLayout>
-  ));
-
-  return AuthorizedPage(<Wrapped />, pageProps);
+  ), pageProps);
 }

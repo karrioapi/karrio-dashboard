@@ -24,6 +24,7 @@ import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
+import ShipmentMutationProvider from '@/context/shipment-mutation';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -80,34 +81,36 @@ export default function LabelPage(pageProps: any) {
           </ul>
         </nav>
 
-        {(ready && Object.keys(shipment || {}).length > 0) && <div className="columns px-2 pb-6">
-          <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
+        <ShipmentMutationProvider>
+          {(ready && Object.keys(shipment || {}).length > 0) && <div className="columns px-2 pb-6">
+            <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
 
-            <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
-              <Tabs tabs={tabs} disabled={filterDisabled(tabs, shipment)} eventKey="label-select-tab" style={{ overflowY: 'auto', minHeight: '100%', maxHeight: '75vh' }}>
+              <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
+                <Tabs tabs={tabs} disabled={filterDisabled(tabs, shipment)} eventKey="label-select-tab" style={{ overflowY: 'auto', minHeight: '100%', maxHeight: '75vh' }}>
 
-                <AddressForm key={`${ckey}-shipper`} value={shipment.shipper} default_value={default_address} shipment={shipment} update={update} name="shipper" />
+                  <AddressForm key={`${ckey}-shipper`} value={shipment.shipper} default_value={default_address} shipment={shipment} update={update} name="shipper" />
 
-                <AddressForm key={`${ckey}-recipient`} value={shipment.recipient} shipment={shipment} update={update} name="recipient" />
+                  <AddressForm key={`${ckey}-recipient`} value={shipment.recipient} shipment={shipment} update={update} name="recipient" />
 
-                <ParcelForm key={`${ckey}-parcel`} value={shipment.parcels[0]} shipment={shipment} update={update} />
+                  <ParcelForm key={`${ckey}-parcel`} value={shipment.parcels[0]} shipment={shipment} update={update} />
 
-                <CustomsInfoForm key={`${ckey}-customs`} value={shipment.customs} shipment={shipment} update={update} />
+                  <CustomsInfoForm key={`${ckey}-customs`} value={shipment.customs} shipment={shipment} update={update} />
 
-                <ShipmentOptions key={`${ckey}-options`} shipment={shipment} update={update} />
+                  <ShipmentOptions key={`${ckey}-options`} shipment={shipment} update={update} />
 
-              </Tabs>
+                </Tabs>
+              </div>
+
             </div>
+            <div className="column is-5 pb-6">
 
-          </div>
-          <div className="column is-5 pb-6">
+              <div className="card px-3 py-3">
+                <LiveRates key={ckey} update={update} />
+              </div>
 
-            <div className="card px-3 py-3">
-              <LiveRates key={ckey} update={update} />
             </div>
-
-          </div>
-        </div>}
+          </div>}
+        </ShipmentMutationProvider>
 
         {!ready && <Spinner />}
 

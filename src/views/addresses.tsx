@@ -6,24 +6,25 @@ import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
-import AddressTemplateMutation from "@/context/address-template-mutation";
 import { isNone } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
+import AddressMutationProvider, { AddressMutationContext } from "@/context/address-template-mutation";
 
 export { getServerSideProps } from '@/lib/middleware';
 
 
 export default function AddressPage(pageProps: any) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editAddress } = useContext(AddressEditContext);
+    const { deleteAddressTemplate } = useContext(AddressMutationContext);
     const { loading, templates, next, previous, load, loadMore, refetch } = useContext(AddressTemplates);
 
     const update = async (_?: React.MouseEvent) => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteTemplate(id);
+      await deleteAddressTemplate(id);
       update();
     };
 
@@ -115,21 +116,21 @@ export default function AddressPage(pageProps: any) {
     );
   };
 
-  const Wrapped = AddressTemplateMutation<{}>(({ deleteTemplate }) => (
+  return AuthorizedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
       <AddressTemplatesProvider>
-        <ConfirmModal>
-          <AddressEditModal>
+        <AddressMutationProvider>
+          <ConfirmModal>
+            <AddressEditModal>
 
-            <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
-          </AddressEditModal>
-        </ConfirmModal>
+            </AddressEditModal>
+          </ConfirmModal>
+        </AddressMutationProvider>
       </AddressTemplatesProvider>
     </DashboardLayout>
-  ));
-
-  return AuthorizedPage(<Wrapped />, pageProps);
+  ), pageProps);
 }

@@ -8,7 +8,7 @@ import OptionsDescription from '@/components/descriptions/options-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
-import ShipmentMutation from '@/context/shipment-mutation';
+import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { LabelData } from '@/context/shipment-provider';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
@@ -22,12 +22,13 @@ interface LiveRatesComponent {
 
 const DEFAULT_PAYMENT: Partial<Payment> = { paid_by: PaymentPaidByEnum.Sender };
 
-const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesComponent>(({ update, fetchRates, buyLabel }) => {
+const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
   const { shipment } = useContext(LabelData);
   const { loading, setLoading } = useContext(Loading);
+  const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
   const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
   const [label_type, setLabelType] = useState<ShipmentLabelTypeEnum>(shipment?.label_type || ShipmentLabelTypeEnum.Pdf);
   const [payment, setPayment] = useState<Partial<Payment>>(DEFAULT_PAYMENT);
@@ -228,6 +229,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesCompon
 
     </div>
   )
-});
+};
 
 export default LiveRates;

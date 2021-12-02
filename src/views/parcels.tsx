@@ -5,19 +5,20 @@ import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
-import ParcelTemplateMutation from "@/context/parcel-template-mutation";
 import { isNone } from "@/lib/helper";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
+import ParcelMutationProvider, { ParcelMutationContext } from "@/context/parcel-template-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ParcelsPage(pageProps: any) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { deleteTemplate } = useContext(ParcelMutationContext);
     const { loading, templates, previous, next, load, loadMore, refetch } = useContext(ParcelTemplates);
 
     const update = async () => refetch && await refetch();
@@ -28,7 +29,6 @@ export default function ParcelsPage(pageProps: any) {
 
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
-
 
     return (
       <>
@@ -117,20 +117,20 @@ export default function ParcelsPage(pageProps: any) {
     );
   };
 
-  const Wrapped = ParcelTemplateMutation<{}>(({ deleteTemplate }) => (
+  return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
-      <ParcelTemplatesProvider>
-        <ConfirmModal>
-          <ParcelEditModal>
+      <ParcelMutationProvider>
+        <ParcelTemplatesProvider>
+          <ConfirmModal>
+            <ParcelEditModal>
 
-            <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
-          </ParcelEditModal>
-        </ConfirmModal>
-      </ParcelTemplatesProvider>
+            </ParcelEditModal>
+          </ConfirmModal>
+        </ParcelTemplatesProvider>
+      </ParcelMutationProvider>
     </DashboardLayout>
-  ));
-
-  return AuthorizedPage(<Wrapped />, pageProps);
+  ), pageProps);
 }

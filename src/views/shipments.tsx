@@ -17,6 +17,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
+import ShipmentMutationProvider from "@/context/shipment-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -155,15 +156,17 @@ export default function ShipmentsPage(pageProps: any) {
   return AuthorizedPage((
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).references?.app_name}</title></Head>
-      <LabelPrinter>
-        <CustomInvoicePrinter>
-          <ShipmentsProvider>
+      <ShipmentMutationProvider>
+        <LabelPrinter>
+          <CustomInvoicePrinter>
+            <ShipmentsProvider>
 
-            <Component />
+              <Component />
 
-          </ShipmentsProvider>
-        </CustomInvoicePrinter>
-      </LabelPrinter >
+            </ShipmentsProvider>
+          </CustomInvoicePrinter>
+        </LabelPrinter>
+      </ShipmentMutationProvider>
     </DashboardLayout>
   ), pageProps)
 };

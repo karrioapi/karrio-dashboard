@@ -2,13 +2,13 @@ import React, { useState, useRef, useContext } from 'react';
 import { Shipment, ShipmentStatusEnum } from '@/api/index';
 import { LabelPrinterContext } from '@/components/label/label-printer';
 import { NotificationType } from '@/lib/types';
-import ShipmentMutation from '@/context/shipment-mutation';
 import { Notify } from '@/components/notifier';
 import { Shipments } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
+import { ShipmentMutationContext } from '@/context/shipment-mutation';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -16,11 +16,12 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 }
 
 
-const ShipmentMenu: React.FC<ShipmentMenuComponent> = ShipmentMutation<ShipmentMenuComponent>(({ shipment, voidLabel, className, style, onClick }) => {
+const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, style, onClick }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
   const { printLabel } = useContext(LabelPrinterContext);
+  const { voidLabel } = useContext(ShipmentMutationContext);
   const { printInvoice } = useContext(CustomInvoicePrinterContext);
   const shipments = useContext(Shipments);
   const btn = useRef<HTMLButtonElement>(null);
@@ -102,6 +103,6 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ShipmentMutation<ShipmentM
       </div>
     </div>
   );
-});
+};
 
 export default ShipmentMenu;
