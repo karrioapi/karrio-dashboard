@@ -12,7 +12,7 @@ import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, 
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -24,7 +24,6 @@ export default function ShipmentPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { printLabel } = useContext(LabelPrinterContext);
     const { printInvoice } = useContext(CustomInvoicePrinterContext);
-    const [key] = useState<string>(`shipment-${Date.now()}`);
     const { shipment, loading, loadShipment } = useContext(LabelData);
     const { id } = router.query;
 
@@ -177,12 +176,12 @@ export default function ShipmentPage(pageProps: any) {
               <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">PARCELS</p>
 
-                {shipment.parcels.map((parcel) => <>
+                {shipment.parcels.map((parcel, index) => <React.Fragment key={index + "parcel-info"}>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                   <p className="is-size-7 my-1">{formatParcelLabel(parcel)}</p>
                   <p className="is-size-7 my-1 has-text-grey">{formatDimension(parcel)}</p>
                   <p className="is-size-7 my-1 has-text-grey">{formatWeight(parcel)}</p>
-                </>)}
+                </React.Fragment>)}
               </div>
             </div>
 
@@ -221,7 +220,7 @@ export default function ShipmentPage(pageProps: any) {
               {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
 
-                {(shipment.customs?.commodities || []).map((commodity) => <>
+                {(shipment.customs?.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                   <p className="is-size-7 my-1 has-text-weight-semibold">{commodity.sku}</p>
                   <p className="is-size-7 my-1">{commodity.description}</p>
@@ -231,13 +230,13 @@ export default function ShipmentPage(pageProps: any) {
                     </>}
                   </p>
                   <p className="is-size-7 my-1 has-text-grey">{formatWeight(commodity)}</p>
-                </>)}
+                </React.Fragment>)}
               </div>}
 
               {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">SHIPMENT OPTIONS</p>
 
-                {[shipment.options].map((options: any) => <>
+                {[shipment.options].map((options: any, index) => <React.Fragment key={index + "parcel-info"}>
                   <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                     {!isNone(options.shipment_date) && <span>Shipment Date: <strong>{formatDate(options.shipment_date)}</strong></span>}
                   </p>
@@ -262,7 +261,7 @@ export default function ShipmentPage(pageProps: any) {
                       <span>Amount To Collect <strong>{options.cash_on_delivery}</strong> {options.currency}</span>
                     </>}
                   </p>
-                </>)}
+                </React.Fragment>)}
 
               </div>}
             </div>
