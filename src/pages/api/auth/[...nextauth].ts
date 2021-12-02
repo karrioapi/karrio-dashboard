@@ -1,15 +1,13 @@
 import { TokenPair } from '@/api';
-import { authenticate, refreshToken, AuthToken } from '@/client/context';
+import { authenticate, refreshToken, AuthToken, OrgToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
 import { NextApiRequest } from 'next';
 import getConfig from 'next/config';
 import NextAuth, { User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Providers from 'next-auth/providers';
-import { BehaviorSubject } from 'rxjs';
 import logger from '@/lib/logger';
 
-export const orgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
 
@@ -51,8 +49,8 @@ const auth = NextAuth({
         token.expiration = parseJwt(user.accessToken as string).exp
       }
 
-      if (!isNone(orgToken.value)) {
-        const { access, refresh } = orgToken.value as TokenPair;
+      if (!isNone(OrgToken.value)) {
+        const { access, refresh } = OrgToken.value as TokenPair;
         return {
           ...token,
           accessToken: access,

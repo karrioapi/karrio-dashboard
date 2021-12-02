@@ -21,6 +21,7 @@ export const AuthToken = new Subject<TokenPair>();
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
 export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
 export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
+export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 
 AuthToken.subscribe(async ({ access }: { access?: string }) => {
   graphqlClient.next(createGrapQLContext(access));

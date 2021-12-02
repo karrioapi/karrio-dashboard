@@ -1,4 +1,4 @@
-import { graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
+import { AuthToken, OrgToken, graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
@@ -6,6 +6,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { References } from "@/api";
 import logger from "@/lib/logger";
+import { Response } from "node-fetch";
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -32,17 +33,24 @@ export async function connectAPI(): Promise<{ references?: References }> {
       // TODO:: implement version compatibility check here.
 
       resolve({ references });
-    } catch (e) {
+    } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${PURPLSHIP_API})`, e);
-      const error = createServerError({
-        code: ServerErrorCode.API_CONNECTION_ERROR,
-        message: `
+
+      if (e.status === 403) {
+        AuthToken.next({ access: "", refresh: "" });
+        OrgToken.next({ access: "", refresh: "" });
+
+        connectAPI();
+      } else {
+        const error = createServerError({
+          code: ServerErrorCode.API_CONNECTION_ERROR,
+          message: `
           Server (${PURPLSHIP_API}) unreachable.
           Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
         `
-      })
-
-      reject({ error });
+        })
+        reject({ error });
+      }
     }
   });
 }
