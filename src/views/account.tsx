@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import CloseAccountAction from "@/components/close-account-action";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import Tabs from "@/components/generic/tabs";
@@ -77,7 +77,7 @@ export default function AccountPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 

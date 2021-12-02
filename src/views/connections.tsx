@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal from "@/components/confirm-modal";
 import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/connect-provider-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -59,7 +59,7 @@ export default function ConnectionsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Carrier Connections - {(pageProps as any).references?.app_name}</title></Head>
       <ConfirmModal>

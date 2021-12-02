@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import ParcelDescription from "@/components/descriptions/parcel-description";
@@ -117,7 +117,7 @@ export default function ParcelsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
       <ParcelMutationProvider>

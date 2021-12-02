@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
@@ -127,7 +127,7 @@ export default function LogPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Log - {(pageProps as any).references?.app_name}</title></Head>
       <LogProvider>

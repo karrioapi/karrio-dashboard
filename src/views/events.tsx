@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import Spinner from "@/components/spinner";
@@ -86,7 +86,7 @@ export default function EventsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Events - {(pageProps as any).references?.app_name}</title></Head>
       <EventsProvider>

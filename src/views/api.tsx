@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import GenerateAPIModal from "@/components/generate-api-dialog";
 import { Loading } from "@/components/loader";
@@ -71,7 +71,7 @@ export default function ApiPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>API Keys - {(pageProps as any).references?.app_name}</title></Head>
       <Component />

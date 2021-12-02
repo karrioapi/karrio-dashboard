@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -118,7 +118,7 @@ export default function CustomsInfoPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
       <CustomInfoTemplatesProvider>

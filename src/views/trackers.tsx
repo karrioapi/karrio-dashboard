@@ -1,7 +1,7 @@
 import { TrackingEvent } from "@/api";
 import { ListStatusEnum } from "@/api/generated/apis/TrackersApi";
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";
@@ -159,7 +159,7 @@ export default function TrackersPage(pageProps: any) {
   };
 
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
       <TrackerMutationProvider>

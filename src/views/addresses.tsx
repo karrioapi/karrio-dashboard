@@ -1,5 +1,5 @@
 import AddressEditModal, { AddressEditContext } from "@/components/address-edit-modal";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import AddressDescription from "@/components/descriptions/address-description";
@@ -116,7 +116,7 @@ export default function AddressPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>

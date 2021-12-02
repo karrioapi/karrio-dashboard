@@ -1,5 +1,5 @@
 import { Customs, ShipmentStatusEnum } from "@/api";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter, { CustomInvoicePrinterContext } from "@/components/descriptions/custom-invoice-printer";
@@ -282,7 +282,7 @@ export default function ShipmentPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentProvider>

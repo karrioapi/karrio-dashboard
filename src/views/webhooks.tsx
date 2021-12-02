@@ -1,5 +1,5 @@
 import { Webhook } from "@/api";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
@@ -152,5 +152,5 @@ export default function WebhooksPage(pageProps: any) {
   ));
 
 
-  return AuthorizedPage(<Wrapped />, pageProps)
+  return AuthenticatedPage(<Wrapped />, pageProps)
 }

@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
@@ -82,7 +82,7 @@ export default function EventPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Event - {(pageProps as any).references?.app_name}</title></Head>
       <EventProvider>

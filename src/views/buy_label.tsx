@@ -18,7 +18,7 @@ import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import DashboardLayout from '@/layouts/dashboard-layout';
-import AuthorizedPage from '@/layouts/authorized-page';
+import AuthenticatedPage from '@/layouts/authenticated-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
@@ -118,7 +118,7 @@ export default function LabelPage(pageProps: any) {
     )
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>

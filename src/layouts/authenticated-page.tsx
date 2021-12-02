@@ -34,7 +34,7 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
   );
 };
 
-const AuthorizedPage = (children: any, pageProps?: any | {}) => {
+const AuthenticatedPage = (children: any, pageProps?: any | {}) => {
   const router = useRouter();
   const [session] = useSession();
   const purplship = useContext(RestContext);
@@ -64,4 +64,4 @@ const AuthorizedPage = (children: any, pageProps?: any | {}) => {
   );
 };
 
-export default AuthorizedPage;
+export default AuthenticatedPage;

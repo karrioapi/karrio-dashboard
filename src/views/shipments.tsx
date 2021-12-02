@@ -1,6 +1,6 @@
 import { ListStatusEnum } from "@/api/generated/apis/ShipmentsApi";
 import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter from "@/components/descriptions/custom-invoice-printer";
 import LabelPrinter from "@/components/label/label-printer";
@@ -153,7 +153,7 @@ export default function ShipmentsPage(pageProps: any) {
     );
   };
 
-  return AuthorizedPage((
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentMutationProvider>
