@@ -69,7 +69,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
 
           {user_connections.map((connection) => (
 
-            <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || viewOtherMode === connection.test) ? 'table-row' : 'none' }}>
+            <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || (testMode !== connection.test && viewOtherMode)) ? 'table-row' : 'none' }}>
               <td className="carrier">
                 <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" />
               </td>
