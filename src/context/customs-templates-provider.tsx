@@ -37,7 +37,7 @@ const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
       load, loadMore,
       templates: extract(query?.data?.customs_templates?.edges),
       next: query.data?.customs_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
-      previous: query.data?.customs_templates?.pageInfo?.hasPreviousPage ? (variables?.offset - PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>
       {children}

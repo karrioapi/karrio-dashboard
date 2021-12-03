@@ -47,7 +47,7 @@ const LogsProvider: React.FC = ({ children }) => {
       load, loadMore,
       logs: extract(query?.data?.logs?.edges),
       next: query.data?.logs?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
-      previous: query.data?.logs?.pageInfo?.hasPreviousPage ? (variables?.offset - PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>
       {children}
