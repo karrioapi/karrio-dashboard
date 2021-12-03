@@ -7,12 +7,7 @@ import { RestContext } from '@/client/context';
 const DEFAULT_SHIPMENT_DATA = {
   shipper: {} as Address,
   recipient: {} as Address,
-  parcels: [{
-    packaging_type: "envelope",
-    is_document: false,
-    weight_unit: "KG",
-    dimension_unit: "CM",
-  }] as Parcel[],
+  parcels: [] as Parcel[],
   options: {}
 } as Shipment;
 
@@ -21,6 +16,7 @@ type ShipmentType = Shipment | Shipment & { customs: Customs & { options: any } 
 type LabelDataContext = {
   shipment: ShipmentType;
   loading: boolean;
+  called: boolean;
   error?: RequestError;
   loadShipment: (id?: string) => Promise<Shipment>;
   updateShipment: (data: Partial<Shipment>) => void;
@@ -33,10 +29,12 @@ const ShipmentProvider: React.FC = ({ children }) => {
   const [error, setError] = useState<RequestError>();
   const [shipment, setValue] = useState<Shipment>(DEFAULT_SHIPMENT_DATA);
   const [loading, setLoading] = useState<boolean>(false);
+  const [called, setCalled] = useState<boolean>(false);
 
   const loadShipment = async (id?: string) => {
     setError(undefined);
     setLoading(true);
+    setCalled(true);
 
     return new Promise<Shipment>(async (resolve) => {
       if (id === 'new') {
@@ -65,6 +63,7 @@ const ShipmentProvider: React.FC = ({ children }) => {
     <LabelData.Provider value={{
       shipment,
       error,
+      called,
       loading,
       loadShipment,
       updateShipment

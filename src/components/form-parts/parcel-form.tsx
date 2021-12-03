@@ -54,7 +54,6 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
   const { updateParcel } = useContext(ShipmentMutationContext);
   const { packaging_types, package_presets } = useContext(APIReference);
   const { templates, load, ...state } = useContext(ParcelTemplates);
-  const { default_parcel } = useContext(DefaultTemplatesData);
   const form = useRef<HTMLFormElement>(null);
   const [key] = useState<string>(`parcel-${Date.now()}`);
   const [parcel, dispatch] = useReducer(reducer, value, () => value || DEFAULT_PARCEL_CONTENT);
@@ -118,12 +117,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
   };
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
-  useEffect(() => {
-    if (!isNone(value)) return;
-    dispatch({ name: 'template', value: default_parcel as Parcel });
-    setDimension(formatDimension(default_parcel as Partial<Parcel>));
-    setParcelType(default_parcel?.package_preset ? 'preset' : 'custom');
-  }, [default_parcel, value]);
+
 
 
   return (

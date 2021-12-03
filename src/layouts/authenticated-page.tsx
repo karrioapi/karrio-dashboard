@@ -1,17 +1,17 @@
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
-import { useSession } from 'next-auth/client';
 import UserProvider from '@/context/user-provider';
 import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
-import { isNone } from '@/lib/helper';
-import { AuthToken, RestContext } from '@/client/context';
-import { PurplshipClient, TokenPair } from '@/api';
+import { AuthToken } from '@/client/context';
+import { TokenPair } from '@/api';
 import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
 import TokenProvider from '@/context/token-provider';
 import Notifier from '@/components/notifier';
 import Footer from '@/components/footer';
+import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
+import { isNone } from '@/lib/helper';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -34,34 +34,37 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
   );
 };
 
-const AuthenticatedPage = (children: any, pageProps?: any | {}) => {
-  const router = useRouter();
-  const [session] = useSession();
-  const purplship = useContext(RestContext);
+const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
+  const SessionWrapper: React.FC = ({ children }) => {
+    const router = useRouter();
+    const session = useContext(NextSession);
 
-  const isReady = (purplship?: PurplshipClient) => {
-    return ((purplship?.config.apiKey as string || '').length > 0);
-  };
+    useEffect(() => {
+      if (session === null || session?.error === "RefreshAccessTokenError") {
+        router.push('/login?next=' + window.location.pathname);
+      }
+      if (session?.accessToken) {
+        AuthToken.next({ access: session?.accessToken } as TokenPair);
+      }
+    }, [session, router]);
 
-  useEffect(() => {
-    if (session === null || session?.error === "RefreshAccessTokenError") {
-      router.push('/login?next=' + window.location.pathname);
-    }
-    if (!isNone(session?.accessToken)) {
-      AuthToken.next({ access: session?.accessToken } as TokenPair);
-    }
-  }, [session, router]);
+    if (!session) return <></>;
 
-  return (
-    <ContextProviders {...(pageProps || {})}>
-      {isReady(purplship) && <>
-
+    return (
+      <ContextProviders {...(pageProps || {})}>
         {children}
         <Footer />
+      </ContextProviders>
+    );
+  };
 
-      </>}
-    </ContextProviders>
-  );
+  return (
+    <NextSessionProvider>
+      <SessionWrapper>{content}</SessionWrapper>
+    </NextSessionProvider>
+  )
 };
+
+AuthenticatedPage.whyDidYouRender = true
 
 export default AuthenticatedPage;
