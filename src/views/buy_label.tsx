@@ -51,14 +51,6 @@ export default function LabelPage(pageProps: any) {
           .then(({ status, messages }) => {
             if (isNone(status) || status === ShipmentStatusEnum.Created) {
               setKey(`${id}-${Date.now()}`);
-              if ((messages || []).length > 0) {
-                const error: APIError = {
-                  error: { code: "notes", details: { messages } as APIError['error']['details'] }
-                };
-                const message = new RequestError(error);
-
-                notify({ type: NotificationType.warning, message });
-              }
             } else {
               notify({ type: NotificationType.info, message: 'Label already purchased!' });
               router.push(basePath);

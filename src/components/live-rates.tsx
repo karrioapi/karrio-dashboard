@@ -1,4 +1,5 @@
 import { formatRef, isNone } from '@/lib/helper';
+import { useRouter } from 'next/dist/client/router';
 import { APIError, NotificationType, RequestError } from '@/lib/types';
 import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@/api/index';
 import React, { useContext, useState } from 'react';
@@ -13,8 +14,8 @@ import { LabelData } from '@/context/shipment-provider';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
-import RateDescription from './descriptions/rate-description';
-import { useRouter } from 'next/dist/client/router';
+import RateDescription from '@/components/descriptions/rate-description';
+import MessagesDescription from '@/components/descriptions/messages-description';
 
 interface LiveRatesComponent {
   update: (payload: {}, refresh?: boolean) => void;
@@ -174,6 +175,13 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
           </ul>
 
         </div>
+
+        {(shipment.messages || []).length > 0 && <div className="column is-12 py-1">
+          <p className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</p>
+          <div className="notification is-warning is-size-7">
+            <MessagesDescription messages={shipment.messages} />
+          </div>
+        </div>}
 
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 

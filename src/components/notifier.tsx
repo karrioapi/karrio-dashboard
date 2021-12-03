@@ -39,7 +39,7 @@ const Notifier: React.FC = ({ children }) => {
   )
 };
 
-const formatMessage = (msg: string | Error | RequestError) => {
+export function formatMessage(msg: string | Error | RequestError) {
   try {
     if (typeof msg === 'string') {
       return msg;
