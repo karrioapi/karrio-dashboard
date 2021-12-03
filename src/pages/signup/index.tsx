@@ -106,7 +106,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
 
             <ButtonField type="submit"
               disabled={loading}
-              className={`is-primary is-fullwidth ${loading ? 'is-loading' : ''} mt-6`}
+              className={`is-primary is-fullwidth mt-6`}
               controlClass="has-text-centered">
               <span>Create account</span>
             </ButtonField>

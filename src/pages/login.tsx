@@ -78,7 +78,8 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
                 <div className="field mt-6">
                   <div className="control">
                     <input
-                      className={"button is-primary is-fullwidth" + (isLoading ? " is-loading" : "")}
+                      disabled={isLoading}
+                      className={"button is-primary is-fullwidth"}
                       type="submit"
                       value="Log in"
                     />
