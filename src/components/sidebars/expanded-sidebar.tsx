@@ -5,10 +5,12 @@ import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
 import AppLink from '@/components/app-link';
 import { APIReference } from '@/context/references-provider';
 import { p } from '@/lib/helper';
+import { useRouter } from 'next/dist/client/router';
 
 interface ExpandedSidebarComponent { }
 
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
+  const router = useRouter();
   const { testMode, basePath, switchMode } = useContext(AppMode);
   const { multi_organizations } = useContext(APIReference);
   const sidebar = useRef<HTMLDivElement>(null);
@@ -18,8 +20,8 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
     sidebar.current?.classList.remove('is-mobile-active');
   };
   const isActive = (path: string) => {
-    if (path === basePath && path === window.location.pathname) return 'is-active';
-    return window.location.pathname.includes(`${basePath}${path}`.replace('//', '/')) ? 'is-active' : '';
+    if (path === basePath) return path === router.pathname ? 'is-active' : '';
+    return router.pathname.includes(`${basePath}${path}`.replace('//', '/')) ? 'is-active' : '';
   };
 
   return (
@@ -56,7 +58,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         <AppLink href="/templates/customs-infos" className={"menu-item " + isActive("/templates/customs-infos")}>
           <span className="has-text-weight-semibold">Customs</span>
         </AppLink>
-
 
         <AppLink href="/developers/api" className="menu-item menu-item my-0">
           <span className="has-text-weight-semibold">Developers</span>
