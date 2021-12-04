@@ -233,6 +233,343 @@ query get_logs($offset: Int, $first: Int, $status: String) {
 }
 `;
 
+export const GET_SHIPMENT = gql`
+query get_shipment($id: String!) {
+  shipment(id: $id) {
+    id
+    created_at
+    updated_at
+    created_by {
+      email
+      full_name
+    }
+    status
+    recipient {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      validate_location
+    }
+    shipper {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      validate_location
+    }
+    label_type
+    tracking_number
+    shipment_identifier
+    label
+    tracking_url
+    test_mode
+    reference
+    customs {
+      id
+      certify
+      commercial_invoice
+      content_type
+      content_description
+      incoterm
+      invoice
+      invoice_date
+      signer
+      duty {
+        paid_by
+        currency
+        account_number
+        declared_value
+      }
+      options
+      commodities {
+        id
+        weight
+        description
+        quantity
+        sku
+        value_amount
+        origin_country
+      }
+    }
+    selected_rate {
+      carrier_name
+      carrier_id
+      currency
+      transit_days
+      service
+      discount
+      base_charge
+      total_charge
+      duties_and_taxes
+      extra_charges {
+        name
+        amount
+        currency
+      }
+      meta
+    }
+  }
+}
+`;
+
+export const GET_SHIPMENTS = gql`
+query get_shipments($offset: Int, $first: Int, $status: String, $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: String, $reference: String, $service: String, $test_mode: Boolean) {
+  shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service, test_mode: $test_mode) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        created_at
+        updated_at
+        created_by {
+          email
+          full_name
+        }
+        status
+        recipient {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          validate_location
+        }
+        shipper {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          validate_location
+        }
+        label_type
+        tracking_number
+        shipment_identifier
+        label
+        tracking_url
+        test_mode
+        reference
+        customs {
+          id
+          certify
+          commercial_invoice
+          content_type
+          content_description
+          incoterm
+          invoice
+          invoice_date
+          signer
+          duty {
+            paid_by
+            currency
+            account_number
+            declared_value
+          }
+          options
+          commodities {
+            id
+            weight
+            description
+            quantity
+            sku
+            value_amount
+            origin_country
+          }
+        }
+        selected_rate {
+          carrier_name
+          carrier_id
+          currency
+          transit_days
+          service
+          discount
+          base_charge
+          total_charge
+          duties_and_taxes
+          extra_charges {
+            name
+            amount
+            currency
+          }
+          meta
+        }
+      }
+    }
+  }
+}
+`;
+
+export const GET_TRACKER = gql`
+query get_tracker($id: String!) {
+  tracker(id: $id) {
+    id
+    created_at
+    updated_at
+    created_by {
+      email
+      full_name
+    }
+    status
+    tracking_number
+    events {
+      description
+      location
+      code
+      date
+      time
+    }
+    delivered
+    estimated_delivery
+    test_mode
+    messages {
+      carrier_name
+      carrier_id
+      message
+      code
+      details
+    }
+    carrier_id
+    carrier_name
+  }
+}
+
+`;
+
+export const GET_TRACKERS = gql`
+query get_trackers($offset: Int, $first: Int, $status: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: String, $test_mode: Boolean) {
+  trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, test_mode: $test_mode) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        created_at
+        updated_at
+        created_by {
+          email
+          full_name
+        }
+        status
+        tracking_number
+        events {
+          description
+          location
+          code
+          date
+          time
+        }
+        delivered
+        estimated_delivery
+        test_mode
+        messages {
+          carrier_name
+          carrier_id
+          message
+          code
+          details
+        }
+        carrier_id
+        carrier_name
+      }
+    }
+  }
+}
+`;
+
+export const GET_WEBHOOK = gql`
+query get_webhook($id: String!) {
+  webhook(id: $id) {
+    id
+    created_at
+    updated_at
+    created_by {
+      email
+      full_name
+    }
+    enabled_events
+    url
+    test_mode
+    disabled
+    description
+    last_event_at
+  }
+}
+`;
+
+export const GET_WEBHOOKS = gql`
+query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean, $test_mode: Boolean) {
+  webhooks(offset: $offset, first: $first, created_after: $created_after, created_before: $created_before, description: $description, events: $events, disabled: $disabled, test_mode: $test_mode) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        created_at
+        updated_at
+        created_by {
+          email
+          full_name
+        }
+        enabled_events
+        url
+        test_mode
+        disabled
+        description
+        last_event_at
+      }
+    }
+  }
+}
+`;
+
 export const GET_PARCEL_TEMPLATES = gql`
 query get_parcel_templates($offset: Int, $first: Int) {
   parcel_templates(offset: $offset, first: $first) {

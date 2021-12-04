@@ -402,6 +402,502 @@ export interface get_logsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: get_shipment
+// ====================================================
+
+export interface get_shipment_shipment_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_shipment_shipment_recipient {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipment_shipment_shipper {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipment_shipment_customs_duty {
+  paid_by: string | null;
+  currency: string | null;
+  account_number: string | null;
+  declared_value: number | null;
+}
+
+export interface get_shipment_shipment_customs_commodities {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  origin_country: CommodityOriginCountry | null;
+}
+
+export interface get_shipment_shipment_customs {
+  id: string;
+  certify: boolean | null;
+  commercial_invoice: boolean | null;
+  content_type: string | null;
+  content_description: string | null;
+  incoterm: CustomsIncoterm;
+  invoice: string | null;
+  invoice_date: any | null;
+  signer: string | null;
+  duty: get_shipment_shipment_customs_duty | null;
+  options: any | null;
+  commodities: (get_shipment_shipment_customs_commodities | null)[] | null;
+}
+
+export interface get_shipment_shipment_selected_rate_extra_charges {
+  name: string | null;
+  amount: number | null;
+  currency: string | null;
+}
+
+export interface get_shipment_shipment_selected_rate {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  currency: string | null;
+  transit_days: number | null;
+  service: string | null;
+  discount: number | null;
+  base_charge: number | null;
+  total_charge: number | null;
+  duties_and_taxes: number | null;
+  extra_charges: (get_shipment_shipment_selected_rate_extra_charges | null)[] | null;
+  meta: any | null;
+}
+
+export interface get_shipment_shipment {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_shipment_shipment_created_by;
+  status: ShipmentStatus | null;
+  recipient: get_shipment_shipment_recipient | null;
+  shipper: get_shipment_shipment_shipper | null;
+  label_type: string | null;
+  tracking_number: string | null;
+  shipment_identifier: string | null;
+  label: string | null;
+  tracking_url: string | null;
+  test_mode: boolean;
+  reference: string | null;
+  customs: get_shipment_shipment_customs | null;
+  selected_rate: get_shipment_shipment_selected_rate | null;
+}
+
+export interface get_shipment {
+  shipment: get_shipment_shipment | null;
+}
+
+export interface get_shipmentVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_shipments
+// ====================================================
+
+export interface get_shipments_shipments_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_shipments_shipments_edges_node_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_shipments_shipments_edges_node_recipient {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipments_shipments_edges_node_shipper {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipments_shipments_edges_node_customs_duty {
+  paid_by: string | null;
+  currency: string | null;
+  account_number: string | null;
+  declared_value: number | null;
+}
+
+export interface get_shipments_shipments_edges_node_customs_commodities {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  origin_country: CommodityOriginCountry | null;
+}
+
+export interface get_shipments_shipments_edges_node_customs {
+  id: string;
+  certify: boolean | null;
+  commercial_invoice: boolean | null;
+  content_type: string | null;
+  content_description: string | null;
+  incoterm: CustomsIncoterm;
+  invoice: string | null;
+  invoice_date: any | null;
+  signer: string | null;
+  duty: get_shipments_shipments_edges_node_customs_duty | null;
+  options: any | null;
+  commodities: (get_shipments_shipments_edges_node_customs_commodities | null)[] | null;
+}
+
+export interface get_shipments_shipments_edges_node_selected_rate_extra_charges {
+  name: string | null;
+  amount: number | null;
+  currency: string | null;
+}
+
+export interface get_shipments_shipments_edges_node_selected_rate {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  currency: string | null;
+  transit_days: number | null;
+  service: string | null;
+  discount: number | null;
+  base_charge: number | null;
+  total_charge: number | null;
+  duties_and_taxes: number | null;
+  extra_charges: (get_shipments_shipments_edges_node_selected_rate_extra_charges | null)[] | null;
+  meta: any | null;
+}
+
+export interface get_shipments_shipments_edges_node {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_shipments_shipments_edges_node_created_by;
+  status: ShipmentStatus | null;
+  recipient: get_shipments_shipments_edges_node_recipient | null;
+  shipper: get_shipments_shipments_edges_node_shipper | null;
+  label_type: string | null;
+  tracking_number: string | null;
+  shipment_identifier: string | null;
+  label: string | null;
+  tracking_url: string | null;
+  test_mode: boolean;
+  reference: string | null;
+  customs: get_shipments_shipments_edges_node_customs | null;
+  selected_rate: get_shipments_shipments_edges_node_selected_rate | null;
+}
+
+export interface get_shipments_shipments_edges {
+  node: get_shipments_shipments_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_shipments_shipments {
+  pageInfo: get_shipments_shipments_pageInfo;       // Pagination data for this connection.
+  edges: (get_shipments_shipments_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_shipments {
+  shipments: get_shipments_shipments | null;
+}
+
+export interface get_shipmentsVariables {
+  offset?: number | null;
+  first?: number | null;
+  status?: string | null;
+  address?: string | null;
+  created_after?: any | null;
+  created_before?: any | null;
+  carrier_name?: string | null;
+  reference?: string | null;
+  service?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_tracker
+// ====================================================
+
+export interface get_tracker_tracker_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_tracker_tracker_events {
+  description: string | null;
+  location: string | null;
+  code: string | null;
+  date: string | null;
+  time: string | null;
+}
+
+export interface get_tracker_tracker_messages {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  message: string | null;
+  code: string | null;
+  details: any | null;
+}
+
+export interface get_tracker_tracker {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_tracker_tracker_created_by;
+  status: TrackerStatus | null;
+  tracking_number: string;
+  events: (get_tracker_tracker_events | null)[] | null;
+  delivered: boolean | null;
+  estimated_delivery: any | null;
+  test_mode: boolean;
+  messages: (get_tracker_tracker_messages | null)[] | null;
+  carrier_id: string | null;
+  carrier_name: string | null;
+}
+
+export interface get_tracker {
+  tracker: get_tracker_tracker | null;
+}
+
+export interface get_trackerVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_trackers
+// ====================================================
+
+export interface get_trackers_trackers_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_trackers_trackers_edges_node_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_trackers_trackers_edges_node_events {
+  description: string | null;
+  location: string | null;
+  code: string | null;
+  date: string | null;
+  time: string | null;
+}
+
+export interface get_trackers_trackers_edges_node_messages {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  message: string | null;
+  code: string | null;
+  details: any | null;
+}
+
+export interface get_trackers_trackers_edges_node {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_trackers_trackers_edges_node_created_by;
+  status: TrackerStatus | null;
+  tracking_number: string;
+  events: (get_trackers_trackers_edges_node_events | null)[] | null;
+  delivered: boolean | null;
+  estimated_delivery: any | null;
+  test_mode: boolean;
+  messages: (get_trackers_trackers_edges_node_messages | null)[] | null;
+  carrier_id: string | null;
+  carrier_name: string | null;
+}
+
+export interface get_trackers_trackers_edges {
+  node: get_trackers_trackers_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_trackers_trackers {
+  pageInfo: get_trackers_trackers_pageInfo;       // Pagination data for this connection.
+  edges: (get_trackers_trackers_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_trackers {
+  trackers: get_trackers_trackers | null;
+}
+
+export interface get_trackersVariables {
+  offset?: number | null;
+  first?: number | null;
+  status?: string | null;
+  created_after?: any | null;
+  created_before?: any | null;
+  carrier_name?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_webhook
+// ====================================================
+
+export interface get_webhook_webhook_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_webhook_webhook {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_webhook_webhook_created_by;
+  enabled_events: string[];
+  url: string;
+  test_mode: boolean;
+  disabled: boolean | null;
+  description: string | null;
+  last_event_at: any | null;
+}
+
+export interface get_webhook {
+  webhook: get_webhook_webhook | null;
+}
+
+export interface get_webhookVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_webhooks
+// ====================================================
+
+export interface get_webhooks_webhooks_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_webhooks_webhooks_edges_node_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_webhooks_webhooks_edges_node {
+  id: string;  // The ID of the object.
+  created_at: any;
+  updated_at: any;
+  created_by: get_webhooks_webhooks_edges_node_created_by;
+  enabled_events: string[];
+  url: string;
+  test_mode: boolean;
+  disabled: boolean | null;
+  description: string | null;
+  last_event_at: any | null;
+}
+
+export interface get_webhooks_webhooks_edges {
+  node: get_webhooks_webhooks_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_webhooks_webhooks {
+  pageInfo: get_webhooks_webhooks_pageInfo;       // Pagination data for this connection.
+  edges: (get_webhooks_webhooks_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_webhooks {
+  webhooks: get_webhooks_webhooks | null;
+}
+
+export interface get_webhooksVariables {
+  offset?: number | null;
+  first?: number | null;
+  description?: string | null;
+  created_after?: any | null;
+  created_before?: any | null;
+  events?: (string | null)[] | null;
+  disabled?: boolean | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: get_parcel_templates
 // ====================================================
 
@@ -1958,6 +2454,24 @@ export enum CommodityOriginCountry {
   ZA = "ZA",
   ZM = "ZM",
   ZW = "ZW",
+}
+
+// An enumeration.
+export enum ShipmentStatus {
+  cancelled = "cancelled",
+  created = "created",
+  delivered = "delivered",
+  purchased = "purchased",
+  shipped = "shipped",
+  transit = "transit",
+}
+
+// An enumeration.
+export enum TrackerStatus {
+  delivered = "delivered",
+  in_transit = "in_transit",
+  incident = "incident",
+  pending = "pending",
 }
 
 // An enumeration.

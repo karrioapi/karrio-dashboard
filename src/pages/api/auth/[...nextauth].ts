@@ -49,7 +49,14 @@ const auth = NextAuth({
         token.expiration = parseJwt(user.accessToken as string).exp
       }
 
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < (token.expiration as number) * 1000) {
+        return token;
+      }
+
+      // Refresh the token with a new organization if provideed
       if (!isNone(OrgToken.value)) {
+        AuthToken.next(OrgToken.value as TokenPair);
         const { access, refresh } = OrgToken.value as TokenPair;
         return {
           ...token,
@@ -57,11 +64,6 @@ const auth = NextAuth({
           refreshToken: refresh,
           expiration: parseJwt(access).exp
         };
-      }
-
-      // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.expiration as number) * 1000) {
-        return token;
       }
 
       // Access token has expired, try to update it OR orgId has changed
