@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { TrackerList } from '@/api/index';
+import { TrackerList } from '@/purplship/rest/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination, isNone } from '@/lib/helper';

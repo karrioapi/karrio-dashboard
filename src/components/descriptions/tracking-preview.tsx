@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { TrackingEvent, TrackingStatus } from '@/api/index';
+import { TrackingEvent, TrackingStatus } from '@/purplship/rest/index';
 import { formatDayDate, isNone } from '@/lib/helper';
-import { ListStatusEnum } from '@/api/generated/apis/TrackersApi';
+import { ListStatusEnum } from '@/purplship/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { BASE_PATH } from '@/client/context';
 

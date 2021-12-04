@@ -1,4 +1,4 @@
-import { Shipment } from "@/api/index";
+import { Shipment } from "@/purplship/rest/index";
 import { BASE_PATH } from "@/client/context";
 import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError } from "@/lib/types";
 

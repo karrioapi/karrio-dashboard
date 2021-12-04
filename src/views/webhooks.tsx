@@ -1,4 +1,4 @@
-import { Webhook } from "@/api";
+import { Webhook } from "@/purplship/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";

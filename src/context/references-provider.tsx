@@ -1,5 +1,5 @@
 import React from 'react';
-import { References } from '@/api/index';
+import { References } from '@/purplship/rest/index';
 
 export const APIReference = React.createContext<References>({} as References);
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
-import { PurplshipClient, TokenObtainPair, TokenPair } from "@/api/index";
+import { PurplshipClient, TokenObtainPair, TokenPair } from "@/purplship/rest/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject, Subject } from "rxjs";

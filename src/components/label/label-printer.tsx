@@ -1,4 +1,4 @@
-import { Shipment, ShipmentLabelTypeEnum } from '@/api/index';
+import { Shipment, ShipmentLabelTypeEnum } from '@/purplship/rest/index';
 import React, { useState } from 'react';
 
 

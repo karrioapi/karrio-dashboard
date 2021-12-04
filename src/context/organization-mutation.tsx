@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, MutationFunctionOptions, MutationResult, useMutation } from '@apollo/client';
-import { CreateOrganizationInput, CREATE_ORGANIZATION, create_connectionVariables, UpdateOrganizationInput, UPDATE_ORGANIZATION, update_connectionVariables } from '@/graphql';
+import { CreateOrganizationInput, CREATE_ORGANIZATION, create_connectionVariables, UpdateOrganizationInput, UPDATE_ORGANIZATION, update_connectionVariables } from '@/purplship/graphql';
 
 export type OrganizationMutator<T> = T & {
   createOrganization: (data: CreateOrganizationInput) => Promise<FetchResult<CreateOrganizationInput, Record<string, any>, Record<string, any>>>;

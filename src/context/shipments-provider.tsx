@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { PurplshipClient, ShipmentList } from '@/api/index';
+import { PurplshipClient, ShipmentList } from '@/purplship/rest/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination, isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
-import { ListRequest } from '@/api/generated/apis/ShipmentsApi';
+import { ListRequest } from '@/purplship/rest/generated/apis/ShipmentsApi';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
 type RequestOptions = { cursor?: string | null } & ListRequest;

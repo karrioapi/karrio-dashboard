@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Address, Customs, Parcel, PurplshipClient, Shipment } from '@/api/index';
+import { Address, Customs, Parcel, PurplshipClient, Shipment } from '@/purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RequestError } from '@/lib/types';
 import { RestContext } from '@/client/context';

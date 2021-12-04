@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_address_templates, GET_ADDRESS_TEMPLATES, get_address_templates_address_templates_edges } from '@/graphql';
+import { get_address_templates, GET_ADDRESS_TEMPLATES, get_address_templates_address_templates_edges } from '@/purplship/graphql';
 import { AddressTemplate } from '@/lib/types';
 
 const PAGE_SIZE = 20;

@@ -1,4 +1,4 @@
-import { CarrierSettingsCarrierNameEnum, References } from '@/api/index';
+import { CarrierSettingsCarrierNameEnum, References } from '@/purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';

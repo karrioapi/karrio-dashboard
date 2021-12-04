@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GET_DEFAULT_TEMPLATES } from '@/graphql';
+import { GET_DEFAULT_TEMPLATES } from '@/purplship/graphql';
 import { AddressType, CustomsType, ParcelType, TemplateType } from '@/lib/types';
 import { isNone } from '@/lib/helper';
 

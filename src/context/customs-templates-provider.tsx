@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@/graphql';
+import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@/purplship/graphql';
 import { CustomsTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;

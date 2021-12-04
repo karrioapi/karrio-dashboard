@@ -1,5 +1,5 @@
 import React, { EventHandler, useContext, useState } from 'react';
-import { Shipment } from '@/api/index';
+import { Shipment } from '@/purplship/rest/index';
 import AddressForm from '@/components/form-parts/address-form';
 import { isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';

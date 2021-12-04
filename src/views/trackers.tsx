@@ -1,5 +1,5 @@
-import { TrackingEvent } from "@/api";
-import { ListStatusEnum } from "@/api/generated/apis/TrackersApi";
+import { TrackingEvent } from "@/purplship/rest";
+import { ListStatusEnum } from "@/purplship/rest/generated/apis/TrackersApi";
 import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";

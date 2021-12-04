@@ -1,4 +1,4 @@
-import { Customs, ShipmentStatusEnum } from "@/api";
+import { Customs, ShipmentStatusEnum } from "@/purplship/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";

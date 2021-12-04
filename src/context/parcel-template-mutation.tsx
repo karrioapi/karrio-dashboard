@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { ParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_PARCEL_TEMPLATE, PartialParcelTemplateInput, update_parcel_templateVariables } from '@/graphql';
+import { ParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_PARCEL_TEMPLATE, PartialParcelTemplateInput, update_parcel_templateVariables } from '@/purplship/graphql';
 
 
 type TemplateMutator = {

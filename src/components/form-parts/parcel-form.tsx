@@ -1,4 +1,4 @@
-import { Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, Shipment } from '@/api/index';
+import { Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, Shipment } from '@/purplship/rest/index';
 import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import SelectField from '@/components/generic/select-field';

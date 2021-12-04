@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
-import { Shipment, ShipmentStatusEnum } from '@/api/index';
+import { Shipment, ShipmentStatusEnum } from '@/purplship/rest/index';
 import { LabelPrinterContext } from '@/components/label/label-printer';
 import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';

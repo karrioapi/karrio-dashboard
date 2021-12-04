@@ -1,4 +1,4 @@
-import { ListStatusEnum } from "@/api/generated/apis/ShipmentsApi";
+import { ListStatusEnum } from "@/purplship/rest/generated/apis/ShipmentsApi";
 import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";

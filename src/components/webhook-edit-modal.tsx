@@ -2,7 +2,7 @@ import React, { useContext, useReducer, useState } from 'react';
 import { NotificationType, WEBHOOK_EVENTS } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
-import { Webhook, WebhookData } from '@/api/index';
+import { Webhook, WebhookData } from '@/purplship/rest/index';
 import { Notify } from '@/components/notifier';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';

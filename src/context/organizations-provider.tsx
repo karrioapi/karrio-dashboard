@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from '@/graphql';
+import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from '@/purplship/graphql';
 
 
 export type OrganizationType = get_organizations_organizations;

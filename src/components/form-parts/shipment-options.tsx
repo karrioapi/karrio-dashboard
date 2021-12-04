@@ -1,4 +1,4 @@
-import { Shipment } from '@/api/index';
+import { Shipment } from '@/purplship/rest/index';
 import React, { FormEvent, useContext, useReducer } from 'react';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
