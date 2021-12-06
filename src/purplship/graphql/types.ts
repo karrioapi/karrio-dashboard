@@ -1806,7 +1806,10 @@ export interface get_events {
 export interface get_eventsVariables {
   offset?: number | null;
   first?: number | null;
+  entity_id?: string | null;
   type?: (string | null)[] | null;
+  date_after?: any | null;
+  date_before?: any | null;
 }
 
 /* tslint:disable */

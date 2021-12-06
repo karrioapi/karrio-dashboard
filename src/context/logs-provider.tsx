@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@/purplship/graphql';
 import { LogType } from '@/lib/types';
-import { insertUrlParam, isNone } from '@/lib/helper';
+import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
@@ -29,7 +29,7 @@ const LogsProvider: React.FC = ({ children }) => {
 
   const loadMore = (options: LogsFilterType = {}) => {
     const params = Object.keys(options).reduce((acc, key) => {
-      return isNone(options[key as keyof LogsFilterType]) ? acc : {
+      return isNoneOrEmpty(options[key as keyof LogsFilterType]) ||  ? acc : {
         ...acc,
         [key]: (
           ["method", "status_code"].includes(key)

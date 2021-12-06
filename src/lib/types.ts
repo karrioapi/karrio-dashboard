@@ -118,3 +118,11 @@ export const HTTP_METHODS = [
   "PATCH",
   "DELETE",
 ];
+
+export const EVENT_TYPES = [
+  'shipment.purchased',
+  'shipment.cancelled',
+  'shipment.fulfilled',
+  'tracker.created',
+  'tracker.updated',
+];

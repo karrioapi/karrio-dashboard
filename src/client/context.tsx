@@ -78,7 +78,6 @@ export async function refreshToken(refresh: string, org_id?: string) {
   return token;
 }
 
-
 function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
     basePath: PURPLSHIP_API || '',
@@ -101,6 +100,11 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
     }
   });
 
+  const GRAPHQL_QUERIES = [
+    'logs', 'events', 'shipments', 'trackers',
+    'customs_templates', 'address_templates', 'parcel_templates'
+  ];
+
   return new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache({
@@ -108,7 +112,7 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
       typePolicies: {
         Query: {
           fields: {
-            ...(['logs', 'customs_templates', 'address_templates', 'parcel_templates'].reduce((fields, field) => ({
+            ...(GRAPHQL_QUERIES.reduce((fields, field) => ({
               ...fields,
               [field]: {
                 keyArgs: false,

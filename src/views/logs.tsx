@@ -1,4 +1,3 @@
-import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
@@ -23,9 +22,6 @@ export default function LogsPage(pageProps: any) {
     const { loading, called, logs, next, previous, variables, load, loadMore } = useContext(LogsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
 
-    const viewLog = (id: string) => (_: React.MouseEvent) => {
-      router.push(p`/developers/logs/` + id);
-    };
     const fetchLogs = (extra: Partial<typeof variables> = {}) => {
       const query = {
         ...filters,
@@ -108,8 +104,8 @@ export default function LogsPage(pageProps: any) {
         {(!loading && logs.length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
-            <p>No API logs has been captured yet.</p>
-            <p>Use the <strong>API</strong> to communicate with your logistic providers.</p>
+            <p>No API logs found.</p>
+            <p>Use the <strong>API</strong> to send shipping requests.</p>
           </div>
 
         </div>}

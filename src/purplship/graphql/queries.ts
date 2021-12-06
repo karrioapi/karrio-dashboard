@@ -1087,8 +1087,8 @@ query get_event($id: String!) {
 `;
 
 export const GET_EVENTS = gql`
-query get_events($offset: Int, $first: Int, $type: [String]) {
-  events(offset: $offset, first: $first, type: $type) {
+query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String], $date_after: DateTime, $date_before: DateTime) {
+  events(offset: $offset, first: $first, entity_id: $entity_id, type: $type, date_after: $date_after, date_before: $date_before) {
     pageInfo {
       hasNextPage
       hasPreviousPage

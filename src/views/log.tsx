@@ -10,7 +10,6 @@ import LogProvider, { Log } from "@/context/log-provider";
 import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
 import Expandable from "@/components/expandable";
-import Link from "next/link";
 import AppLink from "@/components/app-link";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -18,7 +17,7 @@ export { getServerSideProps } from "@/lib/middleware";
 hljs.registerLanguage('json', json);
 
 
-export const LogComponent: React.FC<{ logId?: sring }> = ({ logId }) => {
+export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
   const router = useRouter();
   const { setLoading } = useContext(Loading);
   const { log, loading, loadLog } = useContext(Log);
@@ -28,7 +27,7 @@ export const LogComponent: React.FC<{ logId?: sring }> = ({ logId }) => {
   const { id } = router.query;
 
   useEffect(() => { setLoading(loading); });
-  useEffect(() => { (!isNone(loadLog) && !loading) && loadLog(id as string || logId); }, [id || logId]);
+  useEffect(() => { (!isNone(loadLog) && !loading) && loadLog((id || logId) as string); }, [id || logId]);
   useEffect(() => {
     if (log !== undefined) {
       setQueryParams(jsonify(log.query_params || '{}'));

@@ -117,6 +117,10 @@ export function isNone(value: any): boolean {
   return value === null || value === undefined;
 }
 
+export function isNoneOrEmpty(value: any): boolean {
+  return isNone(value) || value === "" || value === [];
+}
+
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {
   const clean_value1 = Object.entries(value1 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
   const clean_value2 = Object.entries(value2 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
