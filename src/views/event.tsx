@@ -49,7 +49,7 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
                 href={`/developers/events/${eventId}`} target="blank"
                 className="button is-white has-text-info is-medium px-2">
                 <span className="icon">
-                  <i className="fas fa-share-square"></i>
+                  <i className="fas fa-external-link-alt"></i>
                 </span>
               </AppLink>
             </p>}

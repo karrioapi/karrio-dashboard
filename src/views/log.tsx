@@ -49,7 +49,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           {!isNone(logId) && <div className="column is-4 is-flex is-justify-content-end">
             <AppLink href={`/developers/logs/${logId}`} target="blank" className="button is-white has-text-info is-medium">
               <span className="icon">
-                <i className="fas fa-share-square"></i>
+                <i className="fas fa-external-link-alt"></i>
               </span>
             </AppLink>
           </div>}
