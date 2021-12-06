@@ -35,7 +35,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         </button>
       </div>
       <div className="sidebar-menu has-slimscroll py-6" style={{ height: "calc(100% - 60px)" }}>
-        <AppLink href={basePath} className={"menu-item " + isActive(basePath)}>
+        <AppLink href="/" className={"menu-item " + isActive(basePath)}>
           <span className="has-text-weight-semibold">Shipments</span>
         </AppLink>
 

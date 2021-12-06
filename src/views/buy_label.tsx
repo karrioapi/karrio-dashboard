@@ -70,7 +70,7 @@ export default function LabelPage(pageProps: any) {
         <ModeIndicator />
         <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
           <ul>
-            <li><AppLink href={p``}>Shipments</AppLink></li>
+            <li><AppLink href="/">Shipments</AppLink></li>
             <li className="is-active"><a href="#" aria-current="page">Create Label</a></li>
           </ul>
         </nav>

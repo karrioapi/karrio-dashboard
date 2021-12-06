@@ -29,7 +29,7 @@ const LogsProvider: React.FC = ({ children }) => {
 
   const loadMore = (options: LogsFilterType = {}) => {
     const params = Object.keys(options).reduce((acc, key) => {
-      return isNoneOrEmpty(options[key as keyof LogsFilterType]) ||  ? acc : {
+      return isNoneOrEmpty(options[key as keyof LogsFilterType]) ? acc : {
         ...acc,
         [key]: (
           ["method", "status_code"].includes(key)

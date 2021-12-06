@@ -1,6 +1,7 @@
+import { AppMode } from '@/context/app-mode-provider';
 import { p } from '@/lib/helper';
 import Link, { LinkProps } from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
 
 interface AppLinkProps extends LinkProps {
   href: string;
@@ -9,15 +10,19 @@ interface AppLinkProps extends LinkProps {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-const AppLink: React.FC<AppLinkProps> = ({ href, className, target, onClick, children, ...props }) => (
-  <Link href={p`${href}`} {...props}>
-    <a
-      {...(target ? { target } : {})}
-      {...(onClick ? { onClick } : {})}
-      {...(className ? { className } : {})}>
-      {children}
-    </a>
-  </Link>
-);
+const AppLink: React.FC<AppLinkProps> = ({ href, className, target, onClick, children, ...props }) => {
+  const { basePath } = useContext(AppMode);
+
+  return (
+    <Link href={p`${basePath}${href}`} {...props}>
+      <a
+        {...(target ? { target } : {})}
+        {...(onClick ? { onClick } : {})}
+        {...(className ? { className } : {})}>
+        {children}
+      </a>
+    </Link>
+  )
+};
 
 export default AppLink;
