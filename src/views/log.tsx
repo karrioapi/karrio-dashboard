@@ -2,7 +2,7 @@ import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
-import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
+import { formatDateTimeLong, isNone, jsonify, notEmptyJSON } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/dist/client/router";
@@ -29,9 +29,9 @@ export default function LogPage(pageProps: any) {
     useEffect(() => { (!isNone(loadLog) && !loading) && loadLog(id as string); }, [id]);
     useEffect(() => {
       if (log !== undefined) {
-        setQueryParams(JSON.stringify(JSON.parse(log.query_params || '{}'), null, 2));
-        setResponse(JSON.stringify(JSON.parse(log.response || '{}'), null, 2));
-        setData(JSON.stringify(JSON.parse(log.data || '{}'), null, 2));
+        setQueryParams(jsonify(log.query_params || '{}'));
+        setResponse(jsonify(log.response || '{}'));
+        setData(jsonify(log.data || '{}'));
       }
     });
 

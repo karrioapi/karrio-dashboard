@@ -395,6 +395,12 @@ export interface get_logsVariables {
   offset?: number | null;
   first?: number | null;
   status?: string | null;
+  api_endpoint?: string | null;
+  date_after?: any | null;
+  date_before?: any | null;
+  entity_id?: string | null;
+  method?: (string | null)[] | null;
+  status_code?: (string | null)[] | null;
 }
 
 
@@ -664,13 +670,13 @@ export interface get_shipments {
 export interface get_shipmentsVariables {
   offset?: number | null;
   first?: number | null;
-  status?: string | null;
+  status?: (string | null)[] | null;
   address?: string | null;
   created_after?: any | null;
   created_before?: any | null;
-  carrier_name?: string | null;
+  carrier_name?: (string | null)[] | null;
   reference?: string | null;
-  service?: string | null;
+  service?: (string | null)[] | null;
   test_mode?: boolean | null;
 }
 
@@ -795,10 +801,10 @@ export interface get_trackers {
 export interface get_trackersVariables {
   offset?: number | null;
   first?: number | null;
-  status?: string | null;
+  status?: (string | null)[] | null;
   created_after?: any | null;
   created_before?: any | null;
-  carrier_name?: string | null;
+  carrier_name?: (string | null)[] | null;
   test_mode?: boolean | null;
 }
 
@@ -1800,7 +1806,7 @@ export interface get_events {
 export interface get_eventsVariables {
   offset?: number | null;
   first?: number | null;
-  type?: string | null;
+  type?: (string | null)[] | null;
 }
 
 /* tslint:disable */

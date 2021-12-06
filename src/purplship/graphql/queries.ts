@@ -205,8 +205,8 @@ query get_log($id: Int!) {
 `;
 
 export const GET_LOGS = gql`
-query get_logs($offset: Int, $first: Int, $status: String) {
-  logs(offset: $offset, first: $first, status: $status) {
+query get_logs($offset: Int, $first: Int, $status: String, $api_endpoint: String, $date_after: DateTime, $date_before: DateTime, $entity_id: String, $method: [String], $status_code: [String]) {
+  logs(offset: $offset, first: $first, status: $status, api_endpoint: $api_endpoint, date_after: $date_after, date_before: $date_before, entity_id: $entity_id, method: $method, status_code: $status_code) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -332,7 +332,7 @@ query get_shipment($id: String!) {
 `;
 
 export const GET_SHIPMENTS = gql`
-query get_shipments($offset: Int, $first: Int, $status: String, $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: String, $reference: String, $service: String, $test_mode: Boolean) {
+query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String], $test_mode: Boolean) {
   shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service, test_mode: $test_mode) {
     pageInfo {
       hasNextPage
@@ -476,7 +476,7 @@ query get_tracker($id: String!) {
 `;
 
 export const GET_TRACKERS = gql`
-query get_trackers($offset: Int, $first: Int, $status: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: String, $test_mode: Boolean) {
+query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $test_mode: Boolean) {
   trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, test_mode: $test_mode) {
     pageInfo {
       hasNextPage
@@ -1087,7 +1087,7 @@ query get_event($id: String!) {
 `;
 
 export const GET_EVENTS = gql`
-query get_events($offset: Int, $first: Int, $type: String) {
+query get_events($offset: Int, $first: Int, $type: [String]) {
   events(offset: $offset, first: $first, type: $type) {
     pageInfo {
       hasNextPage

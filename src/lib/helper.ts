@@ -223,3 +223,23 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
     .replaceAll('///', '/')
     .replaceAll('//', '/');
 }
+
+export function getURLSearchParams() {
+  const query = new URLSearchParams(location.search);
+  return [...query.keys() as any].reduce(
+    (acc, key) => ({ ...acc, [key]: query.get(key) }),
+    {}
+  );
+}
+
+export function insertUrlParam(params: {}) {
+  if (window.history.pushState) {
+    let searchParams = new URLSearchParams(params);
+    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+    window.history.pushState({ path: newurl }, '', newurl);
+  }
+}
+
+export function jsonify(value: any): string {
+  return JSON.stringify(typeof value == 'string' ? JSON.parse(value) : value, null, 2);
+}

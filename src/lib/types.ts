@@ -98,3 +98,23 @@ export class RequestError extends Error {
     }
   }
 }
+
+export const HTTP_STATUS_CODES = [
+  200,
+  201,
+  204,
+  207,
+  400,
+  401,
+  403,
+  404,
+  409,
+  500,
+];
+
+export const HTTP_METHODS = [
+  "GET",
+  "POST",
+  "PATCH",
+  "DELETE",
+];

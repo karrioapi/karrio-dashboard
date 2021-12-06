@@ -2,56 +2,73 @@ import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@/purplship/graphql';
 import { LogType } from '@/lib/types';
-import { isNone } from '@/lib/helper';
+import { insertUrlParam, isNone } from '@/lib/helper';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
 
+export interface LogsFilterType extends get_logsVariables { };
 type Edges = (get_logs_logs_edges | null)[];
-type LogsType = LazyQueryResult<get_logs, any> & {
+type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
   logs: LogType[];
   next?: number | null;
   previous?: number | null;
-  load: (options?: get_logsVariables) => void;
-  loadMore: (options?: get_logsVariables) => void;
+  variables: LogsFilterType;
+  load: (options?: LogsFilterType) => Promise<void>;
+  loadMore: (options?: LogsFilterType) => Promise<void>;
 };
 
-export const Logs = React.createContext<LogsType>({} as LogsType);
+export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
 const LogsProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_logs>(GET_LOGS, { notifyOnNetworkStatusChange: true });
-  const [variables, setVariables] = useState<any>(PAGINATION);
+  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, { notifyOnNetworkStatusChange: true });
+  const [variables, setVariables] = useState<LogsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as LogType);
   const fetchMore = (options: any) => query?.fetchMore && query.fetchMore(options);
 
-  const loadMore = (options: get_logsVariables = {}) => {
-    const { offset, status } = options;
-    const params = { offset: offset || 0, ...(isNone(status) ? {} : { status }) };
-    const requestVariables = { ...variables, ...params };
+  const loadMore = (options: LogsFilterType = {}) => {
+    const params = Object.keys(options).reduce((acc, key) => {
+      return isNone(options[key as keyof LogsFilterType]) ? acc : {
+        ...acc,
+        [key]: (
+          ["method", "status_code"].includes(key)
+            ? [].concat(options[key as keyof LogsFilterType]).reduce(
+              (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            )
+            : options[key as keyof LogsFilterType]
+        )
+      };
+    }, PAGINATION);
+
+    const requestVariables = { ...params };
+
+    insertUrlParam(requestVariables);
+    setVariables(requestVariables);
 
     if (query.called) {
-      return fetchMore({ variables: requestVariables })?.then(response => {
+      return Promise.resolve(fetchMore({ variables: requestVariables })?.then(response => {
         setVariables(requestVariables);
         return response;
-      });
+      }));
     }
 
-    setVariables(requestVariables);
-    return initialLoad({ variables: requestVariables })
+    return Promise.resolve(initialLoad({ variables: requestVariables }));
   };
-  const load = (options?: get_logsVariables) => loadMore(options);
+  const load = (options?: LogsFilterType) => loadMore(options);
 
   return (
-    <Logs.Provider value={{
-      load, loadMore,
+    <LogsContext.Provider value={{
+      load,
+      loadMore,
+      variables,
       logs: extract(query?.data?.logs?.edges),
-      next: query.data?.logs?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
-      previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
+      next: query.data?.logs?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
       ...query
-    }}>
+    } as LogsType}>
       {children}
-    </Logs.Provider>
+    </LogsContext.Provider>
   );
 };
 

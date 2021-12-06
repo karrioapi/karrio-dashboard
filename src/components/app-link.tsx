@@ -1,15 +1,16 @@
 import { p } from '@/lib/helper';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import React from 'react';
 
-interface AppLinkProps {
+interface AppLinkProps extends LinkProps {
   href: string;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-const AppLink: React.FC<AppLinkProps> = ({ href, className, children }) => (
-  <Link href={p`${href}`}>
-    <a className={className}>{children}</a>
+const AppLink: React.FC<AppLinkProps> = ({ href, className, onClick, children, ...props }) => (
+  <Link href={p`${href}`} {...props}>
+    <a className={className} {...(onClick ? { onClick } : {})}>{children}</a>
   </Link>
 );
 
