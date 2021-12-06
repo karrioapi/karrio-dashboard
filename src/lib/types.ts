@@ -1,19 +1,26 @@
-import { Address, Commodity, Customs, Message, Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, WebhookEnabledEventsEnum } from '@/purplship/rest/index';
-import { get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_customs_info_templates_customs_templates_edges_node_customs, get_customs_info_templates_customs_templates_edges_node_customs_commodities, get_events_events_edges_node, get_logs_logs_edges_node, get_parcel_templates_parcel_templates_edges_node, get_parcel_templates_parcel_templates_edges_node_parcel, ServiceLevelModelSerializerInput } from '@/purplship/graphql';
+import { Address, CarrierSettingsCarrierNameEnum, Commodity, Customs, Message, Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentStatusEnum, TrackingEvent, TrackingStatus, TrackingStatusStatusEnum, WebhookEnabledEventsEnum } from '@/purplship/rest/index';
+import { get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_customs_info_templates_customs_templates_edges_node_customs, get_customs_info_templates_customs_templates_edges_node_customs_commodities, get_events_events_edges_node, get_logs_logs_edges_node, get_parcel_templates_parcel_templates_edges_node, get_parcel_templates_parcel_templates_edges_node_parcel, get_trackers_trackers_edges_node, get_tracker_tracker_events, get_tracker_tracker_messages, ServiceLevelModelSerializerInput } from '@/purplship/graphql';
 
 
-
+export type MessageType = Message | get_tracker_tracker_messages;
 export type LogType = get_logs_logs_edges_node;
 export type EventType = get_events_events_edges_node;
 export type AddressType = Address | get_address_templates_address_templates_edges_node_address
 export type ParcelType = Parcel | get_parcel_templates_parcel_templates_edges_node_parcel;
 export type CustomsType = Customs | get_customs_info_templates_customs_templates_edges_node_customs;
+export type TrackingEventType = TrackingEvent | get_tracker_tracker_events;
+export type TrackerType = (TrackingStatus | get_trackers_trackers_edges_node) & {
+  events?: TrackingEventType[],
+  messages?: MessageType[]
+};
 
 export type AddressTemplate = get_address_templates_address_templates_edges_node;
 export type CustomsTemplateType = get_customs_info_templates_customs_templates_edges_node;
 export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_node;
 export type TemplateType = AddressTemplate & ParcelTemplateType & CustomsTemplateType;
-export type CommodityType = (Commodity | get_customs_info_templates_customs_templates_edges_node_customs_commodities) & { id: string; };
+export type CommodityType = (Commodity | get_customs_info_templates_customs_templates_edges_node_customs_commodities) & {
+  id: string;
+};
 
 export type ServiceLevelType = ServiceLevelModelSerializerInput;
 
@@ -68,9 +75,24 @@ export const WEIGHT_UNITS = Array.from(new Set(
     .values(ParcelWeightUnitEnum)
 ));
 
-export const WEBHOOK_EVENTS: string[] = Array.from(new Set(
+export const EVENT_TYPES: string[] = Array.from(new Set(
   Object
     .values(WebhookEnabledEventsEnum)
+));
+
+export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
+  Object
+    .values(ShipmentStatusEnum)
+));
+
+export const TRACKERS_STATUSES: string[] = Array.from(new Set(
+  Object
+    .values(TrackingStatusStatusEnum)
+));
+
+export const CARRIER_NAMES: string[] = Array.from(new Set(
+  Object
+    .values(CarrierSettingsCarrierNameEnum)
 ));
 
 export type ErrorMessage = Message & {
@@ -117,12 +139,4 @@ export const HTTP_METHODS = [
   "POST",
   "PATCH",
   "DELETE",
-];
-
-export const EVENT_TYPES = [
-  'shipment.purchased',
-  'shipment.cancelled',
-  'shipment.fulfilled',
-  'tracker.created',
-  'tracker.updated',
 ];

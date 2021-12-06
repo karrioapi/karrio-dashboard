@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, useState } from 'react';
-import { NotificationType, WEBHOOK_EVENTS } from '@/lib/types';
+import { NotificationType, EVENT_TYPES } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
 import { Webhook, WebhookData } from '@/purplship/rest/index';
@@ -118,7 +118,7 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
                 <div className="control">
                   <div className="select is-multiple is-fullwidth">
                     <select name="enabled_events" defaultValue={payload?.enabled_events} onChange={handleChange} size={6} multiple required>
-                      {WEBHOOK_EVENTS.map(event => <option key={event} value={event}>{event}</option>)}
+                      {EVENT_TYPES.map(event => <option key={event} value={event}>{event}</option>)}
                     </select>
                   </div>
                 </div>

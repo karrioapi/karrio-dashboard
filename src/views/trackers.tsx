@@ -1,6 +1,4 @@
 import { TrackingEvent } from "@/purplship/rest";
-import { ListStatusEnum } from "@/purplship/rest/generated/apis/TrackersApi";
-import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -12,72 +10,85 @@ import StatusBadge from "@/components/status-badge";
 import TrackerModalProvider, { TrackerModalContext } from "@/components/track-shipment-modal";
 import SystemConnectionsProvider from "@/context/system-connections-provider";
 import { TrackerMutationContext } from "@/context/tracker-mutation";
-import TrackersProvider, { Trackers } from "@/context/trackers-provider";
+import TrackersProvider, { TrackersContext } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
-import { isNone, p } from "@/lib/helper";
+import { getURLSearchParams, isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import TrackerMutationProvider from "@/context/tracker-mutation";
+import { useRouter } from "next/dist/client/router";
+import TrackersFilter from "@/components/filters/trackers-filter";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function TrackersPage(pageProps: any) {
   const Component: React.FC<any> = () => {
+    const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { removeTracker } = useContext(TrackerMutationContext);
     const { addTracker } = useContext(TrackerModalContext);
-    const { loading, results, called, load, loadMore, next, previous, refetch } = useContext(Trackers);
-    const [status, setStatus] = React.useState<ListStatusEnum>();
+    const { loading, called, trackers, next, previous, variables, load, loadMore } = useContext(TrackersContext);
+    const [filters, setFilters] = React.useState<typeof variables>(variables);
 
-    const update = () => refetch && refetch();
     const remove = (id?: string) => async () => {
       await removeTracker(id as string);
-      update();
+      fetchLogs;
     };
+    const fetchLogs = (extra: Partial<typeof variables> = {}) => {
+      const query = {
+        ...filters,
+        ...getURLSearchParams(),
+        ...extra
+      };
 
-    useEffect(() => { setLoading && setLoading(loading); }, [loading]);
+      setFilters(query);
+      (!loading) && (called ? loadMore : load)(query);
+    }
+
     useEffect(() => {
-      const newStatus = (new URLSearchParams(location.search)).get('status') as ListStatusEnum || undefined;
-
-      setStatus(newStatus);
-      (!loading) && (called ? loadMore : load)({ status: newStatus, cursor: '' });
-    }, [location.search]);
+      window.setTimeout(() => setLoading(loading), 1000);
+    });
+    useEffect(() => { fetchLogs(); }, [router.query]);
+    useEffect(() => { setFilters({ ...variables }); }, [variables]);
 
     return (
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Trackers</span>
-          <button className="button is-success is-pulled-right" onClick={() => addTracker({ onChange: update })}>
-            <span>Track a Shipment</span>
-          </button>
+          <div>
+            <TrackersFilter />
+            <button className="button is-small is-primary ml-1" onClick={() => addTracker({ onChange: fetchLogs })}>
+              <span>Track a Shipment</span>
+            </button>
+          </div>
         </header>
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(status) ? 'is-active' : ''}`}>
-              <AppLink href="/trackers">all</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
+              <a onClick={() => !isNone(filters?.status) && fetchLogs({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'in-transit' ? 'is-active' : ''}`}>
-              <AppLink href="/trackers?status=in-transit">in-tansit</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('in-transit') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('in-transit') && fetchLogs({ status: ['in-transit'], offset: 0 })}>in-transit</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'pending' ? 'is-active' : ''}`}>
-              <AppLink href="/trackers?status=pending">pending</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('pending') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('pending') && fetchLogs({ status: ['pending'], offset: 0 })}>pending</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'delivered' ? 'is-active' : ''}`}>
-              <AppLink href="/trackers?status=delivered">delivered</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('pedeliverednding') && fetchLogs({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
           </ul>
         </div>
 
         {loading && <Spinner />}
 
-        {(!loading && results.length > 0) && <div className="table-container">
+        {(!loading && trackers.length > 0) && <div className="table-container">
           <table className="trackers-table table is-fullwidth">
 
             <tbody className="trackers-table">
@@ -90,7 +101,7 @@ export default function TrackersPage(pageProps: any) {
                 <td className="action"></td>
               </tr>
 
-              {results.map(tracker => (
+              {trackers.map(tracker => (
                 <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
                   <td className="carrier is-vcentered has-text-centered">
                     <Image src={p`/carriers/${tracker.carrier_name}_logo.svg`} height="25" width="100%" alt="carrier logo" />
@@ -99,17 +110,19 @@ export default function TrackersPage(pageProps: any) {
                     <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>
                   </td>
                   <td className="status is-vcentered">
-                    <StatusBadge status={tracker.status} style={{ width: '100%' }} />
+                    <StatusBadge status={tracker.status as string} style={{ width: '100%' }} />
                   </td>
                   <td className="last-event is-vcentered py-1 last-event">
                     <p className="is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
                       style={{ width: '300px' }}
-                      title={formatEventDescription((tracker.events || [])[0])}>
-                      {formatEventDescription((tracker.events || [])[0])}
+                      title={isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}>
+                      {isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}
                     </p>
                   </td>
                   <td className="date is-vcentered has-text-right">
-                    <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatEventDate((tracker.events || [])[0])}</p>
+                    <p className="is-size-7 has-text-weight-semibold has-text-grey">
+                      {isNoneOrEmpty(tracker?.events) ? "" : formatEventDate((tracker?.events as TrackingEvent[])[0])}
+                    </p>
                   </td>
                   <td className="action is-vcentered p-1">
                     <button className="button is-white is-pulled-right"
@@ -130,26 +143,20 @@ export default function TrackersPage(pageProps: any) {
           </table>
 
           <footer className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{results.length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">{trackers.length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ cursor: previous, status })} disabled={isNone(previous)}>
-                <span>Previous</span>
-              </button>
-              <button className="button is-small" onClick={() => loadMore({ cursor: next, status })} disabled={isNone(next)}>
-                <span>Next</span>
-              </button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
           </footer>
 
         </div>}
 
-        {(!loading && results.length == 0) && <div className="card my-6">
+        {(!loading && trackers.length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No shipment trackers found.</p>
-
-            {isNone(status) && <p>Use the <strong>API</strong> to track your first shipment.</p>}
           </div>
 
         </div>}
