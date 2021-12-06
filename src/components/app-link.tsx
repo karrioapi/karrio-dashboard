@@ -4,13 +4,19 @@ import React from 'react';
 
 interface AppLinkProps extends LinkProps {
   href: string;
+  target?: string;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-const AppLink: React.FC<AppLinkProps> = ({ href, className, onClick, children, ...props }) => (
+const AppLink: React.FC<AppLinkProps> = ({ href, className, target, onClick, children, ...props }) => (
   <Link href={p`${href}`} {...props}>
-    <a className={className} {...(onClick ? { onClick } : {})}>{children}</a>
+    <a
+      {...(target ? { target } : {})}
+      {...(onClick ? { onClick } : {})}
+      {...(className ? { className } : {})}>
+      {children}
+    </a>
   </Link>
 );
 

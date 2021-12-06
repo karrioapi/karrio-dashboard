@@ -3,7 +3,6 @@ import { TrackingEvent, TrackingStatus } from '@/purplship/rest/index';
 import { formatDayDate, isNone, p } from '@/lib/helper';
 import { ListStatusEnum } from '@/purplship/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
-import { BASE_PATH } from '@/client/context';
 
 type DayEvents = { [k: string]: TrackingEvent[] };
 type TrackingPreviewContextType = {

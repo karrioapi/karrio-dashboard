@@ -10,6 +10,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import LogsFilter from "@/components/filters/logs-filter";
+import LogPreview, { LogPreviewContext } from "@/components/descriptions/log-preview";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -18,6 +19,7 @@ export default function LogsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
+    const { previewLog } = useContext(LogPreviewContext);
     const { loading, called, logs, next, previous, variables, load, loadMore } = useContext(LogsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
 
@@ -78,7 +80,7 @@ export default function LogsPage(pageProps: any) {
 
               {logs.map((log) => (
 
-                <tr key={log.id} onClick={viewLog(log.id)}>
+                <tr key={log.id} onClick={() => previewLog(log.id)}>
                   <td className="status"><StatusCode code={log.status_code as number} /></td>
                   <td className="description">{`${log.method} ${log.path}`}</td>
                   <td className="date has-text-right">
@@ -120,7 +122,9 @@ export default function LogsPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Logs - {(pageProps as any).references?.app_name}</title></Head>
       <LogsProvider>
-        <Component />
+        <LogPreview>
+          <Component />
+        </LogPreview>
       </LogsProvider>
     </DashboardLayout>
   ), pageProps)
