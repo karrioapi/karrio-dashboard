@@ -1,6 +1,6 @@
 import { Shipment } from "@/purplship/rest/index";
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError } from "@/lib/types";
+import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 
 
 const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
@@ -206,7 +206,7 @@ export function getCursorPagination(cursor?: string | null): { limit?: number; o
   };
 }
 
-export function shipmentCarrier(shipment: Shipment) {
+export function shipmentCarrier(shipment: ShipmentType) {
   return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
 }
 

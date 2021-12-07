@@ -237,6 +237,8 @@ export const GET_SHIPMENT = gql`
 query get_shipment($id: String!) {
   shipment(id: $id) {
     id
+    carrier_id
+    carrier_name
     created_at
     updated_at
     created_by {
@@ -282,6 +284,7 @@ query get_shipment($id: String!) {
     label
     tracking_url
     test_mode
+    service
     reference
     customs {
       id
@@ -327,6 +330,7 @@ query get_shipment($id: String!) {
       }
       meta
     }
+    meta
   }
 }
 `;
@@ -343,6 +347,8 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
     edges {
       node {
         id
+        carrier_id
+        carrier_name
         created_at
         updated_at
         created_by {
@@ -388,6 +394,7 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
         label
         tracking_url
         test_mode
+        service
         reference
         customs {
           id
@@ -433,6 +440,7 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
           }
           meta
         }
+        meta
       }
     }
   }

@@ -1,9 +1,10 @@
-import { Shipment, ShipmentLabelTypeEnum } from '@/purplship/rest/index';
+import { ShipmentType } from '@/lib/types';
+import { ShipmentLabelTypeEnum } from '@/purplship/rest/index';
 import React, { useState } from 'react';
 
 
 type LabelPrinterContextType = {
-  printLabel: (shipment: Shipment) => void,
+  printLabel: (shipment: ShipmentType) => void,
 };
 
 export const LabelPrinterContext = React.createContext<LabelPrinterContextType>({} as LabelPrinterContextType);
@@ -12,9 +13,9 @@ interface LabelPrinterComponent extends React.ButtonHTMLAttributes<HTMLButtonEle
 
 const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [shipment, setShipment] = useState<Shipment>();
+  const [shipment, setShipment] = useState<ShipmentType>();
 
-  const printLabel = (shipment: Shipment) => {
+  const printLabel = (shipment: ShipmentType) => {
     setIsActive(true);
     setShipment(shipment);
   };
@@ -23,7 +24,7 @@ const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
     setIsActive(false);
     setShipment(undefined);
   };
-  const conputeSource = (shipment: Shipment) => {
+  const conputeSource = (shipment: ShipmentType) => {
     const label_type = shipment?.label_type || ShipmentLabelTypeEnum.Pdf;
     const format = {
       [ShipmentLabelTypeEnum.Pdf]: 'application/pdf',
@@ -43,7 +44,7 @@ const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
         <div className="modal-background" onClick={close}></div>
         <div className="label-container">
 
-          {isActive && <iframe src={conputeSource(shipment as Shipment)} height="100%" width="100%"></iframe>}
+          {isActive && <iframe src={conputeSource(shipment as ShipmentType)} height="100%" width="100%"></iframe>}
 
         </div>
 

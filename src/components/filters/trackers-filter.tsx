@@ -3,7 +3,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import { isNone } from '@/lib/helper';
 import { TrackersContext } from '@/context/trackers-provider';
 import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
-import { CARRIER_NAMES, TRACKERS_STATUSES } from '@/lib/types';
+import { CARRIER_NAMES, TRACKER_STATUSES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
 import Spinner from '@/components/spinner';
 
@@ -80,7 +80,7 @@ const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
       <article className="menu-inner panel is-white p-0 has-background-white" style={{ width: '300px', maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }}>
         <div className="py-5"></div>
         <p className="panel-heading is-flex is-justify-content-space-between p-2 has-background-light"
-          style={{ position: "absolute", top: 0, left: 0, right: 0 }}>
+          style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2 }}>
           <button className="button is-small is-default" onClick={handleClear}>Clear</button>
           <span className="is-size-6 has-text-weight-semibold p-1">Filters</span>
           <button
@@ -163,7 +163,7 @@ const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
             </CheckBoxField>
 
             {!isNone(filters?.status) && <div className="column is-12 px-2 has-background-light">
-              {TRACKERS_STATUSES.map((status: string, index) => (
+              {TRACKER_STATUSES.map((status: string, index) => (
                 <CheckBoxField key={index}
                   defaultChecked={filters?.status?.includes(status)}
                   onChange={handleChange}

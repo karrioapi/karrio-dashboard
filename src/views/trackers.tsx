@@ -36,9 +36,9 @@ export default function TrackersPage(pageProps: any) {
 
     const remove = (id?: string) => async () => {
       await removeTracker(id as string);
-      fetchLogs;
+      fetchTrackers;
     };
-    const fetchLogs = (extra: Partial<typeof variables> = {}) => {
+    const fetchTrackers = (extra: Partial<typeof variables> = {}) => {
       const query = {
         ...filters,
         ...getURLSearchParams(),
@@ -52,7 +52,7 @@ export default function TrackersPage(pageProps: any) {
     useEffect(() => {
       window.setTimeout(() => setLoading(loading), 1000);
     });
-    useEffect(() => { fetchLogs(); }, [router.query]);
+    useEffect(() => { fetchTrackers(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
 
     return (
@@ -63,7 +63,7 @@ export default function TrackersPage(pageProps: any) {
           <span className="title is-4">Trackers</span>
           <div>
             <TrackersFilter />
-            <button className="button is-small is-primary ml-1" onClick={() => addTracker({ onChange: fetchLogs })}>
+            <button className="button is-small is-primary ml-1" onClick={() => addTracker({ onChange: fetchTrackers })}>
               <span>Track a Shipment</span>
             </button>
           </div>
@@ -72,16 +72,16 @@ export default function TrackersPage(pageProps: any) {
         <div className="tabs">
           <ul>
             <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
-              <a onClick={() => !isNone(filters?.status) && fetchLogs({ status: null, offset: 0 })}>all</a>
+              <a onClick={() => !isNone(filters?.status) && fetchTrackers({ status: null, offset: 0 })}>all</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('in-transit') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('in-transit') && fetchLogs({ status: ['in-transit'], offset: 0 })}>in-transit</a>
+              <a onClick={() => !filters?.status?.includes('in-transit') && fetchTrackers({ status: ['in-transit'], offset: 0 })}>in-transit</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('pending') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('pending') && fetchLogs({ status: ['pending'], offset: 0 })}>pending</a>
+              <a onClick={() => !filters?.status?.includes('pending') && fetchTrackers({ status: ['pending'], offset: 0 })}>pending</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('pedeliverednding') && fetchLogs({ status: ['delivered'], offset: 0 })}>delivered</a>
+              <a onClick={() => !filters?.status?.includes('pedeliverednding') && fetchTrackers({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
           </ul>
         </div>

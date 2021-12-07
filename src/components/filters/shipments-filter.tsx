@@ -1,45 +1,59 @@
 import React, { useReducer, useContext, useEffect } from 'react';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { isNone } from '@/lib/helper';
-import { LogsContext } from '@/context/logs-provider';
-import Dropdown, { closeDropdown } from '../generic/dropdown';
-import { HTTP_METHODS, HTTP_STATUS_CODES } from '@/lib/types';
+import { ShipmentsContext } from '@/context/shipments-provider';
+import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
+import { CARRIER_NAMES, SHIPMENT_STATUSES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
 import Spinner from '@/components/spinner';
 
 
-interface LogsFilterComponent { }
+interface ShipmentsFilterComponent { }
 
 
-const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
-  const { variables, loading, loadMore } = useContext(LogsContext);
+const ShipmentsFilter: React.FC<ShipmentsFilterComponent> = ({ ...props }) => {
+  const { variables, loading, loadMore } = useContext(ShipmentsContext);
   const [filters, dispatch] = useReducer((state: any, { name, checked, value }: { name: string, checked?: boolean, value?: string | boolean | object }) => {
     switch (name) {
       case 'clear':
         return {};
       case 'full':
         return { ...(value as typeof variables) };
+
       case 'hasStatus':
-        if (checked) return { ...state, status_code: [] };
-        return Object.keys(state).reduce((acc, key) => key === 'status_code' ? acc : { ...acc, [key]: state[key] }, {});
-      case 'status_code':
+        if (checked) return { ...state, status: [] };
+        return Object.keys(state).reduce((acc, key) => key === 'status' ? acc : { ...acc, [key]: state[key] }, {});
+      case 'status':
         return checked
-          ? { ...state, status_code: [...(new Set([...state.status_code, parseInt(value as string)]) as any)] }
-          : { ...state, status_code: state.status_code.filter((item: number) => item !== parseInt(value as string)) };
-      case 'hasMethod':
-        if (checked) return { ...state, method: [] };
-        return Object.keys(state).reduce((acc, key) => key === 'method' ? acc : { ...acc, [key]: state[key] }, {});
-      case 'method':
+          ? { ...state, status: [...(new Set([...state.status, value]) as any)] }
+          : { ...state, status: state.status.filter((item: string) => item !== value) };
+
+      case 'hasService':
+        if (checked) return { ...state, service: [] };
+        return Object.keys(state).reduce((acc, key) => key === 'service' ? acc : { ...acc, [key]: state[key] }, {});
+      case 'service':
+        // return checked
+        //   ? { ...state, service: [...(new Set([...state.service, value]) as any)] }
+        //   : { ...state, service: state.service.filter((item: string) => item !== value) };
+        return { ...state, [name]: [value] };
+
+      case 'hasCarrierName':
+        if (checked) return { ...state, carrier_name: [] };
+        return Object.keys(state).reduce((acc, key) => key === 'carrier_name' ? acc : { ...acc, [key]: state[key] }, {});
+      case 'carrier_name':
         return checked
-          ? { ...state, method: [...(new Set([...state.method, value]) as any)] }
-          : { ...state, method: state.method.filter((item: string) => item !== value) };
-      case 'hasEntityId':
-      case 'hasEndpoint':
+          ? { ...state, carrier_name: [...(new Set([...state.carrier_name, value]) as any)] }
+          : { ...state, carrier_name: state.carrier_name.filter((item: string) => item !== value) };
+
+      case 'hasDate':
+        if (checked) return { ...state, created_before: "", created_after: "" };
+        return Object.keys(state).reduce((acc, key) => ["created_before", "created_after"].includes(key) ? acc : { ...acc, [key]: state[key] }, {});
+
+      case 'hasAddress':
+      case 'hasReference':
         if (checked) return { ...state, [value as string]: "" };
         return Object.keys(state).reduce((acc, key) => key === value ? acc : { ...acc, [key]: state[key] }, {});
-      case 'hasDate':
-        if (checked) return { ...state, date_before: "", date_after: "" };
-        return Object.keys(state).reduce((acc, key) => ["date_before", "date_after"].includes(key) ? acc : { ...acc, [key]: state[key] }, {});
+
       default:
         return { ...state, [name]: value };
     }
@@ -97,19 +111,39 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
 
         {isReady && <>
 
+          {/* Address */}
+          <div className="panel-block columns is-multiline m-0 p-0">
+
+            <CheckBoxField defaultChecked={!isNone(filters?.address)} onChange={handleChange} name="hasAddress" value="address" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Address</span>
+            </CheckBoxField>
+
+            {!isNone(filters?.address) && <div className="column is-12 px-2 has-background-light">
+              <InputField
+                defaultValue={filters?.address}
+                onChange={handleChange}
+                name="address"
+                fieldClass="mb-0 py-1"
+                className="is-fullwidth is-small"
+                placeholder="e.g: 100 Main St, New York, NY"
+              />
+            </div>}
+
+          </div>
+
           {/* Date */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
-            <CheckBoxField defaultChecked={!isNone(filters?.date_before) || !isNone(filters?.date_after)} onChange={handleChange} name="hasDate" fieldClass="column mb-0 is-12 px-2 py-2">
+            <CheckBoxField defaultChecked={!isNone(filters?.created_before) || !isNone(filters?.created_after)} onChange={handleChange} name="hasDate" fieldClass="column mb-0 is-12 px-2 py-2">
               <span>Date</span>
             </CheckBoxField>
 
-            {(!isNone(filters?.date_before) || !isNone(filters?.date_after)) && <div className="column is-12 px-2 has-background-light">
+            {(!isNone(filters?.created_before) || !isNone(filters?.created_after)) && <div className="column is-12 px-2 has-background-light">
               <InputField
-                defaultValue={filters?.date_after}
+                defaultValue={filters?.created_after}
                 onChange={handleChange}
                 type="datetime-local"
-                name="date_after"
+                name="created_after"
                 fieldClass="has-addons mb-0 py-1"
                 controlClass="is-expanded"
                 className="is-small"
@@ -120,10 +154,10 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
                 }
               />
               <InputField
-                defaultValue={filters?.date_before}
+                defaultValue={filters?.created_before}
                 onChange={handleChange}
                 type="datetime-local"
-                name="date_before"
+                name="created_before"
                 fieldClass="has-addons mb-0 py-1"
                 controlClass="is-expanded"
                 className="is-fullwidth is-small"
@@ -137,81 +171,81 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
 
           </div>
 
-          {/* API Endpoint */}
+          {/* Reference */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
-            <CheckBoxField defaultChecked={!isNone(filters?.api_endpoint)} onChange={handleChange} name="hasEndpoint" value="api_endpoint" fieldClass="column mb-0 is-12 px-2 py-2">
-              <span>API Endpoint</span>
+            <CheckBoxField defaultChecked={!isNone(filters?.reference)} onChange={handleChange} name="hasReference" value="reference" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Reference</span>
             </CheckBoxField>
 
-            {!isNone(filters?.api_endpoint) && <div className="column is-12 px-2 has-background-light">
+            {!isNone(filters?.reference) && <div className="column is-12 px-2 has-background-light">
               <InputField
-                defaultValue={filters?.api_endpoint}
+                defaultValue={filters?.reference}
                 onChange={handleChange}
-                name="api_endpoint"
+                name="reference"
                 fieldClass="mb-0 py-1"
                 className="is-fullwidth is-small"
-                placeholder="e.g: /v1/trackers"
+                placeholder="e.g: Order #1111"
               />
             </div>}
 
           </div>
 
-          {/* Entity ID */}
+          {/* Service */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
-            <CheckBoxField defaultChecked={!isNone(filters?.entity_id)} onChange={handleChange} name="hasEntityId" value="entity_id" fieldClass="column mb-0 is-12 px-2 py-2">
-              <span>Related Object ID</span>
+            <CheckBoxField defaultChecked={!isNone(filters?.service)} onChange={handleChange} name="hasService" value="service" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Service</span>
             </CheckBoxField>
 
-            {!isNone(filters?.entity_id) && <div className="column is-12 px-2 has-background-light">
+            {!isNone(filters?.service) && <div className="column is-12 px-2 has-background-light">
               <InputField
-                defaultValue={filters?.entity_id}
+                defaultValue={filters?.service}
                 onChange={handleChange}
-                name="entity_id"
+                name="service"
                 fieldClass="mb-0 py-1"
                 className="is-fullwidth is-small"
-                placeholder="e.g: shp_123456"
+                placeholder="e.g: fedex_first_overnight"
               />
             </div>}
 
           </div>
 
-          {/* Method */}
+          {/* Carrier Name */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
-            <CheckBoxField defaultChecked={!isNone(filters?.method)} onChange={handleChange} name="hasMethod" fieldClass="column mb-0 is-12 px-2 py-2">
-              <span>Method</span>
+            <CheckBoxField defaultChecked={!isNone(filters?.carrier_name)} onChange={handleChange} name="hasCarrierName" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Carrier</span>
             </CheckBoxField>
 
-            {!isNone(filters?.method) && <div className="column is-12 px-2 has-background-light">
-              {HTTP_METHODS.map((method: string, index) => (
+            {!isNone(filters?.carrier_name) && <div className="column is-12 px-2 has-background-light">
+              {CARRIER_NAMES.map((carrier_name: string, index) => (
                 <CheckBoxField key={index}
-                  defaultChecked={filters?.method?.includes(method)}
+                  defaultChecked={filters?.carrier_name?.includes(carrier_name)}
                   onChange={handleChange}
-                  name="method"
-                  value={method}
+                  name="carrier_name"
+                  value={carrier_name}
                   fieldClass="is-fullwidth mb-0 py-1">
-                  <span>{method}</span>
+                  <span>{carrier_name}</span>
                 </CheckBoxField>
               ))}
             </div>}
 
           </div>
 
-          {/* Status Code */}
+          {/* Status */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
-            <CheckBoxField defaultChecked={!isNone(filters?.status_code)} onChange={handleChange} name="hasStatus" fieldClass="column mb-0 is-12 px-2 py-2">
-              <span>Status Code</span>
+            <CheckBoxField defaultChecked={!isNone(filters?.status)} onChange={handleChange} name="hasStatus" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Status</span>
             </CheckBoxField>
 
-            {!isNone(filters?.status_code) && <div className="column is-12 px-2 has-background-light">
-              {HTTP_STATUS_CODES.map((status: number, index) => (
+            {!isNone(filters?.status) && <div className="column is-12 px-2 has-background-light">
+              {SHIPMENT_STATUSES.map((status: string, index) => (
                 <CheckBoxField key={index}
-                  defaultChecked={filters?.status_code?.includes(status)}
+                  defaultChecked={filters?.status?.includes(status)}
                   onChange={handleChange}
-                  name="status_code"
+                  name="status"
                   value={status}
                   fieldClass="is-fullwidth mb-0 py-1">
                   <span>{status}</span>
@@ -229,4 +263,4 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
   );
 }
 
-export default LogsFilter;
+export default ShipmentsFilter;

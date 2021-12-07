@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext } from 'react';
 import { Shipment, ShipmentStatusEnum } from '@/purplship/rest/index';
 import { LabelPrinterContext } from '@/components/label/label-printer';
-import { NotificationType } from '@/lib/types';
+import { NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
-import { Shipments } from '@/context/shipments-provider';
+import { ShipmentsContext } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
@@ -12,7 +12,7 @@ import { ShipmentMutationContext } from '@/context/shipment-mutation';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
-  shipment: Shipment;
+  shipment: ShipmentType;
 }
 
 
@@ -23,7 +23,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
   const { printLabel } = useContext(LabelPrinterContext);
   const { voidLabel } = useContext(ShipmentMutationContext);
   const { printInvoice } = useContext(CustomInvoicePrinterContext);
-  const shipments = useContext(Shipments);
+  const shipments = useContext(ShipmentsContext);
   const btn = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState(false);
 
@@ -95,9 +95,9 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
           <div className="dropdown-content">
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
             {shipment.status !== ShipmentStatusEnum.Cancelled &&
-              <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
+              <a className="dropdown-item" onClick={cancelShipment(shipment as Shipment)}>Cancel Shipment</a>}
             {!isNone((shipment?.meta as any).custom_invoice) &&
-              <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
+              <a className="dropdown-item" onClick={() => printInvoice(shipment as Shipment)}>Print Invoice</a>}
           </div>
         </div>
       </div>

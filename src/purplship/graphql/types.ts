@@ -504,21 +504,25 @@ export interface get_shipment_shipment_selected_rate {
 
 export interface get_shipment_shipment {
   id: string;  // The ID of the object.
+  carrier_id: string | null;
+  carrier_name: string | null;
   created_at: any;
   updated_at: any;
   created_by: get_shipment_shipment_created_by;
-  status: ShipmentStatus | null;
-  recipient: get_shipment_shipment_recipient | null;
-  shipper: get_shipment_shipment_shipper | null;
+  status: ShipmentStatus;
+  recipient: get_shipment_shipment_recipient;
+  shipper: get_shipment_shipment_shipper;
   label_type: string | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
   label: string | null;
   tracking_url: string | null;
   test_mode: boolean;
+  service: string | null;
   reference: string | null;
   customs: get_shipment_shipment_customs | null;
   selected_rate: get_shipment_shipment_selected_rate | null;
+  meta: any | null;
 }
 
 export interface get_shipment {
@@ -637,21 +641,25 @@ export interface get_shipments_shipments_edges_node_selected_rate {
 
 export interface get_shipments_shipments_edges_node {
   id: string;  // The ID of the object.
+  carrier_id: string | null;
+  carrier_name: string | null;
   created_at: any;
   updated_at: any;
   created_by: get_shipments_shipments_edges_node_created_by;
-  status: ShipmentStatus | null;
-  recipient: get_shipments_shipments_edges_node_recipient | null;
-  shipper: get_shipments_shipments_edges_node_shipper | null;
+  status: ShipmentStatus;
+  recipient: get_shipments_shipments_edges_node_recipient;
+  shipper: get_shipments_shipments_edges_node_shipper;
   label_type: string | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
   label: string | null;
   tracking_url: string | null;
   test_mode: boolean;
+  service: string | null;
   reference: string | null;
   customs: get_shipments_shipments_edges_node_customs | null;
   selected_rate: get_shipments_shipments_edges_node_selected_rate | null;
+  meta: any | null;
 }
 
 export interface get_shipments_shipments_edges {
@@ -714,15 +722,15 @@ export interface get_tracker_tracker {
   created_at: any;
   updated_at: any;
   created_by: get_tracker_tracker_created_by;
-  status: TrackerStatus | null;
+  status: TrackerStatus;
   tracking_number: string;
-  events: (get_tracker_tracker_events | null)[] | null;
+  events: (get_tracker_tracker_events | null)[];
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
-  messages: (get_tracker_tracker_messages | null)[] | null;
-  carrier_id: string | null;
-  carrier_name: string | null;
+  messages: (get_tracker_tracker_messages | null)[];
+  carrier_id: string;
+  carrier_name: string;
 }
 
 export interface get_tracker {
@@ -774,15 +782,15 @@ export interface get_trackers_trackers_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_trackers_trackers_edges_node_created_by;
-  status: TrackerStatus | null;
+  status: TrackerStatus;
   tracking_number: string;
-  events: (get_trackers_trackers_edges_node_events | null)[] | null;
+  events: (get_trackers_trackers_edges_node_events | null)[];
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
-  messages: (get_trackers_trackers_edges_node_messages | null)[] | null;
-  carrier_id: string | null;
-  carrier_name: string | null;
+  messages: (get_trackers_trackers_edges_node_messages | null)[];
+  carrier_id: string;
+  carrier_name: string;
 }
 
 export interface get_trackers_trackers_edges {

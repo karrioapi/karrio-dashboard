@@ -76,7 +76,7 @@ const EventsFilter: React.FC<EventsFilterComponent> = ({ ...props }) => {
       <article className="menu-inner panel is-white p-0 has-background-white" style={{ width: '300px', maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }}>
         <div className="py-5"></div>
         <p className="panel-heading is-flex is-justify-content-space-between p-2 has-background-light"
-          style={{ position: "absolute", top: 0, left: 0, right: 0 }}>
+          style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2 }}>
           <button className="button is-small is-default" onClick={handleClear}>Clear</button>
           <span className="is-size-6 has-text-weight-semibold p-1">Filters</span>
           <button

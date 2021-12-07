@@ -1,5 +1,5 @@
 import { Address, CarrierSettingsCarrierNameEnum, Commodity, Customs, Message, Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentStatusEnum, TrackingEvent, TrackingStatus, TrackingStatusStatusEnum, WebhookEnabledEventsEnum } from '@/purplship/rest/index';
-import { get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_customs_info_templates_customs_templates_edges_node_customs, get_customs_info_templates_customs_templates_edges_node_customs_commodities, get_events_events_edges_node, get_logs_logs_edges_node, get_parcel_templates_parcel_templates_edges_node, get_parcel_templates_parcel_templates_edges_node_parcel, get_trackers_trackers_edges_node, get_tracker_tracker_events, get_tracker_tracker_messages, ServiceLevelModelSerializerInput } from '@/purplship/graphql';
+import { get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_customs_info_templates_customs_templates_edges_node_customs, get_customs_info_templates_customs_templates_edges_node_customs_commodities, get_events_events_edges_node, get_logs_logs_edges_node, get_parcel_templates_parcel_templates_edges_node, get_parcel_templates_parcel_templates_edges_node_parcel, get_shipment_shipment, get_trackers_trackers_edges_node, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, ServiceLevelModelSerializerInput } from '@/purplship/graphql';
 
 
 export type MessageType = Message | get_tracker_tracker_messages;
@@ -9,10 +9,11 @@ export type AddressType = Address | get_address_templates_address_templates_edge
 export type ParcelType = Parcel | get_parcel_templates_parcel_templates_edges_node_parcel;
 export type CustomsType = Customs | get_customs_info_templates_customs_templates_edges_node_customs;
 export type TrackingEventType = TrackingEvent | get_tracker_tracker_events;
-export type TrackerType = (TrackingStatus | get_trackers_trackers_edges_node) & {
+export type TrackerType = (TrackingStatus | get_tracker_tracker) & {
   events?: TrackingEventType[],
   messages?: MessageType[]
 };
+export type ShipmentType = Shipment | get_shipment_shipment;
 
 export type AddressTemplate = get_address_templates_address_templates_edges_node;
 export type CustomsTemplateType = get_customs_info_templates_customs_templates_edges_node;
@@ -85,7 +86,7 @@ export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
     .values(ShipmentStatusEnum)
 ));
 
-export const TRACKERS_STATUSES: string[] = Array.from(new Set(
+export const TRACKER_STATUSES: string[] = Array.from(new Set(
   Object
     .values(TrackingStatusStatusEnum)
 ));

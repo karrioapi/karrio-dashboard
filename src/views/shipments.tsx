@@ -11,13 +11,15 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentsProvider from "@/context/shipments-provider";
-import { Shipments } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, isNone, p, shipmentCarrier } from "@/lib/helper";
+import { ShipmentsContext } from "@/context/shipments-provider";
+import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 import ShipmentMutationProvider from "@/context/shipment-mutation";
+import ShipmentsFilter from "@/components/filters/shipments-filter";
+import { AddressType } from "@/lib/types";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -27,57 +29,66 @@ export default function ShipmentsPage(pageProps: any) {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { basePath } = useContext(AppMode);
-    const { loading, results, load, loadMore, previous, next, called } = useContext(Shipments);
-    const [status, setStatus] = useState<ListStatusEnum>();
+    const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
+    const [filters, setFilters] = React.useState<typeof variables>(variables);
 
     const viewShipment = (id: string) => (_: React.MouseEvent) => {
       router.push(`${basePath}/shipments/` + id);
     };
-    const fetch = (newStatus?: ListStatusEnum) => {
-      (!loading && load) && (called ? loadMore : load)({ status: newStatus, cursor: '' });
-    };
+    const fetchShipments = (extra: Partial<typeof variables> = {}) => {
+      const query = {
+        ...filters,
+        ...getURLSearchParams(),
+        ...extra
+      };
 
-    useEffect(() => { setLoading && setLoading(loading); }, [loading]);
+      setFilters(query);
+      (!loading) && (called ? loadMore : load)(query);
+    }
+
     useEffect(() => {
-      const newStatus = (new URLSearchParams(location.search)).get('status') as ListStatusEnum || undefined;
-      setStatus(newStatus);
-      fetch(newStatus);
-    }, [router]);
+      window.setTimeout(() => setLoading(loading), 1000);
+    });
+    useEffect(() => { fetchShipments(); }, [router.query]);
+    useEffect(() => { setFilters({ ...variables }); }, [variables]);
 
     return (
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Shipments</span>
-          <AppLink href="/buy_label/new" className="button is-success is-pulled-right">
-            <span>Create Label</span>
-          </AppLink>
+          <div>
+            <ShipmentsFilter />
+            <AppLink href="/buy_label/new" className="button is-primary is-small is-pulled-right ml-1">
+              <span>Create Label</span>
+            </AppLink>
+          </div>
         </header>
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(status) ? 'is-active' : ''}`}>
-              <AppLink href="">all</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
+              <a onClick={() => !isNone(filters?.status) && fetchShipments({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'created' ? 'is-active' : ''}`}>
-              <AppLink href="?status=created">created</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('created') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('created') && fetchShipments({ status: ['created'], offset: 0 })}>created</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'purchased' ? 'is-active' : ''}`}>
-              <AppLink href="?status=purchased">purchased</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('purchased') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('purchased') && fetchShipments({ status: ['purchased'], offset: 0 })}>purchased</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'delivered' ? 'is-active' : ''}`}>
-              <AppLink href="?status=delivered">delivered</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('delivered') && fetchShipments({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'cancelled' ? 'is-active' : ''}`}>
-              <AppLink href="?status=cancelled">cancelled</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('cancelled') && fetchShipments({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
           </ul>
         </div>
 
         {loading && <Spinner />}
 
-        {(!loading && results?.length > 0) && <div className="table-container">
+        {(!loading && shipments?.length > 0) && <div className="table-container">
           <table className="shipments-table table is-fullwidth">
             <tbody>
 
@@ -90,7 +101,7 @@ export default function ShipmentsPage(pageProps: any) {
                 <td className="action"></td>
               </tr>
 
-              {results?.map(shipment => (
+              {shipments?.map(shipment => (
                 <tr key={shipment.id} className="items" onClick={viewShipment(shipment.id as string)}>
                   <td className="carrier is-vcentered has-text-centered">
                     {!isNone(shipment.carrier_name) &&
@@ -107,10 +118,10 @@ export default function ShipmentsPage(pageProps: any) {
                     </p>
                   </td>
                   <td className="status is-vcentered">
-                    <StatusBadge status={shipment.status} style={{ width: '100%' }} />
+                    <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
                   </td>
                   <td className="recipient is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient)}</p>
+                    <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient as AddressType)}</p>
                   </td>
                   <td className="date is-vcentered">
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
@@ -126,25 +137,20 @@ export default function ShipmentsPage(pageProps: any) {
           </table>
 
           <footer className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{(results || []).length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">{(shipments || []).length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ cursor: previous, status })} disabled={isNone(previous)}>
-                <span>Previous</span>
-              </button>
-              <button className="button is-small" onClick={() => loadMore({ cursor: next, status })} disabled={isNone(next)}>
-                <span>Next</span>
-              </button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
           </footer>
 
         </div>}
 
-        {(!loading && (results || []).length == 0) && <div className="card my-6">
+        {(!loading && (shipments || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
-            <p>No shipment has been created yet.</p>
-            <p>Use the <strong>API</strong> to create your first shipment.</p>
+            <p>No shipment found.</p>
           </div>
 
         </div>}
