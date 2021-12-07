@@ -11,7 +11,7 @@ import TokenProvider from '@/context/token-provider';
 import Notifier from '@/components/notifier';
 import Footer from '@/components/footer';
 import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
-import { isNone } from '@/lib/helper';
+import ErrorBoundary from '@/components/error-boudaries';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -46,14 +46,16 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
       if (session?.accessToken) {
         AuthToken.next({ access: session?.accessToken } as TokenPair);
       }
-    }, [session, router]);
+    }, [session]);
 
     if (!session) return <></>;
 
     return (
       <ContextProviders {...(pageProps || {})}>
-        {children}
-        <Footer />
+        <ErrorBoundary>
+          {children}
+          <Footer />
+        </ErrorBoundary>
       </ContextProviders>
     );
   };
