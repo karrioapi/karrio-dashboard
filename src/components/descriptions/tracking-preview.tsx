@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { TrackingEvent, TrackingStatus } from '@/api/index';
-import { isNone } from '@/lib/helper';
-import { ListStatusEnum } from '@/api/generated/apis/TrackersApi';
+import { formatDayDate, isNone, p } from '@/lib/helper';
+import { ListStatusEnum } from '@/purplship/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
+import { TrackerType, TrackingEventType } from '@/lib/types';
 
-type DayEvents = { [k: string]: TrackingEvent[] };
+type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {
-  previewTracker: (tracker: TrackingStatus) => void,
+  previewTracker: (tracker: TrackerType) => void,
 };
 
 interface TrackingPreviewComponent { }
@@ -18,9 +18,9 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [sharingLink, setSharingLink] = useState<string>('');
   const [key, setKey] = useState<string>(`tracker-${Date.now()}`);
-  const [tracker, setTracker] = useState<TrackingStatus>();
+  const [tracker, setTracker] = useState<TrackerType>();
 
-  const previewTracker = (tracker: TrackingStatus) => {
+  const previewTracker = (tracker: TrackerType) => {
     setTracker(tracker);
     setIsActive(true);
     setKey(`tracker-${Date.now()}`);
@@ -40,19 +40,19 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
     document.execCommand('copy');
     document.body.removeChild(input);
   };
-  const computeColor = (tracker: TrackingStatus) => {
+  const computeColor = (tracker: TrackerType) => {
     if (tracker?.delivered) return "has-background-success";
     else if (tracker?.status === ListStatusEnum.Pending.toString()) return "has-background-grey-dark";
     else return "has-background-info";
   };
-  const computeStatus = (tracker: TrackingStatus) => {
+  const computeStatus = (tracker: TrackerType) => {
     if (tracker?.delivered) return "Delivered";
     else if (tracker?.status === ListStatusEnum.Pending.toString()) return "Pending";
     else return "In-Transit";
   };
-  const computeEvents = (tracker: TrackingStatus): DayEvents => {
-    return (tracker?.events || []).reduce((days, event: TrackingEvent) => {
-      const daydate = new Date(event.date as string).toUTCString().split(' ').slice(0, 4).join(' ');
+  const computeEvents = (tracker: TrackerType): DayEvents => {
+    return (tracker?.events || []).reduce((days: any, event: TrackingEventType) => {
+      const daydate = formatDayDate(event.date as string);
       return { ...days, [daydate]: [...(days[daydate] || []), event] };
     }, {} as DayEvents);
   };
@@ -70,15 +70,20 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
         {!isNone(tracker) && <div className="modal-card">
           <section className="modal-card-body">
             <div className="has-text-centered pb-4">
-              <Image src={`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
+              <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
             </div>
 
-            <p className="subtitle has-text-centered is-6">
+            <p className="subtitle has-text-centered is-6 my-3">
               <span>Tracking ID</span> <strong>{tracker?.tracking_number}</strong>
             </p>
 
-            <p className={computeColor(tracker as TrackingStatus) + " block has-text-centered has-text-white is-size-4 py-3"}>
-              {computeStatus(tracker as TrackingStatus)}
+            {!isNone(tracker?.estimated_delivery) && <p className="subtitle has-text-centered is-6 mb-3">
+              <span>{tracker?.delivered ? 'Delivered' : 'Estimated Delivery'}</span> {' '}
+              <strong>{formatDayDate(tracker!.estimated_delivery as string)}</strong>
+            </p>}
+
+            <p className={computeColor(tracker as TrackerType) + " block has-text-centered has-text-white is-size-4 py-3"}>
+              {computeStatus(tracker as TrackerType)}
             </p>
 
             <hr />
@@ -87,7 +92,7 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
 
               <aside className="menu">
                 <ul className="menu-list mb-5" style={{ maxWidth: "28rem" }}>
-                  {Object.entries(computeEvents(tracker as TrackingStatus)).map(([day, events], index) => <li key={index}>
+                  {Object.entries(computeEvents(tracker as TrackerType)).map(([day, events], index) => <li key={index}>
                     <p className="menu-label is-size-6 is-capitalized">{day}</p>
 
                     {events.map((event, index) => <ul key={index}>
@@ -105,6 +110,12 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
               </aside>
 
             </div>
+
+            {((tracker?.messages || []).length > 0) && <div className="notification is-warning">
+              <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
+                {(tracker?.messages || [{}])[0].message}
+              </p>
+            </div>}
 
             <hr />
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Address, Parcel, PurplshipClient, Shipment } from '@/api/index';
+import { Address, Customs, Parcel, PurplshipClient, Shipment } from '@/purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RequestError } from '@/lib/types';
 import { RestContext } from '@/client/context';
@@ -11,9 +11,12 @@ const DEFAULT_SHIPMENT_DATA = {
   options: {}
 } as Shipment;
 
+type ShipmentType = Shipment | Shipment & { customs: Customs & { options: any } };
+
 type LabelDataContext = {
-  shipment: Shipment;
+  shipment: ShipmentType;
   loading: boolean;
+  called: boolean;
   error?: RequestError;
   loadShipment: (id?: string) => Promise<Shipment>;
   updateShipment: (data: Partial<Shipment>) => void;
@@ -26,10 +29,12 @@ const ShipmentProvider: React.FC = ({ children }) => {
   const [error, setError] = useState<RequestError>();
   const [shipment, setValue] = useState<Shipment>(DEFAULT_SHIPMENT_DATA);
   const [loading, setLoading] = useState<boolean>(false);
+  const [called, setCalled] = useState<boolean>(false);
 
   const loadShipment = async (id?: string) => {
     setError(undefined);
     setLoading(true);
+    setCalled(true);
 
     return new Promise<Shipment>(async (resolve) => {
       if (id === 'new') {
@@ -58,6 +63,7 @@ const ShipmentProvider: React.FC = ({ children }) => {
     <LabelData.Provider value={{
       shipment,
       error,
+      called,
       loading,
       loadShipment,
       updateShipment

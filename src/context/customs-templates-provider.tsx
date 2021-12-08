@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@/graphql';
+import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@/purplship/graphql';
 import { CustomsTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;
@@ -37,7 +37,7 @@ const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
       load, loadMore,
       templates: extract(query?.data?.customs_templates?.edges),
       next: query.data?.customs_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
-      previous: query.data?.customs_templates?.pageInfo?.hasPreviousPage ? (variables?.offset - PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>
       {children}

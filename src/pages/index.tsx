@@ -1,3 +1,1 @@
-import ShipmentsPage from "@/views/shipments";
-
-export default ShipmentsPage;
+export { default, getServerSideProps } from "@/views/shipments";

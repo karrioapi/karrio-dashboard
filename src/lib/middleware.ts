@@ -1,32 +1,28 @@
-import { graphqlClient, restClient } from "@/client/context";
+import { AuthToken, OrgToken, graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
-import { NextPage, NextPageContext } from "next";
 import { Session } from "next-auth";
-import getConfig from 'next/config';
 import { getSession } from "next-auth/client";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import { References } from "@/api";
+import { References } from "@/purplship/rest";
 import logger from "@/lib/logger";
+import { Response } from "node-fetch";
 
-const { publicRuntimeConfig } = getConfig();
 
-export function withSessionCookies(page: NextPage) {
-  const getInitialProps = page.getInitialProps;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  await setOrgHeader(ctx, session);
 
-  page.getInitialProps = async ctx => {
-    const session = await getSession({ req: ctx.req });
-    await setOrgHeader(ctx, session);
+  const pathname = ctx.resolvedUrl;
+  const org_id = session?.org_id || "";
+  const data = await loadData(session);
 
-    return {
-      pathname: ctx.pathname,
-      org_id: session?.org_id,
-      ...(await loadData(session)),
-      ...(getInitialProps ? await getInitialProps(ctx) : {}),
-    };
+  ctx.res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59');
+
+  return {
+    props: { pathname, org_id, ...data }
   };
-
-  return page;
-}
+};
 
 export async function connectAPI(): Promise<{ references?: References }> {
   // Attempt connection to the purplship API to retrieve the refereneces (API metadata)
@@ -37,22 +33,29 @@ export async function connectAPI(): Promise<{ references?: References }> {
       // TODO:: implement version compatibility check here.
 
       resolve({ references });
-    } catch (e) {
-      logger.error(`Failed to fetch API metadata from (${publicRuntimeConfig?.PURPLSHIP_API_URL})`, e);
-      const error = createServerError({
-        code: ServerErrorCode.API_CONNECTION_ERROR,
-        message: `
-          Server (${publicRuntimeConfig?.PURPLSHIP_API_URL}) unreachable.
+    } catch (e: any | Response) {
+      logger.error(`Failed to fetch API metadata from (${PURPLSHIP_API})`, e);
+
+      if (e.status === 403) {
+        AuthToken.next({ access: "", refresh: "" });
+        OrgToken.next({ access: "", refresh: "" });
+
+        connectAPI();
+      } else {
+        const error = createServerError({
+          code: ServerErrorCode.API_CONNECTION_ERROR,
+          message: `
+          Server (${PURPLSHIP_API}) unreachable.
           Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
         `
-      })
-
-      reject({ error });
+        })
+        reject({ error });
+      }
     }
   });
 }
 
-async function setOrgHeader(ctx: NextPageContext, session: Session | null) {
+async function setOrgHeader(ctx: GetServerSidePropsContext, session: Session | null) {
   // Sets the authentication org_id cookie if the session has one
   if (ctx.res && session?.org_id) {
     ctx.res.setHeader('Set-Cookie', `org_id=${session.org_id}`);

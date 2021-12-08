@@ -1,22 +1,24 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
+import ParcelMutationProvider, { ParcelMutationContext } from "@/context/parcel-template-mutation";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 
-export default withSessionCookies(function (pageProps) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+export default function ParcelsPage(pageProps: any) {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { deleteTemplate } = useContext(ParcelMutationContext);
     const { loading, templates, previous, next, load, loadMore, refetch } = useContext(ParcelTemplates);
 
     const update = async () => refetch && await refetch();
@@ -27,7 +29,6 @@ export default withSessionCookies(function (pageProps) {
 
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
-
 
     return (
       <>
@@ -116,22 +117,20 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
+  return AuthenticatedPage((
+    <DashboardLayout>
+      <Head><title>Parcel Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <ParcelMutationProvider>
         <ParcelTemplatesProvider>
           <ConfirmModal>
             <ParcelEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
             </ParcelEditModal>
           </ConfirmModal>
         </ParcelTemplatesProvider>
-      </DashboardLayout>
-    ));
-
-    return <Wrapped />;
-  }, pageProps);
-})
+      </ParcelMutationProvider>
+    </DashboardLayout>
+  ), pageProps);
+}

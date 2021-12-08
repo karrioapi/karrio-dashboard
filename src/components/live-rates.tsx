@@ -1,6 +1,7 @@
 import { formatRef, isNone } from '@/lib/helper';
+import { useRouter } from 'next/dist/client/router';
 import { APIError, NotificationType, RequestError } from '@/lib/types';
-import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@/api/index';
+import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@/purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
@@ -8,13 +9,13 @@ import OptionsDescription from '@/components/descriptions/options-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
-import ShipmentMutation from '@/context/shipment-mutation';
+import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { LabelData } from '@/context/shipment-provider';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
-import RateDescription from './descriptions/rate-description';
-import { useRouter } from 'next/dist/client/router';
+import RateDescription from '@/components/descriptions/rate-description';
+import MessagesDescription from '@/components/descriptions/messages-description';
 
 interface LiveRatesComponent {
   update: (payload: {}, refresh?: boolean) => void;
@@ -22,16 +23,18 @@ interface LiveRatesComponent {
 
 const DEFAULT_PAYMENT: Partial<Payment> = { paid_by: PaymentPaidByEnum.Sender };
 
-const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesComponent>(({ update, fetchRates, buyLabel }) => {
+const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
   const { shipment } = useContext(LabelData);
   const { loading, setLoading } = useContext(Loading);
+  const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
   const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
   const [label_type, setLabelType] = useState<ShipmentLabelTypeEnum>(shipment?.label_type || ShipmentLabelTypeEnum.Pdf);
   const [payment, setPayment] = useState<Partial<Payment>>(DEFAULT_PAYMENT);
   const [reference, setReference] = useState(shipment?.reference);
+  const [showMessage, setShowMessage] = useState(false);
 
   const computeDisabled = (shipment: Shipment) => {
     return (
@@ -174,6 +177,19 @@ const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesCompon
 
         </div>
 
+        {(shipment.messages || []).length > 0 && <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
+          <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
+            <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
+            <span className="icon is-small is-pulled-right pt-2">
+              <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+            </span>
+          </p>
+
+          {showMessage && <div className="notification is-warning is-size-7">
+            <MessagesDescription messages={shipment.messages} />
+          </div>}
+        </article>}
+
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
           <h6 className="is-title is-size-6 mt-1 mb-2 has-text-weight-semibold">Select your label type</h6>
@@ -228,6 +244,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ShipmentMutation<LiveRatesCompon
 
     </div>
   )
-});
+};
 
 export default LiveRates;

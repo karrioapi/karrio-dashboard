@@ -1,28 +1,30 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
+import CustomsMutationProvider, { CustomsMutationContext } from "@/context/customs-template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+
+export default function CustomsInfoPage(pageProps: any) {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
+    const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
     const { loading, templates, next, previous, load, loadMore, refetch } = useContext(CustomInfoTemplates);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteTemplate(id);
+      await deleteCustomsTemplate(id);
       update();
     };
 
@@ -116,22 +118,20 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
-        <CustomInfoTemplatesProvider>
+  return AuthenticatedPage((
+    <DashboardLayout>
+      <Head><title>Customs Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <CustomInfoTemplatesProvider>
+        <CustomsMutationProvider>
           <ConfirmModal>
             <CustomsInfoEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
             </CustomsInfoEditModal>
           </ConfirmModal>
-        </CustomInfoTemplatesProvider>
-      </DashboardLayout>
-    ));
-
-    return <Wrapped />;
-  }, pageProps);
-})
+        </CustomsMutationProvider>
+      </CustomInfoTemplatesProvider>
+    </DashboardLayout>
+  ), pageProps);
+}

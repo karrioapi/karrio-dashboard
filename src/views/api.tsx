@@ -1,14 +1,15 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import GenerateAPIModal from "@/components/generate-api-dialog";
 import { Loading } from "@/components/loader";
 import { TokenData } from "@/context/token-provider";
-import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import { useContext, useEffect, useRef, useState } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function ApiPage(pageProps: any) {
   const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { token, loading, load } = useContext(TokenData)
@@ -70,10 +71,10 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>API Keys - {(pageProps as any).references?.app_name}</title></Head>
       <Component />
     </DashboardLayout>
   ), pageProps)
-})
+}

@@ -1,10 +1,10 @@
-import { CarrierSettingsCarrierNameEnum } from '@/api/index';
+import { CarrierSettingsCarrierNameEnum, References } from '@/purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
-import { Collection, NotificationType } from '@/lib/types';
+import { Collection, NotificationType, ServiceLevelType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import ConnectionMutation from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
@@ -13,6 +13,7 @@ import { Loading } from '@/components/loader';
 import { deepEqual, isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
+import CarrierServiceEditor from './carrier-services-editor';
 
 type OperationType = {
   connection?: UserConnectionType;
@@ -30,7 +31,7 @@ interface ConnectProviderModalComponent {
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ConnectionMutation<ConnectProviderModalComponent>(
   ({ children, createConnection, updateConnection }) => {
-    const { carriers } = useContext(APIReference);
+    const { carriers, service_levels } = useContext(APIReference) as References & { service_levels: Record<string, ServiceLevelType[]> };
     const { notify } = useContext(Notify);
     const { loading, setLoading } = useContext(Loading);
     const { testMode } = useContext(AppMode);
@@ -96,7 +97,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = Connection
     const directChange = (property: string) => (value: any) => {
       const new_state = { ...payload, [property]: value };
       setPayload(new_state);
-      setIsDisabled(deepEqual((operation.connection || DEFAULT_STATE), new_state));
+      setIsDisabled(JSON.stringify(operation.connection || DEFAULT_STATE) === JSON.stringify(new_state));
     };
     const has = (property: string) => {
       return hasProperty(payload.carrier_name as CarrierSettingsCarrierNameEnum, property);
@@ -164,7 +165,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = Connection
 
                   {has("api_secret") && <InputField label="API Secret" defaultValue={payload.api_secret} onChange={handleOnChange("api_secret")} className="is-small" required />}
 
-                  {has("account_number") && <InputField label="Account Number" defaultValue={payload.account_number} onChange={handleOnChange("account_number")} className="is-small" required />}
+                  {has("account_number") && <InputField label="Account Number" defaultValue={payload.account_number} onChange={handleOnChange("account_number")} className="is-small" />}
 
                   {has("billing_account") && <InputField label="Billing Account" defaultValue={payload.billing_account} onChange={handleOnChange("billing_account")} className="is-small" />}
 
@@ -188,12 +189,18 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = Connection
 
                   {has("logistics_manager_mailer_id") && <InputField label="Logistics Manager Mailer ID" defaultValue={payload.logistics_manager_mailer_id} onChange={handleOnChange("logistics_manager_mailer_id")} className="is-small" />}
 
+                  {has("services") && <CarrierServiceEditor defaultValue={payload.services || service_levels[payload.carrier_name]} onChange={directChange("services")} />}
+
                   {/* Carrier specific fields END */}
 
                   <CheckBoxField defaultChecked={payload.test} onChange={handleOnChange("test")}>Test Mode</CheckBoxField>
 
-                  <ButtonField className={`is-primary ${loading ? 'is-loading' : ''}`}
-                    fieldClass="has-text-centered mt-3"
+
+                  <div className="p-3 my-5"></div>
+                  <ButtonField type="submit"
+                    className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
+                    fieldClass="form-floating-footer p-3"
+                    controlClass="has-text-centered"
                     disabled={isDisabled}>
                     <span>Submit</span>
                   </ButtonField>
@@ -216,6 +223,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test", "username", "password", "billing_account"],
     [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test", "site_id", "password", "account_number", "account_country_code"],
+    [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test", "username", "password", "account_number", "services"],
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],

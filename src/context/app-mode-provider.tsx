@@ -1,4 +1,6 @@
+import { BASE_PATH, TEST_BASE_PATH } from "@/client/context";
 import React from "react";
+
 
 type AppModeType = {
   basePath: string;
@@ -7,11 +9,11 @@ type AppModeType = {
 };
 
 export function computeMode(pathname?: string) {
-  return pathname?.startsWith('/test');
+  return pathname?.startsWith(TEST_BASE_PATH);
 };
 
 export function computeBasePath(pathname?: string) {
-  return pathname?.startsWith('/test') ? '/test' : '/';
+  return pathname?.startsWith(TEST_BASE_PATH) ? TEST_BASE_PATH : BASE_PATH;
 };
 
 
@@ -22,8 +24,8 @@ const AppModeProvider: React.FC<{ pathname: string }> = ({ children, pathname })
   const switchMode = () => {
     const isTestMode = computeMode(pathname);
 
-    if (isTestMode) window.location.pathname = pathname.replace('/test', '');
-    else window.location.replace('/test' + pathname);
+    if (isTestMode) window.location.pathname = pathname.replace(TEST_BASE_PATH, '');
+    else window.location.replace(TEST_BASE_PATH + pathname);
   };
 
   return (
@@ -32,7 +34,7 @@ const AppModeProvider: React.FC<{ pathname: string }> = ({ children, pathname })
       basePath: computeBasePath(pathname),
       switchMode
     }}>
-      {pathname && children}
+      {children}
     </AppMode.Provider>
   );
 };

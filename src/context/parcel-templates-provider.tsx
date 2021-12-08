@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from '@/graphql';
+import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from '@/purplship/graphql';
 import { ParcelTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;
@@ -37,7 +37,7 @@ const ParcelTemplatesProvider: React.FC = ({ children }) => {
       load, loadMore,
       templates: extract(query?.data?.parcel_templates?.edges),
       next: query.data?.parcel_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
-      previous: query.data?.parcel_templates?.pageInfo?.hasPreviousPage ? (variables?.offset - PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>
       {children}

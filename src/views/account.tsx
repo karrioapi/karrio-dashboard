@@ -1,4 +1,4 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import CloseAccountAction from "@/components/close-account-action";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import Tabs from "@/components/generic/tabs";
@@ -7,11 +7,12 @@ import { useContext } from "react";
 import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import { APIReference } from "@/context/references-provider";
-import { withSessionCookies } from "@/lib/middleware";
 import PasswordManagement from "@/components/password-management";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function AccountPage(pageProps: any) {
   const Component: React.FC = () => {
     const { multi_organizations, app_name } = useContext(APIReference);
 
@@ -76,7 +77,7 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 
@@ -84,4 +85,4 @@ export default withSessionCookies(function (pageProps) {
 
     </DashboardLayout>
   ), pageProps)
-})
+}

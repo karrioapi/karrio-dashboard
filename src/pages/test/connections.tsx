@@ -1,3 +1,1 @@
-import ConnectionsPage from "@/views/connections";
-
-export default ConnectionsPage;
+export { default, getServerSideProps } from "@/views/connections";

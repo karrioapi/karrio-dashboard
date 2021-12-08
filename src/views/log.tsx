@@ -1,84 +1,124 @@
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
-import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
+import { formatDateTimeLong, isNone, jsonify, notEmptyJSON, p } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect, useState } from "react";
-import AppLink from "@/components/app-link";
 import { useRouter } from "next/dist/client/router";
 import LogProvider, { Log } from "@/context/log-provider";
 import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
-import { withSessionCookies } from "@/lib/middleware";
+import Expandable from "@/components/expandable";
+import AppLink from "@/components/app-link";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 hljs.registerLanguage('json', json);
 
 
-export default withSessionCookies(function (pageProps) {
-  const Component: React.FC = () => {
-    const router = useRouter();
-    const { setLoading } = useContext(Loading);
-    const { log, loading, loadLog } = useContext(Log);
-    const [query_params, setQueryParams] = useState<string>();
-    const [response, setResponse] = useState<string>();
-    const [data, setData] = useState<string>();
-    const { id } = router.query;
+export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
+  const router = useRouter();
+  const { setLoading } = useContext(Loading);
+  const { log, loading, loadLog } = useContext(Log);
+  const [query_params, setQueryParams] = useState<string>();
+  const [response, setResponse] = useState<string>();
+  const [data, setData] = useState<string>();
+  const { id } = router.query;
 
-    useEffect(() => { setLoading(loading); });
-    useEffect(() => { (!isNone(loadLog) && !loading) && loadLog(id as string); }, [id]);
-    useEffect(() => {
-      if (log !== undefined) {
-        setQueryParams(JSON.stringify(JSON.parse(log.query_params || '{}'), null, 2));
-        setResponse(JSON.stringify(JSON.parse(log.response || '{}'), null, 2));
-        setData(JSON.stringify(JSON.parse(log.data || '{}'), null, 2));
-      }
-    });
+  useEffect(() => { setLoading(loading); });
+  useEffect(() => { (!isNone(loadLog) && !loading) && loadLog((id || logId) as string); }, [id || logId]);
+  useEffect(() => {
+    if (log !== undefined) {
+      setQueryParams(jsonify(log.query_params || '{}'));
+      setResponse(jsonify(log.response || '{}'));
+      setData(jsonify(log.data || '{}'));
+    }
+  });
 
-    return (
-      <>
-        <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
-          <ul>
-            <li><AppLink href="/developers/logs">Logs</AppLink></li>
-            <li className="is-active"><a href="#" aria-current="page">details</a></li>
-          </ul>
-        </nav>
+  return (
+    <>
+      {log !== undefined && <>
 
-        {log !== undefined && <div className="card">
-
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="subtitle is-6">Request</p>
-            <p className="title is-4">{log.method} {log.path} <StatusCode code={log.status_code as number} /></p>
+        <div className="columns my-1">
+          <div className="column is-8">
+            <span className="subtitle is-size-7 has-text-weight-semibold">LOG</span>
+            <br />
+            <span className="title is-5 mr-2">{log.method} {log.path} <StatusCode code={log.status_code as number} /></span>
           </div>
+          {!isNone(logId) && <div className="column is-4 is-flex is-justify-content-end">
+            <AppLink href={`/developers/logs/${logId}`} target="blank" className="button is-white has-text-info is-medium">
+              <span className="icon">
+                <i className="fas fa-external-link-alt"></i>
+              </span>
+            </AppLink>
+          </div>}
+        </div>
 
-          <div className="card-content py-3">
-            <div className="columns my-0">
-              <div className="column is-3 py-1">ID</div>
-              <div className="column is-8 py-1">{log.id}</div>
-            </div>
-            <div className="columns my-0">
-              <div className="column is-3 py-1">Date</div>
-              <div className="column is-8 py-1">{formatDateTimeLong(log.requested_at)}</div>
-            </div>
-            <div className="columns my-0">
-              <div className="column is-3 py-1">IP Address</div>
-              <div className="column is-8 py-1">{log.host}</div>
-            </div>
-            <div className="columns my-0">
-              <div className="column is-3 py-1">Origin</div>
-              <div className="column is-8 py-1">{log.remote_addr}</div>
-            </div>
+        <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+        <div className="py-3">
+          <div className="columns my-0">
+            <div className="column is-3 py-1">ID</div>
+            <div className="column is-8 py-1">{log.id}</div>
           </div>
-
-        </div>}
-
-        {notEmptyJSON(query_params) && query_params !== data && <div className="card my-3">
-
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Request query params</p>
+          <div className="columns my-0">
+            <div className="column is-3 py-1">Date</div>
+            <div className="column is-8 py-1">{formatDateTimeLong(log.requested_at)}</div>
           </div>
+          <div className="columns my-0">
+            <div className="column is-3 py-1">Origin</div>
+            <div className="column is-8 py-1">{log.host}</div>
+          </div>
+          <div className="columns my-0">
+            <div className="column is-3 py-1">IP Address</div>
+            <div className="column is-8 py-1">{log.remote_addr}</div>
+          </div>
+        </div>
 
-          <div className="card-content py-3">
+
+        {notEmptyJSON(response) && <>
+
+          <h2 className="title is-5 my-4">Response body</h2>
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+          <Expandable className="py-3">
+            <pre>
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: hljs.highlight(response as string, { language: 'json' }).value,
+                }}
+              />
+            </pre>
+          </Expandable>
+
+        </>}
+
+
+        {notEmptyJSON(data) && <>
+
+          <h2 className="title is-5 my-4">Request {log?.method} body</h2>
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+          <Expandable className="py-3">
+            <pre>
+              <code
+                dangerouslySetInnerHTML={{
+                  __html: hljs.highlight(data as string, { language: 'json' }).value,
+                }}
+              />
+            </pre>
+          </Expandable>
+
+        </>}
+
+
+        {notEmptyJSON(query_params) && query_params !== data && <>
+
+          <h2 className="title is-5 my-4">Request query params</h2>
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+
+          <div className="py-3">
             <pre>
               <code
                 dangerouslySetInnerHTML={{
@@ -88,53 +128,22 @@ export default withSessionCookies(function (pageProps) {
             </pre>
           </div>
 
-        </div>}
+        </>}
 
-        {notEmptyJSON(data) && <div className="card my-3">
+      </>}
+    </>
+  );
+};
 
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Request {log?.method} body</p>
-          </div>
 
-          <div className="card-content py-3">
-            <pre>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(data as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+export default function LogPage(pageProps: any) {
 
-        </div>}
-
-        {notEmptyJSON(response) && <div className="card my-3">
-
-          <div className="log-card-header px-5 pt-5 pb-3">
-            <p className="title is-4">Response body</p>
-          </div>
-
-          <div className="card-content py-3">
-            <pre>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(response as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
-
-        </div>}
-      </>
-    );
-  };
-
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Log - {(pageProps as any).references?.app_name}</title></Head>
       <LogProvider>
-        <Component />
+        <LogComponent />
       </LogProvider>
     </DashboardLayout>
   ), pageProps);
-})
+}

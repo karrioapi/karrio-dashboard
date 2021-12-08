@@ -1,3 +1,1 @@
-import CustomsInfosPage from "@/views/customs-infos";
-
-export default CustomsInfosPage;
+export { default, getServerSideProps } from "@/views/customs-infos";

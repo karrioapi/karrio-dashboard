@@ -1,69 +1,76 @@
 import React, { useContext, useState } from 'react';
-import { PurplshipClient, ShipmentList } from '@/api/index';
-import { RestContext } from '@/client/context';
-import { RequestError } from '@/lib/types';
-import { getCursorPagination, isNone } from '@/lib/helper';
+import { LazyQueryResult, useLazyQuery } from '@apollo/client';
+import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@/purplship/graphql';
+import { ShipmentType } from '@/lib/types';
+import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
-import { ListRequest } from '@/api/generated/apis/ShipmentsApi';
 
-const DEFAULT_PAGINATED_RESULT = { results: [] };
-type RequestOptions = { cursor?: string } & ListRequest;
+const PAGE_SIZE = 20;
+const PAGINATION = { offset: 0, first: PAGE_SIZE };
 
-type ResultType = ShipmentList & {
-  error?: RequestError;
-  called: boolean;
-  loading: boolean;
-  load: (options?: RequestOptions) => void;
-  loadMore: (options?: RequestOptions) => void;
-  refetch: (options?: RequestOptions) => void;
+export interface ShipmentsFilterType extends get_shipmentsVariables { };
+type Edges = (get_shipments_shipments_edges | null)[];
+type ShipmentsType = LazyQueryResult<get_shipments, ShipmentsFilterType> & {
+  shipments: ShipmentType[];
+  next?: number | null;
+  previous?: number | null;
+  variables: ShipmentsFilterType;
+  load: (options?: ShipmentsFilterType) => Promise<void>;
+  loadMore: (options?: ShipmentsFilterType) => Promise<void>;
 };
-export const Shipments = React.createContext<ResultType>({} as ResultType);
+
+export const ShipmentsContext = React.createContext<ShipmentsType>({} as ShipmentsType);
 
 const ShipmentsProvider: React.FC = ({ children }) => {
-  const purplship = useContext(RestContext);
   const { testMode } = useContext(AppMode);
-  const [result, setValue] = useState<ShipmentList>(DEFAULT_PAGINATED_RESULT);
-  const [error, setError] = useState<RequestError>();
-  const [called, setCalled] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [options, setCursor] = useState<RequestOptions>({ cursor: '' });
+  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, { notifyOnNetworkStatusChange: true });
+  const [variables, setVariables] = useState<ShipmentsFilterType & { offset: number }>(PAGINATION);
 
-  const loadMore = async (options: RequestOptions = {}) => {
-    const { cursor, status } = options;
-    const params = {
-      testMode: testMode,
-      ...getCursorPagination(cursor),
-      ...(isNone(status) ? {} : { status })
-    };
+  const extract = (edges?: Edges) => (edges || []).map(item => item?.node as ShipmentType);
+  const fetchMore = (options: any) => query?.fetchMore && query.fetchMore(options);
 
-    setCursor(params);
-    setLoading(true);
+  const loadMore = (options: ShipmentsFilterType = {}) => {
+    const params = Object.keys(options).reduce((acc, key) => {
+      return isNoneOrEmpty(options[key as keyof ShipmentsFilterType]) ? acc : {
+        ...acc,
+        [key]: (
+          ["carrier_name", "status", "service"].includes(key)
+            ? [].concat(options[key as keyof ShipmentsFilterType]).reduce(
+              (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            )
+            : options[key as keyof ShipmentsFilterType]
+        )
+      };
+    }, { ...PAGINATION, test_mode: testMode });
 
-    return (purplship as PurplshipClient).shipments
-      .list(params)
-      .then(setValue)
-      .catch(setError)
-      .then(() => setLoading(false));
+    const requestVariables = { ...params };
+
+    insertUrlParam(requestVariables);
+    setVariables(requestVariables);
+
+    if (query.called) {
+      return Promise.resolve(fetchMore({ variables: requestVariables })?.then(response => {
+        setVariables(requestVariables);
+        return response;
+      }));
+    }
+
+    return Promise.resolve(initialLoad({ variables: requestVariables }));
   };
-  const load = async (options?: RequestOptions) => {
-    setCalled(true);
-
-    return loadMore(options);
-  };
-  const refetch = async () => loadMore(options);
+  const load = (options?: ShipmentsFilterType) => loadMore(options);
 
   return (
-    <Shipments.Provider value={{
+    <ShipmentsContext.Provider value={{
       load,
       loadMore,
-      called,
-      loading,
-      error,
-      refetch,
-      ...result
-    }}>
+      variables,
+      shipments: extract(query?.data?.shipments?.edges),
+      next: query.data?.shipments?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
+      ...query
+    } as ShipmentsType}>
       {children}
-    </Shipments.Provider>
+    </ShipmentsContext.Provider>
   );
 };
 

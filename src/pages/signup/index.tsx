@@ -1,11 +1,11 @@
-import { References } from "@/api";
+import { References } from "@/purplship/rest";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
 import UserMutation from "@/context/user-mutation";
-import { RegisterUserInput, register_user_register_user_errors } from "@/graphql";
+import { RegisterUserInput, register_user_register_user_errors } from "@/purplship/graphql";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -105,7 +105,8 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
 
 
             <ButtonField type="submit"
-              className={`is-primary is-fullwidth ${loading ? 'is-loading' : ''} mt-6`}
+              disabled={loading}
+              className={`is-primary is-fullwidth mt-6`}
               controlClass="has-text-centered">
               <span>Create account</span>
             </ButtonField>

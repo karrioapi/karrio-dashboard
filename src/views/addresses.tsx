@@ -1,28 +1,30 @@
 import AddressEditModal, { AddressEditContext } from "@/components/address-edit-modal";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
-import TemplateMutation from "@/context/template-mutation";
 import { isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
+import AddressMutationProvider, { AddressMutationContext } from "@/context/address-template-mutation";
+
+export { getServerSideProps } from '@/lib/middleware';
 
 
-export default withSessionCookies(function (pageProps) {
-  const Component: React.FC<any> = ({ deleteTemplate }) => {
+export default function AddressPage(pageProps: any) {
+  const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editAddress } = useContext(AddressEditContext);
+    const { deleteAddressTemplate } = useContext(AddressMutationContext);
     const { loading, templates, next, previous, load, loadMore, refetch } = useContext(AddressTemplates);
 
     const update = async (_?: React.MouseEvent) => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteTemplate(id);
+      await deleteAddressTemplate(id);
       update();
     };
 
@@ -114,23 +116,21 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => {
-    const Wrapped = TemplateMutation<{}>(({ deleteTemplate }) => (
-      <DashboardLayout>
-        <GoogleGeocodingScript />
-        <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
-        <AddressTemplatesProvider>
+  return AuthenticatedPage((
+    <DashboardLayout>
+      <GoogleGeocodingScript />
+      <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <AddressTemplatesProvider>
+        <AddressMutationProvider>
           <ConfirmModal>
             <AddressEditModal>
 
-              <Component deleteTemplate={deleteTemplate} />
+              <Component />
 
             </AddressEditModal>
           </ConfirmModal>
-        </AddressTemplatesProvider>
-      </DashboardLayout>
-    ));
-
-    return <Wrapped />;
-  }, pageProps);
-})
+        </AddressMutationProvider>
+      </AddressTemplatesProvider>
+    </DashboardLayout>
+  ), pageProps);
+}

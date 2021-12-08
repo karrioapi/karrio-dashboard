@@ -1,4 +1,4 @@
-import { Shipment } from '@/api/index';
+import { Shipment } from '@/purplship/rest/index';
 import React, { FormEvent, useContext, useReducer } from 'react';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
@@ -6,7 +6,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
 import { cleanDict, deepEqual, isNone } from '@/lib/helper';
 import { CURRENCY_OPTIONS, NotificationType } from '@/lib/types';
-import ShipmentMutation from '@/context/shipment-mutation';
+import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -28,9 +28,10 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
   };
 }
 
-const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ShipmentMutation<ShipmentOptionsComponent>(({ shipment, update, setOptions }) => {
+const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update }) => {
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
+  const { setOptions } = useContext(ShipmentMutationContext);
   const [options, dispatch] = useReducer(reducer, shipment?.options, () => shipment?.options);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +152,6 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ShipmentMutation<Shi
 
     </form>
   )
-});
+};
 
 export default ShipmentOptions;

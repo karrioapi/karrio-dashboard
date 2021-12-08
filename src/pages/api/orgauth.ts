@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
-import { orgToken } from '@/pages/api/auth/[...nextauth]';
-import { refreshToken } from '@/client/context';
+import { OrgToken, refreshToken } from '@/client/context';
 import { getToken } from 'next-auth/jwt';
 import { getSession } from 'next-auth/client';
 
@@ -15,7 +14,7 @@ export default async function OrgAPI(req: NextApiRequest, res: NextApiResponse) 
     const current = await getToken({ req, secret, encryption: true });
 
     const token = await refreshToken(current?.refreshToken as string, orgId);
-    orgToken.next(token);
+    OrgToken.next(token);
 
     await getSession({ req });
 

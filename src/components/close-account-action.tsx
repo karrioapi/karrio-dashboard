@@ -2,10 +2,13 @@ import { NotificationType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
 import UserMutation from '@/context/user-mutation';
 import { Notify } from '@/components/notifier';
+import { signOut } from 'next-auth/client';
+import { useRouter } from 'next/dist/client/router';
 
 interface CloseAccountActionComponent extends React.InputHTMLAttributes<HTMLDivElement> { }
 
 const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<CloseAccountActionComponent>(({ children, closeAccount }) => {
+  const router = useRouter();
   const { notify } = useContext(Notify);
   const [isActive, setIsActive] = useState<boolean>(false);
   const close = (evt: React.MouseEvent) => {
@@ -16,7 +19,8 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<C
     evt.preventDefault();
     try {
       await closeAccount();
-      window.location.pathname = '/logout';
+      signOut();
+      router.push('/login');
     } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }

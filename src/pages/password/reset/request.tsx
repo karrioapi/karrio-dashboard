@@ -1,14 +1,15 @@
-import { References } from "@/api";
+import { References } from "@/purplship/rest";
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider from "@/components/loader";
 import APIReferenceProvider from "@/context/references-provider";
-import { request_password_reset, REQUEST_PASSWORD_RESET } from "@/graphql";
+import { request_password_reset, REQUEST_PASSWORD_RESET } from "@/purplship/graphql";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
+import { p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -24,11 +25,14 @@ export default function Page({ references }: { references: References }) {
       e.preventDefault();
       const { data } = await send_request({
         variables: {
-          data: { email: email.current?.value, redirect_url: `${location.origin}/password/reset` }
+          data: {
+            email: email.current?.value,
+            redirect_url: location.origin + p`/password/reset`
+          }
         }
       }) as { data: request_password_reset };
 
-      if ((data?.request_password_reset?.errors || []).length === 0) router.push('/password/reset/sent')
+      if ((data?.request_password_reset?.errors || []).length === 0) router.push(`/password/reset/sent`)
     };
 
     return (
@@ -47,7 +51,8 @@ export default function Page({ references }: { references: References }) {
               </div>
 
               <ButtonField type="submit"
-                className={`is-primary is-fullwidth ${loading ? 'is-loading' : ''} mt-6`}
+                disabled={loading}
+                className={`is-primary is-fullwidth mt-6`}
                 controlClass="has-text-centered">
                 <span>Reset my password</span>
               </ButtonField>

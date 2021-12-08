@@ -1,5 +1,5 @@
 import { Collection } from '@/lib/types';
-import { CarrierSettingsCarrierNameEnum } from '@/api/index';
+import { CarrierSettingsCarrierNameEnum } from '@/purplship/rest/index';
 import React, { useContext } from 'react';
 import { APIReference } from '@/context/references-provider';
 
@@ -11,6 +11,7 @@ const THEME: Collection = {
   'canpar': 'is-canpar',
   'dicom': 'is-dicom',
   'dhl_express': 'is-dhl',
+  'dhl_poland': 'is-dhl',
   'dhl_universal': 'is-dhl',
   'eshipper': 'is-eshipper',
   'fedex': 'is-fedex',

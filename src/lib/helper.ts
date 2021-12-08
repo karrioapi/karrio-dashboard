@@ -1,5 +1,6 @@
-import { Shipment } from "@/api/index";
-import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError } from "@/lib/types";
+import { Shipment } from "@/purplship/rest/index";
+import { BASE_PATH } from "@/client/context";
+import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 
 
 const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
@@ -21,6 +22,10 @@ export function formatDateTime(date_string: string): string {
 
 export function formatDateTimeLong(date_string: string): string {
   return DATE_TIME_FORMAT_LONG.format(new Date(date_string));
+}
+
+export function formatDayDate(date_string: string): string {
+  return new Date(date_string).toUTCString().split(' ').slice(0, 4).join(' ')
 }
 
 export function notEmptyJSON(value?: string | null): boolean {
@@ -88,7 +93,7 @@ export function formatValues(separator: string, ...args: any[]): string {
 }
 
 export function formatDimension(parcel?: Partial<ParcelType>): string {
-  if (parcel !== undefined) {
+  if (parcel !== undefined && parcel !== null) {
 
     const { dimension_unit, height, length, width } = parcel;
     let formatted = formatValues(' x ', width, height, length);
@@ -99,7 +104,7 @@ export function formatDimension(parcel?: Partial<ParcelType>): string {
 }
 
 export function formatWeight(parcel?: Partial<ParcelType> | Partial<CommodityType>): string {
-  if (parcel !== undefined) {
+  if (parcel !== undefined && parcel !== null) {
 
     const { weight, weight_unit } = parcel;
 
@@ -112,9 +117,14 @@ export function isNone(value: any): boolean {
   return value === null || value === undefined;
 }
 
+export function isNoneOrEmpty(value: any): boolean {
+  return isNone(value) || value === "" || value === [];
+}
+
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {
   const clean_value1 = Object.entries(value1 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
   const clean_value2 = Object.entries(value2 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
+
 
   return (
     JSON.stringify(clean_value1, Object.keys(clean_value1 || {}).sort()) ===
@@ -183,7 +193,7 @@ export function createServerError(error: ServerError) {
   return error;
 }
 
-export function getCursorPagination(cursor?: string): { limit?: number; offset?: number; } {
+export function getCursorPagination(cursor?: string | null): { limit?: number; offset?: number; } {
   const [_, queryString] = (cursor || '').split('?');
   const params = (queryString || '').split('&');
 
@@ -196,7 +206,7 @@ export function getCursorPagination(cursor?: string): { limit?: number; offset?:
   };
 }
 
-export function shipmentCarrier(shipment: Shipment) {
+export function shipmentCarrier(shipment: ShipmentType) {
   return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
 }
 
@@ -208,3 +218,32 @@ export const parseJwt = (token: string): any => {
     return {};
   }
 };
+
+export function p(strings: TemplateStringsArray, ...keys: any[]) {
+  const base = (keys || []).reduce((acc, key, i) => acc + strings[i] + key, '');
+  const template = `${base}${strings[strings.length - 1]}`;
+
+  return `${BASE_PATH}/${template}`
+    .replaceAll('///', '/')
+    .replaceAll('//', '/');
+}
+
+export function getURLSearchParams() {
+  const query = new URLSearchParams(location.search);
+  return [...query.keys() as any].reduce(
+    (acc, key) => ({ ...acc, [key]: query.get(key) }),
+    {}
+  );
+}
+
+export function insertUrlParam(params: {}) {
+  if (window.history.pushState) {
+    let searchParams = new URLSearchParams(params);
+    let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+    window.history.pushState({ path: newurl }, '', newurl);
+  }
+}
+
+export function jsonify(value: any): string {
+  return JSON.stringify(typeof value == 'string' ? JSON.parse(value) : value, null, 2);
+}

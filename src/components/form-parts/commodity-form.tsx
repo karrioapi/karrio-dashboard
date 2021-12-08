@@ -1,5 +1,5 @@
 import React from "react";
-import { CommodityDataWeightUnitEnum, CommodityWeightUnitEnum } from "@/api";
+import { CommodityDataWeightUnitEnum, CommodityWeightUnitEnum } from "@/purplship/rest";
 import { CommodityType, CURRENCY_OPTIONS, NotificationType, WEIGHT_UNITS } from "@/lib/types";
 import { FormEvent, useContext, useReducer, useRef, useState } from "react";
 import { Notify } from "@/components/notifier";
@@ -8,7 +8,6 @@ import InputField from "@/components/generic/input-field";
 import SelectField from "@/components/generic/select-field";
 import { deepEqual, isNone } from "@/lib/helper";
 import CountryInput from "@/components/generic/country-input";
-import ShipmentMutation from "@/context/shipment-mutation";
 import { Loading } from "@/components/loader";
 import TextAreaField from "@/components/generic/textarea-field";
 
@@ -33,7 +32,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
   }
 }
 
-const CommodityForm: React.FC<CommodityTypeFormComponent> = ShipmentMutation<CommodityTypeFormComponent>(({ value, update }) => {
+const CommodityForm: React.FC<CommodityTypeFormComponent> = ({ value, update }) => {
   const form = useRef<HTMLFormElement>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
@@ -104,6 +103,6 @@ const CommodityForm: React.FC<CommodityTypeFormComponent> = ShipmentMutation<Com
 
     </form>
   )
-});
+};
 
 export default CommodityForm;

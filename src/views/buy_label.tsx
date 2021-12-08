@@ -3,12 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import CustomsInfoForm from '@/components/form-parts/customs-info-form';
 import AddressForm from '@/components/form-parts/address-form';
 import ShipmentOptions from '@/components/form-parts/shipment-options';
-import ParcelForm from '@/components/form-parts/parcel-form';
+import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import LiveRates from '@/components/live-rates';
 import Tabs from '@/components/generic/tabs';
-import { Shipment, ShipmentStatusEnum } from '@/api/index';
-import { isNone } from '@/lib/helper';
-import { APIReference } from '@/context/references-provider';
+import { Shipment, ShipmentStatusEnum } from '@/purplship/rest/index';
+import { isNone, p } from '@/lib/helper';
 import ShipmentProvider, { LabelData, } from '@/context/shipment-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Notify } from '@/components/notifier';
@@ -18,24 +17,25 @@ import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import DashboardLayout from '@/layouts/dashboard-layout';
-import AuthorizedPage from '@/layouts/authorized-page';
+import AuthenticatedPage from '@/layouts/authenticated-page';
 import AppLink from '@/components/app-link';
 import TemplatesProvider from '@/context/default-templates-provider';
-import { withSessionCookies } from '@/lib/middleware';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
+import ShipmentMutationProvider from '@/context/shipment-mutation';
+
+export { getServerSideProps } from "@/lib/middleware";
 
 
-export default withSessionCookies(function (pageProps) {
+export default function LabelPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
     const { notify } = useContext(Notify);
     const { basePath } = useContext(AppMode);
-    const { countries } = useContext(APIReference);
-    const { shipment, loading, loadShipment, updateShipment } = useContext(LabelData);
-    const { default_address, ...template } = useContext(DefaultTemplatesData);
+    const { shipment, called, loading, loadShipment, updateShipment } = useContext(LabelData);
+    const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
     const tabs = ["shipper", "recipient", "parcel", "customs info", "options"];
     const [ready, setReady] = useState<boolean>(false);
     const [ckey, setKey] = useState<string>(`${id}-${Date.now()}`);
@@ -46,19 +46,11 @@ export default withSessionCookies(function (pageProps) {
     };
 
     useEffect(() => {
-      if (!loading && shipment?.id !== id) {
+      if (!called && !loading) {
         loadShipment(id as string)
           .then(({ status, messages }) => {
             if (isNone(status) || status === ShipmentStatusEnum.Created) {
               setKey(`${id}-${Date.now()}`);
-              if ((messages || []).length > 0) {
-                const error: APIError = {
-                  error: { code: "notes", details: { messages } as APIError['error']['details'] }
-                };
-                const message = new RequestError(error);
-
-                notify({ type: NotificationType.warning, message });
-              }
             } else {
               notify({ type: NotificationType.info, message: 'Label already purchased!' });
               router.push(basePath);
@@ -66,20 +58,24 @@ export default withSessionCookies(function (pageProps) {
           });
       }
     }, []);
-    useEffect(() => { if (!template.loading) template.load(); }, []);
-    useEffect(() => { if (!isNone(countries) && !isNone(default_address)) setReady(true); }, [countries, default_address]);
+    useEffect(() => {
+      if (!template.called && !template.loading && template.load) template.load();
+    }, []);
+    useEffect(() => {
+      if (!ready && called && template.called) setReady(true);
+    }, [template.called, called]);
 
     return (
       <>
         <ModeIndicator />
         <nav className="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
           <ul>
-            <li><AppLink href="">Shipments</AppLink></li>
+            <li><AppLink href="/">Shipments</AppLink></li>
             <li className="is-active"><a href="#" aria-current="page">Create Label</a></li>
           </ul>
         </nav>
 
-        {(ready && Object.keys(shipment || {}).length > 0) && <div className="columns px-2 pb-6">
+        {ready && <div className="columns px-2 pb-6">
           <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
 
             <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
@@ -89,7 +85,7 @@ export default withSessionCookies(function (pageProps) {
 
                 <AddressForm key={`${ckey}-recipient`} value={shipment.recipient} shipment={shipment} update={update} name="recipient" />
 
-                <ParcelForm key={`${ckey}-parcel`} value={shipment.parcels[0]} shipment={shipment} update={update} />
+                <ParcelForm key={`${ckey}-parcel`} value={shipment.parcels[0] || default_parcel || DEFAULT_PARCEL_CONTENT} shipment={shipment} update={update} />
 
                 <CustomsInfoForm key={`${ckey}-customs`} value={shipment.customs} shipment={shipment} update={update} />
 
@@ -114,7 +110,7 @@ export default withSessionCookies(function (pageProps) {
     )
   };
 
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>
@@ -122,17 +118,18 @@ export default withSessionCookies(function (pageProps) {
         <TemplatesProvider>
           <ParcelTemplatesProvider>
             <AddressTemplatesProvider>
+              <ShipmentMutationProvider>
 
-              <Component />
+                <Component />
 
+              </ShipmentMutationProvider>
             </AddressTemplatesProvider>
           </ParcelTemplatesProvider>
         </TemplatesProvider>
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);
-})
-
+}
 
 function filterDisabled(tabs: string[], shipment: Shipment) {
   return tabs.reduce((disabled: string[], value: string) => {

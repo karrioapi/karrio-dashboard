@@ -1,55 +1,62 @@
-import AppLink from "@/components/app-link";
-import AuthorizedPage from "@/layouts/authorized-page";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import Spinner from "@/components/spinner";
 import StatusCode from "@/components/status-code-badge";
-import { AppMode } from "@/context/app-mode-provider";
-import LogsProvider, { Logs } from "@/context/logs-provider";
-import { formatDateTimeLong, isNone } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
+import LogsProvider, { LogsContext } from "@/context/logs-provider";
+import { formatDateTimeLong, getURLSearchParams, isNone, p } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
+import LogsFilter from "@/components/filters/logs-filter";
+import LogPreview, { LogPreviewContext } from "@/components/descriptions/log-preview";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 
-export default withSessionCookies(function (pageProps) {
+export default function LogsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
-    const { basePath } = useContext(AppMode);
     const { setLoading } = useContext(Loading);
-    const { loading, called, logs, next, previous, load, loadMore } = useContext(Logs);
-    const [status, setStatus] = React.useState<string>();
+    const { previewLog } = useContext(LogPreviewContext);
+    const { loading, called, logs, next, previous, variables, load, loadMore } = useContext(LogsContext);
+    const [filters, setFilters] = React.useState<typeof variables>(variables);
 
-    const viewLog = (id: string) => (_: React.MouseEvent) => {
-      router.push(`${basePath}/developers/logs/` + id);
-    };
+    const fetchLogs = (extra: Partial<typeof variables> = {}) => {
+      const query = {
+        ...filters,
+        ...getURLSearchParams(),
+        ...extra
+      };
 
-    useEffect(() => { setLoading(loading); });
+      setFilters(query);
+      (!loading) && (called ? loadMore : load)(query);
+    }
+
     useEffect(() => {
-      const newStatus = (new URLSearchParams(location.search)).get('status') as string || undefined;
-
-      setStatus(newStatus);
-      (!loading) && (called ? loadMore : load)({ status: newStatus });
-    }, [location.search]);
+      window.setTimeout(() => setLoading(loading), 1000);
+    });
+    useEffect(() => { fetchLogs(); }, [router.query]);
+    useEffect(() => { setFilters({ ...variables }); }, [variables]);
 
     return (
       <>
 
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Logs</span>
+          <LogsFilter />
         </header>
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(status) ? 'is-active' : ''}`}>
-              <AppLink href="/developers/logs">all</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
+              <a onClick={() => !isNone(filters?.status) && fetchLogs({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'succeeded' ? 'is-active' : ''}`}>
-              <AppLink href="/developers/logs?status=succeeded">succeeded</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === 'succeeded' ? 'is-active' : ''}`}>
+              <a onClick={() => filters?.status !== 'succeeded' && fetchLogs({ status: 'succeeded', offset: 0 })}>succeeded</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${status === 'failed' ? 'is-active' : ''}`}>
-              <AppLink href="/developers/logs?status=failed">failed</AppLink>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === 'failed' ? 'is-active' : ''}`}>
+              <a onClick={() => filters?.status !== 'failed' && fetchLogs({ status: 'failed', offset: 0 })}>failed</a>
             </li>
           </ul>
         </div>
@@ -69,7 +76,7 @@ export default withSessionCookies(function (pageProps) {
 
               {logs.map((log) => (
 
-                <tr key={log.id} onClick={viewLog(log.id)}>
+                <tr key={log.id} onClick={() => previewLog(log.id)}>
                   <td className="status"><StatusCode code={log.status_code as number} /></td>
                   <td className="description">{`${log.method} ${log.path}`}</td>
                   <td className="date has-text-right">
@@ -86,8 +93,8 @@ export default withSessionCookies(function (pageProps) {
             <span className="is-size-7 has-text-weight-semibold">{logs.length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ offset: previous })} disabled={isNone(previous)}>Previous</button>
-              <button className="button is-small" onClick={() => loadMore({ offset: next })} disabled={isNone(next)}>Next</button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
+              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
           </footer>
 
@@ -97,8 +104,8 @@ export default withSessionCookies(function (pageProps) {
         {(!loading && logs.length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
-            <p>No API logs has been captured yet.</p>
-            <p>Use the <strong>API</strong> to communicate with your logistic providers.</p>
+            <p>No API logs found.</p>
+            <p>Use the <strong>API</strong> to send shipping requests.</p>
           </div>
 
         </div>}
@@ -107,12 +114,14 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Logs - {(pageProps as any).references?.app_name}</title></Head>
       <LogsProvider>
-        <Component />
+        <LogPreview>
+          <Component />
+        </LogPreview>
       </LogsProvider>
     </DashboardLayout>
   ), pageProps)
-})
+}

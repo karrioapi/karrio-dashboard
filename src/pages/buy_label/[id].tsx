@@ -1,3 +1,1 @@
-import BuyLabelPage from "@/views/buy_label";
-
-export default BuyLabelPage;
+export { default, getServerSideProps } from "@/views/buy_label";

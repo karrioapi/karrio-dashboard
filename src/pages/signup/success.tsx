@@ -1,4 +1,4 @@
-import { References } from "@/api";
+import { References } from "@/purplship/rest";
 import SectionLayout from "@/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import { NextPage } from "next";

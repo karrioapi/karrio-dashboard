@@ -5,10 +5,12 @@ export interface InputFieldComponent extends React.InputHTMLAttributes<HTMLInput
   label?: string;
   fieldClass?: string;
   controlClass?: string;
+  addonRight?: JSX.Element;
+  addonLeft?: JSX.Element;
   ref?: RefObject<HTMLInputElement>;
 }
 
-const InputField: React.FC<InputFieldComponent> = ({ label, required, className, fieldClass, controlClass, children, ref, ...props }) => {
+const InputField: React.FC<InputFieldComponent> = ({ label, required, className, fieldClass, controlClass, children, ref, addonLeft, addonRight, ...props }) => {
   const Ref = isNone(ref) ? { ref } : {};
   const Props = {
     required,
@@ -22,10 +24,12 @@ const InputField: React.FC<InputFieldComponent> = ({ label, required, className,
         {label}
         {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
       </label>}
-      <div className={`control ${controlClass}`}>
+      {addonLeft && addonLeft}
+      <p className={`control ${controlClass}`}>
         <input type="text" className={`input ${className}`} {...Props} {...Ref} />
         {children}
-      </div>
+      </p>
+      {addonRight ? addonRight : <></>}
     </div>
   )
 };

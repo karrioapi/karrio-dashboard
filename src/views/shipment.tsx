@@ -1,5 +1,5 @@
-import { Customs, ShipmentStatusEnum } from "@/api";
-import AuthorizedPage from "@/layouts/authorized-page";
+import { Customs, ShipmentStatusEnum } from "@/purplship/rest";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter, { CustomInvoicePrinterContext } from "@/components/descriptions/custom-invoice-printer";
@@ -8,22 +8,22 @@ import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { LabelData } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
-import { withSessionCookies } from "@/lib/middleware";
+import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+export { getServerSideProps } from "@/lib/middleware";
 
 
-export default withSessionCookies(function (pageProps) {
+export default function ShipmentPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { basePath } = useContext(AppMode);
     const { setLoading } = useContext(Loading);
     const { printLabel } = useContext(LabelPrinterContext);
     const { printInvoice } = useContext(CustomInvoicePrinterContext);
-    const [key] = useState<string>(`shipment-${Date.now()}`);
     const { shipment, loading, loadShipment } = useContext(LabelData);
     const { id } = router.query;
 
@@ -73,7 +73,7 @@ export default withSessionCookies(function (pageProps) {
               <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
               <div className="p-4 mr-4">
                 <span className="subtitle is-size-7 my-4">Courier</span><br />
-                <Image src={`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={40} alt="logo" className="mt-1" />
+                <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={40} alt="logo" className="mt-1" />
               </div>
 
               <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
@@ -176,12 +176,12 @@ export default withSessionCookies(function (pageProps) {
               <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">PARCELS</p>
 
-                {shipment.parcels.map((parcel) => <>
+                {shipment.parcels.map((parcel, index) => <React.Fragment key={index + "parcel-info"}>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                   <p className="is-size-7 my-1">{formatParcelLabel(parcel)}</p>
                   <p className="is-size-7 my-1 has-text-grey">{formatDimension(parcel)}</p>
                   <p className="is-size-7 my-1 has-text-grey">{formatWeight(parcel)}</p>
-                </>)}
+                </React.Fragment>)}
               </div>
             </div>
 
@@ -192,10 +192,10 @@ export default withSessionCookies(function (pageProps) {
 
                 <p className="is-size-6 my-1">{formatCustomsLabel(shipment.customs as Customs)}</p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.aes) && <span>AES: <strong>{shipment.customs?.aes}</strong></span>}
+                  {!isNone(shipment.customs?.options?.aes) && <span>AES: <strong>{shipment.customs?.options?.aes}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.eel_pfc) && <span>EEL / PFC: <strong>{shipment.customs?.eel_pfc}</strong></span>}
+                  {!isNone(shipment.customs?.options?.eel_pfc) && <span>EEL / PFC: <strong>{shipment.customs?.options?.eel_pfc}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
                   {!isNone(shipment.customs?.invoice) && <span>Invoice Number: <strong>{shipment.customs?.invoice}</strong></span>}
@@ -204,7 +204,7 @@ export default withSessionCookies(function (pageProps) {
                   {!isNone(shipment.customs?.invoice_date) && <span>Invoice Date: <strong>{shipment.customs?.invoice_date}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
-                  {!isNone(shipment.customs?.certificate_number) && <span>Certificate Number: <strong>{shipment.customs?.certificate_number}</strong></span>}
+                  {!isNone(shipment.customs?.options?.certificate_number) && <span>Certificate Number: <strong>{shipment.customs?.options?.certificate_number}</strong></span>}
                 </p>
                 <p className="is-size-6 my-1 has-text-grey">
                   {!isNone(shipment.customs?.duty) && <span>Duties paid by <strong>{formatRef('' + shipment.customs?.duty?.paid_by)}</strong></span>}
@@ -220,7 +220,7 @@ export default withSessionCookies(function (pageProps) {
               {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
 
-                {(shipment.customs?.commodities || []).map((commodity) => <>
+                {(shipment.customs?.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                   <p className="is-size-7 my-1 has-text-weight-semibold">{commodity.sku}</p>
                   <p className="is-size-7 my-1">{commodity.description}</p>
@@ -230,13 +230,13 @@ export default withSessionCookies(function (pageProps) {
                     </>}
                   </p>
                   <p className="is-size-7 my-1 has-text-grey">{formatWeight(commodity)}</p>
-                </>)}
+                </React.Fragment>)}
               </div>}
 
               {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">SHIPMENT OPTIONS</p>
 
-                {[shipment.options].map((options: any) => <>
+                {[shipment.options].map((options: any, index) => <React.Fragment key={index + "parcel-info"}>
                   <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                     {!isNone(options.shipment_date) && <span>Shipment Date: <strong>{formatDate(options.shipment_date)}</strong></span>}
                   </p>
@@ -261,7 +261,7 @@ export default withSessionCookies(function (pageProps) {
                       <span>Amount To Collect <strong>{options.cash_on_delivery}</strong> {options.currency}</span>
                     </>}
                   </p>
-                </>)}
+                </React.Fragment>)}
 
               </div>}
             </div>
@@ -282,7 +282,7 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
-  return AuthorizedPage(() => (
+  return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentProvider>
@@ -296,4 +296,4 @@ export default withSessionCookies(function (pageProps) {
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);
-})
+}

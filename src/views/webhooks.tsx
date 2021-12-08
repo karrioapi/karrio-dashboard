@@ -1,5 +1,5 @@
-import { Webhook } from "@/api";
-import AuthorizedPage from "@/layouts/authorized-page";
+import { Webhook } from "@/purplship/rest";
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
@@ -9,13 +9,14 @@ import WebhookEditModal, { WebhookEditContext } from "@/components/webhook-edit-
 import WebhookTestModal from "@/components/webhook-test-modal";
 import WebhookMutation from "@/context/webhook-mutation";
 import WebhooksProvider, { Webhooks } from "@/context/webhooks-provider";
-import { withSessionCookies } from "@/lib/middleware";
 import { NotificationType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 
+export { getServerSideProps } from "@/lib/middleware";
 
-export default withSessionCookies(function (pageProps) {
+
+export default function WebhooksPage(pageProps: any) {
   const Component: React.FC<any> = ({ removeWebhook, updateWebhook }) => {
     const { notify } = useContext(Notify)
     const { setLoading } = useContext(Loading);
@@ -135,23 +136,21 @@ export default withSessionCookies(function (pageProps) {
     );
   };
 
+  const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
+    <DashboardLayout>
+      <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
 
-  return AuthorizedPage(() => {
-    const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
-      <DashboardLayout>
-        <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
+      <WebhooksProvider>
+        <WebhookEditModal>
+          <ConfirmModal>
+            <Component removeWebhook={removeWebhook} updateWebhook={updateWebhook} />
+          </ConfirmModal>
+        </WebhookEditModal>
+      </WebhooksProvider>
 
-        <WebhooksProvider>
-          <WebhookEditModal>
-            <ConfirmModal>
-              <Component removeWebhook={removeWebhook} updateWebhook={updateWebhook} />
-            </ConfirmModal>
-          </WebhookEditModal>
-        </WebhooksProvider>
+    </DashboardLayout>
+  ));
 
-      </DashboardLayout>
-    ));
 
-    return <Wrapped />;
-  }, pageProps)
-})
+  return AuthenticatedPage(<Wrapped />, pageProps)
+}

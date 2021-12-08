@@ -37,9 +37,16 @@ npm install
 
 Use the following environment variables to configure the dashboard:
 
-- `NEXT_PUBLIC_PURPLSHIP_API_URL` (**required**) - URL of a running instance of purplship-server. If you are running purplship-server locally with the default settings, set `NEXT_PUBLIC_PURPLSHIP_API_URL` to: `http://localhost:5002`.
+- `NEXT_PUBLIC_PURPLSHIP_API_URL` (**required**) - URL of a running instance of purplship server. If you are running purplship-server locally with the default settings, set `NEXT_PUBLIC_PURPLSHIP_API_URL` to: `http://localhost:5002`.
 
-- `JWT_SECRET` - A secret to use for JWT key generation - you should set this explicitly.
+- `JWT_SECRET` (**required**) - A secret to use for JWT key generation - you should set this explicitly.
+
+- `NEXTAUTH_URL` (**required**) - The URL of your dashboard to restrict the authentication host to your instance. If you are running the dashboard locally, set `NEXTAUTH_URL` to: `http://localhost:3000`.
+
+- `PURPLSHIP_HOSTNAME` - URL of a running instance of purplship server. Useful for an ingress network request from the node side of the dashboard.
+
+- `BASE_PATH` - A base path to use for deploying the dashboard to a domain subpath. e.g. `instance.purplship.com/dashboard`
+
 
 #### Development
 
