@@ -1,4 +1,5 @@
 import { BASE_PATH, TEST_BASE_PATH } from "@/client/context";
+import { insertUrlParam } from "@/lib/helper";
 import React from "react";
 
 
@@ -23,7 +24,7 @@ export const AppMode = React.createContext<AppModeType>({} as AppModeType);
 const AppModeProvider: React.FC<{ pathname: string }> = ({ children, pathname }) => {
   const switchMode = () => {
     const isTestMode = computeMode(pathname);
-
+    insertUrlParam({});
     if (isTestMode) window.location.pathname = pathname.replace(TEST_BASE_PATH, '');
     else window.location.replace(TEST_BASE_PATH + pathname);
   };
