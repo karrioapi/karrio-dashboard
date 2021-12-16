@@ -169,11 +169,11 @@ export default function TrackersPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
-      <TrackerMutationProvider>
-        <TrackerModalProvider>
-          <TrackersProvider>
-            <UserConnectionsProvider>
-              <SystemConnectionsProvider>
+      <UserConnectionsProvider>
+        <SystemConnectionsProvider>
+          <TrackerMutationProvider>
+            <TrackerModalProvider>
+              <TrackersProvider>
                 <TrackingPreview>
                   <ConfirmModal>
 
@@ -181,11 +181,11 @@ export default function TrackersPage(pageProps: any) {
 
                   </ConfirmModal>
                 </TrackingPreview>
-              </SystemConnectionsProvider>
-            </UserConnectionsProvider>
-          </TrackersProvider>
-        </TrackerModalProvider>
-      </TrackerMutationProvider>
+              </TrackersProvider>
+            </TrackerModalProvider>
+          </TrackerMutationProvider>
+        </SystemConnectionsProvider>
+      </UserConnectionsProvider>
     </DashboardLayout>
   ), pageProps)
 }
