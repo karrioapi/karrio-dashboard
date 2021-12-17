@@ -8,7 +8,6 @@ import { deepEqual, findPreset, formatDimension, formatRef, isNone } from '@/lib
 import { DIMENSION_UNITS, NotificationType, PresetCollection, WEIGHT_UNITS } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { ParcelTemplates } from '@/context/parcel-templates-provider';
-import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
@@ -217,7 +216,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
         className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
-        disabled={deepEqual(value || DEFAULT_PARCEL_CONTENT, parcel)}>
+        disabled={deepEqual(DEFAULT_PARCEL_CONTENT, parcel)}>
         <span>Save</span>
       </ButtonField>
 
