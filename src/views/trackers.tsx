@@ -36,7 +36,7 @@ export default function TrackersPage(pageProps: any) {
 
     const remove = (id?: string) => async () => {
       await removeTracker(id as string);
-      fetchTrackers;
+      fetchTrackers();
     };
     const fetchTrackers = (extra: Partial<typeof variables> = {}) => {
       const query = {

@@ -168,7 +168,6 @@ export default function ShipmentsPage(pageProps: any) {
                 <Component />
 
               </ShipmentPreview>
-
             </ShipmentsProvider>
           </CustomInvoicePrinter>
         </LabelPrinter>

@@ -238,7 +238,6 @@ export function getURLSearchParams() {
 
 export function insertUrlParam(params: {} | any) {
   if (window.history.pushState) {
-    !isNone(params.test_mode) && delete params.test_mode;
     let searchParams = new URLSearchParams(params);
     let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
     if (newurl.endsWith('?')) {
