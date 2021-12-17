@@ -41,7 +41,7 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
 
     useEffect(() => {
       if (session === null || session?.error === "RefreshAccessTokenError") {
-        router.push('/login?next=' + window.location.pathname);
+        router.push('/login?next=' + window.location.pathname + window.location.search);
       }
       if (session?.accessToken) {
         AuthToken.next({ access: session?.accessToken } as TokenPair);
