@@ -260,7 +260,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         </div>
 
         {/* Commodities */}
-        <div className="columns p-2 my-2">
+        <div className="columns p-2 my-2 is-relative">
           <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
             <p className="panel-heading select is-fullwidth px-2 pt-3" onClick={() => setCommoditiesExpanded(!commoditiesExpanded)}>
               <span className="is-size-6">Customs commodities</span>
@@ -297,6 +297,15 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
 
             </div>}
           </article>
+
+          <input
+            required
+            name="commodities"
+            style={{ position: 'absolute', top: 40, left: 60, zIndex: -10 }}
+            onChange={() => { }}
+            onInvalid={e => (e.target as any).setCustomValidity('Please add at least one commodity')}
+            value={(customs?.commodities || []).length === 0 ? "" : "specified"}
+          />
         </div>
 
         {/* Customs Summary and signature */}
@@ -322,7 +331,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
           disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty) && deepEqual(value?.options, customs?.options)}>
-          <span>Save</span>
+          <span>{isNone(shipment) ? 'Save' : 'Next'}</span>
         </ButtonField>
 
       </form>}
