@@ -71,7 +71,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
       [...(user_connections || []), ...(system_connections || [])]
         .filter(c => c.active && c.test === testMode)
     );
-  }, [user_connections, system_connections]);
+  }, [user_connections, system_connections, testMode]);
 
   return (
     <>
