@@ -1,4 +1,3 @@
-import { ListStatusEnum } from "@/purplship/rest/generated/apis/ShipmentsApi";
 import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -16,10 +15,11 @@ import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, p
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import ShipmentMutationProvider from "@/context/shipment-mutation";
 import ShipmentsFilter from "@/components/filters/shipments-filter";
 import { AddressType } from "@/lib/types";
+import ShipmentPreview, { ShipmentPreviewContext } from "@/components/descriptions/shipment-preview";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -28,13 +28,10 @@ export default function ShipmentsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
-    const { basePath } = useContext(AppMode);
+    const { previewShipment } = useContext(ShipmentPreviewContext);
     const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
 
-    const viewShipment = (id: string) => (_: React.MouseEvent) => {
-      router.push(`${basePath}/shipments/` + id);
-    };
     const fetchShipments = (extra: Partial<typeof variables> = {}) => {
       const query = {
         ...filters,
@@ -102,7 +99,7 @@ export default function ShipmentsPage(pageProps: any) {
               </tr>
 
               {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items" onClick={viewShipment(shipment.id as string)}>
+                <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id as string)}>
                   <td className="carrier is-vcentered has-text-centered">
                     {!isNone(shipment.carrier_name) &&
                       <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
@@ -166,8 +163,11 @@ export default function ShipmentsPage(pageProps: any) {
         <LabelPrinter>
           <CustomInvoicePrinter>
             <ShipmentsProvider>
+              <ShipmentPreview>
 
-              <Component />
+                <Component />
+
+              </ShipmentPreview>
 
             </ShipmentsProvider>
           </CustomInvoicePrinter>

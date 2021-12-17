@@ -68,7 +68,7 @@ const ShipmentProvider: React.FC = ({ children }) => {
       loadShipment,
       updateShipment
     }}>
-      {children}
+      {purplship && children}
     </LabelData.Provider>
   );
 };

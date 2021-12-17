@@ -15,7 +15,7 @@ const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, ...props }) => {
   };
 
   return (
-    <a className="button is-white is-small"
+    <a className="button is-white is-small m-1"
       style={{ padding: '0', height: '20px' }}
       onClick={copyText}
       {...props}>
