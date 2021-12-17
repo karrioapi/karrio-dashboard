@@ -238,6 +238,9 @@ export function getURLSearchParams() {
 
 export function insertUrlParam(params: {} | any) {
   if (window.history.pushState) {
+    params = Object.keys(params).reduce((acc, key) => (
+      key === 'test_mode' ? acc : { ...acc, [key]: params[key] }
+    ), {});
     let searchParams = new URLSearchParams(params);
     let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
     if (newurl.endsWith('?')) {
