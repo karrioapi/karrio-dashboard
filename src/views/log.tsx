@@ -47,7 +47,8 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
             <span className="title is-5 mr-2">{log.method} {log.path} <StatusCode code={log.status_code as number} /></span>
           </div>
           {!isNone(logId) && <div className="column is-4 is-flex is-justify-content-end">
-            <AppLink href={`/developers/logs/${logId}`} target="blank" className="button is-white has-text-info is-medium">
+            <AppLink href={`/developers/logs/${logId}`} target="blank"
+              className="button is-default has-text-info is-small mx-1">
               <span className="icon">
                 <i className="fas fa-external-link-alt"></i>
               </span>
@@ -82,7 +83,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <h2 className="title is-5 my-4">Response body</h2>
           <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-          <Expandable className="py-3">
+          <div className="py-3">
             <pre>
               <code
                 dangerouslySetInnerHTML={{
@@ -90,7 +91,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
                 }}
               />
             </pre>
-          </Expandable>
+          </div>
 
         </>}
 
@@ -100,7 +101,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <h2 className="title is-5 my-4">Request {log?.method} body</h2>
           <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-          <Expandable className="py-3">
+          <div className="py-3">
             <pre>
               <code
                 dangerouslySetInnerHTML={{
@@ -108,7 +109,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
                 }}
               />
             </pre>
-          </Expandable>
+          </div>
 
         </>}
 
