@@ -227,6 +227,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Generic]: ["carrier_id", "test", "account_country_code", "label_template", "services"],
     [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test", "username", "password", "account_number", "user_token"],
     [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test", "client_id", "client_secret"],
