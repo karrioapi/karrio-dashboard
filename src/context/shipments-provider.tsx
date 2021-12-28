@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@/purplship/graphql';
+import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@purplship/graphql';
 import { ShipmentType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';

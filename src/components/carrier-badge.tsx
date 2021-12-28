@@ -1,5 +1,5 @@
 import { Collection } from '@/lib/types';
-import { CarrierSettingsCarrierNameEnum } from '@/purplship/rest/index';
+import { CarrierSettingsCarrierNameEnum } from '@purplship/rest/index';
 import React, { useContext } from 'react';
 import { APIReference } from '@/context/references-provider';
 

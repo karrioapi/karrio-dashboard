@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { GetUser_user, UPDATE_USER, update_userVariables, UpdateUserInput, REGISTER_USER, register_userVariables, register_user_register_user, RegisterUserInput, ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset, confirm_password_resetVariables, CONFIRM_PASSWORD_RESET, ChangePasswordInput, CHANGE_PASSWORD, change_password_change_password, change_passwordVariables } from '@/purplship/graphql';
+import { GetUser_user, UPDATE_USER, update_userVariables, UpdateUserInput, REGISTER_USER, register_userVariables, register_user_register_user, RegisterUserInput, ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset, confirm_password_resetVariables, CONFIRM_PASSWORD_RESET, ChangePasswordInput, CHANGE_PASSWORD, change_password_change_password, change_passwordVariables } from '@purplship/graphql';
 
 
 export type UserMutator<T> = T & {

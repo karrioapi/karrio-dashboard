@@ -1,4 +1,4 @@
-import { Address } from "@/purplship/rest";
+import { Address } from "@purplship/rest";
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 

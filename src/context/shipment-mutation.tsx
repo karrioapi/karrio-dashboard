@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Customs, OperationResponse, Shipment, Address, ShipmentData, Parcel } from '@/purplship/rest/index';
+import { Customs, OperationResponse, Shipment, Address, ShipmentData, Parcel } from '@purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { LabelData } from '@/context/shipment-provider';
 import { CommodityType } from '@/lib/types';

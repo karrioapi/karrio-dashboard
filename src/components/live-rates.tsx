@@ -1,7 +1,7 @@
 import { formatRef, isNone } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
 import { APIError, NotificationType, RequestError } from '@/lib/types';
-import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@/purplship/rest/index';
+import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';

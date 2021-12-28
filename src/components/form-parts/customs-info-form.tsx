@@ -1,4 +1,4 @@
-import { Commodity, CommodityWeightUnitEnum, Customs, CustomsContentTypeEnum, CustomsIncotermEnum, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment } from '@/purplship/rest/index';
+import { Commodity, CommodityWeightUnitEnum, Customs, CustomsContentTypeEnum, CustomsIncotermEnum, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment } from '@purplship/rest/index';
 import React, { ChangeEvent, FormEvent, useContext, useReducer, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';

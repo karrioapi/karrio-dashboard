@@ -4,7 +4,7 @@ import UserProvider from '@/context/user-provider';
 import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
 import { AuthToken } from '@/client/context';
-import { TokenPair } from '@/purplship/rest';
+import { TokenPair } from '@purplship/rest';
 import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
 import TokenProvider from '@/context/token-provider';

@@ -6,7 +6,7 @@ import ShipmentOptions from '@/components/form-parts/shipment-options';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import LiveRates from '@/components/live-rates';
 import Tabs from '@/components/generic/tabs';
-import { Shipment, ShipmentStatusEnum } from '@/purplship/rest/index';
+import { Shipment, ShipmentStatusEnum } from '@purplship/rest/index';
 import { isNone, p } from '@/lib/helper';
 import ShipmentProvider, { LabelData, } from '@/context/shipment-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';

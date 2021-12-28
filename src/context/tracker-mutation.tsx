@@ -1,8 +1,8 @@
-import { Operation, TrackingStatus } from '@/purplship/rest/index';
+import { Operation, TrackingStatus } from '@purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';
-import { CreateCarrierNameEnum } from '@/purplship/rest/generated/apis/TrackersApi';
+import { CreateCarrierNameEnum } from '@purplship/rest/generated/apis/TrackersApi';
 
 
 type TrackerMutator = {

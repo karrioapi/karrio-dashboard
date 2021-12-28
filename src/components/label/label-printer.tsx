@@ -1,5 +1,5 @@
 import { ShipmentType } from '@/lib/types';
-import { ShipmentLabelTypeEnum } from '@/purplship/rest/index';
+import { ShipmentLabelTypeEnum } from '@purplship/rest/index';
 import React, { useState } from 'react';
 
 

@@ -1,7 +1,7 @@
 import React, { FormEvent, useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { Loading } from '@/components/loader';
-import { ChangePasswordInput, change_password_change_password_errors } from '@/purplship/graphql';
+import { ChangePasswordInput, change_password_change_password_errors } from '@purplship/graphql';
 import ButtonField from '@/components/generic/button-field';
 import UserMutation from '@/context/user-mutation';
 import { isNone } from '@/lib/helper';

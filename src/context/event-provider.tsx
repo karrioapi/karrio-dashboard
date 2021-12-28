@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_event, GET_EVENT, get_eventVariables, get_event_event } from '@/purplship/graphql';
+import { get_event, GET_EVENT, get_eventVariables, get_event_event } from '@purplship/graphql';
 
 
 type Event = get_event_event;

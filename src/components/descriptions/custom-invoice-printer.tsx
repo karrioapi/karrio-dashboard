@@ -1,4 +1,4 @@
-import { Shipment } from '@/purplship/rest/index';
+import { Shipment } from '@purplship/rest/index';
 import React, { useState } from 'react';
 
 

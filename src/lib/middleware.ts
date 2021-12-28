@@ -4,7 +4,7 @@ import { Session } from "next-auth";
 import { getSession } from "next-auth/client";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import { References } from "@/purplship/rest";
+import { References } from "@purplship/rest";
 import logger from "@/lib/logger";
 import { Response } from "node-fetch";
 

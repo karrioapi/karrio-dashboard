@@ -756,245 +756,276 @@ export const GET_TOKEN = gql`
 `;
 
 export const GET_USER_CONNECTIONS = gql`
-  query get_user_connections($test: Boolean) {
-    user_connections(test: $test) {
-      __typename
-      ... on AramexSettings {
+query get_user_connections($test: Boolean) {
+  user_connections(test: $test) {
+    __typename
+    ... on AramexSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      account_pin
+      account_entity
+      account_number
+      account_country_code
+    }
+    ... on AustraliaPostSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      api_key
+      password
+      account_number
+    }
+    ... on CanadaPostSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      customer_number
+      contract_id
+    }
+    ... on CanparSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+    }
+    ... on DHLExpressSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      site_id
+      password
+      account_number
+      account_country_code
+    }
+    ... on DHLPolandSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      account_number
+      services {
         id
-        carrier_id
-        carrier_name
-        test
         active
-        username
-        password
-        account_pin
-        account_entity
-        account_number
-        account_country_code
-      }
-      ... on AustraliaPostSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        api_key
-        password
-        account_number
-      }
-      ... on CanadaPostSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        customer_number
-        contract_id
-      }
-      ... on CanparSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-      }
-      ... on DHLExpressSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        site_id
-        password
-        account_number
-        account_country_code
-      }
-      ... on DHLPolandSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        account_number
-        services {
-          id
-          active
-          service_name
-          service_code
-          description
-          cost
-          currency
-          estimated_transit_days
-          max_weight
-          max_width
-          max_height
-          max_length
-          weight_unit
-          dimension_unit
-          domicile
-          international
-        }
-      }
-      ... on DHLUniversalSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        consumer_key
-        consumer_secret
-      }
-      ... on DicomSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        billing_account
-      }
-      ... on EShipperSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-      }
-      ... on FedexSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        account_number
-        password
-        meter_number
-        user_key
-        account_country_code
-      }
-      ... on FreightcomSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-      }
-      ... on PurolatorSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        account_number
-        user_token
-      }
-      ... on RoyalMailSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        client_id
-        client_secret
-      }
-      ... on SendleSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        sendle_id
-        api_key
-      }
-      ... on SFExpressSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        partner_id
-        check_word
-      }
-      ... on TNTSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        account_number
-        account_country_code
-      }
-      ... on UPSSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        access_license_number
-        account_number
-        account_country_code
-      }
-      ... on USPSSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        mailer_id
-        customer_registration_id
-        logistics_manager_mailer_id
-      }
-      ... on USPSInternationalSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        username
-        password
-        mailer_id
-        customer_registration_id
-        logistics_manager_mailer_id
-      }
-      ... on YanwenSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        customer_number
-        license_key
-      }
-      ... on YunExpressSettings {
-        id
-        carrier_id
-        carrier_name
-        test
-        active
-        customer_number
-        api_secret
+        service_name
+        service_code
+        description
+        cost
+        currency
+        estimated_transit_days
+        max_weight
+        max_width
+        max_height
+        max_length
+        weight_unit
+        dimension_unit
+        domicile
+        international
       }
     }
+    ... on DHLUniversalSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      consumer_key
+      consumer_secret
+    }
+    ... on DicomSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      billing_account
+    }
+    ... on EShipperSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+    }
+    ... on FedexSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      account_number
+      password
+      meter_number
+      user_key
+      account_country_code
+    }
+    ... on FreightcomSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+    }
+    ... on GenericSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      services {
+        id
+        active
+        service_name
+        service_code
+        description
+        cost
+        currency
+        estimated_transit_days
+        max_weight
+        max_width
+        max_height
+        max_length
+        weight_unit
+        dimension_unit
+        domicile
+        international
+      }
+      label_template {
+        id
+        name
+        template
+        description
+      }
+    }
+    ... on PurolatorSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      account_number
+      user_token
+    }
+    ... on RoyalMailSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      client_id
+      client_secret
+    }
+    ... on SendleSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      sendle_id
+      api_key
+    }
+    ... on SFExpressSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      partner_id
+      check_word
+    }
+    ... on TNTSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      account_number
+      account_country_code
+    }
+    ... on UPSSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      access_license_number
+      account_number
+      account_country_code
+    }
+    ... on USPSSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      mailer_id
+      customer_registration_id
+      logistics_manager_mailer_id
+    }
+    ... on USPSInternationalSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      username
+      password
+      mailer_id
+      customer_registration_id
+      logistics_manager_mailer_id
+    }
+    ... on YanwenSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      customer_number
+      license_key
+    }
+    ... on YunExpressSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      customer_number
+      api_secret
+    }
   }
+}
 `;
 
 export const GET_USER = gql`

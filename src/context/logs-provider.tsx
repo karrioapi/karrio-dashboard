@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@/purplship/graphql';
+import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@purplship/graphql';
 import { LogType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 

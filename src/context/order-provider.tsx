@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_order, GET_ORDER, get_orderVariables, get_order_order } from '@/purplship/graphql';
+import { get_order, GET_ORDER, get_orderVariables, get_order_order } from '@purplship/graphql';
 
 
 type Order = get_order_order;

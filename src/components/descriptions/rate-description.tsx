@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rate } from '@/purplship/rest/index';
+import { Rate } from '@purplship/rest/index';
 import { formatRef, isNone } from '@/lib/helper';
 
 interface RateDescriptionComponent {

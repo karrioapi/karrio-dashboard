@@ -1,4 +1,4 @@
-import { TokenPair } from '@/purplship/rest';
+import { TokenPair } from '@purplship/rest';
 import { authenticate, refreshToken, AuthToken, OrgToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
 import { NextApiRequest } from 'next';

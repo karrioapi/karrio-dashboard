@@ -1,5 +1,5 @@
 import React from "react";
-import { CommodityDataWeightUnitEnum, CommodityWeightUnitEnum } from "@/purplship/rest";
+import { CommodityDataWeightUnitEnum, CommodityWeightUnitEnum } from "@purplship/rest";
 import { CommodityType, CURRENCY_OPTIONS, NotificationType, WEIGHT_UNITS } from "@/lib/types";
 import { FormEvent, useContext, useReducer, useRef, useState } from "react";
 import { Notify } from "@/components/notifier";

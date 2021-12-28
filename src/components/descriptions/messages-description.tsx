@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message } from '@/purplship/rest';
+import { Message } from '@purplship/rest';
 import { APIError, RequestError } from '@/lib/types';
 import { formatMessage } from '@/components/notifier';
 

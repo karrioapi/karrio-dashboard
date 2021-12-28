@@ -1,4 +1,4 @@
-import { Operation, OperationConfirmation, Webhook, WebhookData } from '@/purplship/rest/index';
+import { Operation, OperationConfirmation, Webhook, WebhookData } from '@purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';

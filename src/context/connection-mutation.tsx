@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, MutationFunctionOptions, MutationResult, useMutation } from '@apollo/client';
-import { CreateConnectionInput, CREATE_CONNECTION, create_connectionVariables, DELETE_CONNECTION, delete_connectionVariables, UpdateConnectionInput, UPDATE_CONNECTION, update_connectionVariables } from '@/purplship/graphql';
+import { CreateConnectionInput, CREATE_CONNECTION, create_connectionVariables, DELETE_CONNECTION, delete_connectionVariables, UpdateConnectionInput, UPDATE_CONNECTION, update_connectionVariables } from '@purplship/graphql';
 
 export type ConnectionMutator<T> = T & {
   createConnection: (data: CreateConnectionInput) => Promise<FetchResult<CreateConnectionInput, Record<string, any>, Record<string, any>>>;

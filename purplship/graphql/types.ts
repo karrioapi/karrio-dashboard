@@ -1285,10 +1285,6 @@ export interface GetTokenVariables {
 // GraphQL query operation: get_user_connections
 // ====================================================
 
-export interface get_user_connections_user_connections_GenericSettings {
-  __typename: "GenericSettings";
-}
-
 export interface get_user_connections_user_connections_AramexSettings {
   __typename: "AramexSettings";
   id: string;
@@ -1444,6 +1440,43 @@ export interface get_user_connections_user_connections_FreightcomSettings {
   password: string;
 }
 
+export interface get_user_connections_user_connections_GenericSettings_services {
+  id: string;  // The ID of the object.
+  active: boolean | null;
+  service_name: string;
+  service_code: string;
+  description: string | null;
+  cost: number | null;
+  currency: ServiceLevelCurrency | null;
+  estimated_transit_days: number | null;
+  max_weight: number | null;
+  max_width: number | null;
+  max_height: number | null;
+  max_length: number | null;
+  weight_unit: ServiceLevelWeightUnit | null;
+  dimension_unit: ServiceLevelDimensionUnit | null;
+  domicile: boolean | null;
+  international: boolean | null;
+}
+
+export interface get_user_connections_user_connections_GenericSettings_label_template {
+  id: string;  // The ID of the object.
+  name: string;
+  template: string;
+  description: string | null;
+}
+
+export interface get_user_connections_user_connections_GenericSettings {
+  __typename: "GenericSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;
+  active: boolean;
+  services: (get_user_connections_user_connections_GenericSettings_services | null)[] | null;
+  label_template: get_user_connections_user_connections_GenericSettings_label_template | null;
+}
+
 export interface get_user_connections_user_connections_PurolatorSettings {
   __typename: "PurolatorSettings";
   id: string;
@@ -1567,7 +1600,7 @@ export interface get_user_connections_user_connections_YunExpressSettings {
   api_secret: string;
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_GenericSettings | get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
+export type get_user_connections_user_connections = get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_GenericSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
 
 export interface get_user_connections {
   user_connections: (get_user_connections_user_connections | null)[] | null;
