@@ -14,55 +14,93 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
+    AddressData,
+    AddressDataFromJSON,
+    AddressDataFromJSONTyped,
+    AddressDataToJSON,
+} from './AddressData';
+import {
+    CommodityData,
+    CommodityDataFromJSON,
+    CommodityDataFromJSONTyped,
+    CommodityDataToJSON,
+} from './CommodityData';
 
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface OrderData
  */
-export interface ShipmentList {
+export interface OrderData {
     /**
-     * 
+     * The source' order id.
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof OrderData
      */
-    next?: string | null;
+    order_id: string;
     /**
-     * 
+     * The order's source.
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof OrderData
      */
-    previous?: string | null;
+    source?: string;
     /**
      * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * @type {AddressData}
+     * @memberof OrderData
      */
-    results: Array<Shipment>;
+    shipping_address: AddressData;
+    /**
+     * The order line items.
+     * @type {Array<CommodityData>}
+     * @memberof OrderData
+     */
+    line_items: Array<CommodityData>;
+    /**
+     * 
+     * <details>
+     * <summary>The options available for the order shipments.</summary>
+     * 
+     * ```
+     * {
+     *     "currency": "USD",
+     * }
+     * ```
+     * 
+     * Please check the docs for shipment specific options.
+     * </details>
+     * @type {object}
+     * @memberof OrderData
+     */
+    options?: object | null;
+    /**
+     * User metadata for the order.
+     * @type {object}
+     * @memberof OrderData
+     */
+    metadata?: object;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function OrderDataFromJSON(json: any): OrderData {
+    return OrderDataFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function OrderDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'order_id': json['order_id'],
+        'source': !exists(json, 'source') ? undefined : json['source'],
+        'shipping_address': AddressDataFromJSON(json['shipping_address']),
+        'line_items': ((json['line_items'] as Array<any>).map(CommodityDataFromJSON)),
+        'options': !exists(json, 'options') ? undefined : json['options'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function OrderDataToJSON(value?: OrderData | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,9 +109,12 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'order_id': value.order_id,
+        'source': value.source,
+        'shipping_address': AddressDataToJSON(value.shipping_address),
+        'line_items': ((value.line_items as Array<any>).map(CommodityDataToJSON)),
+        'options': value.options,
+        'metadata': value.metadata,
     };
 }
 

@@ -440,6 +440,7 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
           }
           meta
         }
+        metadata
         meta
       }
     }
@@ -1111,6 +1112,308 @@ query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String],
         test_mode
         pending_webhooks
         created_at
+      }
+    }
+  }
+}
+`;
+
+export const GET_ORDER = gql`
+query get_order($id: String!) {
+  order(id: $id) {
+    id
+    order_id
+    source
+    status
+    shipping_address {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      validate_location
+    }
+    line_items {
+      id
+      weight
+      description
+      quantity
+      sku
+      value_amount
+      weight_unit
+      value_currency
+      origin_country
+      metadata
+    }
+    created_at
+    updated_at
+    created_by {
+      email
+      full_name
+    }
+    test_mode
+    metadata
+    meta
+    shipments {
+      id
+      carrier_id
+      carrier_name
+      created_at
+      updated_at
+      created_by {
+        email
+        full_name
+      }
+      status
+      recipient {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        validate_location
+      }
+      shipper {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        validate_location
+      }
+      label_type
+      tracking_number
+      shipment_identifier
+      label
+      tracking_url
+      test_mode
+      service
+      reference
+      customs {
+        id
+        certify
+        commercial_invoice
+        content_type
+        content_description
+        incoterm
+        invoice
+        invoice_date
+        signer
+        duty {
+          paid_by
+          currency
+          account_number
+          declared_value
+        }
+        options
+        commodities {
+          id
+          weight
+          description
+          quantity
+          sku
+          value_amount
+          origin_country
+        }
+      }
+      selected_rate {
+        carrier_name
+        carrier_id
+        currency
+        transit_days
+        service
+        discount
+        base_charge
+        total_charge
+        duties_and_taxes
+        extra_charges {
+          name
+          amount
+          currency
+        }
+        meta
+      }
+      metadata
+      meta
+    }
+  }
+}
+`;
+
+export const GET_ORDERS = gql`
+query get_orders($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
+  orders(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        order_id
+        source
+        status
+        shipping_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          validate_location
+        }
+        line_items {
+          id
+          weight
+          description
+          quantity
+          sku
+          value_amount
+          weight_unit
+          value_currency
+          origin_country
+          metadata
+        }
+        created_at
+        updated_at
+        created_by {
+          email
+          full_name
+        }
+        test_mode
+        metadata
+        meta
+        shipments {
+          id
+          carrier_id
+          carrier_name
+          created_at
+          updated_at
+          created_by {
+            email
+            full_name
+          }
+          status
+          recipient {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            validate_location
+          }
+          shipper {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            validate_location
+          }
+          label_type
+          tracking_number
+          shipment_identifier
+          label
+          tracking_url
+          test_mode
+          service
+          reference
+          customs {
+            id
+            certify
+            commercial_invoice
+            content_type
+            content_description
+            incoterm
+            invoice
+            invoice_date
+            signer
+            duty {
+              paid_by
+              currency
+              account_number
+              declared_value
+            }
+            options
+            commodities {
+              id
+              weight
+              description
+              quantity
+              sku
+              value_amount
+              origin_country
+            }
+          }
+          selected_rate {
+            carrier_name
+            carrier_id
+            currency
+            transit_days
+            service
+            discount
+            base_charge
+            total_charge
+            duties_and_taxes
+            extra_charges {
+              name
+              amount
+              currency
+            }
+            meta
+          }
+          metadata
+          meta
+        }
       }
     }
   }

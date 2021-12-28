@@ -14,43 +14,43 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
+    Order,
+    OrderFromJSON,
+    OrderFromJSONTyped,
+    OrderToJSON,
+} from './Order';
 
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface OrderList
  */
-export interface ShipmentList {
+export interface OrderList {
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof OrderList
      */
     next?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof OrderList
      */
     previous?: string | null;
     /**
      * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * @type {Array<Order>}
+     * @memberof OrderList
      */
-    results: Array<Shipment>;
+    results: Array<Order>;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function OrderListFromJSON(json: any): OrderList {
+    return OrderListFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -58,11 +58,11 @@ export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function OrderListToJSON(value?: OrderList | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -73,7 +73,7 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
         
         'next': value.next,
         'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'results': ((value.results as Array<any>).map(OrderToJSON)),
     };
 }
 

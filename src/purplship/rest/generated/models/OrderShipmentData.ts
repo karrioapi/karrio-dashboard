@@ -26,48 +26,36 @@ import {
     CustomsDataToJSON,
 } from './CustomsData';
 import {
-    ParcelData,
-    ParcelDataFromJSON,
-    ParcelDataFromJSONTyped,
-    ParcelDataToJSON,
-} from './ParcelData';
+    OrderParcel,
+    OrderParcelFromJSON,
+    OrderParcelFromJSONTyped,
+    OrderParcelToJSON,
+} from './OrderParcel';
 import {
     Payment,
     PaymentFromJSON,
     PaymentFromJSONTyped,
     PaymentToJSON,
 } from './Payment';
-import {
-    Rate,
-    RateFromJSON,
-    RateFromJSONTyped,
-    RateToJSON,
-} from './Rate';
 
 /**
  * 
  * @export
- * @interface ShippingRequest
+ * @interface OrderShipmentData
  */
-export interface ShippingRequest {
+export interface OrderShipmentData {
     /**
      * 
      * @type {AddressData}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     shipper: AddressData;
     /**
-     * 
-     * @type {AddressData}
-     * @memberof ShippingRequest
-     */
-    recipient: AddressData;
-    /**
      * The shipment's parcels
-     * @type {Array<ParcelData>}
-     * @memberof ShippingRequest
+     * @type {Array<OrderParcel>}
+     * @memberof OrderShipmentData
      */
-    parcels: Array<ParcelData>;
+    parcels: Array<OrderParcel>;
     /**
      * 
      * <details>
@@ -90,87 +78,93 @@ export interface ShippingRequest {
      * Please check the docs for carrier specific options.
      * </details>
      * @type {object}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     options?: object | null;
     /**
      * 
      * @type {Payment}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     payment?: Payment;
     /**
      * 
      * @type {CustomsData}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     customs?: CustomsData;
     /**
      * The shipment reference
      * @type {string}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     reference?: string | null;
     /**
      * The shipment label file type.
      * @type {string}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
-    label_type?: ShippingRequestLabelTypeEnum;
+    label_type?: OrderShipmentDataLabelTypeEnum;
     /**
      * User metadata for the shipment
      * @type {object}
-     * @memberof ShippingRequest
+     * @memberof OrderShipmentData
      */
     metadata?: object;
     /**
-     * The shipment selected rate.
-     * @type {string}
-     * @memberof ShippingRequest
+     * 
+     * The requested carrier service for the shipment.
+     * 
+     * Please consult the reference for specific carriers services.<br/>
+     * Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.
+     * @type {Array<string>}
+     * @memberof OrderShipmentData
      */
-    selected_rate_id: string;
+    services?: Array<string> | null;
     /**
-     * The list for shipment rates fetched previously
-     * @type {Array<Rate>}
-     * @memberof ShippingRequest
+     * 
+     * The list of configured carriers you wish to get rates from.
+     * 
+     * *Note that the request will be sent to all carriers in nothing is specified*
+     * @type {Array<string>}
+     * @memberof OrderShipmentData
      */
-    rates: Array<Rate>;
+    carrier_ids?: Array<string> | null;
 }
 
 /**
 * @export
 * @enum {string}
 */
-export enum ShippingRequestLabelTypeEnum {
+export enum OrderShipmentDataLabelTypeEnum {
     Pdf = 'PDF',
     Zpl = 'ZPL'
 }
 
-export function ShippingRequestFromJSON(json: any): ShippingRequest {
-    return ShippingRequestFromJSONTyped(json, false);
+export function OrderShipmentDataFromJSON(json: any): OrderShipmentData {
+    return OrderShipmentDataFromJSONTyped(json, false);
 }
 
-export function ShippingRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShippingRequest {
+export function OrderShipmentDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderShipmentData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'shipper': AddressDataFromJSON(json['shipper']),
-        'recipient': AddressDataFromJSON(json['recipient']),
-        'parcels': ((json['parcels'] as Array<any>).map(ParcelDataFromJSON)),
+        'parcels': ((json['parcels'] as Array<any>).map(OrderParcelFromJSON)),
         'options': !exists(json, 'options') ? undefined : json['options'],
         'payment': !exists(json, 'payment') ? undefined : PaymentFromJSON(json['payment']),
         'customs': !exists(json, 'customs') ? undefined : CustomsDataFromJSON(json['customs']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
-        'selected_rate_id': json['selected_rate_id'],
-        'rates': ((json['rates'] as Array<any>).map(RateFromJSON)),
+        'services': !exists(json, 'services') ? undefined : json['services'],
+        'carrier_ids': !exists(json, 'carrier_ids') ? undefined : json['carrier_ids'],
     };
 }
 
-export function ShippingRequestToJSON(value?: ShippingRequest | null): any {
+export function OrderShipmentDataToJSON(value?: OrderShipmentData | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -180,16 +174,15 @@ export function ShippingRequestToJSON(value?: ShippingRequest | null): any {
     return {
         
         'shipper': AddressDataToJSON(value.shipper),
-        'recipient': AddressDataToJSON(value.recipient),
-        'parcels': ((value.parcels as Array<any>).map(ParcelDataToJSON)),
+        'parcels': ((value.parcels as Array<any>).map(OrderParcelToJSON)),
         'options': value.options,
         'payment': PaymentToJSON(value.payment),
         'customs': CustomsDataToJSON(value.customs),
         'reference': value.reference,
         'label_type': value.label_type,
         'metadata': value.metadata,
-        'selected_rate_id': value.selected_rate_id,
-        'rates': ((value.rates as Array<any>).map(RateToJSON)),
+        'services': value.services,
+        'carrier_ids': value.carrier_ids,
     };
 }
 

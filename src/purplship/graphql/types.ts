@@ -659,6 +659,7 @@ export interface get_shipments_shipments_edges_node {
   reference: string | null;
   customs: get_shipments_shipments_edges_node_customs | null;
   selected_rate: get_shipments_shipments_edges_node_selected_rate | null;
+  metadata: any | null;
   meta: any | null;
 }
 
@@ -1284,6 +1285,10 @@ export interface GetTokenVariables {
 // GraphQL query operation: get_user_connections
 // ====================================================
 
+export interface get_user_connections_user_connections_GenericSettings {
+  __typename: "GenericSettings";
+}
+
 export interface get_user_connections_user_connections_AramexSettings {
   __typename: "AramexSettings";
   id: string;
@@ -1562,7 +1567,7 @@ export interface get_user_connections_user_connections_YunExpressSettings {
   api_secret: string;
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
+export type get_user_connections_user_connections = get_user_connections_user_connections_GenericSettings | get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
 
 export interface get_user_connections {
   user_connections: (get_user_connections_user_connections | null)[] | null;
@@ -1818,6 +1823,395 @@ export interface get_eventsVariables {
   type?: (string | null)[] | null;
   date_after?: any | null;
   date_before?: any | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_order
+// ====================================================
+
+export interface get_order_order_shipping_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_order_order_line_items {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  weight_unit: CommodityWeightUnit | null;
+  value_currency: CommodityValueCurrency | null;
+  origin_country: CommodityOriginCountry | null;
+  metadata: any | null;
+}
+
+export interface get_order_order_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_order_order_shipments_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_order_order_shipments_recipient {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_order_order_shipments_shipper {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_order_order_shipments_customs_duty {
+  paid_by: string | null;
+  currency: string | null;
+  account_number: string | null;
+  declared_value: number | null;
+}
+
+export interface get_order_order_shipments_customs_commodities {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  origin_country: CommodityOriginCountry | null;
+}
+
+export interface get_order_order_shipments_customs {
+  id: string;
+  certify: boolean | null;
+  commercial_invoice: boolean | null;
+  content_type: string | null;
+  content_description: string | null;
+  incoterm: CustomsIncoterm;
+  invoice: string | null;
+  invoice_date: any | null;
+  signer: string | null;
+  duty: get_order_order_shipments_customs_duty | null;
+  options: any | null;
+  commodities: (get_order_order_shipments_customs_commodities | null)[] | null;
+}
+
+export interface get_order_order_shipments_selected_rate_extra_charges {
+  name: string | null;
+  amount: number | null;
+  currency: string | null;
+}
+
+export interface get_order_order_shipments_selected_rate {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  currency: string | null;
+  transit_days: number | null;
+  service: string | null;
+  discount: number | null;
+  base_charge: number | null;
+  total_charge: number | null;
+  duties_and_taxes: number | null;
+  extra_charges: (get_order_order_shipments_selected_rate_extra_charges | null)[] | null;
+  meta: any | null;
+}
+
+export interface get_order_order_shipments {
+  id: string;  // The ID of the object.
+  carrier_id: string | null;
+  carrier_name: string | null;
+  created_at: any;
+  updated_at: any;
+  created_by: get_order_order_shipments_created_by;
+  status: ShipmentStatus;
+  recipient: get_order_order_shipments_recipient;
+  shipper: get_order_order_shipments_shipper;
+  label_type: string | null;
+  tracking_number: string | null;
+  shipment_identifier: string | null;
+  label: string | null;
+  tracking_url: string | null;
+  test_mode: boolean;
+  service: string | null;
+  reference: string | null;
+  customs: get_order_order_shipments_customs | null;
+  selected_rate: get_order_order_shipments_selected_rate | null;
+  metadata: any | null;
+  meta: any | null;
+}
+
+export interface get_order_order {
+  id: string;  // The ID of the object.
+  order_id: string;
+  source: string | null;
+  status: OrderStatus;
+  shipping_address: get_order_order_shipping_address;
+  line_items: (get_order_order_line_items | null)[];
+  created_at: any;
+  updated_at: any;
+  created_by: get_order_order_created_by;
+  test_mode: boolean;
+  metadata: any | null;
+  meta: any | null;
+  shipments: (get_order_order_shipments | null)[];
+}
+
+export interface get_order {
+  order: get_order_order | null;
+}
+
+export interface get_orderVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_orders
+// ====================================================
+
+export interface get_orders_orders_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_orders_orders_edges_node_shipping_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_orders_orders_edges_node_line_items {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  weight_unit: CommodityWeightUnit | null;
+  value_currency: CommodityValueCurrency | null;
+  origin_country: CommodityOriginCountry | null;
+  metadata: any | null;
+}
+
+export interface get_orders_orders_edges_node_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_orders_orders_edges_node_shipments_created_by {
+  email: string;
+  full_name: string;
+}
+
+export interface get_orders_orders_edges_node_shipments_recipient {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_shipper {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: AddressCountryCode;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_customs_duty {
+  paid_by: string | null;
+  currency: string | null;
+  account_number: string | null;
+  declared_value: number | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_customs_commodities {
+  id: string;
+  weight: number | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  origin_country: CommodityOriginCountry | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_customs {
+  id: string;
+  certify: boolean | null;
+  commercial_invoice: boolean | null;
+  content_type: string | null;
+  content_description: string | null;
+  incoterm: CustomsIncoterm;
+  invoice: string | null;
+  invoice_date: any | null;
+  signer: string | null;
+  duty: get_orders_orders_edges_node_shipments_customs_duty | null;
+  options: any | null;
+  commodities: (get_orders_orders_edges_node_shipments_customs_commodities | null)[] | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_selected_rate_extra_charges {
+  name: string | null;
+  amount: number | null;
+  currency: string | null;
+}
+
+export interface get_orders_orders_edges_node_shipments_selected_rate {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  currency: string | null;
+  transit_days: number | null;
+  service: string | null;
+  discount: number | null;
+  base_charge: number | null;
+  total_charge: number | null;
+  duties_and_taxes: number | null;
+  extra_charges: (get_orders_orders_edges_node_shipments_selected_rate_extra_charges | null)[] | null;
+  meta: any | null;
+}
+
+export interface get_orders_orders_edges_node_shipments {
+  id: string;  // The ID of the object.
+  carrier_id: string | null;
+  carrier_name: string | null;
+  created_at: any;
+  updated_at: any;
+  created_by: get_orders_orders_edges_node_shipments_created_by;
+  status: ShipmentStatus;
+  recipient: get_orders_orders_edges_node_shipments_recipient;
+  shipper: get_orders_orders_edges_node_shipments_shipper;
+  label_type: string | null;
+  tracking_number: string | null;
+  shipment_identifier: string | null;
+  label: string | null;
+  tracking_url: string | null;
+  test_mode: boolean;
+  service: string | null;
+  reference: string | null;
+  customs: get_orders_orders_edges_node_shipments_customs | null;
+  selected_rate: get_orders_orders_edges_node_shipments_selected_rate | null;
+  metadata: any | null;
+  meta: any | null;
+}
+
+export interface get_orders_orders_edges_node {
+  id: string;  // The ID of the object.
+  order_id: string;
+  source: string | null;
+  status: OrderStatus;
+  shipping_address: get_orders_orders_edges_node_shipping_address;
+  line_items: (get_orders_orders_edges_node_line_items | null)[];
+  created_at: any;
+  updated_at: any;
+  created_by: get_orders_orders_edges_node_created_by;
+  test_mode: boolean;
+  metadata: any | null;
+  meta: any | null;
+  shipments: (get_orders_orders_edges_node_shipments | null)[];
+}
+
+export interface get_orders_orders_edges {
+  node: get_orders_orders_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_orders_orders {
+  pageInfo: get_orders_orders_pageInfo;       // Pagination data for this connection.
+  edges: (get_orders_orders_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_orders {
+  orders: get_orders_orders | null;
+}
+
+export interface get_ordersVariables {
+  offset?: number | null;
+  first?: number | null;
+  status?: (string | null)[] | null;
+  address?: string | null;
+  created_after?: any | null;
+  created_before?: any | null;
+  test_mode?: boolean | null;
+  option_key?: (string | null)[] | null;
+  option_value?: string | null;
+  metadata_value?: string | null;
 }
 
 /* tslint:disable */
@@ -2504,391 +2898,6 @@ export enum ParcelWeightUnit {
 }
 
 // An enumeration.
-export enum value_currency {
-  AED = "AED",
-  AMD = "AMD",
-  ANG = "ANG",
-  AOA = "AOA",
-  ARS = "ARS",
-  AUD = "AUD",
-  AWG = "AWG",
-  AZN = "AZN",
-  BAM = "BAM",
-  BBD = "BBD",
-  BDT = "BDT",
-  BGN = "BGN",
-  BHD = "BHD",
-  BIF = "BIF",
-  BMD = "BMD",
-  BND = "BND",
-  BOB = "BOB",
-  BRL = "BRL",
-  BSD = "BSD",
-  BTN = "BTN",
-  BWP = "BWP",
-  BYN = "BYN",
-  BZD = "BZD",
-  CAD = "CAD",
-  CDF = "CDF",
-  CHF = "CHF",
-  CLP = "CLP",
-  CNY = "CNY",
-  COP = "COP",
-  CRC = "CRC",
-  CUC = "CUC",
-  CVE = "CVE",
-  CZK = "CZK",
-  DJF = "DJF",
-  DKK = "DKK",
-  DOP = "DOP",
-  DZD = "DZD",
-  EGP = "EGP",
-  ERN = "ERN",
-  ETB = "ETB",
-  EUR = "EUR",
-  FJD = "FJD",
-  GBP = "GBP",
-  GEL = "GEL",
-  GHS = "GHS",
-  GMD = "GMD",
-  GNF = "GNF",
-  GTQ = "GTQ",
-  GYD = "GYD",
-  HKD = "HKD",
-  HNL = "HNL",
-  HRK = "HRK",
-  HTG = "HTG",
-  HUF = "HUF",
-  IDR = "IDR",
-  ILS = "ILS",
-  INR = "INR",
-  IRR = "IRR",
-  ISK = "ISK",
-  JMD = "JMD",
-  JOD = "JOD",
-  JPY = "JPY",
-  KES = "KES",
-  KGS = "KGS",
-  KHR = "KHR",
-  KMF = "KMF",
-  KPW = "KPW",
-  KRW = "KRW",
-  KWD = "KWD",
-  KYD = "KYD",
-  KZT = "KZT",
-  LAK = "LAK",
-  LKR = "LKR",
-  LRD = "LRD",
-  LSL = "LSL",
-  LYD = "LYD",
-  MAD = "MAD",
-  MDL = "MDL",
-  MGA = "MGA",
-  MKD = "MKD",
-  MMK = "MMK",
-  MNT = "MNT",
-  MOP = "MOP",
-  MRO = "MRO",
-  MUR = "MUR",
-  MVR = "MVR",
-  MWK = "MWK",
-  MXN = "MXN",
-  MYR = "MYR",
-  MZN = "MZN",
-  NAD = "NAD",
-  NGN = "NGN",
-  NIO = "NIO",
-  NOK = "NOK",
-  NPR = "NPR",
-  NZD = "NZD",
-  OMR = "OMR",
-  PEN = "PEN",
-  PGK = "PGK",
-  PHP = "PHP",
-  PKR = "PKR",
-  PLN = "PLN",
-  PYG = "PYG",
-  QAR = "QAR",
-  RSD = "RSD",
-  RUB = "RUB",
-  RWF = "RWF",
-  SAR = "SAR",
-  SBD = "SBD",
-  SCR = "SCR",
-  SDG = "SDG",
-  SEK = "SEK",
-  SGD = "SGD",
-  SHP = "SHP",
-  SLL = "SLL",
-  SOS = "SOS",
-  SRD = "SRD",
-  SSP = "SSP",
-  STD = "STD",
-  SYP = "SYP",
-  SZL = "SZL",
-  THB = "THB",
-  TJS = "TJS",
-  TND = "TND",
-  TOP = "TOP",
-  TRY = "TRY",
-  TTD = "TTD",
-  TWD = "TWD",
-  TZS = "TZS",
-  UAH = "UAH",
-  USD = "USD",
-  UYU = "UYU",
-  UZS = "UZS",
-  VEF = "VEF",
-  VND = "VND",
-  VUV = "VUV",
-  WST = "WST",
-  XAF = "XAF",
-  XCD = "XCD",
-  XOF = "XOF",
-  XPF = "XPF",
-  YER = "YER",
-  ZAR = "ZAR",
-}
-
-// An enumeration.
-export enum origin_country {
-  AD = "AD",
-  AE = "AE",
-  AF = "AF",
-  AG = "AG",
-  AI = "AI",
-  AL = "AL",
-  AM = "AM",
-  AN = "AN",
-  AO = "AO",
-  AR = "AR",
-  AS = "AS",
-  AT = "AT",
-  AU = "AU",
-  AW = "AW",
-  AZ = "AZ",
-  BA = "BA",
-  BB = "BB",
-  BD = "BD",
-  BE = "BE",
-  BF = "BF",
-  BG = "BG",
-  BH = "BH",
-  BI = "BI",
-  BJ = "BJ",
-  BM = "BM",
-  BN = "BN",
-  BO = "BO",
-  BR = "BR",
-  BS = "BS",
-  BT = "BT",
-  BW = "BW",
-  BY = "BY",
-  BZ = "BZ",
-  CA = "CA",
-  CD = "CD",
-  CF = "CF",
-  CG = "CG",
-  CH = "CH",
-  CI = "CI",
-  CK = "CK",
-  CL = "CL",
-  CM = "CM",
-  CN = "CN",
-  CO = "CO",
-  CR = "CR",
-  CU = "CU",
-  CV = "CV",
-  CY = "CY",
-  CZ = "CZ",
-  DE = "DE",
-  DJ = "DJ",
-  DK = "DK",
-  DM = "DM",
-  DO = "DO",
-  DZ = "DZ",
-  EC = "EC",
-  EE = "EE",
-  EG = "EG",
-  ER = "ER",
-  ES = "ES",
-  ET = "ET",
-  FI = "FI",
-  FJ = "FJ",
-  FK = "FK",
-  FM = "FM",
-  FO = "FO",
-  FR = "FR",
-  GA = "GA",
-  GB = "GB",
-  GD = "GD",
-  GE = "GE",
-  GF = "GF",
-  GG = "GG",
-  GH = "GH",
-  GI = "GI",
-  GL = "GL",
-  GM = "GM",
-  GN = "GN",
-  GP = "GP",
-  GQ = "GQ",
-  GR = "GR",
-  GT = "GT",
-  GU = "GU",
-  GW = "GW",
-  GY = "GY",
-  HK = "HK",
-  HN = "HN",
-  HR = "HR",
-  HT = "HT",
-  HU = "HU",
-  IC = "IC",
-  ID = "ID",
-  IE = "IE",
-  IL = "IL",
-  IN = "IN",
-  IQ = "IQ",
-  IR = "IR",
-  IS = "IS",
-  IT = "IT",
-  JE = "JE",
-  JM = "JM",
-  JO = "JO",
-  JP = "JP",
-  KE = "KE",
-  KG = "KG",
-  KH = "KH",
-  KI = "KI",
-  KM = "KM",
-  KN = "KN",
-  KP = "KP",
-  KR = "KR",
-  KV = "KV",
-  KW = "KW",
-  KY = "KY",
-  KZ = "KZ",
-  LA = "LA",
-  LB = "LB",
-  LC = "LC",
-  LI = "LI",
-  LK = "LK",
-  LR = "LR",
-  LS = "LS",
-  LT = "LT",
-  LU = "LU",
-  LV = "LV",
-  LY = "LY",
-  MA = "MA",
-  MC = "MC",
-  MD = "MD",
-  ME = "ME",
-  MG = "MG",
-  MH = "MH",
-  MK = "MK",
-  ML = "ML",
-  MM = "MM",
-  MN = "MN",
-  MO = "MO",
-  MP = "MP",
-  MQ = "MQ",
-  MR = "MR",
-  MS = "MS",
-  MT = "MT",
-  MU = "MU",
-  MV = "MV",
-  MW = "MW",
-  MX = "MX",
-  MY = "MY",
-  MZ = "MZ",
-  NA = "NA",
-  NC = "NC",
-  NE = "NE",
-  NG = "NG",
-  NI = "NI",
-  NL = "NL",
-  NO = "NO",
-  NP = "NP",
-  NR = "NR",
-  NU = "NU",
-  NZ = "NZ",
-  OM = "OM",
-  PA = "PA",
-  PE = "PE",
-  PF = "PF",
-  PG = "PG",
-  PH = "PH",
-  PK = "PK",
-  PL = "PL",
-  PR = "PR",
-  PT = "PT",
-  PW = "PW",
-  PY = "PY",
-  QA = "QA",
-  RE = "RE",
-  RO = "RO",
-  RS = "RS",
-  RU = "RU",
-  RW = "RW",
-  SA = "SA",
-  SB = "SB",
-  SC = "SC",
-  SD = "SD",
-  SE = "SE",
-  SG = "SG",
-  SH = "SH",
-  SI = "SI",
-  SK = "SK",
-  SL = "SL",
-  SM = "SM",
-  SN = "SN",
-  SO = "SO",
-  SR = "SR",
-  SS = "SS",
-  ST = "ST",
-  SV = "SV",
-  SY = "SY",
-  SZ = "SZ",
-  TC = "TC",
-  TD = "TD",
-  TG = "TG",
-  TH = "TH",
-  TJ = "TJ",
-  TL = "TL",
-  TN = "TN",
-  TO = "TO",
-  TR = "TR",
-  TT = "TT",
-  TV = "TV",
-  TW = "TW",
-  TZ = "TZ",
-  UA = "UA",
-  UG = "UG",
-  US = "US",
-  UY = "UY",
-  UZ = "UZ",
-  VA = "VA",
-  VC = "VC",
-  VE = "VE",
-  VG = "VG",
-  VI = "VI",
-  VN = "VN",
-  VU = "VU",
-  WS = "WS",
-  XB = "XB",
-  XC = "XC",
-  XE = "XE",
-  XM = "XM",
-  XN = "XN",
-  XS = "XS",
-  XY = "XY",
-  YE = "YE",
-  YT = "YT",
-  ZA = "ZA",
-  ZM = "ZM",
-  ZW = "ZW",
-}
-
-// An enumeration.
 export enum paid_by {
   RECIPIENT = "RECIPIENT",
   SENDER = "SENDER",
@@ -3201,6 +3210,15 @@ export enum ServiceLevelDimensionUnit {
   IN = "IN",
 }
 
+// An enumeration.
+export enum OrderStatus {
+  cancelled = "cancelled",
+  created = "created",
+  delivered = "delivered",
+  fulfilled = "fulfilled",
+  partially_fulfilled = "partially_fulfilled",
+}
+
 // null
 export interface CreateConnectionInput {
   id?: string | null;
@@ -3215,6 +3233,7 @@ export interface CreateConnectionInput {
   eshippersettings?: EShipperSettingsInput | null;
   fedexsettings?: FedexSettingsInput | null;
   freightcomsettings?: FreightcomSettingsInput | null;
+  genericsettings?: GenericSettingsInput | null;
   purolatorsettings?: PurolatorSettingsInput | null;
   royalmailsettings?: RoyalMailSettingsInput | null;
   sendlesettings?: SendleSettingsInput | null;
@@ -3230,7 +3249,6 @@ export interface CreateConnectionInput {
 
 // null
 export interface AramexSettingsInput {
-  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -3244,7 +3262,6 @@ export interface AramexSettingsInput {
 
 // null
 export interface AustraliaPostSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3255,7 +3272,6 @@ export interface AustraliaPostSettingsInput {
 
 // null
 export interface CanadaPostSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3267,7 +3283,6 @@ export interface CanadaPostSettingsInput {
 
 // null
 export interface CanparSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3277,8 +3292,7 @@ export interface CanparSettingsInput {
 
 // null
 export interface DHLExpressSettingsInput {
-  id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3289,7 +3303,6 @@ export interface DHLExpressSettingsInput {
 
 // null
 export interface DHLPolandSettingsInput {
-  id?: string | null;
   services?: (ServiceLevelModelSerializerInput | null)[] | null;
   carrier_id: string;
   test?: boolean | null;
@@ -3301,7 +3314,6 @@ export interface DHLPolandSettingsInput {
 
 // null
 export interface ServiceLevelModelSerializerInput {
-  id?: string | null;
   dimension_unit?: string | null;
   weight_unit?: string | null;
   currency?: string | null;
@@ -3321,7 +3333,6 @@ export interface ServiceLevelModelSerializerInput {
 
 // null
 export interface DHLUniversalSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3331,7 +3342,6 @@ export interface DHLUniversalSettingsInput {
 
 // null
 export interface DicomSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3342,7 +3352,6 @@ export interface DicomSettingsInput {
 
 // null
 export interface EShipperSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3352,8 +3361,7 @@ export interface EShipperSettingsInput {
 
 // null
 export interface FedexSettingsInput {
-  id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3365,7 +3373,6 @@ export interface FedexSettingsInput {
 
 // null
 export interface FreightcomSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3374,8 +3381,24 @@ export interface FreightcomSettingsInput {
 }
 
 // null
+export interface GenericSettingsInput {
+  account_country_code?: string | null;
+  services?: (ServiceLevelModelSerializerInput | null)[] | null;
+  label_template?: LabelTemplateModelSerializerInput | null;
+  carrier_id: string;
+  test?: boolean | null;
+  active?: boolean | null;
+}
+
+// null
+export interface LabelTemplateModelSerializerInput {
+  name: string;
+  template: string;
+  description?: string | null;
+}
+
+// null
 export interface PurolatorSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3387,7 +3410,6 @@ export interface PurolatorSettingsInput {
 
 // null
 export interface RoyalMailSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3397,7 +3419,6 @@ export interface RoyalMailSettingsInput {
 
 // null
 export interface SendleSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3407,7 +3428,6 @@ export interface SendleSettingsInput {
 
 // null
 export interface SFExpressSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3417,7 +3437,6 @@ export interface SFExpressSettingsInput {
 
 // null
 export interface TNTSettingsInput {
-  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -3429,8 +3448,7 @@ export interface TNTSettingsInput {
 
 // null
 export interface UPSSettingsInput {
-  id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3442,7 +3460,6 @@ export interface UPSSettingsInput {
 
 // null
 export interface USPSSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3455,7 +3472,6 @@ export interface USPSSettingsInput {
 
 // null
 export interface USPSInternationalSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3468,7 +3484,6 @@ export interface USPSInternationalSettingsInput {
 
 // null
 export interface YanwenSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3478,7 +3493,6 @@ export interface YanwenSettingsInput {
 
 // null
 export interface YunExpressSettingsInput {
-  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3500,6 +3514,7 @@ export interface UpdateConnectionInput {
   eshippersettings?: PartialEShipperSettingsInput | null;
   fedexsettings?: PartialFedexSettingsInput | null;
   freightcomsettings?: PartialFreightcomSettingsInput | null;
+  genericsettings?: PartialGenericSettingsInput | null;
   purolatorsettings?: PartialPurolatorSettingsInput | null;
   royalmailsettings?: PartialRoyalMailSettingsInput | null;
   sendlesettings?: PartialSendleSettingsInput | null;
@@ -3515,7 +3530,6 @@ export interface UpdateConnectionInput {
 
 // null
 export interface PartialAramexSettingsInput {
-  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3529,7 +3543,6 @@ export interface PartialAramexSettingsInput {
 
 // null
 export interface PartialAustraliaPostSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3540,7 +3553,6 @@ export interface PartialAustraliaPostSettingsInput {
 
 // null
 export interface PartialCanadaPostSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3552,7 +3564,6 @@ export interface PartialCanadaPostSettingsInput {
 
 // null
 export interface PartialCanparSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3562,7 +3573,6 @@ export interface PartialCanparSettingsInput {
 
 // null
 export interface PartialDHLExpressSettingsInput {
-  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3574,7 +3584,6 @@ export interface PartialDHLExpressSettingsInput {
 
 // null
 export interface PartialDHLPolandSettingsInput {
-  id?: string | null;
   services?: (PartialServiceLevelModelSerializerInput | null)[] | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3606,7 +3615,6 @@ export interface PartialServiceLevelModelSerializerInput {
 
 // null
 export interface PartialDHLUniversalSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3616,7 +3624,6 @@ export interface PartialDHLUniversalSettingsInput {
 
 // null
 export interface PartialDicomSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3627,7 +3634,6 @@ export interface PartialDicomSettingsInput {
 
 // null
 export interface PartialEShipperSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3637,7 +3643,6 @@ export interface PartialEShipperSettingsInput {
 
 // null
 export interface PartialFedexSettingsInput {
-  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3650,7 +3655,6 @@ export interface PartialFedexSettingsInput {
 
 // null
 export interface PartialFreightcomSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3659,8 +3663,25 @@ export interface PartialFreightcomSettingsInput {
 }
 
 // null
-export interface PartialPurolatorSettingsInput {
+export interface PartialGenericSettingsInput {
+  account_country_code?: string | null;
+  services?: (PartialServiceLevelModelSerializerInput | null)[] | null;
+  label_template?: PartialLabelTemplateModelSerializerInput | null;
+  carrier_id?: string | null;
+  test?: boolean | null;
+  active?: boolean | null;
+}
+
+// null
+export interface PartialLabelTemplateModelSerializerInput {
   id?: string | null;
+  name?: string | null;
+  template?: string | null;
+  description?: string | null;
+}
+
+// null
+export interface PartialPurolatorSettingsInput {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3672,7 +3693,6 @@ export interface PartialPurolatorSettingsInput {
 
 // null
 export interface PartialRoyalMailSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3682,7 +3702,6 @@ export interface PartialRoyalMailSettingsInput {
 
 // null
 export interface PartialSendleSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3692,7 +3711,6 @@ export interface PartialSendleSettingsInput {
 
 // null
 export interface PartialSFExpressSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3702,7 +3720,6 @@ export interface PartialSFExpressSettingsInput {
 
 // null
 export interface PartialTNTSettingsInput {
-  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3714,7 +3731,6 @@ export interface PartialTNTSettingsInput {
 
 // null
 export interface PartialUPSSettingsInput {
-  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -3727,7 +3743,6 @@ export interface PartialUPSSettingsInput {
 
 // null
 export interface PartialUSPSSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3740,7 +3755,6 @@ export interface PartialUSPSSettingsInput {
 
 // null
 export interface PartialUSPSInternationalSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3753,7 +3767,6 @@ export interface PartialUSPSInternationalSettingsInput {
 
 // null
 export interface PartialYanwenSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3763,7 +3776,6 @@ export interface PartialYanwenSettingsInput {
 
 // null
 export interface PartialYunExpressSettingsInput {
-  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -3839,7 +3851,7 @@ export interface CustomsTemplateInput {
 // null
 export interface CustomsTemplate {
   incoterm?: string | null;
-  commodities?: (PartialCommodityModelSerializerInput | null)[] | null;
+  commodities?: (CommodityModelSerializerInput | null)[] | null;
   certify?: boolean | null;
   commercial_invoice?: boolean | null;
   content_type?: string | null;
@@ -3852,16 +3864,17 @@ export interface CustomsTemplate {
 }
 
 // null
-export interface PartialCommodityModelSerializerInput {
-  id?: string | null;
+export interface CommodityModelSerializerInput {
   weight_unit: string;
+  value_currency?: string | null;
+  origin_country?: string | null;
   weight?: number | null;
   description?: string | null;
   quantity?: number | null;
   sku?: string | null;
   value_amount?: number | null;
-  value_currency?: value_currency | null;
-  origin_country?: origin_country | null;
+  metadata?: any | null;
+  parent?: string | null;
 }
 
 // null
@@ -3894,12 +3907,13 @@ export interface ParcelTemplate {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
+  items?: string | null;
 }
 
 // null
 export interface PartialAddressTemplateInput {
   id: string;
-  address: PartialAddressTemplate;
+  address?: PartialAddressTemplate | null;
   label?: string | null;
   is_default?: boolean | null;
   clientMutationId?: string | null;
@@ -3928,7 +3942,7 @@ export interface PartialAddressTemplate {
 // null
 export interface PartialCustomsTemplateInput {
   id: string;
-  customs: PartialCustomsTemplate;
+  customs?: PartialCustomsTemplate | null;
   label?: string | null;
   is_default?: boolean | null;
   clientMutationId?: string | null;
@@ -3950,9 +3964,24 @@ export interface PartialCustomsTemplate {
 }
 
 // null
+export interface PartialCommodityModelSerializerInput {
+  id?: string | null;
+  weight_unit: string;
+  value_currency?: string | null;
+  origin_country?: string | null;
+  weight?: number | null;
+  description?: string | null;
+  quantity?: number | null;
+  sku?: string | null;
+  value_amount?: number | null;
+  metadata?: any | null;
+  parent?: string | null;
+}
+
+// null
 export interface PartialParcelTemplateInput {
   id: string;
-  parcel: PartialParcelTemplate;
+  parcel?: PartialParcelTemplate | null;
   label?: string | null;
   is_default?: boolean | null;
   clientMutationId?: string | null;
@@ -3971,6 +4000,7 @@ export interface PartialParcelTemplate {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
+  items?: string | null;
 }
 
 // null

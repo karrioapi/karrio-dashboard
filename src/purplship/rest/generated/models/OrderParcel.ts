@@ -14,46 +14,40 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Commodity,
-    CommodityFromJSON,
-    CommodityFromJSONTyped,
-    CommodityToJSON,
-} from './Commodity';
+    OrderCommodityData,
+    OrderCommodityDataFromJSON,
+    OrderCommodityDataFromJSONTyped,
+    OrderCommodityDataToJSON,
+} from './OrderCommodityData';
 
 /**
  * The shipment's parcels
  * @export
- * @interface Parcel
+ * @interface OrderParcel
  */
-export interface Parcel {
-    /**
-     * A unique identifier
-     * @type {string}
-     * @memberof Parcel
-     */
-    id?: string;
+export interface OrderParcel {
     /**
      * The parcel's weight
      * @type {number}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     weight: number;
     /**
      * The parcel's width
      * @type {number}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     width?: number | null;
     /**
      * The parcel's height
      * @type {number}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     height?: number | null;
     /**
      * The parcel's length
      * @type {number}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     length?: number | null;
     /**
@@ -67,7 +61,7 @@ export interface Parcel {
      * 
      * For carrier specific packaging types, please consult the reference.
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     packaging_type?: string | null;
     /**
@@ -76,74 +70,73 @@ export interface Parcel {
      * 
      * For carrier specific package presets, please consult the reference.
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     package_preset?: string | null;
     /**
      * The parcel's description
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     description?: string | null;
     /**
      * The parcel's content description
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     content?: string | null;
     /**
      * Indicates if the parcel is composed of documents only
      * @type {boolean}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
     is_document?: boolean | null;
     /**
      * The parcel's weight unit
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
-    weight_unit: ParcelWeightUnitEnum;
+    weight_unit: OrderParcelWeightUnitEnum;
     /**
      * The parcel's dimension unit
      * @type {string}
-     * @memberof Parcel
+     * @memberof OrderParcel
      */
-    dimension_unit?: ParcelDimensionUnitEnum;
+    dimension_unit?: OrderParcelDimensionUnitEnum;
     /**
      * The parcel items.
-     * @type {Array<Commodity>}
-     * @memberof Parcel
+     * @type {Array<OrderCommodityData>}
+     * @memberof OrderParcel
      */
-    items?: Array<Commodity>;
+    items: Array<OrderCommodityData>;
 }
 
 /**
 * @export
 * @enum {string}
 */
-export enum ParcelWeightUnitEnum {
+export enum OrderParcelWeightUnitEnum {
     Kg = 'KG',
     Lb = 'LB'
 }/**
 * @export
 * @enum {string}
 */
-export enum ParcelDimensionUnitEnum {
+export enum OrderParcelDimensionUnitEnum {
     Cm = 'CM',
     In = 'IN'
 }
 
-export function ParcelFromJSON(json: any): Parcel {
-    return ParcelFromJSONTyped(json, false);
+export function OrderParcelFromJSON(json: any): OrderParcel {
+    return OrderParcelFromJSONTyped(json, false);
 }
 
-export function ParcelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Parcel {
+export function OrderParcelFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderParcel {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
         'weight': json['weight'],
         'width': !exists(json, 'width') ? undefined : json['width'],
         'height': !exists(json, 'height') ? undefined : json['height'],
@@ -155,11 +148,11 @@ export function ParcelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pa
         'is_document': !exists(json, 'is_document') ? undefined : json['is_document'],
         'weight_unit': json['weight_unit'],
         'dimension_unit': !exists(json, 'dimension_unit') ? undefined : json['dimension_unit'],
-        'items': !exists(json, 'items') ? undefined : ((json['items'] as Array<any>).map(CommodityFromJSON)),
+        'items': ((json['items'] as Array<any>).map(OrderCommodityDataFromJSON)),
     };
 }
 
-export function ParcelToJSON(value?: Parcel | null): any {
+export function OrderParcelToJSON(value?: OrderParcel | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -168,7 +161,6 @@ export function ParcelToJSON(value?: Parcel | null): any {
     }
     return {
         
-        'id': value.id,
         'weight': value.weight,
         'width': value.width,
         'height': value.height,
@@ -180,7 +172,7 @@ export function ParcelToJSON(value?: Parcel | null): any {
         'is_document': value.is_document,
         'weight_unit': value.weight_unit,
         'dimension_unit': value.dimension_unit,
-        'items': value.items === undefined ? undefined : ((value.items as Array<any>).map(CommodityToJSON)),
+        'items': ((value.items as Array<any>).map(OrderCommodityDataToJSON)),
     };
 }
 

@@ -14,65 +14,65 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * 
+ * The parcel items.
  * @export
- * @interface CommodityData
+ * @interface OrderCommodityData
  */
-export interface CommodityData {
+export interface OrderCommodityData {
     /**
      * The commodity's weight
      * @type {number}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     weight: number;
     /**
      * The commodity's weight unit
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
-    weight_unit: CommodityDataWeightUnitEnum;
+    weight_unit: OrderCommodityDataWeightUnitEnum;
     /**
      * A description of the commodity
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     description?: string | null;
     /**
      * The commodity's quantity (number or item)
      * @type {number}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     quantity?: number;
     /**
      * The commodity's sku number
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     sku?: string | null;
     /**
      * The monetary value of the commodity
      * @type {number}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     value_amount?: number | null;
     /**
      * The currency of the commodity value amount
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     value_currency?: string | null;
     /**
      * The origin or manufacture country
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     origin_country?: string | null;
     /**
      * The id of the related order line item.
      * @type {string}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
-    parent_id?: string;
+    parent_id: string;
     /**
      * 
      * <details>
@@ -90,7 +90,7 @@ export interface CommodityData {
      * ```
      * </details>
      * @type {object}
-     * @memberof CommodityData
+     * @memberof OrderCommodityData
      */
     metadata?: object | null;
 }
@@ -99,16 +99,16 @@ export interface CommodityData {
 * @export
 * @enum {string}
 */
-export enum CommodityDataWeightUnitEnum {
+export enum OrderCommodityDataWeightUnitEnum {
     Kg = 'KG',
     Lb = 'LB'
 }
 
-export function CommodityDataFromJSON(json: any): CommodityData {
-    return CommodityDataFromJSONTyped(json, false);
+export function OrderCommodityDataFromJSON(json: any): OrderCommodityData {
+    return OrderCommodityDataFromJSONTyped(json, false);
 }
 
-export function CommodityDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): CommodityData {
+export function OrderCommodityDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderCommodityData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -122,12 +122,12 @@ export function CommodityDataFromJSONTyped(json: any, ignoreDiscriminator: boole
         'value_amount': !exists(json, 'value_amount') ? undefined : json['value_amount'],
         'value_currency': !exists(json, 'value_currency') ? undefined : json['value_currency'],
         'origin_country': !exists(json, 'origin_country') ? undefined : json['origin_country'],
-        'parent_id': !exists(json, 'parent_id') ? undefined : json['parent_id'],
+        'parent_id': json['parent_id'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
-export function CommodityDataToJSON(value?: CommodityData | null): any {
+export function OrderCommodityDataToJSON(value?: OrderCommodityData | null): any {
     if (value === undefined) {
         return undefined;
     }

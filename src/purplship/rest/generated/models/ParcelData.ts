@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Purplship API
- *  ## API Reference  Purplship is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Purplship API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded  request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Purplship API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released.  The current version is `2021.11.2`.   Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses,  list shipments, and list trackers. These list API methods share a common structure, taking at least these  two parameters: limit, and offset.  Purplship utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order.  The offset parameter returns objects listed after an index.  The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"next\": \"/v1/shipments?limit=25&offset=25\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [     ] } ```  ## Environments  The Purplship API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates,  buy labels, create trackers and schedule pickups in `test_mode`.  
+ *  ## API Reference  Purplship is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Purplship API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Purplship API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2021.11.2`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Purplship utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"next\": \"/v1/shipments?limit=25&offset=25\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [     ] } ```  ## Environments  The Purplship API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.  
  *
  * The version of the OpenAPI document: 2021.11.2
  * Contact: hello@purplship.com
@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    CommodityData,
+    CommodityDataFromJSON,
+    CommodityDataFromJSONTyped,
+    CommodityDataToJSON,
+} from './CommodityData';
+
 /**
  * 
  * @export
@@ -49,9 +56,10 @@ export interface ParcelData {
      * 
      * **Note that the packaging is optional when using a package preset**
      * 
-     * values: <br/>- **envelope**<br/>- **pak**<br/>- **tube**<br/>- **pallet**<br/>- **small_box**<br/>- **medium_box**<br/>- **your_packaging**
+     * values: <br/>
+     * `envelope` `pak` `tube` `pallet` `small_box` `medium_box` `your_packaging`
      * 
-     * For specific carriers packaging type, please consult [the reference](#operation/references).
+     * For carrier specific packaging types, please consult the reference.
      * @type {string}
      * @memberof ParcelData
      */
@@ -60,7 +68,7 @@ export interface ParcelData {
      * 
      * The parcel's package preset.
      * 
-     * For specific carriers package preset, please consult [the reference](#operation/references).
+     * For carrier specific package presets, please consult the reference.
      * @type {string}
      * @memberof ParcelData
      */
@@ -95,6 +103,12 @@ export interface ParcelData {
      * @memberof ParcelData
      */
     dimension_unit?: ParcelDataDimensionUnitEnum;
+    /**
+     * The parcel items.
+     * @type {Array<CommodityData>}
+     * @memberof ParcelData
+     */
+    items?: Array<CommodityData>;
 }
 
 /**
@@ -134,6 +148,7 @@ export function ParcelDataFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'is_document': !exists(json, 'is_document') ? undefined : json['is_document'],
         'weight_unit': json['weight_unit'],
         'dimension_unit': !exists(json, 'dimension_unit') ? undefined : json['dimension_unit'],
+        'items': !exists(json, 'items') ? undefined : ((json['items'] as Array<any>).map(CommodityDataFromJSON)),
     };
 }
 
@@ -157,6 +172,7 @@ export function ParcelDataToJSON(value?: ParcelData | null): any {
         'is_document': value.is_document,
         'weight_unit': value.weight_unit,
         'dimension_unit': value.dimension_unit,
+        'items': value.items === undefined ? undefined : ((value.items as Array<any>).map(CommodityDataToJSON)),
     };
 }
 
