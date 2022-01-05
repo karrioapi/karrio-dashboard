@@ -25,7 +25,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const onUpdate = async () => refetch && await refetch();
   const toggle = ({ __typename, active, id }: UserConnectionType) => async () => {
     try {
-      const data = { [__typename.toLowerCase()]: { id, active: !active } };
+      const data = { [__typename.toLowerCase()]: { active: !active } };
       await updateConnection({ id, ...data });
       notify({
         type: NotificationType.success,
