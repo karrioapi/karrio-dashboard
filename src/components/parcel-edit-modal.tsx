@@ -4,7 +4,7 @@ import { isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { NotificationType, ParcelTemplateType, ParcelType } from '@/lib/types';
-import ParcelTemplateMutation, { ParcelMutationContext } from '@/context/parcel-template-mutation';
+import { ParcelMutationContext } from '@/context/parcel-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 

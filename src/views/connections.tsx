@@ -12,6 +12,7 @@ import Head from "next/head";
 import { useContext, useEffect } from "react";
 import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
+import ConnectionMutationProvider, { ConnectionMutationContext } from "@/context/connection-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -63,15 +64,17 @@ export default function ConnectionsPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Carrier Connections - {(pageProps as any).references?.app_name}</title></Head>
       <ConfirmModal>
-        <ConnectProviderModal>
-          <SystemConnectionsProvider>
-            <UserConnectionsProvider>
+        <ConnectionMutationProvider>
+          <ConnectProviderModal>
+            <SystemConnectionsProvider>
+              <UserConnectionsProvider>
 
-              <Component />
+                <Component />
 
-            </UserConnectionsProvider>
-          </SystemConnectionsProvider>
-        </ConnectProviderModal>
+              </UserConnectionsProvider>
+            </SystemConnectionsProvider>
+          </ConnectProviderModal>
+        </ConnectionMutationProvider>
       </ConfirmModal>
     </DashboardLayout>
   ), pageProps);

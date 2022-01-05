@@ -111,7 +111,6 @@ query get_default_templates {
 export const CREATE_CONNECTION = gql`
   mutation create_connection($data: CreateConnectionInput!) {
     create_connection(input: $data) {
-      id
       errors {
         field
         messages
@@ -123,7 +122,6 @@ export const CREATE_CONNECTION = gql`
 export const UPDATE_CONNECTION = gql`
   mutation update_connection($data: UpdateConnectionInput!) {
     update_connection(input: $data) {
-      id
       errors {
         field
         messages
@@ -892,10 +890,12 @@ query get_user_connections($test: Boolean) {
     }
     ... on GenericSettings {
       id
+      name
       carrier_id
       carrier_name
       test
       active
+      account_country_code
       services {
         id
         active
@@ -916,8 +916,11 @@ query get_user_connections($test: Boolean) {
       }
       label_template {
         id
-        name
+        alias
         template
+        template_type
+        width
+        height
         description
       }
     }
@@ -1446,6 +1449,19 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
           meta
         }
       }
+    }
+  }
+}
+`;
+
+export const MUTATE_METADATA = gql`
+mutation mutate_metadata($data: MutateMetadataInput!) {
+  mutate_metadata(input: $data) {
+    id
+    metadata
+    errors {
+      field
+      messages
     }
   }
 }

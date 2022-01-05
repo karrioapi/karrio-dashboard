@@ -8,7 +8,6 @@ import ModeIndicator from "@/components/mode-indicator";
 import ShipmentMenu from "@/components/shipment-menu";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
-import { AppMode } from "@/context/app-mode-provider";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
 import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, p, shipmentCarrier } from "@/lib/helper";

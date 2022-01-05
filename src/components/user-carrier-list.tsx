@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
 import CarrierBadge from '@/components/carrier-badge';
 import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
-import ConnectionMutation from '@/context/connection-mutation';
+import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
@@ -12,12 +12,13 @@ import Spinner from '@/components/spinner';
 
 interface UserConnectionListView { }
 
-const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<UserConnectionListView>(({ updateConnection, deleteConnection }) => {
+const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
   const { confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
+  const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
   const { user_connections, loading, refetch } = useContext(UserConnections);
   const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
@@ -130,6 +131,6 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
 
     </>
   );
-});
+}
 
 export default UserConnectionList;

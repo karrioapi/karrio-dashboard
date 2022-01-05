@@ -1,3 +1,4 @@
+import MetadataMutationProvider from '@/context/metadata-mutation';
 import ShipmentProvider from '@/context/shipment-provider';
 import { ShipmentComponent } from '@/views/shipment';
 import React, { useState } from 'react';
@@ -38,7 +39,9 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
             <ShipmentProvider>
-              <ShipmentComponent shipmentId={shipmentId} />
+              <MetadataMutationProvider>
+                <ShipmentComponent shipmentId={shipmentId} />
+              </MetadataMutationProvider>
             </ShipmentProvider>
           </section>
         </div>}

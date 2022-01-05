@@ -174,7 +174,6 @@ export interface create_connection_create_connection_errors {
 }
 
 export interface create_connection_create_connection {
-  id: string | null;
   errors: (create_connection_create_connection_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -200,7 +199,6 @@ export interface update_connection_update_connection_errors {
 }
 
 export interface update_connection_update_connection {
-  id: string | null;
   errors: (update_connection_update_connection_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -1461,18 +1459,23 @@ export interface get_user_connections_user_connections_GenericSettings_services 
 
 export interface get_user_connections_user_connections_GenericSettings_label_template {
   id: string;  // The ID of the object.
-  name: string;
+  alias: string;
   template: string;
+  template_type: LabelTemplateTemplateType;
+  width: number | null;
+  height: number | null;
   description: string | null;
 }
 
 export interface get_user_connections_user_connections_GenericSettings {
   __typename: "GenericSettings";
   id: string;
+  name: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
   test: boolean;
   active: boolean;
+  account_country_code: string;
   services: (get_user_connections_user_connections_GenericSettings_services | null)[] | null;
   label_template: get_user_connections_user_connections_GenericSettings_label_template | null;
 }
@@ -2245,6 +2248,33 @@ export interface get_ordersVariables {
   option_key?: (string | null)[] | null;
   option_value?: string | null;
   metadata_value?: string | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: mutate_metadata
+// ====================================================
+
+export interface mutate_metadata_mutate_metadata_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface mutate_metadata_mutate_metadata {
+  id: string | null;
+  metadata: any | null;
+  errors: (mutate_metadata_mutate_metadata_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface mutate_metadata {
+  mutate_metadata: mutate_metadata_mutate_metadata | null;
+}
+
+export interface mutate_metadataVariables {
+  data: MutateMetadataInput;
 }
 
 /* tslint:disable */
@@ -3244,6 +3274,12 @@ export enum ServiceLevelDimensionUnit {
 }
 
 // An enumeration.
+export enum LabelTemplateTemplateType {
+  SVG = "SVG",
+  ZPL = "ZPL",
+}
+
+// An enumeration.
 export enum OrderStatus {
   cancelled = "cancelled",
   created = "created",
@@ -3252,9 +3288,15 @@ export enum OrderStatus {
   partially_fulfilled = "partially_fulfilled",
 }
 
+// An enumeration.
+export enum MetadataObjectType {
+  commodity = "commodity",
+  order = "order",
+  shipment = "shipment",
+}
+
 // null
 export interface CreateConnectionInput {
-  id?: string | null;
   aramexsettings?: AramexSettingsInput | null;
   australiapostsettings?: AustraliaPostSettingsInput | null;
   canadapostsettings?: CanadaPostSettingsInput | null;
@@ -3421,13 +3463,18 @@ export interface GenericSettingsInput {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  name: string;
 }
 
 // null
 export interface LabelTemplateModelSerializerInput {
-  name: string;
+  id?: string | null;
+  template_type?: string | null;
+  alias: string;
   template: string;
   description?: string | null;
+  width?: number | null;
+  height?: number | null;
 }
 
 // null
@@ -3703,14 +3750,18 @@ export interface PartialGenericSettingsInput {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  name?: string | null;
 }
 
 // null
 export interface PartialLabelTemplateModelSerializerInput {
   id?: string | null;
-  name?: string | null;
+  template_type?: string | null;
+  alias?: string | null;
   template?: string | null;
   description?: string | null;
+  width?: number | null;
+  height?: number | null;
 }
 
 // null
@@ -4098,6 +4149,15 @@ export interface ConfirmPasswordResetInput {
   new_password2: string;
   uid: string;
   token: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface MutateMetadataInput {
+  id: string;
+  object_type: MetadataObjectType;
+  added_values?: any | null;
+  discarded_keys?: (string | null)[] | null;
   clientMutationId?: string | null;
 }
 

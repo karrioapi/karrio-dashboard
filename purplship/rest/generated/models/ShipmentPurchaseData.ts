@@ -50,6 +50,12 @@ export interface ShipmentPurchaseData {
      * @memberof ShipmentPurchaseData
      */
     reference?: string | null;
+    /**
+     * User metadata for the shipment
+     * @type {object}
+     * @memberof ShipmentPurchaseData
+     */
+    metadata?: object;
 }
 
 /**
@@ -75,6 +81,7 @@ export function ShipmentPurchaseDataFromJSONTyped(json: any, ignoreDiscriminator
         'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
         'payment': !exists(json, 'payment') ? undefined : PaymentFromJSON(json['payment']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
@@ -91,6 +98,7 @@ export function ShipmentPurchaseDataToJSON(value?: ShipmentPurchaseData | null):
         'label_type': value.label_type,
         'payment': PaymentToJSON(value.payment),
         'reference': value.reference,
+        'metadata': value.metadata,
     };
 }
 

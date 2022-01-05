@@ -44,6 +44,12 @@ export interface ShipmentRateData {
      * @memberof ShipmentRateData
      */
     reference?: string | null;
+    /**
+     * User metadata for the shipment
+     * @type {object}
+     * @memberof ShipmentRateData
+     */
+    metadata?: object;
 }
 
 export function ShipmentRateDataFromJSON(json: any): ShipmentRateData {
@@ -59,6 +65,7 @@ export function ShipmentRateDataFromJSONTyped(json: any, ignoreDiscriminator: bo
         'services': !exists(json, 'services') ? undefined : json['services'],
         'carrier_ids': !exists(json, 'carrier_ids') ? undefined : json['carrier_ids'],
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
@@ -74,6 +81,7 @@ export function ShipmentRateDataToJSON(value?: ShipmentRateData | null): any {
         'services': value.services,
         'carrier_ids': value.carrier_ids,
         'reference': value.reference,
+        'metadata': value.metadata,
     };
 }
 

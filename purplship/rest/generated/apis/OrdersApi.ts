@@ -27,15 +27,7 @@ import {
     OrderList,
     OrderListFromJSON,
     OrderListToJSON,
-    OrderShipmentData,
-    OrderShipmentDataFromJSON,
-    OrderShipmentDataToJSON,
 } from '../models';
-
-export interface AddShipmentRequest {
-    id: string;
-    data: OrderShipmentData;
-}
 
 export interface CancelRequest {
     id: string;
@@ -63,49 +55,6 @@ export interface RetrieveRequest {
  * 
  */
 export class OrdersApi extends runtime.BaseAPI {
-
-    /**
-     * Add a shipment to an order.
-     * Add a shipment
-     */
-    async addShipmentRaw(requestParameters: AddShipmentRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Order>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling addShipment.');
-        }
-
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling addShipment.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
-        }
-
-        const response = await this.request({
-            path: `/v1/orders/{id}/shipments`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: OrderShipmentDataToJSON(requestParameters.data),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => OrderFromJSON(jsonValue));
-    }
-
-    /**
-     * Add a shipment to an order.
-     * Add a shipment
-     */
-    async addShipment(requestParameters: AddShipmentRequest, initOverrides?: RequestInit): Promise<Order> {
-        const response = await this.addShipmentRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Cancel an order.
