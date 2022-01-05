@@ -11,9 +11,10 @@ interface ExpandedSidebarComponent { }
 
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
-  const { testMode, basePath, switchMode } = useContext(AppMode);
-  const { multi_organizations } = useContext(APIReference);
   const sidebar = useRef<HTMLDivElement>(null);
+  const { multi_organizations } = useContext(APIReference);
+  const { testMode, basePath, switchMode } = useContext(AppMode);
+  const [showTemplateMenus, setShowTemplateMenus] = React.useState(false);
 
   const dismiss = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,36 +48,44 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span className="has-text-weight-semibold">Carriers</span>
         </AppLink>
 
-        <AppLink href="/templates/addresses" className={"menu-item " + isActive("/templates/addresses")} shallow={false} prefetch={false}>
-          <span className="has-text-weight-semibold">Addresses</span>
-        </AppLink>
+        {/* Templates */}
+        <a className="menu-item menu-item my-0" onClick={() => setShowTemplateMenus(!showTemplateMenus)}>
+          <span className="has-text-weight-semibold">Templates</span>
+        </a>
 
-        <AppLink href="/templates/parcels" className={"menu-item " + isActive("/templates/parcels")} shallow={false} prefetch={false}>
-          <span className="has-text-weight-semibold">Parcels</span>
-        </AppLink>
+        {(showTemplateMenus || window.location.pathname.includes('/templates')) && <>
+          <AppLink href="/templates/addresses" className={"menu-item ml-5 " + isActive("/templates/addresses")} shallow={false} prefetch={false}>
+            <span>Addresses</span>
+          </AppLink>
 
-        <AppLink href="/templates/customs-infos" className={"menu-item " + isActive("/templates/customs-infos")} shallow={false} prefetch={false}>
-          <span className="has-text-weight-semibold">Customs</span>
-        </AppLink>
+          <AppLink href="/templates/parcels" className={"menu-item ml-5 " + isActive("/templates/parcels")} shallow={false} prefetch={false}>
+            <span>Parcels</span>
+          </AppLink>
 
+          <AppLink href="/templates/customs-infos" className={"menu-item ml-5 " + isActive("/templates/customs-infos")} shallow={false} prefetch={false}>
+            <span>Customs</span>
+          </AppLink>
+        </>}
+
+        {/* Developers */}
         <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
           <span className="has-text-weight-semibold">Developers</span>
         </AppLink>
 
         {window.location.pathname.includes('/developers') && <>
-          <AppLink href="/developers/api" className={"menu-item ml-6 " + isActive("/developers/api")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/api" className={"menu-item ml-5 " + isActive("/developers/api")} shallow={false} prefetch={false}>
             <span>API</span>
           </AppLink>
 
-          <AppLink href="/developers/webhooks" className={"menu-item ml-6 " + isActive("/developers/webhooks")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/webhooks" className={"menu-item ml-5 " + isActive("/developers/webhooks")} shallow={false} prefetch={false}>
             <span>Webhooks</span>
           </AppLink>
 
-          <AppLink href="/developers/events" className={"menu-item ml-6 " + isActive("/developers/events")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/events" className={"menu-item ml-5 " + isActive("/developers/events")} shallow={false} prefetch={false}>
             <span>Events</span>
           </AppLink>
 
-          <AppLink href="/developers/logs" className={"menu-item ml-6 " + isActive("/developers/logs")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/logs" className={"menu-item ml-5 " + isActive("/developers/logs")} shallow={false} prefetch={false}>
             <span>Logs</span>
           </AppLink>
         </>}
