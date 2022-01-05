@@ -65,6 +65,14 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update 
 
         <InputField defaultValue={options?.shipment_date} onChange={handleChange} label="shipment date" name="shipment_date" type="date" className="is-small" fieldClass="column mb-0 is-5 px-2 py-2" />
 
+        <SelectField label="shipment currency"
+          value={options?.currency} onChange={handleChange}
+          name="currency" className="is-small is-fullwidth" fieldClass="column is-4 mb-0 px-1 py-2"
+          required={!isNone(options?.insurance) || !isNone(options?.cash_on_delivery) || !isNone(options?.declared_value)}>
+          <option value="">Select a currency</option>
+          {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
+        </SelectField>
+
         <CheckBoxField defaultChecked={options?.signature_confirmation} onChange={handleChange} name="signature_confirmation" fieldClass="column mb-0 is-12 px-2 py-2">
           <span>Add signature confirmation</span>
         </CheckBoxField>
@@ -132,7 +140,7 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update 
 
       <div className="columns is-multiline mb-0 px-1">
 
-        <SelectField label="shipment currency" value={options?.currency} onChange={handleChange} name="currency" className="is-small is-fullwidth" fieldClass="column is-3 mb-0 px-1 py-2" required={!isNone(options?.insurance) || !isNone(options?.cash_on_delivery) || !isNone(options?.declared_value)}>
+        <SelectField label="shipment currency" value={options?.currency} onChange={handleChange} name="currency" className="is-small is-fullwidth" fieldClass="column is-4 mb-0 px-1 py-2" required={!isNone(options?.insurance) || !isNone(options?.cash_on_delivery) || !isNone(options?.declared_value)}>
           <option value="">Select a currency</option>
 
           {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}

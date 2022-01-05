@@ -12,7 +12,7 @@ export interface DropdownInputComponent extends React.AllHTMLAttributes<HTMLInpu
 }
 
 
-const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, value, fieldClass, controlClass, dropdownClass, required, onValueChange, ...props }) => {
+const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, value, className, fieldClass, controlClass, dropdownClass, required, onValueChange, ...props }) => {
   const btn = useRef<any>(null);
   const control = useRef<any>(null);
   const [key, setKey] = useState<string>(`dropdown-${Date.now()}`);
@@ -73,7 +73,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
       <div className={`control ${controlClass}`}>
         <div className={`dropdown select is-fullwidth ${isActive ? 'is-active' : ''} ${dropdownClass}`} key={`dropdown-input-${key}`}>
           <input name={name} onChange={onRefChange} value={country || ''} className="input is-fullwidth" style={{ position: 'absolute', zIndex: -1 }} required={required} />
-          <a onClick={handleOnClick} aria-haspopup="true" className="dropdown-trigger input is-fullwidth px-2" style={{ justifyContent: 'left' }} aria-controls={`dropdown-input-`} ref={btn}>
+          <a onClick={handleOnClick} aria-haspopup="true" className={"dropdown-trigger input is-fullwidth px-2" + ` ${className}` || ''} style={{ justifyContent: 'left' }} aria-controls={`dropdown-input-`} ref={btn}>
             <span>{country}</span>
           </a>
 
@@ -82,7 +82,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
 
               <div className="panel-block px-1 py-1">
                 <p className="control">
-                  <input className="input" type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
+                  <input className={"input" + ` ${className}` || ''} type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
                 </p>
               </div>
               <nav className="panel dropped-panel">
@@ -93,7 +93,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
                       tabIndex={index}
                       onClick={onSelect(key)}
                       className={`panel-block  ${key === country ? 'is-active' : ''}`}>
-                      <span>{val}</span>
+                      <span className='is-size-7'>{val}</span>
                     </a>
                   ))
                 }

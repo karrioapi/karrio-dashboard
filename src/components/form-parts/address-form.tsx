@@ -96,36 +96,43 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
       {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, address, onChange: handleChange }))}
 
       <div className="columns mb-0">
-        <NameInput label="name" onValueChange={(value, refresh) => { dispatch({ name: "partial", value }); refresh && setKey(`address-${Date.now()}`); }} value={address.person_name} disableSuggestion={isNone(shipment)} fieldClass="column mb-0 px-2 py-2" required />
+        <NameInput label="name" onValueChange={(value, refresh) => { dispatch({ name: "partial", value }); refresh && setKey(`address-${Date.now()}`); }} value={address.person_name} disableSuggestion={isNone(shipment)} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
       </div>
 
       <div className="columns mb-0">
-        <InputField label="company" name="company_name" onChange={handleChange} value={address.company_name} fieldClass="column mb-0 px-2 py-2" />
+        <InputField label="company" name="company_name" onChange={handleChange} value={address.company_name} className="is-small" fieldClass="column mb-0 px-2 py-2" />
       </div>
 
       <div className="columns mb-0">
-        <InputField label="email" name="email" onChange={handleChange} value={address.email} fieldClass="column mb-0 is-7 px-2 py-2" type="email" />
+        <InputField label="email" name="email" onChange={handleChange} value={address.email} className="is-small" fieldClass="column mb-0 is-7 px-2 py-2" type="email" />
 
-        <PhoneInput label="phone" onValueChange={value => dispatch({ name: "phone_number", value: value as string })} value={address.phone_number} country={address.country_code} fieldClass="column mb-0 px-2 py-2" />
+        <PhoneInput label="phone" onValueChange={value => dispatch({ name: "phone_number", value: value as string })} value={address.phone_number} country={address.country_code} className="is-small" fieldClass="column mb-0 px-2 py-2" />
       </div>
 
 
       <div className="columns mb-0">
-        <CountryInput label="country" onValueChange={value => dispatch({ name: "country_code", value: value as string })} value={address.country_code} fieldClass="column mb-0 px-2 py-2" required />
+        <CountryInput
+          label="country"
+          onValueChange={value => dispatch({ name: "country_code", value: value as string })}
+          value={address.country_code}
+          className="is-small"
+          dropdownClass="is-small"
+          fieldClass="column mb-0 px-2 py-2"
+          required />
       </div>
 
       <div className="columns mb-0">
-        <AddressAutocompleteInput label="Street (Line 1)" name="address_line1" onValueChange={(value) => dispatch({ name: "partial", value })} value={address.address_line1} country_code={address.country_code} fieldClass="column mb-0 px-2 py-2" required />
+        <AddressAutocompleteInput label="Street (Line 1)" name="address_line1" onValueChange={(value) => dispatch({ name: "partial", value })} value={address.address_line1} country_code={address.country_code} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
       </div>
 
       <div className="columns is-multiline mb-0">
-        <InputField label="Street (Line 2)" name="address_line2" onChange={handleChange} value={address.address_line2} fieldClass="column is-6 mb-0 px-2 py-2" />
+        <InputField label="Street (Line 2)" name="address_line2" onChange={handleChange} value={address.address_line2} className="is-small" fieldClass="column is-6 mb-0 px-2 py-2" />
 
-        <InputField label="city" name="city" onChange={handleChange} value={address.city} fieldClass="column is-6 mb-0 px-2 py-2" required />
+        <InputField label="city" name="city" onChange={handleChange} value={address.city} className="is-small" fieldClass="column is-6 mb-0 px-2 py-2" required />
 
-        <StateInput label="province or state" onValueChange={value => dispatch({ name: "state_code", value: value as string })} value={address.state_code} fieldClass="column is-6 mb-0 px-2 py-2" country_code={address.country_code} required={Object.keys(states || {}).includes(address.country_code)} />
+        <StateInput label="province or state" onValueChange={value => dispatch({ name: "state_code", value: value as string })} value={address.state_code} className="is-small" fieldClass="column is-6 mb-0 px-2 py-2" country_code={address.country_code} required={Object.keys(states || {}).includes(address.country_code)} />
 
-        <PostalInput label="postal code" onValueChange={value => dispatch({ name: "postal_code", value: value as string })} value={address.postal_code} country={address.country_code} fieldClass="column is-6 mb-0 px-2 py-2" required={COUNTRY_WITH_POSTAL_CODE.includes(address.country_code)} />
+        <PostalInput label="postal code" onValueChange={value => dispatch({ name: "postal_code", value: value as string })} value={address.postal_code} country={address.country_code} className="is-small" fieldClass="column is-6 mb-0 px-2 py-2" required={COUNTRY_WITH_POSTAL_CODE.includes(address.country_code)} />
       </div>
 
       <div className="columns mb-0">

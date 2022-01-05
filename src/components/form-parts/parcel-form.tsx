@@ -132,7 +132,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
       </div>
 
-      <SelectField name="parcel_type" onChange={handleChange} value={parcel_type} className="is-fullwidth" required>
+      <SelectField name="parcel_type" onChange={handleChange} value={parcel_type} className="is-small is-fullwidth" required>
         <optgroup label="New">
           <option value='custom'>Custom Measurements</option>
           <option value='preset'>Carrier Parcel Presets</option>
@@ -145,7 +145,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
       {(parcel_type === 'preset') && <>
 
-        <SelectField name="package_preset" onChange={handleChange} value={parcel.package_preset} className="is-fullwidth is-capitalized" required>
+        <SelectField name="package_preset" onChange={handleChange} value={parcel.package_preset} className="is-small is-fullwidth is-capitalized" required>
           <option value="">Select a Carrier Provided Parcel</option>
 
           {Object

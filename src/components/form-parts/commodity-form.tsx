@@ -64,19 +64,25 @@ const CommodityForm: React.FC<CommodityTypeFormComponent> = ({ value, update }) 
 
       <div className="columns is-multiline mb-0 px-1">
 
-        <InputField label="SKU" value={commodity?.sku} onChange={handleChange} name="sku" fieldClass="column mb-0 is-6 px-2 py-1" required />
+        <InputField label="SKU" value={commodity?.sku} onChange={handleChange} name="sku" className="is-small" fieldClass="column mb-0 is-6 px-2 py-1" required />
 
-        <CountryInput label="Origin Country" onValueChange={value => dispatch({ name: "origin_country", value: value as string })} value={commodity.origin_country} fieldClass="column mb-0 is-6 px-2 py-1" />
+        <CountryInput
+          label="Origin Country"
+          onValueChange={value => dispatch({ name: "origin_country", value: value as string })}
+          value={commodity.origin_country}
+          className="is-small"
+          dropdownClass="is-small"
+          fieldClass="column mb-0 is-6 px-2 py-1" />
 
-        <InputField label="Quantity" onChange={handleChange} value={commodity?.quantity} name="quantity" type="number" step="1" min="1" fieldClass="column is-6 mb-0 px-2 py-1" required />
+        <InputField label="Quantity" onChange={handleChange} value={commodity?.quantity} name="quantity" type="number" step="1" min="1" className="is-small" fieldClass="column is-6 mb-0 px-2 py-1" required />
 
-        <InputField label="Value Amount" onChange={handleChange} value={commodity?.value_amount} name="value_amount" type="number" step="any" min="0" fieldClass="column is-3 mb-0 px-2 py-1" />
+        <InputField label="Value Amount" onChange={handleChange} value={commodity?.value_amount} name="value_amount" type="number" step="any" min="0" className="is-small" fieldClass="column is-3 mb-0 px-2 py-1" />
 
-        <SelectField label="Value Currency" onChange={handleChange} value={commodity.value_currency} name="value_currency" className="is-fullwidth" fieldClass="column is-3 mb-0 px-2 py-1" required={!isNone(commodity?.value_amount)}>
+        <SelectField label="Value Currency" onChange={handleChange} value={commodity.value_currency} name="value_currency" className="is-small is-fullwidth" fieldClass="column is-3 mb-0 px-2 py-1" required={!isNone(commodity?.value_amount)}>
           {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
         </SelectField>
 
-        <TextAreaField label="description" value={commodity?.description} onChange={handleChange} name="description" fieldClass="column mb-0 is-12 px-2 py-1" placeholder="item description" rows={2} />
+        <TextAreaField label="description" value={commodity?.description} onChange={handleChange} name="description" className="is-small" fieldClass="column mb-0 is-12 px-2 py-1" placeholder="item description" rows={2} />
 
       </div>
 
@@ -84,9 +90,9 @@ const CommodityForm: React.FC<CommodityTypeFormComponent> = ({ value, update }) 
 
       <div className="columns mb-0 px-1">
 
-        <InputField type="number" step="any" min="0" name="weight" onChange={handleChange} value={commodity.weight} fieldClass="column is-2 mb-0 px-2 py-1" required />
+        <InputField type="number" step="any" min="0" name="weight" onChange={handleChange} value={commodity.weight} className="is-small" fieldClass="column is-2 mb-0 px-2 py-1" required />
 
-        <SelectField name="weight_unit" onChange={handleChange} value={commodity.weight_unit || CommodityDataWeightUnitEnum.Kg} className="is-fullwidth" fieldClass="column is-2 mb-0 px-2 py-1" required>
+        <SelectField name="weight_unit" onChange={handleChange} value={commodity.weight_unit || CommodityDataWeightUnitEnum.Kg} className="is-small is-fullwidth" fieldClass="column is-2 mb-0 px-2 py-1" required>
           {WEIGHT_UNITS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
         </SelectField>
 

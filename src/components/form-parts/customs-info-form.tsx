@@ -136,7 +136,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
 
   return (
     <>
-      {!cannotOptOut && <div className="columns is-multiline">
+      {!cannotOptOut && <div className="columns is-multiline mb-0">
         <CheckBoxField defaultChecked={isNone(customs)} onChange={handleChange} name="optOut" fieldClass="column mb-0 is-12 px-3 py-3 has-text-weight-semibold">
           <span>Opt out of customs</span>
         </CheckBoxField>
@@ -151,14 +151,14 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         </ButtonField>
       </div>}
 
-      {!isNone(customs) && <form className="pl-1 pr-2 py-2" onSubmit={handleSubmit} ref={form} style={{ display: `${!editCommodity ? 'block' : 'none'}` }}>
+      {!isNone(customs) && <form className="pl-1 pr-2 pb-2" onSubmit={handleSubmit} ref={form} style={{ display: `${!editCommodity ? 'block' : 'none'}` }}>
 
         {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, customs, onChange: handleChange }))}
 
         {/* Customs Info */}
         <div className="columns is-multiline mb-0 mt-4">
 
-          <SelectField label="Content type" value={customs?.content_type} onChange={handleChange} name="content_type" className="is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
+          <SelectField label="Content type" value={customs?.content_type} onChange={handleChange} name="content_type" className="is-small is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
             {customs_content_type && Object
               .entries(customs_content_type as Collection)
               .map(([code, name]) => (
@@ -167,7 +167,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
             }
           </SelectField>
 
-          <SelectField label="incoterm" value={customs?.incoterm} onChange={handleChange} name="incoterm" className="is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
+          <SelectField label="incoterm" value={customs?.incoterm} onChange={handleChange} name="incoterm" className="is-small is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
             {incoterms && Object
               .entries(incoterms as Collection)
               .map(([code, name]) => (
@@ -234,25 +234,25 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
 
             <div className="columns column is-multiline mb-0 ml-6 my-2 px-2 py-2" style={{ borderLeft: "solid 2px #ddd", display: `${optionsExpanded ? 'block' : 'none'}` }}>
 
-              <InputField label="AES" value={customs?.options?.aes} name="aes" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="AES" value={customs?.options?.aes} name="aes" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), aes: e.target.value } })} />
 
-              <InputField label="EEL / PFC" value={customs?.options?.eel_pfc} name="eel_pfc" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="EEL / PFC" value={customs?.options?.eel_pfc} name="eel_pfc" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), eel_pfc: e.target.value } })} />
 
-              <InputField label="certificate number" value={customs?.options?.certificate_number} name="certificate_number" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="certificate number" value={customs?.options?.certificate_number} name="certificate_number" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), certificate_number: e.target.value } })} />
 
-              <InputField label="license number" value={customs?.options?.license_number} name="license_number" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="license number" value={customs?.options?.license_number} name="license_number" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), license_number: e.target.value } })} />
 
-              <InputField label="VAT registration number" value={customs?.options?.vat_registration_number} name="vat_registration_number" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="VAT registration number" value={customs?.options?.vat_registration_number} name="vat_registration_number" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), vat_registration_number: e.target.value } })} />
 
-              <InputField label="nip_number" value={customs?.options?.nip_number} name="nip_number" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="nip_number" value={customs?.options?.nip_number} name="nip_number" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), nip_number: e.target.value } })} />
 
-              <InputField label="eori_number" value={customs?.options?.eori_number} name="eori_number" fieldClass="column mb-0 is-5 px-2 py-1"
+              <InputField label="eori_number" value={customs?.options?.eori_number} name="eori_number" className="is-small" fieldClass="column mb-0 is-5 px-2 py-1"
                 onChange={e => dispatch({ name: 'options', value: { ...(customs.options || {}), eori_number: e.target.value } })} />
 
             </div>
@@ -311,12 +311,23 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         {/* Customs Summary and signature */}
         <div className="columns is-multiline mb-6 pt-2">
 
-          <TextAreaField label="content description" value={customs?.content_description} onChange={handleChange} name="content_description"
-            fieldClass="column mb-0 is-12 px-2 py-2" placeholder="Content type description" rows={2} />
+          <TextAreaField label="content description"
+            value={customs?.content_description}
+            onChange={handleChange} name="content_description"
+            className="is-small"
+            fieldClass="column mb-0 is-12 px-2 py-2"
+            placeholder="Content type description"
+            rows={2} />
 
           <UserData.Consumer>
             {({ user }) => (
-              <InputField label="Signed By" value={(customs?.signer || user?.full_name) as string} onChange={handleChange} name="signer" fieldClass="column mb-0 is-12 px-2 py-2" required={!cannotOptOut} />
+              <InputField label="Signed By"
+                value={(customs?.signer || user?.full_name) as string}
+                onChange={handleChange}
+                name="signer"
+                className="is-small"
+                fieldClass="column mb-0 is-12 px-2 py-2"
+                required={!cannotOptOut} />
             )}
           </UserData.Consumer>
 

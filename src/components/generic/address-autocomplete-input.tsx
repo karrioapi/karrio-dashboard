@@ -73,7 +73,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
         <div className={`dropdown input is-fullwidth p-0 ${isActive ? 'is-active' : ''} ${dropdownClass}`}
           style={{ border: 'none' }}
           key={`dropdown-input-${key}`}>
-          <input onChange={onChange} onClick={onClick} autoComplete={address_auto_complete?.is_enabled ? key : "on"} className="input is-fullwidth" required={required} {...props} />
+          <input onChange={onChange} onClick={onClick} autoComplete={address_auto_complete?.is_enabled ? key : "on"} className={`input is-fullwidth ${className || ''}`} required={required} {...props} />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
               <nav className="panel dropped-panel">

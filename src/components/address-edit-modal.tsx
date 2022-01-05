@@ -75,10 +75,10 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   const Extension: React.FC<{ onChange?: EventHandler<any>; address?: ExtendedAddress }> = ({ onChange, address }) => (
     <>
       <div className="columns mb-0">
-        <InputField label="label" name="label" onChange={onChange} defaultValue={address?.label} fieldClass="column mb-0 px-2 py-2" required />
+        <InputField label="label" name="label" onChange={onChange} defaultValue={address?.label} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
       </div>
       <div className="columns mb-1">
-        <CheckBoxField name="is_default" onChange={onChange} defaultChecked={address?.is_default} fieldClass="column mb-0 px-2 py-2">
+        <CheckBoxField name="is_default" onChange={onChange} defaultChecked={address?.is_default} fieldClass="column mb-0 px-2 pt-3 pb-2">
           <span>Set as default address</span>
         </CheckBoxField>
       </div>

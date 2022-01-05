@@ -74,11 +74,11 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const Extension: React.FC<{ onChange?: EventHandler<any>; customs?: ExtendedCustoms }> = ({ onChange, customs }) => (
     <>
       <div className="columns mb-2">
-        <InputField label="label" name="label" onChange={onChange} defaultValue={customs?.label} fieldClass="column mb-0 px-2 py-2" required />
+        <InputField label="label" name="label" onChange={onChange} defaultValue={customs?.label} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
       </div>
 
       <div className="columns mb-1">
-        <CheckBoxField name="is_default" onChange={onChange} defaultChecked={customs?.is_default} fieldClass="column mb-0 px-2 py-2">
+        <CheckBoxField name="is_default" onChange={onChange} defaultChecked={customs?.is_default} fieldClass="column mb-0 px-2 pt-3 pb-2">
           <span>Set as default customs info</span>
         </CheckBoxField>
       </div>
