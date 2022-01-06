@@ -152,28 +152,28 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
 
         </div>
 
-        <div className="column is-12 py-4" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
+        <div className="column is-12 py-4 px-0" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
-          <h6 className="is-title is-size-6 mt-1 mb-4 has-text-weight-semibold">Live Rates</h6>
+          <h6 className="is-title is-size-6 px-3 my-1 has-text-weight-semibold">Live Rates</h6>
 
-          <ul className="menu-list py-2 rates-list-box">
+          <div className="menu-list py-2 rates-list-box">
             {shipment.rates?.map(rate => (
-              <li key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}>
-                <a className={`columns mb-1 ${rate.id === selected_rate_id ? 'has-text-grey-dark' : 'has-text-grey'}`} onClick={() => setSelectedRate(rate.id)}>
+              <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                className={`columns m-0 p-1 ${rate.id === selected_rate_id ? 'has-text-grey-dark' : 'has-text-grey'}`}
+                onClick={() => setSelectedRate(rate.id)}>
 
-                  <span className={`icon is-medium ${rate.id === selected_rate_id ? 'has-text-success' : ''}`}>
-                    {(rate.id === selected_rate_id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
-                  </span>
+                <span className={`icon is-medium ${rate.id === selected_rate_id ? 'has-text-success' : ''}`}>
+                  {(rate.id === selected_rate_id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
+                </span>
 
-                  <RateDescription rate={rate} />
+                <RateDescription rate={rate} />
 
-                  {rate.test_mode && <div className="has-text-warning p-1">
-                    <i className="fas fa-exclamation-circle"></i>
-                  </div>}
-                </a>
-              </li>
+                {rate.test_mode && <div className="has-text-warning p-1">
+                  <i className="fas fa-exclamation-circle"></i>
+                </div>}
+              </a>
             ))}
-          </ul>
+          </div>
 
         </div>
 
