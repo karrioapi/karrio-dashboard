@@ -81,20 +81,20 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         <div className="columns mb-4">
           <div className="p-4 mr-4">
             <span className="subtitle is-size-7 my-4">Date</span><br />
-            <span className="subtitle is-size-7 has-text-weight-semibold">{formatDateTime(shipment.created_at)}</span>
+            <span className="subtitle is-size-7 mt-1 has-text-weight-semibold">{formatDateTime(shipment.created_at)}</span>
           </div>
 
           {!isNone(shipment.service) && <>
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
             <div className="p-4 mr-4">
               <span className="subtitle is-size-7 my-4">Courier</span><br />
-              <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={40} alt="logo" className="mt-1" />
+              <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={25} alt="logo" className="mt-1" />
             </div>
 
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
             <div className="p-4 mr-4">
               <span className="subtitle is-size-7 my-4">Service Level</span><br />
-              <span className="subtitle is-size-7 has-text-weight-semibold">
+              <span className="subtitle is-size-7 mt-1 has-text-weight-semibold">
                 {formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
               </span>
             </div>
