@@ -84,6 +84,12 @@ export interface PickupUpdateData {
      */
     tracking_numbers?: Array<string>;
     /**
+     * User metadata for the pickup
+     * @type {object}
+     * @memberof PickupUpdateData
+     */
+    metadata?: object;
+    /**
      * pickup identification number
      * @type {string}
      * @memberof PickupUpdateData
@@ -109,6 +115,7 @@ export function PickupUpdateDataFromJSONTyped(json: any, ignoreDiscriminator: bo
         'package_location': !exists(json, 'package_location') ? undefined : json['package_location'],
         'options': !exists(json, 'options') ? undefined : json['options'],
         'tracking_numbers': !exists(json, 'tracking_numbers') ? undefined : json['tracking_numbers'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'confirmation_number': json['confirmation_number'],
     };
 }
@@ -130,6 +137,7 @@ export function PickupUpdateDataToJSON(value?: PickupUpdateData | null): any {
         'package_location': value.package_location,
         'options': value.options,
         'tracking_numbers': value.tracking_numbers,
+        'metadata': value.metadata,
         'confirmation_number': value.confirmation_number,
     };
 }

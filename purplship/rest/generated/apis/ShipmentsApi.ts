@@ -15,18 +15,12 @@
 
 import * as runtime from '../runtime';
 import {
-    CustomsData,
-    CustomsDataFromJSON,
-    CustomsDataToJSON,
     ErrorResponse,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
     OperationResponse,
     OperationResponseFromJSON,
     OperationResponseToJSON,
-    ParcelData,
-    ParcelDataFromJSON,
-    ParcelDataToJSON,
     Shipment,
     ShipmentFromJSON,
     ShipmentToJSON,
@@ -42,17 +36,10 @@ import {
     ShipmentRateData,
     ShipmentRateDataFromJSON,
     ShipmentRateDataToJSON,
+    ShipmentUpdateData,
+    ShipmentUpdateDataFromJSON,
+    ShipmentUpdateDataToJSON,
 } from '../models';
-
-export interface AddCustomsRequest {
-    id: string;
-    data: CustomsData;
-}
-
-export interface AddParcelRequest {
-    id: string;
-    data: ParcelData;
-}
 
 export interface CancelRequest {
     id: string;
@@ -90,101 +77,15 @@ export interface RetrieveRequest {
     id: string;
 }
 
-export interface SetOptionsRequest {
+export interface UpdateRequest {
     id: string;
-    data: object;
+    data: ShipmentUpdateData;
 }
 
 /**
  * 
  */
 export class ShipmentsApi extends runtime.BaseAPI {
-
-    /**
-     * Add the customs declaration for the shipment if non existent.
-     * Add a customs declaration
-     */
-    async addCustomsRaw(requestParameters: AddCustomsRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Shipment>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling addCustoms.');
-        }
-
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling addCustoms.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
-        }
-
-        const response = await this.request({
-            path: `/v1/shipments/{id}/customs`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: CustomsDataToJSON(requestParameters.data),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShipmentFromJSON(jsonValue));
-    }
-
-    /**
-     * Add the customs declaration for the shipment if non existent.
-     * Add a customs declaration
-     */
-    async addCustoms(requestParameters: AddCustomsRequest, initOverrides?: RequestInit): Promise<Shipment> {
-        const response = await this.addCustomsRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Add a parcel to an existing shipment for a multi-parcel shipment.
-     * Add a shipment parcel
-     */
-    async addParcelRaw(requestParameters: AddParcelRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Shipment>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling addParcel.');
-        }
-
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling addParcel.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
-        }
-
-        const response = await this.request({
-            path: `/v1/shipments/{id}/parcels`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ParcelDataToJSON(requestParameters.data),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShipmentFromJSON(jsonValue));
-    }
-
-    /**
-     * Add a parcel to an existing shipment for a multi-parcel shipment.
-     * Add a shipment parcel
-     */
-    async addParcel(requestParameters: AddParcelRequest, initOverrides?: RequestInit): Promise<Shipment> {
-        const response = await this.addParcelRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Void a shipment with the associated label.
@@ -460,16 +361,16 @@ export class ShipmentsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Add one or many options to your shipment.<br/> **eg:**<br/> - add shipment **insurance** - specify the preferred transaction **currency** - setup a **cash collected on delivery** option  ```json {     \"insurance\": 120,     \"currency\": \"USD\" } ```  And many more, check additional options available in the [reference](#operation/all_references).
-     * Add shipment options
+     * This operation allows for updating properties of a shipment including `label_type`, `reference`, `payment`, `options` and `metadata`. It is not for editing the parcels of a shipment.
+     * Update a shipment
      */
-    async setOptionsRaw(requestParameters: SetOptionsRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Shipment>> {
+    async updateRaw(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Shipment>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling setOptions.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling update.');
         }
 
         if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling setOptions.');
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling update.');
         }
 
         const queryParameters: any = {};
@@ -483,22 +384,22 @@ export class ShipmentsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/v1/shipments/{id}/options`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'POST',
+            path: `/v1/shipments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.data as any,
+            body: ShipmentUpdateDataToJSON(requestParameters.data),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShipmentFromJSON(jsonValue));
     }
 
     /**
-     * Add one or many options to your shipment.<br/> **eg:**<br/> - add shipment **insurance** - specify the preferred transaction **currency** - setup a **cash collected on delivery** option  ```json {     \"insurance\": 120,     \"currency\": \"USD\" } ```  And many more, check additional options available in the [reference](#operation/all_references).
-     * Add shipment options
+     * This operation allows for updating properties of a shipment including `label_type`, `reference`, `payment`, `options` and `metadata`. It is not for editing the parcels of a shipment.
+     * Update a shipment
      */
-    async setOptions(requestParameters: SetOptionsRequest, initOverrides?: RequestInit): Promise<Shipment> {
-        const response = await this.setOptionsRaw(requestParameters, initOverrides);
+    async update(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<Shipment> {
+        const response = await this.updateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

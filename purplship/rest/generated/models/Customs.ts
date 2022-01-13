@@ -43,7 +43,7 @@ export interface Customs {
      * @type {Array<Commodity>}
      * @memberof Customs
      */
-    commodities: Array<Commodity>;
+    commodities?: Array<Commodity>;
     /**
      * 
      * @type {Duty}
@@ -121,6 +121,12 @@ export interface Customs {
      * @memberof Customs
      */
     options?: object | null;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Customs
+     */
+    object_type?: string;
 }
 
 /**
@@ -165,7 +171,7 @@ export function CustomsFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'commodities': ((json['commodities'] as Array<any>).map(CommodityFromJSON)),
+        'commodities': !exists(json, 'commodities') ? undefined : ((json['commodities'] as Array<any>).map(CommodityFromJSON)),
         'duty': !exists(json, 'duty') ? undefined : DutyFromJSON(json['duty']),
         'content_type': !exists(json, 'content_type') ? undefined : json['content_type'],
         'content_description': !exists(json, 'content_description') ? undefined : json['content_description'],
@@ -176,6 +182,7 @@ export function CustomsFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         'certify': !exists(json, 'certify') ? undefined : json['certify'],
         'signer': !exists(json, 'signer') ? undefined : json['signer'],
         'options': !exists(json, 'options') ? undefined : json['options'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
     };
 }
 
@@ -189,7 +196,7 @@ export function CustomsToJSON(value?: Customs | null): any {
     return {
         
         'id': value.id,
-        'commodities': ((value.commodities as Array<any>).map(CommodityToJSON)),
+        'commodities': value.commodities === undefined ? undefined : ((value.commodities as Array<any>).map(CommodityToJSON)),
         'duty': DutyToJSON(value.duty),
         'content_type': value.content_type,
         'content_description': value.content_description,
@@ -200,6 +207,7 @@ export function CustomsToJSON(value?: Customs | null): any {
         'certify': value.certify,
         'signer': value.signer,
         'options': value.options,
+        'object_type': value.object_type,
     };
 }
 

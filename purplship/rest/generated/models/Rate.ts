@@ -21,7 +21,7 @@ import {
 } from './Charge';
 
 /**
- * The shipment selected rate
+ * The list for shipment rates fetched previously
  * @export
  * @interface Rate
  */
@@ -32,6 +32,12 @@ export interface Rate {
      * @memberof Rate
      */
     id?: string;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Rate
+     */
+    object_type?: string;
     /**
      * The rate's carrier
      * @type {string}
@@ -127,6 +133,7 @@ export function RateFromJSONTyped(json: any, ignoreDiscriminator: boolean): Rate
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
         'carrier_name': json['carrier_name'],
         'carrier_id': json['carrier_id'],
         'currency': json['currency'],
@@ -153,6 +160,7 @@ export function RateToJSON(value?: Rate | null): any {
     return {
         
         'id': value.id,
+        'object_type': value.object_type,
         'carrier_name': value.carrier_name,
         'carrier_id': value.carrier_id,
         'currency': value.currency,

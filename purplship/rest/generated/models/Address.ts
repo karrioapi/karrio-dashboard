@@ -134,6 +134,12 @@ export interface Address {
      */
     validate_location?: boolean | null;
     /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Address
+     */
+    object_type?: string;
+    /**
      * 
      * @type {AddressValidation}
      * @memberof Address
@@ -408,6 +414,7 @@ export function AddressFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
         'address_line1': !exists(json, 'address_line1') ? undefined : json['address_line1'],
         'address_line2': !exists(json, 'address_line2') ? undefined : json['address_line2'],
         'validate_location': !exists(json, 'validate_location') ? undefined : json['validate_location'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
         'validation': !exists(json, 'validation') ? undefined : AddressValidationFromJSON(json['validation']),
     };
 }
@@ -437,6 +444,7 @@ export function AddressToJSON(value?: Address | null): any {
         'address_line1': value.address_line1,
         'address_line2': value.address_line2,
         'validate_location': value.validate_location,
+        'object_type': value.object_type,
         'validation': AddressValidationToJSON(value.validation),
     };
 }

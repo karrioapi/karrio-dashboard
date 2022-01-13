@@ -118,12 +118,6 @@ export interface ShippingRequest {
      */
     label_type?: ShippingRequestLabelTypeEnum;
     /**
-     * User metadata for the shipment
-     * @type {object}
-     * @memberof ShippingRequest
-     */
-    metadata?: object;
-    /**
      * The shipment selected rate.
      * @type {string}
      * @memberof ShippingRequest
@@ -164,7 +158,6 @@ export function ShippingRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         'customs': !exists(json, 'customs') ? undefined : CustomsDataFromJSON(json['customs']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
-        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'selected_rate_id': json['selected_rate_id'],
         'rates': ((json['rates'] as Array<any>).map(RateFromJSON)),
     };
@@ -187,7 +180,6 @@ export function ShippingRequestToJSON(value?: ShippingRequest | null): any {
         'customs': CustomsDataToJSON(value.customs),
         'reference': value.reference,
         'label_type': value.label_type,
-        'metadata': value.metadata,
         'selected_rate_id': value.selected_rate_id,
         'rates': ((value.rates as Array<any>).map(RateToJSON)),
     };

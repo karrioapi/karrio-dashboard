@@ -104,7 +104,96 @@ query get_customs_info_templates($offset: Int, $first: Int) {
 
 export const GET_DEFAULT_TEMPLATES = gql`
 query get_default_templates {
-  default_templates
+  default_templates {
+    default_address {
+      id
+      is_default
+      label
+      address {
+        company_name
+        person_name
+        address_line1
+        address_line2
+        postal_code
+        residential
+        city
+        state_code
+        country_code
+        email
+        phone_number
+        validation
+        validate_location
+      }
+      created_at
+      updated_at
+    }
+    default_customs {
+      id
+      label
+      is_default
+      customs {
+        incoterm
+        content_type
+        commercial_invoice
+        content_description
+        duty {
+          paid_by
+          currency
+          account_number
+          declared_value
+          bill_to {
+            company_name
+            person_name
+            address_line1
+            address_line2
+            postal_code
+            residential
+            city
+            state_code
+            country_code
+            email
+            phone_number
+            validation
+            validate_location
+          }
+          id
+        }
+        invoice
+        invoice_date
+        signer
+        certify
+        commodities {
+          id
+          sku
+          weight
+          quantity
+          weight_unit
+          description
+          value_amount
+          value_currency
+          origin_country
+        }
+        options
+      }
+    }
+    default_parcel {
+      id
+      is_default
+      label
+      parcel {
+        width
+        height
+        length
+        dimension_unit
+        weight
+        weight_unit
+        packaging_type
+        package_preset
+      }
+      created_at
+      updated_at
+    }
+  }
 }
 `;
 
@@ -311,12 +400,14 @@ query get_shipment($id: String!) {
         origin_country
       }
     }
+    selected_rate_id
     selected_rate {
+      id
       carrier_name
       carrier_id
       currency
-      transit_days
       service
+      transit_days
       discount
       base_charge
       total_charge
@@ -326,9 +417,38 @@ query get_shipment($id: String!) {
         amount
         currency
       }
+      test_mode
       meta
     }
+    rates {
+      id
+      carrier_name
+      carrier_id
+      currency
+      service
+      transit_days
+      discount
+      base_charge
+      total_charge
+      duties_and_taxes
+      extra_charges {
+        name
+        amount
+        currency
+      }
+      test_mode
+      meta
+    }
+    options
+    metadata
     meta
+    messages {
+      carrier_name
+      carrier_id
+      message
+      code
+      details
+    }
   }
 }
 `;
@@ -421,12 +541,14 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
             origin_country
           }
         }
+        selected_rate_id
         selected_rate {
+          id
           carrier_name
           carrier_id
           currency
-          transit_days
           service
+          transit_days
           discount
           base_charge
           total_charge
@@ -436,11 +558,178 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
             amount
             currency
           }
+          test_mode
           meta
         }
+        rates {
+          id
+          carrier_name
+          carrier_id
+          currency
+          service
+          transit_days
+          discount
+          base_charge
+          total_charge
+          duties_and_taxes
+          extra_charges {
+            name
+            amount
+            currency
+          }
+          test_mode
+          meta
+        }
+        options
         metadata
         meta
+        messages {
+          carrier_name
+          carrier_id
+          message
+          code
+          details
+        }
       }
+    }
+  }
+}
+`;
+
+export const PARTIAL_UPDATE_SHIPMENT = gql`
+mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
+  partial_shipment_update(input: $data) {
+    shipment {
+      id
+      carrier_id
+      carrier_name
+      created_at
+      updated_at
+      created_by {
+        email
+        full_name
+      }
+      status
+      recipient {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        validate_location
+      }
+      shipper {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        validate_location
+      }
+      label_type
+      tracking_number
+      shipment_identifier
+      label
+      tracking_url
+      test_mode
+      service
+      reference
+      customs {
+        id
+        certify
+        commercial_invoice
+        content_type
+        content_description
+        incoterm
+        invoice
+        invoice_date
+        signer
+        duty {
+          paid_by
+          currency
+          account_number
+          declared_value
+        }
+        options
+        commodities {
+          id
+          weight
+          description
+          quantity
+          sku
+          value_amount
+          origin_country
+        }
+      }
+      selected_rate_id
+      selected_rate {
+        id
+        carrier_name
+        carrier_id
+        currency
+        service
+        transit_days
+        discount
+        base_charge
+        total_charge
+        duties_and_taxes
+        extra_charges {
+          name
+          amount
+          currency
+        }
+        test_mode
+        meta
+      }
+      rates {
+        id
+        carrier_name
+        carrier_id
+        currency
+        service
+        transit_days
+        discount
+        base_charge
+        total_charge
+        duties_and_taxes
+        extra_charges {
+          name
+          amount
+          currency
+        }
+        test_mode
+        meta
+      }
+      options
+      metadata
+      meta
+      messages {
+        carrier_name
+        carrier_id
+        message
+        code
+        details
+      }
+    }
+    errors {
+      field
+      messages
     }
   }
 }
@@ -635,7 +924,7 @@ export const MUTATE_SYSTEM_CONNECTION = gql`
 `;
 
 export const CREATE_ADDRESS_TEMPLATE = gql`
-  mutation create_address_template($data: AddressTemplateInput!) {
+  mutation create_address_template($data: CreateAddressTemplateInput!) {
     create_address_template(input: $data) {
       template {
         id
@@ -649,7 +938,7 @@ export const CREATE_ADDRESS_TEMPLATE = gql`
 `;
 
 export const CREATE_CUSTOMS_TEMPLATE = gql`
-  mutation create_customs_template($data: CustomsTemplateInput!) {
+  mutation create_customs_template($data: CreateCustomsTemplateInput!) {
     create_customs_template(input: $data) {
       template {
         id
@@ -663,7 +952,7 @@ export const CREATE_CUSTOMS_TEMPLATE = gql`
 `;
 
 export const CREATE_PARCEL_TEMPLATE = gql`
-  mutation create_parcel_template($data: ParcelTemplateInput!) {
+  mutation create_parcel_template($data: CreateParcelTemplateInput!) {
     create_parcel_template(input: $data) {
       template {
         id
@@ -677,7 +966,7 @@ export const CREATE_PARCEL_TEMPLATE = gql`
 `;
 
 export const UPDATED_ADDRESS_TEMPLATE = gql`
-  mutation update_address_template($data: PartialAddressTemplateInput!) {
+  mutation update_address_template($data: UpdateAddressTemplateInput!) {
     update_address_template(input: $data) {
       template {
         id
@@ -691,7 +980,7 @@ export const UPDATED_ADDRESS_TEMPLATE = gql`
 `;
 
 export const UPDATED_CUSTOMS_TEMPLATE = gql`
-  mutation update_customs_template($data: PartialCustomsTemplateInput!) {
+  mutation update_customs_template($data: UpdateCustomsTemplateInput!) {
     update_customs_template(input: $data) {
       template {
         id
@@ -705,7 +994,7 @@ export const UPDATED_CUSTOMS_TEMPLATE = gql`
 `;
 
 export const UPDATED_PARCEL_TEMPLATE = gql`
-  mutation update_parcel_template($data: PartialParcelTemplateInput!) {
+  mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
     update_parcel_template(input: $data) {
       template {
         id
@@ -729,6 +1018,22 @@ export const DELETE_TEMPLATE = gql`
 export const DISCARD_COMMODITY = gql`
   mutation discard_commodity($data: DiscardCommodityInput!) {
     discard_commodity(input: $data) {
+      id
+    }
+  }
+`;
+
+export const DISCARD_CUSTOMS = gql`
+  mutation discard_customs($data: DiscardCustomsInput!) {
+    discard_customs(input: $data) {
+      id
+    }
+  }
+`;
+
+export const DISCARD_PARCEL = gql`
+  mutation discard_parcel($data: DiscardParcelInput!) {
+    discard_parcel(input: $data) {
       id
     }
   }
@@ -1195,7 +1500,6 @@ query get_order($id: String!) {
     }
     test_mode
     metadata
-    meta
     shipments {
       id
       carrier_id
@@ -1274,12 +1578,14 @@ query get_order($id: String!) {
           origin_country
         }
       }
+      selected_rate_id
       selected_rate {
+        id
         carrier_name
         carrier_id
         currency
-        transit_days
         service
+        transit_days
         discount
         base_charge
         total_charge
@@ -1289,10 +1595,37 @@ query get_order($id: String!) {
           amount
           currency
         }
+        test_mode
+        meta
+      }
+      rates {
+        id
+        carrier_name
+        carrier_id
+        currency
+        service
+        transit_days
+        discount
+        base_charge
+        total_charge
+        duties_and_taxes
+        extra_charges {
+          name
+          amount
+          currency
+        }
+        test_mode
         meta
       }
       metadata
       meta
+      messages {
+        carrier_name
+        carrier_id
+        message
+        code
+        details
+      }
     }
   }
 }
@@ -1349,7 +1682,6 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
         }
         test_mode
         metadata
-        meta
         shipments {
           id
           carrier_id
@@ -1428,12 +1760,14 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
               origin_country
             }
           }
+          selected_rate_id
           selected_rate {
+            id
             carrier_name
             carrier_id
             currency
-            transit_days
             service
+            transit_days
             discount
             base_charge
             total_charge
@@ -1443,10 +1777,37 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
               amount
               currency
             }
+            test_mode
+            meta
+          }
+          rates {
+            id
+            carrier_name
+            carrier_id
+            currency
+            service
+            transit_days
+            discount
+            base_charge
+            total_charge
+            duties_and_taxes
+            extra_charges {
+              name
+              amount
+              currency
+            }
+            test_mode
             meta
           }
           metadata
           meta
+          messages {
+            carrier_name
+            carrier_id
+            message
+            code
+            details
+          }
         }
       }
     }

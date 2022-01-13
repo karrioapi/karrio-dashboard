@@ -45,6 +45,12 @@ export interface Order {
      */
     id?: string;
     /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Order
+     */
+    object_type?: string;
+    /**
      * The source' order id.
      * @type {string}
      * @memberof Order
@@ -143,6 +149,7 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
         'order_id': json['order_id'],
         'source': !exists(json, 'source') ? undefined : json['source'],
         'status': !exists(json, 'status') ? undefined : json['status'],
@@ -166,6 +173,7 @@ export function OrderToJSON(value?: Order | null): any {
     return {
         
         'id': value.id,
+        'object_type': value.object_type,
         'order_id': value.order_id,
         'source': value.source,
         'status': value.status,

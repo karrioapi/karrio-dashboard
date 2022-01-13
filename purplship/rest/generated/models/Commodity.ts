@@ -99,6 +99,12 @@ export interface Commodity {
      * @memberof Commodity
      */
     metadata?: object | null;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Commodity
+     */
+    object_type?: string;
 }
 
 /**
@@ -131,6 +137,7 @@ export function CommodityFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'origin_country': !exists(json, 'origin_country') ? undefined : json['origin_country'],
         'parent_id': !exists(json, 'parent_id') ? undefined : json['parent_id'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
     };
 }
 
@@ -154,6 +161,7 @@ export function CommodityToJSON(value?: Commodity | null): any {
         'origin_country': value.origin_country,
         'parent_id': value.parent_id,
         'metadata': value.metadata,
+        'object_type': value.object_type,
     };
 }
 

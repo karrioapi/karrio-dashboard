@@ -63,72 +63,6 @@ export interface Shipment {
      */
     id?: string;
     /**
-     * The current Shipment status
-     * @type {string}
-     * @memberof Shipment
-     */
-    status?: ShipmentStatusEnum;
-    /**
-     * The shipment carrier
-     * @type {string}
-     * @memberof Shipment
-     */
-    carrier_name?: string | null;
-    /**
-     * The shipment carrier configured identifier
-     * @type {string}
-     * @memberof Shipment
-     */
-    carrier_id?: string | null;
-    /**
-     * The shipment label in base64 string
-     * @type {string}
-     * @memberof Shipment
-     */
-    label?: string | null;
-    /**
-     * The shipment tracking number
-     * @type {string}
-     * @memberof Shipment
-     */
-    tracking_number?: string | null;
-    /**
-     * The shipment carrier system identifier
-     * @type {string}
-     * @memberof Shipment
-     */
-    shipment_identifier?: string | null;
-    /**
-     * 
-     * @type {Rate}
-     * @memberof Shipment
-     */
-    selected_rate?: Rate | null;
-    /**
-     * The shipment selected rate.
-     * @type {string}
-     * @memberof Shipment
-     */
-    selected_rate_id?: string | null;
-    /**
-     * The list for shipment rates fetched previously
-     * @type {Array<Rate>}
-     * @memberof Shipment
-     */
-    rates?: Array<Rate>;
-    /**
-     * The shipment tracking url
-     * @type {string}
-     * @memberof Shipment
-     */
-    tracking_url?: string | null;
-    /**
-     * The selected service
-     * @type {string}
-     * @memberof Shipment
-     */
-    service?: string | null;
-    /**
      * 
      * @type {Address}
      * @memberof Shipment
@@ -170,7 +104,7 @@ export interface Shipment {
      *     "dangerous_good": true,
      *     "declared_value": 150.00,
      *     "email_notification": true,
-     *     "email_notification_to": shipper@mail.com,
+     *     "email_notification_to": "shipper@mail.com",
      *     "signature_confirmation": true,
      * }
      * ```
@@ -193,6 +127,12 @@ export interface Shipment {
      * @memberof Shipment
      */
     customs?: Customs;
+    /**
+     * The list for shipment rates fetched previously
+     * @type {Array<Rate>}
+     * @memberof Shipment
+     */
+    rates?: Array<Rate>;
     /**
      * The shipment reference
      * @type {string}
@@ -230,18 +170,6 @@ export interface Shipment {
      */
     created_at: string;
     /**
-     * Specified whether it was created with a carrier in test mode
-     * @type {boolean}
-     * @memberof Shipment
-     */
-    test_mode: boolean;
-    /**
-     * provider specific metadata
-     * @type {object}
-     * @memberof Shipment
-     */
-    meta?: object | null;
-    /**
      * User metadata for the shipment
      * @type {object}
      * @memberof Shipment
@@ -253,9 +181,94 @@ export interface Shipment {
      * @memberof Shipment
      */
     messages?: Array<Message>;
+    /**
+     * The current Shipment status
+     * @type {string}
+     * @memberof Shipment
+     */
+    status?: ShipmentStatusEnum;
+    /**
+     * The shipment carrier
+     * @type {string}
+     * @memberof Shipment
+     */
+    carrier_name?: string | null;
+    /**
+     * The shipment carrier configured identifier
+     * @type {string}
+     * @memberof Shipment
+     */
+    carrier_id?: string | null;
+    /**
+     * The shipment label in base64 string
+     * @type {string}
+     * @memberof Shipment
+     */
+    label?: string | null;
+    /**
+     * The shipment tracking number
+     * @type {string}
+     * @memberof Shipment
+     */
+    tracking_number?: string | null;
+    /**
+     * The shipment carrier system identifier
+     * @type {string}
+     * @memberof Shipment
+     */
+    shipment_identifier?: string | null;
+    /**
+     * 
+     * @type {Rate}
+     * @memberof Shipment
+     */
+    selected_rate?: Rate;
+    /**
+     * provider specific metadata
+     * @type {object}
+     * @memberof Shipment
+     */
+    meta?: object | null;
+    /**
+     * The selected service
+     * @type {string}
+     * @memberof Shipment
+     */
+    service?: string | null;
+    /**
+     * The shipment selected rate.
+     * @type {string}
+     * @memberof Shipment
+     */
+    selected_rate_id?: string | null;
+    /**
+     * The shipment tracking url
+     * @type {string}
+     * @memberof Shipment
+     */
+    tracking_url?: string | null;
+    /**
+     * Specified whether it was created with a carrier in test mode
+     * @type {boolean}
+     * @memberof Shipment
+     */
+    test_mode: boolean;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Shipment
+     */
+    object_type?: string;
 }
 
 /**
+* @export
+* @enum {string}
+*/
+export enum ShipmentLabelTypeEnum {
+    Pdf = 'PDF',
+    Zpl = 'ZPL'
+}/**
 * @export
 * @enum {string}
 */
@@ -266,13 +279,6 @@ export enum ShipmentStatusEnum {
     Shipped = 'shipped',
     InTransit = 'in-transit',
     Delivered = 'delivered'
-}/**
-* @export
-* @enum {string}
-*/
-export enum ShipmentLabelTypeEnum {
-    Pdf = 'PDF',
-    Zpl = 'ZPL'
 }
 
 export function ShipmentFromJSON(json: any): Shipment {
@@ -286,17 +292,6 @@ export function ShipmentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'status': !exists(json, 'status') ? undefined : json['status'],
-        'carrier_name': !exists(json, 'carrier_name') ? undefined : json['carrier_name'],
-        'carrier_id': !exists(json, 'carrier_id') ? undefined : json['carrier_id'],
-        'label': !exists(json, 'label') ? undefined : json['label'],
-        'tracking_number': !exists(json, 'tracking_number') ? undefined : json['tracking_number'],
-        'shipment_identifier': !exists(json, 'shipment_identifier') ? undefined : json['shipment_identifier'],
-        'selected_rate': !exists(json, 'selected_rate') ? undefined : RateFromJSON(json['selected_rate']),
-        'selected_rate_id': !exists(json, 'selected_rate_id') ? undefined : json['selected_rate_id'],
-        'rates': !exists(json, 'rates') ? undefined : ((json['rates'] as Array<any>).map(RateFromJSON)),
-        'tracking_url': !exists(json, 'tracking_url') ? undefined : json['tracking_url'],
-        'service': !exists(json, 'service') ? undefined : json['service'],
         'shipper': AddressFromJSON(json['shipper']),
         'recipient': AddressFromJSON(json['recipient']),
         'parcels': ((json['parcels'] as Array<any>).map(ParcelFromJSON)),
@@ -304,15 +299,27 @@ export function ShipmentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'options': !exists(json, 'options') ? undefined : json['options'],
         'payment': !exists(json, 'payment') ? undefined : PaymentFromJSON(json['payment']),
         'customs': !exists(json, 'customs') ? undefined : CustomsFromJSON(json['customs']),
+        'rates': !exists(json, 'rates') ? undefined : ((json['rates'] as Array<any>).map(RateFromJSON)),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
         'carrier_ids': !exists(json, 'carrier_ids') ? undefined : json['carrier_ids'],
         'tracker_id': !exists(json, 'tracker_id') ? undefined : json['tracker_id'],
         'created_at': json['created_at'],
-        'test_mode': json['test_mode'],
-        'meta': !exists(json, 'meta') ? undefined : json['meta'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'messages': !exists(json, 'messages') ? undefined : ((json['messages'] as Array<any>).map(MessageFromJSON)),
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'carrier_name': !exists(json, 'carrier_name') ? undefined : json['carrier_name'],
+        'carrier_id': !exists(json, 'carrier_id') ? undefined : json['carrier_id'],
+        'label': !exists(json, 'label') ? undefined : json['label'],
+        'tracking_number': !exists(json, 'tracking_number') ? undefined : json['tracking_number'],
+        'shipment_identifier': !exists(json, 'shipment_identifier') ? undefined : json['shipment_identifier'],
+        'selected_rate': !exists(json, 'selected_rate') ? undefined : RateFromJSON(json['selected_rate']),
+        'meta': !exists(json, 'meta') ? undefined : json['meta'],
+        'service': !exists(json, 'service') ? undefined : json['service'],
+        'selected_rate_id': !exists(json, 'selected_rate_id') ? undefined : json['selected_rate_id'],
+        'tracking_url': !exists(json, 'tracking_url') ? undefined : json['tracking_url'],
+        'test_mode': json['test_mode'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
     };
 }
 
@@ -326,17 +333,6 @@ export function ShipmentToJSON(value?: Shipment | null): any {
     return {
         
         'id': value.id,
-        'status': value.status,
-        'carrier_name': value.carrier_name,
-        'carrier_id': value.carrier_id,
-        'label': value.label,
-        'tracking_number': value.tracking_number,
-        'shipment_identifier': value.shipment_identifier,
-        'selected_rate': RateToJSON(value.selected_rate),
-        'selected_rate_id': value.selected_rate_id,
-        'rates': value.rates === undefined ? undefined : ((value.rates as Array<any>).map(RateToJSON)),
-        'tracking_url': value.tracking_url,
-        'service': value.service,
         'shipper': AddressToJSON(value.shipper),
         'recipient': AddressToJSON(value.recipient),
         'parcels': ((value.parcels as Array<any>).map(ParcelToJSON)),
@@ -344,15 +340,27 @@ export function ShipmentToJSON(value?: Shipment | null): any {
         'options': value.options,
         'payment': PaymentToJSON(value.payment),
         'customs': CustomsToJSON(value.customs),
+        'rates': value.rates === undefined ? undefined : ((value.rates as Array<any>).map(RateToJSON)),
         'reference': value.reference,
         'label_type': value.label_type,
         'carrier_ids': value.carrier_ids,
         'tracker_id': value.tracker_id,
         'created_at': value.created_at,
-        'test_mode': value.test_mode,
-        'meta': value.meta,
         'metadata': value.metadata,
         'messages': value.messages === undefined ? undefined : ((value.messages as Array<any>).map(MessageToJSON)),
+        'status': value.status,
+        'carrier_name': value.carrier_name,
+        'carrier_id': value.carrier_id,
+        'label': value.label,
+        'tracking_number': value.tracking_number,
+        'shipment_identifier': value.shipment_identifier,
+        'selected_rate': RateToJSON(value.selected_rate),
+        'meta': value.meta,
+        'service': value.service,
+        'selected_rate_id': value.selected_rate_id,
+        'tracking_url': value.tracking_url,
+        'test_mode': value.test_mode,
+        'object_type': value.object_type,
     };
 }
 

@@ -16,98 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CarrierSettings
+ * @interface OrderUpdateData
  */
-export interface CarrierSettings {
+export interface OrderUpdateData {
     /**
-     * A unique address identifier
-     * @type {string}
-     * @memberof CarrierSettings
+     * The order options
+     * @type {object}
+     * @memberof OrderUpdateData
      */
-    id: string;
+    options?: object | null;
     /**
-     * Indicates a carrier (type)
-     * @type {string}
-     * @memberof CarrierSettings
+     * User metadata for the shipment
+     * @type {object}
+     * @memberof OrderUpdateData
      */
-    carrier_name: CarrierSettingsCarrierNameEnum;
-    /**
-     * Indicates a specific carrier configuration name.
-     * @type {string}
-     * @memberof CarrierSettings
-     */
-    carrier_id: string;
-    /**
-     * 
-     * The test flag indicates whether to use a carrier configured for test.
-     * @type {boolean}
-     * @memberof CarrierSettings
-     */
-    test: boolean;
-    /**
-     * 
-     * The active flag indicates whether the carrier account is active or not.
-     * @type {boolean}
-     * @memberof CarrierSettings
-     */
-    active: boolean;
-    /**
-     * Specifies the object type
-     * @type {string}
-     * @memberof CarrierSettings
-     */
-    object_type?: string;
+    metadata?: object;
 }
 
-/**
-* @export
-* @enum {string}
-*/
-export enum CarrierSettingsCarrierNameEnum {
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
+export function OrderUpdateDataFromJSON(json: any): OrderUpdateData {
+    return OrderUpdateDataFromJSONTyped(json, false);
 }
 
-export function CarrierSettingsFromJSON(json: any): CarrierSettings {
-    return CarrierSettingsFromJSONTyped(json, false);
-}
-
-export function CarrierSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): CarrierSettings {
+export function OrderUpdateDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderUpdateData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': json['id'],
-        'carrier_name': json['carrier_name'],
-        'carrier_id': json['carrier_id'],
-        'test': json['test'],
-        'active': json['active'],
-        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
+        'options': !exists(json, 'options') ? undefined : json['options'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
-export function CarrierSettingsToJSON(value?: CarrierSettings | null): any {
+export function OrderUpdateDataToJSON(value?: OrderUpdateData | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -116,12 +57,8 @@ export function CarrierSettingsToJSON(value?: CarrierSettings | null): any {
     }
     return {
         
-        'id': value.id,
-        'carrier_name': value.carrier_name,
-        'carrier_id': value.carrier_id,
-        'test': value.test,
-        'active': value.active,
-        'object_type': value.object_type,
+        'options': value.options,
+        'metadata': value.metadata,
     };
 }
 

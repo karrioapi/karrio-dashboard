@@ -14,7 +14,7 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * 
+ * The parcel content items
  * @export
  * @interface CommodityData
  */

@@ -87,6 +87,18 @@ export interface TrackingStatus {
      */
     estimated_delivery?: string;
     /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof TrackingStatus
+     */
+    object_type?: string;
+    /**
+     * User metadata for the tracker
+     * @type {object}
+     * @memberof TrackingStatus
+     */
+    metadata?: object;
+    /**
      * The list of note or warning messages
      * @type {Array<Message>}
      * @memberof TrackingStatus
@@ -124,6 +136,8 @@ export function TrackingStatusFromJSONTyped(json: any, ignoreDiscriminator: bool
         'test_mode': json['test_mode'],
         'status': !exists(json, 'status') ? undefined : json['status'],
         'estimated_delivery': !exists(json, 'estimated_delivery') ? undefined : json['estimated_delivery'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'messages': !exists(json, 'messages') ? undefined : ((json['messages'] as Array<any>).map(MessageFromJSON)),
     };
 }
@@ -146,6 +160,8 @@ export function TrackingStatusToJSON(value?: TrackingStatus | null): any {
         'test_mode': value.test_mode,
         'status': value.status,
         'estimated_delivery': value.estimated_delivery,
+        'object_type': value.object_type,
+        'metadata': value.metadata,
         'messages': value.messages === undefined ? undefined : ((value.messages as Array<any>).map(MessageToJSON)),
     };
 }

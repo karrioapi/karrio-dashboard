@@ -15,9 +15,6 @@
 
 import * as runtime from '../runtime';
 import {
-    CommodityData,
-    CommodityDataFromJSON,
-    CommodityDataToJSON,
     Customs,
     CustomsFromJSON,
     CustomsToJSON,
@@ -35,21 +32,11 @@ import {
     OperationToJSON,
 } from '../models';
 
-export interface AddCommodityRequest {
-    id: string;
-    data: CommodityData;
-}
-
 export interface CreateRequest {
     data: CustomsData;
 }
 
 export interface DiscardRequest {
-    id: string;
-}
-
-export interface DiscardCommodityRequest {
-    ck: string;
     id: string;
 }
 
@@ -71,49 +58,6 @@ export interface UpdateRequest {
  * 
  */
 export class CustomsApi extends runtime.BaseAPI {
-
-    /**
-     * Add a customs commodity.
-     * Add a commodity
-     */
-    async addCommodityRaw(requestParameters: AddCommodityRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Customs>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling addCommodity.');
-        }
-
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling addCommodity.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
-        }
-
-        const response = await this.request({
-            path: `/v1/customs_info/{id}/commodities`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: CommodityDataToJSON(requestParameters.data),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => CustomsFromJSON(jsonValue));
-    }
-
-    /**
-     * Add a customs commodity.
-     * Add a commodity
-     */
-    async addCommodity(requestParameters: AddCommodityRequest, initOverrides?: RequestInit): Promise<Customs> {
-        const response = await this.addCommodityRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Create a new customs declaration.
@@ -187,46 +131,6 @@ export class CustomsApi extends runtime.BaseAPI {
      */
     async discard(requestParameters: DiscardRequest, initOverrides?: RequestInit): Promise<Operation> {
         const response = await this.discardRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Discard a customs commodity.
-     * Discard a commodity
-     */
-    async discardCommodityRaw(requestParameters: DiscardCommodityRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Operation>> {
-        if (requestParameters.ck === null || requestParameters.ck === undefined) {
-            throw new runtime.RequiredError('ck','Required parameter requestParameters.ck was null or undefined when calling discardCommodity.');
-        }
-
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling discardCommodity.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
-        }
-
-        const response = await this.request({
-            path: `/v1/customs_info/{id}/commodities/{ck}`.replace(`{${"ck"}}`, encodeURIComponent(String(requestParameters.ck))).replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => OperationFromJSON(jsonValue));
-    }
-
-    /**
-     * Discard a customs commodity.
-     * Discard a commodity
-     */
-    async discardCommodity(requestParameters: DiscardCommodityRequest, initOverrides?: RequestInit): Promise<Operation> {
-        const response = await this.discardCommodityRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

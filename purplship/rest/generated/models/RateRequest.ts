@@ -74,7 +74,7 @@ export interface RateRequest {
      *     "dangerous_good": true,
      *     "declared_value": 150.00,
      *     "email_notification": true,
-     *     "email_notification_to": shipper@mail.com,
+     *     "email_notification_to": "shipper@mail.com",
      *     "signature_confirmation": true,
      * }
      * ```

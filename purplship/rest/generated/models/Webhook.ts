@@ -56,6 +56,12 @@ export interface Webhook {
      */
     id?: string;
     /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Webhook
+     */
+    object_type?: string;
+    /**
      * The datetime of the last event sent.
      * @type {Date}
      * @memberof Webhook
@@ -96,6 +102,7 @@ export function WebhookFromJSONTyped(json: any, ignoreDiscriminator: boolean): W
         'test_mode': json['test_mode'],
         'disabled': !exists(json, 'disabled') ? undefined : json['disabled'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
         'last_event_at': !exists(json, 'last_event_at') ? undefined : (json['last_event_at'] === null ? null : new Date(json['last_event_at'])),
     };
 }
@@ -115,6 +122,7 @@ export function WebhookToJSON(value?: Webhook | null): any {
         'test_mode': value.test_mode,
         'disabled': value.disabled,
         'id': value.id,
+        'object_type': value.object_type,
         'last_event_at': value.last_event_at === undefined ? undefined : (value.last_event_at === null ? null : value.last_event_at.toISOString()),
     };
 }

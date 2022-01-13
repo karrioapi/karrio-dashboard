@@ -27,6 +27,9 @@ import {
     OrderList,
     OrderListFromJSON,
     OrderListToJSON,
+    OrderUpdateData,
+    OrderUpdateDataFromJSON,
+    OrderUpdateDataToJSON,
 } from '../models';
 
 export interface CancelRequest {
@@ -49,6 +52,11 @@ export interface ListRequest {
 
 export interface RetrieveRequest {
     id: string;
+}
+
+export interface UpdateRequest {
+    id: string;
+    data: OrderUpdateData;
 }
 
 /**
@@ -224,6 +232,49 @@ export class OrdersApi extends runtime.BaseAPI {
      */
     async retrieve(requestParameters: RetrieveRequest, initOverrides?: RequestInit): Promise<Order> {
         const response = await this.retrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * This operation allows for updating properties of an order including `options` and `metadata`. It is not for editing the line items of an order.
+     * Update an order
+     */
+    async updateRaw(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Order>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling update.');
+        }
+
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling update.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/orders/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OrderUpdateDataToJSON(requestParameters.data),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OrderFromJSON(jsonValue));
+    }
+
+    /**
+     * This operation allows for updating properties of an order including `options` and `metadata`. It is not for editing the line items of an order.
+     * Update an order
+     */
+    async update(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<Order> {
+        const response = await this.updateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

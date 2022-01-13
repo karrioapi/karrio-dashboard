@@ -45,6 +45,12 @@ export interface Pickup {
      */
     id?: string;
     /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Pickup
+     */
+    object_type?: string;
+    /**
      * The pickup carrier
      * @type {string}
      * @memberof Pickup
@@ -123,6 +129,12 @@ export interface Pickup {
      */
     options?: object | null;
     /**
+     * User metadata for the pickup
+     * @type {object}
+     * @memberof Pickup
+     */
+    metadata?: object;
+    /**
      * Specified whether it was created with a carrier in test mode
      * @type {boolean}
      * @memberof Pickup
@@ -141,6 +153,7 @@ export function PickupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
         'carrier_name': json['carrier_name'],
         'carrier_id': json['carrier_id'],
         'confirmation_number': json['confirmation_number'],
@@ -153,6 +166,7 @@ export function PickupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pi
         'instruction': !exists(json, 'instruction') ? undefined : json['instruction'],
         'package_location': !exists(json, 'package_location') ? undefined : json['package_location'],
         'options': !exists(json, 'options') ? undefined : json['options'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'test_mode': json['test_mode'],
     };
 }
@@ -167,6 +181,7 @@ export function PickupToJSON(value?: Pickup | null): any {
     return {
         
         'id': value.id,
+        'object_type': value.object_type,
         'carrier_name': value.carrier_name,
         'carrier_id': value.carrier_id,
         'confirmation_number': value.confirmation_number,
@@ -179,6 +194,7 @@ export function PickupToJSON(value?: Pickup | null): any {
         'instruction': value.instruction,
         'package_location': value.package_location,
         'options': value.options,
+        'metadata': value.metadata,
         'test_mode': value.test_mode,
     };
 }

@@ -115,6 +115,12 @@ export interface Parcel {
      * @memberof Parcel
      */
     items?: Array<Commodity>;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof Parcel
+     */
+    object_type?: string;
 }
 
 /**
@@ -156,6 +162,7 @@ export function ParcelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pa
         'weight_unit': json['weight_unit'],
         'dimension_unit': !exists(json, 'dimension_unit') ? undefined : json['dimension_unit'],
         'items': !exists(json, 'items') ? undefined : ((json['items'] as Array<any>).map(CommodityFromJSON)),
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
     };
 }
 
@@ -181,6 +188,7 @@ export function ParcelToJSON(value?: Parcel | null): any {
         'weight_unit': value.weight_unit,
         'dimension_unit': value.dimension_unit,
         'items': value.items === undefined ? undefined : ((value.items as Array<any>).map(CommodityToJSON)),
+        'object_type': value.object_type,
     };
 }
 

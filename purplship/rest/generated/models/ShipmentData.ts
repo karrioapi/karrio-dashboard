@@ -112,12 +112,6 @@ export interface ShipmentData {
      */
     label_type?: ShipmentDataLabelTypeEnum;
     /**
-     * User metadata for the shipment
-     * @type {object}
-     * @memberof ShipmentData
-     */
-    metadata?: object;
-    /**
      * 
      * The requested carrier service for the shipment.
      * 
@@ -136,6 +130,12 @@ export interface ShipmentData {
      * @memberof ShipmentData
      */
     carrier_ids?: Array<string> | null;
+    /**
+     * User metadata for the shipment
+     * @type {object}
+     * @memberof ShipmentData
+     */
+    metadata?: object;
 }
 
 /**
@@ -165,9 +165,9 @@ export function ShipmentDataFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'customs': !exists(json, 'customs') ? undefined : CustomsDataFromJSON(json['customs']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
-        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
         'services': !exists(json, 'services') ? undefined : json['services'],
         'carrier_ids': !exists(json, 'carrier_ids') ? undefined : json['carrier_ids'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
@@ -188,9 +188,9 @@ export function ShipmentDataToJSON(value?: ShipmentData | null): any {
         'customs': CustomsDataToJSON(value.customs),
         'reference': value.reference,
         'label_type': value.label_type,
-        'metadata': value.metadata,
         'services': value.services,
         'carrier_ids': value.carrier_ids,
+        'metadata': value.metadata,
     };
 }
 

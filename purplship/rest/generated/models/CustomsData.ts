@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Commodity,
-    CommodityFromJSON,
-    CommodityFromJSONTyped,
-    CommodityToJSON,
-} from './Commodity';
+    CommodityData,
+    CommodityDataFromJSON,
+    CommodityDataFromJSONTyped,
+    CommodityDataToJSON,
+} from './CommodityData';
 import {
     Duty,
     DutyFromJSON,
@@ -34,10 +34,10 @@ import {
 export interface CustomsData {
     /**
      * The parcel content items
-     * @type {Array<Commodity>}
+     * @type {Array<CommodityData>}
      * @memberof CustomsData
      */
-    commodities: Array<Commodity>;
+    commodities: Array<CommodityData>;
     /**
      * 
      * @type {Duty}
@@ -158,7 +158,7 @@ export function CustomsDataFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'commodities': ((json['commodities'] as Array<any>).map(CommodityFromJSON)),
+        'commodities': ((json['commodities'] as Array<any>).map(CommodityDataFromJSON)),
         'duty': !exists(json, 'duty') ? undefined : DutyFromJSON(json['duty']),
         'content_type': !exists(json, 'content_type') ? undefined : json['content_type'],
         'content_description': !exists(json, 'content_description') ? undefined : json['content_description'],
@@ -181,7 +181,7 @@ export function CustomsDataToJSON(value?: CustomsData | null): any {
     }
     return {
         
-        'commodities': ((value.commodities as Array<any>).map(CommodityToJSON)),
+        'commodities': ((value.commodities as Array<any>).map(CommodityDataToJSON)),
         'duty': DutyToJSON(value.duty),
         'content_type': value.content_type,
         'content_description': value.content_description,

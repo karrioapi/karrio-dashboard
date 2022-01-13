@@ -13,101 +13,98 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    Payment,
+    PaymentFromJSON,
+    PaymentFromJSONTyped,
+    PaymentToJSON,
+} from './Payment';
+
 /**
  * 
  * @export
- * @interface CarrierSettings
+ * @interface ShipmentUpdateData
  */
-export interface CarrierSettings {
+export interface ShipmentUpdateData {
     /**
-     * A unique address identifier
+     * The shipment label file type.
      * @type {string}
-     * @memberof CarrierSettings
+     * @memberof ShipmentUpdateData
      */
-    id: string;
-    /**
-     * Indicates a carrier (type)
-     * @type {string}
-     * @memberof CarrierSettings
-     */
-    carrier_name: CarrierSettingsCarrierNameEnum;
-    /**
-     * Indicates a specific carrier configuration name.
-     * @type {string}
-     * @memberof CarrierSettings
-     */
-    carrier_id: string;
+    label_type?: ShipmentUpdateDataLabelTypeEnum;
     /**
      * 
-     * The test flag indicates whether to use a carrier configured for test.
-     * @type {boolean}
-     * @memberof CarrierSettings
+     * @type {Payment}
+     * @memberof ShipmentUpdateData
      */
-    test: boolean;
+    payment?: Payment;
     /**
      * 
-     * The active flag indicates whether the carrier account is active or not.
-     * @type {boolean}
-     * @memberof CarrierSettings
+     * <details>
+     * <summary>The options available for the shipment.</summary>
+     * 
+     * ```
+     * {
+     *     "currency": "USD",
+     *     "insurance": 100.00,
+     *     "cash_on_delivery": 30.00,
+     *     "shipment_date": "2020-01-01",
+     *     "dangerous_good": true,
+     *     "declared_value": 150.00,
+     *     "email_notification": true,
+     *     "email_notification_to": "shipper@mail.com",
+     *     "signature_confirmation": true,
+     * }
+     * ```
+     * 
+     * Please check the docs for carrier specific options.
+     * </details>
+     * @type {object}
+     * @memberof ShipmentUpdateData
      */
-    active: boolean;
+    options?: object | null;
     /**
-     * Specifies the object type
+     * The shipment reference
      * @type {string}
-     * @memberof CarrierSettings
+     * @memberof ShipmentUpdateData
      */
-    object_type?: string;
+    reference?: string | null;
+    /**
+     * User metadata for the shipment
+     * @type {object}
+     * @memberof ShipmentUpdateData
+     */
+    metadata?: object;
 }
 
 /**
 * @export
 * @enum {string}
 */
-export enum CarrierSettingsCarrierNameEnum {
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
+export enum ShipmentUpdateDataLabelTypeEnum {
+    Pdf = 'PDF',
+    Zpl = 'ZPL'
 }
 
-export function CarrierSettingsFromJSON(json: any): CarrierSettings {
-    return CarrierSettingsFromJSONTyped(json, false);
+export function ShipmentUpdateDataFromJSON(json: any): ShipmentUpdateData {
+    return ShipmentUpdateDataFromJSONTyped(json, false);
 }
 
-export function CarrierSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): CarrierSettings {
+export function ShipmentUpdateDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentUpdateData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': json['id'],
-        'carrier_name': json['carrier_name'],
-        'carrier_id': json['carrier_id'],
-        'test': json['test'],
-        'active': json['active'],
-        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
+        'label_type': !exists(json, 'label_type') ? undefined : json['label_type'],
+        'payment': !exists(json, 'payment') ? undefined : PaymentFromJSON(json['payment']),
+        'options': !exists(json, 'options') ? undefined : json['options'],
+        'reference': !exists(json, 'reference') ? undefined : json['reference'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
-export function CarrierSettingsToJSON(value?: CarrierSettings | null): any {
+export function ShipmentUpdateDataToJSON(value?: ShipmentUpdateData | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -116,12 +113,11 @@ export function CarrierSettingsToJSON(value?: CarrierSettings | null): any {
     }
     return {
         
-        'id': value.id,
-        'carrier_name': value.carrier_name,
-        'carrier_id': value.carrier_id,
-        'test': value.test,
-        'active': value.active,
-        'object_type': value.object_type,
+        'label_type': value.label_type,
+        'payment': PaymentToJSON(value.payment),
+        'options': value.options,
+        'reference': value.reference,
+        'metadata': value.metadata,
     };
 }
 
