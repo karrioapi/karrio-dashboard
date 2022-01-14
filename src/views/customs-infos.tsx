@@ -36,8 +36,8 @@ export default function CustomsInfoPage(pageProps: any) {
 
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Customs</span>
-          <button className="button is-success is-pulled-right" onClick={() => editCustomsInfo({ onConfirm: update })}>
-            <span>New Customs Info</span>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editCustomsInfo({ onConfirm: update })}>
+            <span>Create customs info</span>
           </button>
         </header>
 

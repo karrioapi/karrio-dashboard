@@ -35,8 +35,8 @@ export default function AddressPage(pageProps: any) {
       <>
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Addresses</span>
-          <button className="button is-success is-pulled-right" onClick={() => editAddress({ onConfirm: update })}>
-            <span>New Address</span>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editAddress({ onConfirm: update })}>
+            <span>Create address</span>
           </button>
         </header>
 
