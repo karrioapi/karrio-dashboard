@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
+  onSwitch: (tab: string) => void;
   eventKey?: string;
   tabClass?: string;
   tabContainerClass?: string;
@@ -37,7 +38,7 @@ export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[
   )
 };
 
-const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, children, ...props }) => {
+const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, children, onSwitch, ...props }) => {
   const { tabs, disabledTabs, selected, selectTab } = useContext(TabStateContext);
   const ref = useRef<any>();
 
@@ -46,13 +47,15 @@ const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, 
     setTimeout(() => __(e.detail.nextTab)(), e.detail.delay || 0);
   });
 
+  useEffect(() => { onSwitch && onSwitch(selected) }, [selected]);
+
   return (
     <>
 
       <div className={`tabs ${tabContainerClass}`}>
         <ul>
 
-          {tabs.map((tab, index) => (
+          {(tabs || []).map((tab, index) => (
             <li key={index} className={`${tabClass} ${selected === tab ? "is-active" : ""}`}>
               <a onClick={__(tab)} data-name={tab} className={`is-capitalized ${(disabledTabs || []).includes(tab) ? "is-disabled" : ""}`}>
                 {tab}
@@ -65,7 +68,7 @@ const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, 
 
       <div {...props} ref={ref}>
         {React.Children.map(children, (child: any, index) => {
-          const isActive = selected === tabs[index];
+          const isActive = tabs && selected === tabs[index];
           return (
             <div key={index} className={`tab-content ${isActive ? "is-active" : ""}`}>
               {child}

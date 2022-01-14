@@ -21,12 +21,14 @@ export function computeBasePath(pathname?: string) {
 // Init the APP client mode
 export const AppMode = React.createContext<AppModeType>({} as AppModeType);
 
-const AppModeProvider: React.FC<{ pathname: string }> = ({ children, pathname }) => {
+const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }) => {
   const switchMode = () => {
-    const isTestMode = computeMode(pathname);
     insertUrlParam({});
-    if (isTestMode) window.location.pathname = pathname.replace(TEST_BASE_PATH, '');
-    else window.location.replace(TEST_BASE_PATH + pathname);
+    const currentPathName = `${window.location.pathname}`;
+    const isTestMode = computeMode(currentPathName);
+
+    if (isTestMode) window.location.pathname = currentPathName.replace(TEST_BASE_PATH, '');
+    else window.location.replace(TEST_BASE_PATH + currentPathName);
   };
 
   return (

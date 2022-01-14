@@ -10,6 +10,7 @@ import { TrackerMutationContext } from '@/context/tracker-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
+import { getURLSearchParams, insertUrlParam } from '@/lib/helper';
 
 type Connection = UserConnectionType | SystemConnectionType;
 type OperationType = {
@@ -48,6 +49,9 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
     setTrackingNumber(undefined);
     setKey(`tracker-${Date.now()}`);
     (updated && operation?.onChange) && operation.onChange();
+
+    const { modal, ...query } = getURLSearchParams();
+    insertUrlParam(query);
   };
   const create = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();

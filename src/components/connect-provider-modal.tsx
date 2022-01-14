@@ -10,7 +10,7 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { deepEqual, isNone } from '@/lib/helper';
+import { deepEqual, getURLSearchParams, insertUrlParam, isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
@@ -82,6 +82,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     setKey(`connection-${Date.now()}`);
     setIsDisabled(true);
     setIsActive(false);
+
+    const { modal, ...query } = getURLSearchParams();
+    insertUrlParam(query);
   };
   const handleOnChange = (property: string) => (e: React.ChangeEvent<any>) => {
     let new_state = { ...payload, [property]: e.target.value || null };
