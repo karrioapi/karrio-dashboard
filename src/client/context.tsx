@@ -49,7 +49,7 @@ export const ClientsProvider: React.FC = ({ children }) => {
   return (
     <ApolloProvider client={graphqlCli}>
       <RestContext.Provider value={restCli}>
-        {children}
+        {(restCli && graphqlCli) && children}
       </RestContext.Provider>
     </ApolloProvider>
   );
