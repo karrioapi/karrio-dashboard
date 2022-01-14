@@ -1,4 +1,4 @@
-import { Customs, ShipmentStatusEnum } from "@purplship/rest";
+import { ShipmentStatusEnum } from "@purplship/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -14,11 +14,10 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import InputField from "@/components/generic/input-field";
-import TextAreaField from "@/components/generic/textarea-field";
-import MetadataStateProvider, { MetadataStateContext } from "@/components/metadata-state";
 import { MetadataObjectType } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
+import { CustomsType } from "@/lib/types";
+import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -31,7 +30,6 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const { printInvoice } = useContext(CustomInvoicePrinterContext);
   const { shipment, loading, loadShipment } = useContext(LabelData);
   const { id } = router.query;
-  const [isEditingMetadata, setIsEditingMetadata] = React.useState(false);
 
   const buyLabel = (_: React.MouseEvent) => {
     router.push(basePath + '/buy_label/' + shipment.id);
@@ -58,10 +56,11 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <i className="fas fa-print"></i>
               <span className="ml-1">Print Label</span>
             </button>}
-            {!isNone((shipment?.meta as any).custom_invoice) && <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
-              <i className="fas fa-print"></i>
-              <span className="ml-1">Print Invoice</span>
-            </button>}
+            {!isNone((shipment?.meta as any).custom_invoice) &&
+              <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
+                <i className="fas fa-print"></i>
+                <span className="ml-1">Print Invoice</span>
+              </button>}
             {(isNone(shipment.label) && shipment.status === ShipmentStatusEnum.Created) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
@@ -205,7 +204,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             {!isNone(shipment.customs) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">CUSTOMS DECLARATION</p>
 
-              <p className="is-size-6 my-1">{formatCustomsLabel(shipment.customs as Customs)}</p>
+              <p className="is-size-6 my-1">{formatCustomsLabel(shipment.customs as CustomsType)}</p>
               <p className="is-size-6 my-1 has-text-grey">
                 {!isNone(shipment.customs?.options?.aes) && <span>AES: <strong>{shipment.customs?.options?.aes}</strong></span>}
               </p>
@@ -284,101 +283,33 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         </div>
 
 
-        <MetadataStateProvider id={shipment.id as string} object_type={MetadataObjectType.shipment} value={shipment.metadata}>
-          <MetadataStateContext.Consumer>{({
-            state,
-            error,
-            saveMetadata,
-            updateItem,
-            removeItem,
-            addItem,
-            reset,
-          }) => (<>
+        <MetadataEditor
+          id={shipment.id}
+          object_type={MetadataObjectType.shipment}
+          metadata={shipment.metadata}
+          onChange={() => loadShipment(shipment.id)}
+        >
+          <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
 
             <div className="is-flex is-justify-content-space-between">
               <h2 className="title is-5 my-4">Metadata</h2>
 
-              <button className="button is-default is-small is-align-self-center"
-                disabled={isEditingMetadata}
-                onClick={() => {
-                  if (Object.keys(state).length == 0) addItem();
-                  setIsEditingMetadata(true)
-                }}>
+              <button
+                type="button"
+                className="button is-default is-small is-align-self-center"
+                disabled={isEditing}
+                onClick={() => editMetadata()}>
                 <span className="icon is-small">
                   <i className="fas fa-pen"></i>
                 </span>
                 <span>Edit metadata</span>
               </button>
             </div>
+
             <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-            {Object.entries(state).map(
-              ([uid, { key, value }], index) => <React.Fragment key={index + "-metadata"}>
-                <div className="is-flex columns my-1 mx-0" key={uid}>
-                  <div className="column is-3 p-1">
-                    {!isEditingMetadata && <span className="has-text-weight-semibold has-text-grey is-size-7">{key}</span>}
-                    {isEditingMetadata && <InputField
-                      placeholder="Key"
-                      defaultValue={key}
-                      onInput={(e: React.ChangeEvent<any>) => updateItem(uid, { key: e.target.value, value })}
-                      className="is-small is-fullwidth"
-                      required />}
-                  </div>
-                  <div className="column p-1">
-                    {!isEditingMetadata && <span className="is-size-7">{value}</span>}
-                    {isEditingMetadata &&
-                      <TextAreaField
-                        placeholder="Value"
-                        defaultValue={value}
-                        onInput={(e: React.ChangeEvent<any>) => updateItem(uid, { key, value: e.target.value })}
-                        className="is-small is-fullwidth py-1"
-                        style={{ minHeight: "30px" }}
-                        rows={1}
-                        required />}
-                  </div>
-                  {isEditingMetadata && <div className="p-1">
-                    <button className="button is-white is-small" onClick={() => removeItem(uid)}>
-                      <span className="icon is-small">
-                        <i className="fas fa-trash"></i>
-                      </span>
-                    </button>
-                  </div>}
-                </div>
-                {error?.key === key && <p className="has-text-danger px-2 is-size-7">{error?.message}</p>}
-              </React.Fragment>
-            )}
-
-            {!isEditingMetadata && Object.keys(shipment.metadata || {}).length == 0 && <div>No metadata</div>}
-
-            {isEditingMetadata && <>
-              <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-              <div className="is-flex is-justify-content-space-between">
-                <button className="button is-white is-small has-text-primary" onClick={() => addItem()}>
-                  <span className="icon is-small">
-                    <i className="fas fa-plus"></i>
-                  </span>
-                  <span>Add another item</span>
-                </button>
-
-                <div className="field is-grouped">
-                  <p className="control">
-                    <button className="button is-small is-default"
-                      onClick={() => { reset(); setIsEditingMetadata(false); }}>Cancel</button>
-                  </p>
-                  <p className="control">
-                    <button className={`button is-small is-primary ${loading ? 'is-loading' : ''}`}
-                      disabled={loading}
-                      onClick={() => saveMetadata({
-                        onChange: () => loadShipment((id || shipmentId) as string).then(() => setIsEditingMetadata(false))
-                      })}
-                    >Save</button>
-                  </p>
-                </div>
-              </div>
-            </>}
-          </>)
-          }</MetadataStateContext.Consumer>
-        </MetadataStateProvider>
+          </>)}</MetadataEditorContext.Consumer>
+        </MetadataEditor>
 
       </>}
 

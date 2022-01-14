@@ -1,4 +1,4 @@
-import { Commodity, CommodityWeightUnitEnum, Customs, CustomsContentTypeEnum, CustomsIncotermEnum, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment } from '@purplship/rest/index';
+import { Commodity, CommodityWeightUnitEnum, Customs, CustomsContentTypeEnum, CustomsIncotermEnum, Payment, PaymentCurrencyEnum, PaymentPaidByEnum } from '@purplship/rest/index';
 import React, { ChangeEvent, FormEvent, useContext, useReducer, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
@@ -6,7 +6,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
 import { deepEqual, formatRef, isNone } from '@/lib/helper';
-import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, PAYOR_OPTIONS } from '@/lib/types';
+import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
 import { UserData } from '@/context/user-provider';
 import { APIReference } from '@/context/references-provider';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
@@ -32,17 +32,17 @@ const DEFAULT_DUTY: Payment = {
 
 interface CustomsInfoFormComponent {
   value?: Customs;
-  shipment?: Shipment;
+  shipment?: ShipmentType;
   cannotOptOut?: boolean;
-  update: (data: { changes?: Partial<Shipment>, refresh?: boolean }) => void;
+  onChange: (customs: Customs | null) => Promise<any>;
   commodityDiscarded?: (id: string) => void
 }
 
-const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, cannotOptOut, update, commodityDiscarded }) => {
+const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, cannotOptOut, onChange, commodityDiscarded }) => {
   const form = useRef<any>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
-  const { updateCustoms, discardCustoms, addCustoms, discardCommodity } = useContext(ShipmentMutationContext);
+  const { discardCustoms, discardCommodity } = useContext(ShipmentMutationContext);
   const { default_customs } = useContext(DefaultTemplatesData);
   const { incoterms, customs_content_type } = useContext(APIReference);
   const [editCommodity, setEditCommodity] = useState<boolean>(false);
@@ -75,25 +75,16 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true);
+      await onChange(customs);
+
       if (customs.id === undefined && shipment?.id !== undefined) {
-        setLoading(true);
-        await addCustoms(shipment.id, customs);
-        update({ refresh: true });
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully added!' });
       } else if (customs.id !== undefined) {
-        setLoading(true);
-        await updateCustoms(customs);
-        update({ refresh: true });
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully updated!' });
       }
-      else {
-        update({ changes: { customs } });
-        form.current?.dispatchEvent(
-          new CustomEvent('label-select-tab', { bubbles: true, detail: { nextTab: 'options' } })
-        );
-      }
-    } catch (err: any) {
-      notify({ type: NotificationType.error, message: err });
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
     }
     setLoading(false);
   };
@@ -105,10 +96,10 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         await discardCustoms(shipment?.customs?.id as string);
         notify({ type: NotificationType.success, message: 'Customs declaration discarded successfully!' });
       } else {
-        update({ changes: { customs: undefined } });
+        onChange(null);
       }
-    } catch (err: any) {
-      notify({ type: NotificationType.error, message: err });
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
     }
     setLoading(false);
   };
@@ -116,7 +107,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     const commodities = (customs.commodities || []).filter((c: CommodityType) => c.id !== id);
     dispatch({ name: 'commodities', value: commodities });
     if (!id.includes('new-')) {
-      if (!isNone(customs.id)) discardCommodity(customs.id, id);
+      if (!isNone(customs.id)) discardCommodity(id);
       else commodityDiscarded && commodityDiscarded(id);
     }
   };
@@ -128,7 +119,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     const commodities = (customs.commodities || []).filter((c: CommodityType) => c.id !== commodity.id);
     dispatch({ name: 'commodities', value: [...commodities, commodity] });
     if (!isNone(customs.id)) {
-      await updateCustoms({ id: customs.id, commodities: [commodity as Commodity] });
+      await onChange({ id: customs.id, commodities: [commodity as Commodity] });
       notify({ type: NotificationType.success, message: 'Customs Commodity successfully updated!' });
     }
     toggleCommodity();
@@ -342,7 +333,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
           disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty) && deepEqual(value?.options, customs?.options)}>
-          <span>{isNone(shipment) ? 'Save' : 'Next'}</span>
+          <span>{isNone(shipment?.id) && !cannotOptOut ? 'Next' : 'Save'}</span>
         </ButtonField>
 
       </form>}

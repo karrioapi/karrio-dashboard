@@ -1,19 +1,47 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
-  tabs: string[];
-  disabled?: string[];
   eventKey?: string;
   tabClass?: string;
   tabContainerClass?: string;
 }
+interface TabStateInterface {
+  tabs: string[];
+  disabledTabs?: string[];
+  selected: string;
+  selectTab: (tab: string, disabled?: string[] | undefined) => void;
+}
 
-const Tabs: React.FC<TabsComponent> = ({ tabs, disabled, eventKey, tabClass, tabContainerClass, children, ...props }) => {
+export const TabStateContext = React.createContext<TabStateInterface>({} as TabStateInterface);
+
+export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[]; }> = ({ children, tabs, disabledTabs }) => {
   const [selected, setSelected] = useState<string>(tabs[0]);
-  const ref = useRef<any>();
-  const __ = (tab: string) => (_?: any) => {
+
+  const selectTab = (tab: string, disabled?: string[]) => {
+    disabled = disabled || disabledTabs || [];
+    if (!tabs.includes(tab)) { return; };
+    if (disabled && disabled.includes(tab)) { return; };
+
     setSelected(tab);
-  };
+  }
+
+  return (
+    <TabStateContext.Provider value={{
+      tabs,
+      disabledTabs,
+      selected,
+      selectTab,
+    }}>
+      {children}
+    </TabStateContext.Provider>
+  )
+};
+
+const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, children, ...props }) => {
+  const { tabs, disabledTabs, selected, selectTab } = useContext(TabStateContext);
+  const ref = useRef<any>();
+
+  const __ = (tab: string) => (_?: any) => { selectTab(tab); };
   ref?.current?.addEventListener((eventKey || 'tab-updated'), (e: CustomEvent<any>) => {
     setTimeout(() => __(e.detail.nextTab)(), e.detail.delay || 0);
   });
@@ -26,7 +54,7 @@ const Tabs: React.FC<TabsComponent> = ({ tabs, disabled, eventKey, tabClass, tab
 
           {tabs.map((tab, index) => (
             <li key={index} className={`${tabClass} ${selected === tab ? "is-active" : ""}`}>
-              <a onClick={__(tab)} data-name={tab} className={`is-capitalized ${(disabled || []).includes(tab) ? "is-disabled" : ""}`}>
+              <a onClick={__(tab)} data-name={tab} className={`is-capitalized ${(disabledTabs || []).includes(tab) ? "is-disabled" : ""}`}>
                 {tab}
               </a>
             </li>

@@ -1,6 +1,7 @@
 import { Shipment } from "@purplship/rest/index";
 import { BASE_PATH } from "@/client/context";
 import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import React from "react";
 
 
 const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
@@ -252,4 +253,23 @@ export function insertUrlParam(params: {} | any) {
 
 export function jsonify(value: any): string {
   return JSON.stringify(typeof value == 'string' ? JSON.parse(value) : value, null, 2);
+}
+
+export function validationMessage(message: string) {
+  return (e: React.FormEvent | any) => {
+    e.target.validity.valid && e.target.setCustomValidity(message);
+  }
+}
+
+export function validityCheck(nested?: (e: React.FormEvent | any) => void) {
+  return (e: React.FormEvent | any) => {
+    if (e.target.validity.valid) {
+      e.target.setCustomValidity('');
+      e.target.classList.remove('is-danger');
+    } else {
+      e.target.classList.add('is-danger');
+    }
+
+    return nested && nested(e);
+  }
 }

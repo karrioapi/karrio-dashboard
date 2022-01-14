@@ -1,7 +1,7 @@
 import { formatRef, isNone } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
-import { APIError, NotificationType, RequestError } from '@/lib/types';
-import { Customs, Payment, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@purplship/rest/index';
+import { APIError, CustomsType, NotificationType, RequestError, ShipmentType } from '@/lib/types';
+import { Payment, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
@@ -18,12 +18,11 @@ import RateDescription from '@/components/descriptions/rate-description';
 import MessagesDescription from '@/components/descriptions/messages-description';
 
 interface LiveRatesComponent {
-  update: (payload: {}, refresh?: boolean) => void;
 }
 
 const DEFAULT_PAYMENT: Partial<Payment> = { paid_by: PaymentPaidByEnum.Sender };
 
-const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
+const LiveRates: React.FC<LiveRatesComponent> = () => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
@@ -31,12 +30,11 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
   const { loading, setLoading } = useContext(Loading);
   const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
   const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
-  const [label_type, setLabelType] = useState<ShipmentLabelTypeEnum>(shipment?.label_type || ShipmentLabelTypeEnum.Pdf);
+  const [label_type, setLabelType] = useState<ShipmentLabelTypeEnum>(shipment?.label_type as ShipmentLabelTypeEnum || ShipmentLabelTypeEnum.Pdf);
   const [payment, setPayment] = useState<Partial<Payment>>(DEFAULT_PAYMENT);
-  const [reference, setReference] = useState(shipment?.reference);
   const [showMessage, setShowMessage] = useState(false);
 
-  const computeDisabled = (shipment: Shipment) => {
+  const computeDisabled = (shipment: ShipmentType) => {
     return (
       shipment.recipient.address_line1 === undefined ||
       shipment.shipper.address_line1 === undefined ||
@@ -48,10 +46,9 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
     if (computeDisabled(shipment)) return;
     try {
       setLoading(true);
-      let payload = { ...shipment, reference };
-      const response = await fetchRates(payload);
+      let payload = { ...shipment };
+      const response = await fetchRates(payload as Shipment);
       if (payload.id === undefined) router.push('' + response.id);
-      update(response, true);
       if ((response.messages || []).length > 0) {
         const error: APIError = {
           error: {
@@ -72,15 +69,13 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
   const buyShipment = async () => {
     try {
       setLoading(true);
-      let currency = (shipment.options || {} as any).currency || PaymentCurrencyEnum.Cad;
+      let { currency } = (shipment.options || {} as any);
       await buyLabel({
         ...shipment,
-        reference,
         label_type,
         selected_rate_id,
         payment: { ...payment, currency }
-      });
-      update(shipment as Shipment);
+      } as Shipment);
       notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
       router.push(basePath);
     } catch (message: any) {
@@ -102,21 +97,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
           </button>
         </div>
 
-        <div className="column is-12 py-2">
-
-          <InputField
-            label="reference"
-            name="reference"
-            defaultValue={shipment?.reference as string}
-            onChange={e => setReference(e.target.value || null)}
-            placeholder="shipment reference"
-            className="is-small"
-            autoComplete="off" />
-
-        </div>
-
-        <hr className="column p-0 mx-3 my-1" />
-
         <div className="column is-12 py-1" style={shipment.shipper.address_line1 === undefined ? { display: 'none' } : {}}>
 
           <p className="is-title is-size-6 my-2 has-text-weight-semibold">Shipper Address</p>
@@ -133,7 +113,7 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
 
         <div className="column is-12 py-1" style={{ display: `${shipment.parcels.length == 0 ? 'none' : 'block'}` }}>
 
-          <p className="is-title is-size-6 my-2 has-text-weight-semibold">Parcel</p>
+          <p className="is-title is-size-6 my-2 has-text-weight-semibold">Parcels</p>
           <ParcelDescription parcel={shipment.parcels[0]} />
 
         </div>
@@ -145,12 +125,12 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
 
         </div>
 
-        <div className="column is-12 py-1" style={{ display: `${isNone(shipment.customs) ? 'none' : 'block'}` }}>
+        {!isNone(shipment.customs) && <div className="column is-12 py-1">
 
           <p className="is-title is-size-6 my-2 has-text-weight-semibold">Customs Declaration</p>
-          <CustomsInfoDescription customs={(shipment.customs || {}) as Customs} />
+          <CustomsInfoDescription customs={shipment.customs as CustomsType} />
 
-        </div>
+        </div>}
 
         <div className="column is-12 py-4 px-0" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
@@ -177,29 +157,42 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
 
         </div>
 
-        {(shipment.messages || []).length > 0 && <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
-          <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
-            <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
-            <span className="icon is-small is-pulled-right pt-2">
-              <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-            </span>
-          </p>
+        {(shipment.messages || []).length > 0 &&
+          <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
+            <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
+              <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
+              <span className="icon is-small is-pulled-right pt-2">
+                <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+              </span>
+            </p>
 
-          {showMessage && <div className="notification is-warning is-size-7">
-            <MessagesDescription messages={shipment.messages} />
-          </div>}
-        </article>}
+            {showMessage && <div className="notification is-warning is-size-7">
+              <MessagesDescription messages={shipment.messages} />
+            </div>}
+          </article>}
 
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
           <h6 className="is-title is-size-6 mt-1 mb-2 has-text-weight-semibold">Select your label type</h6>
           <div className="control">
             <label className="radio">
-              <input className="mr-1" type="radio" name="label_type" defaultChecked={label_type === ShipmentLabelTypeEnum.Pdf} onChange={() => setLabelType(ShipmentLabelTypeEnum.Pdf)} />
+              <input
+                className="mr-1"
+                type="radio"
+                name="label_type"
+                defaultChecked={label_type === ShipmentLabelTypeEnum.Pdf}
+                onChange={() => setLabelType(ShipmentLabelTypeEnum.Pdf)}
+              />
               <span className="is-size-7 has-text-weight-bold">{ShipmentLabelTypeEnum.Pdf}</span>
             </label>
             <label className="radio">
-              <input className="mr-1" type="radio" name="label_type" defaultChecked={label_type === ShipmentLabelTypeEnum.Zpl} onChange={() => setLabelType(ShipmentLabelTypeEnum.Zpl)} />
+              <input
+                className="mr-1"
+                type="radio"
+                name="label_type"
+                defaultChecked={label_type === ShipmentLabelTypeEnum.Zpl}
+                onChange={() => setLabelType(ShipmentLabelTypeEnum.Zpl)}
+              />
               <span className="is-size-7 has-text-weight-bold">{ShipmentLabelTypeEnum.Zpl}</span>
             </label>
           </div>
@@ -225,9 +218,15 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ update }) => {
             </label>
           </div>
 
-          {(payment.paid_by !== PaymentPaidByEnum.Sender) && <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
-            <InputField label="account number" defaultValue={payment?.account_number as string} onChange={e => setPayment({ ...payment, account_number: e.target.value })} fieldClass="column" />
-          </div>}
+          {(payment.paid_by !== PaymentPaidByEnum.Sender) &&
+            <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+              <InputField
+                label="account number"
+                className="is-small"
+                fieldClass="column"
+                defaultValue={payment?.account_number as string}
+                onChange={e => setPayment({ ...payment, account_number: e.target.value })} />
+            </div>}
 
         </div>
 

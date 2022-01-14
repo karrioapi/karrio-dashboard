@@ -6,10 +6,10 @@ import { isNone, isNoneOrEmpty } from '@/lib/helper';
 type MetaPair = { key?: string; value?: string };
 type MetaRecord = Record<string, MetaPair>;
 type OperationType = {
-  onChange?: () => void;
+  onChange?: (metadata: any) => void;
 };
 type MetadataProviderComponent = {
-  id: string;
+  id?: string;
   object_type: MetadataObjectType;
   value?: {}
 }
@@ -58,14 +58,14 @@ const MetadataStateProvider: React.FC<MetadataProviderComponent> = ({ children, 
         .keys(value || {})
         .filter(key => !Object.keys(added_values).includes(key));
 
-      await mutateMetadata({
+      id && await mutateMetadata({
         id,
         object_type,
         discarded_keys,
         added_values,
       })
 
-      operation?.onChange && operation.onChange();
+      operation?.onChange && operation.onChange(added_values);
     } catch (error) {
       setError(error);
     }

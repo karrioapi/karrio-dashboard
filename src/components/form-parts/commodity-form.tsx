@@ -52,7 +52,6 @@ const CommodityForm: React.FC<CommodityTypeFormComponent> = ({ value, update }) 
     setLoading(true);
     try {
       update(commodity);
-      setKey(`commodity-${Date.now()}`);
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }

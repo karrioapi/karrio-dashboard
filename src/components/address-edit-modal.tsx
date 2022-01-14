@@ -57,15 +57,15 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
     setOperation(undefined);
     setKey(`address-${Date.now()}`);
   };
-  const update = async ({ changes }: any) => {
+  const onChange = async (changes: any) => {
     setLoading(true);
     const { label, is_default, ...address } = (changes as ExtendedShipment).template;
     if (isNew) {
-      await createAddressTemplate({ label, is_default, address: address });
+      await createAddressTemplate({ label, is_default, address: address as any });
       notify({ type: NotificationType.success, message: 'Address successfully added!' });
     }
     else {
-      await updateAddressTemplate({ label, is_default, address: address, id: operation?.addressTemplate?.id as string });
+      await updateAddressTemplate({ label, is_default, address: address as any, id: operation?.addressTemplate?.id as string });
       notify({ type: NotificationType.success, message: 'Address successfully updated!' });
     }
 
@@ -75,7 +75,14 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   const Extension: React.FC<{ onChange?: EventHandler<any>; address?: ExtendedAddress }> = ({ onChange, address }) => (
     <>
       <div className="columns mb-0">
-        <InputField label="label" name="label" onChange={onChange} defaultValue={address?.label} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
+        <InputField
+          label="label"
+          name="label"
+          onChange={onChange}
+          defaultValue={address?.label}
+          className="is-small"
+          fieldClass="column mb-0 px-2 py-2"
+          required />
       </div>
       <div className="columns mb-1">
         <CheckBoxField name="is_default" onChange={onChange} defaultChecked={address?.is_default} fieldClass="column mb-0 px-2 pt-3 pb-2">
@@ -101,7 +108,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
             </div>
             <div className="p-3 my-5"></div>
 
-            {payload !== undefined && <AddressForm value={payload as any} name="template" update={update}>
+            {payload !== undefined && <AddressForm value={payload as any} name="template" onChange={onChange}>
 
               <Extension />
 

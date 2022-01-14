@@ -1,10 +1,9 @@
 import React from 'react';
-import { Message } from '@purplship/rest';
-import { APIError, RequestError } from '@/lib/types';
+import { APIError, MessageType, RequestError } from '@/lib/types';
 import { formatMessage } from '@/components/notifier';
 
 interface MessagesDescriptionComponent {
-  messages?: Message[];
+  messages?: MessageType[];
 }
 
 const MessagesDescription: React.FC<MessagesDescriptionComponent> = ({ messages }) => {

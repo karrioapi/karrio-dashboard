@@ -1,9 +1,9 @@
-import { Shipment } from '@purplship/rest/index';
+import { ShipmentType } from '@/lib/types';
 import React, { useState } from 'react';
 
 
 type CustomInvoicePrinterContextType = {
-  printInvoice: (shipment: Shipment) => void,
+  printInvoice: (shipment: ShipmentType) => void,
 };
 
 export const CustomInvoicePrinterContext = React.createContext<CustomInvoicePrinterContextType>({} as CustomInvoicePrinterContextType);
@@ -12,9 +12,9 @@ interface CustomInvoicePrinterComponent extends React.ButtonHTMLAttributes<HTMLB
 
 const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ children }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [shipment, setShipment] = useState<Shipment>();
+  const [shipment, setShipment] = useState<ShipmentType>();
 
-  const printInvoice = (shipment: Shipment) => {
+  const printInvoice = (shipment: ShipmentType) => {
     setIsActive(true);
     setShipment(shipment);
   };
@@ -23,7 +23,7 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
     setIsActive(false);
     setShipment(undefined);
   };
-  const conputeSource = (shipment: Shipment) => {
+  const conputeSource = (shipment: ShipmentType) => {
     return `data:application/pdf;base64, ${encodeURI((shipment?.meta as any).custom_invoice as string)}`;
   };
 
@@ -37,7 +37,7 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
         <div className="modal-background" onClick={close}></div>
         <div className="label-container">
 
-          {isActive && <iframe src={conputeSource(shipment as Shipment)} height="100%" width="100%"></iframe>}
+          {isActive && <iframe src={conputeSource(shipment as ShipmentType)} height="100%" width="100%"></iframe>}
 
         </div>
 

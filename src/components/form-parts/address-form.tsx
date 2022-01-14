@@ -1,4 +1,4 @@
-import { Address, Shipment } from '@purplship/rest/index';
+import { Address } from '@purplship/rest/index';
 import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { COUNTRY_WITH_POSTAL_CODE, deepEqual, isNone } from '@/lib/helper';
 import AddressAutocompleteInput from '@/components/generic/address-autocomplete-input';
@@ -10,9 +10,8 @@ import StateInput from '@/components/generic/state-input';
 import PostalInput from '@/components/generic/postal-input';
 import PhoneInput from '@/components/generic/phone-input';
 import NameInput from '@/components/generic/name-input';
-import { AddressType, Collection, NotificationType } from '@/lib/types';
+import { AddressType, NotificationType, ShipmentType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -22,14 +21,12 @@ export const DEFAULT_ADDRESS_CONTENT = {
   residential: false
 } as Partial<Address>;
 
-const NEXT_TAB_MAPPING: Collection = { "shipper": "recipient", "recipient": "parcel" };
-
 interface AddressFormComponent {
   value?: Address;
   default_value?: AddressType | null;
-  shipment?: Shipment;
+  shipment?: ShipmentType;
   name: "shipper" | "recipient" | "template";
-  update: (data: { changes?: Partial<Shipment>, refresh?: boolean }) => void;
+  onChange: (address: Address) => Promise<any>;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
@@ -44,16 +41,14 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 
-const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, update, children }) => {
+const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onChange, children }) => {
   const { notify } = useContext(Notify);
   const form = useRef<HTMLFormElement>(null);
   const { states } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
-  const { updateAddress } = useContext(ShipmentMutationContext);
-  const init = () => deepEqual(value, {}) ? DEFAULT_ADDRESS_CONTENT : value;
+  const init = () => value || DEFAULT_ADDRESS_CONTENT;
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [address, dispatch] = useReducer(reducer, value, init);
-  const nextTab: string = NEXT_TAB_MAPPING[name];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -65,18 +60,9 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      if (address.id !== undefined) {
-        setLoading(true);
-        await updateAddress(address);
-        notify({ type: NotificationType.success, message: name + ' Address successfully updated!' });
-        update({ refresh: true });
-      } else {
-        update({ changes: { [name]: address } });
-        form.current?.dispatchEvent(
-          new CustomEvent('label-select-tab', { bubbles: true, detail: { nextTab, delay: 100 } })
-        );
-      }
-      setKey(`address-${Date.now()}`);
+      setLoading(true);
+      await onChange(address);
+      address.id && notify({ type: NotificationType.success, message: name + ' Address successfully updated!' });
     } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
@@ -149,7 +135,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
         disabled={deepEqual(value || DEFAULT_ADDRESS_CONTENT, address)}>
-        <span>Save</span>
+        <span>{isNone(shipment?.id) && name !== "template" ? 'Next' : 'Save'}</span>
       </ButtonField>
 
     </form>
