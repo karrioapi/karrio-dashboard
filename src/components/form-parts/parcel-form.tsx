@@ -1,24 +1,24 @@
-import { ParcelDimensionUnitEnum, ParcelWeightUnitEnum, Shipment } from '@purplship/rest/index';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import SelectField from '@/components/generic/select-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { deepEqual, findPreset, formatDimension, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
-import { DIMENSION_UNITS, ParcelType, PresetCollection, WEIGHT_UNITS } from '@/lib/types';
+import { DIMENSION_UNITS, ParcelType, PresetCollection, ShipmentType, WEIGHT_UNITS } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { ParcelTemplates } from '@/context/parcel-templates-provider';
+import { DimensionUnitEnum, WeightUnitEnum } from '@purplship/graphql';
 
 type stateValue = string | boolean | Partial<ParcelType>;
 export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
   packaging_type: "envelope",
   is_document: false,
-  weight_unit: ParcelWeightUnitEnum.Kg,
-  dimension_unit: ParcelDimensionUnitEnum.Cm,
+  weight_unit: WeightUnitEnum.KG,
+  dimension_unit: DimensionUnitEnum.CM,
 };
 
 interface ParcelFormComponent {
   value?: ParcelType;
-  shipment?: Shipment;
+  shipment?: ShipmentType;
   onChange?: (value: ParcelType) => void;
   prefixChilren?: React.ReactNode;
 }
@@ -90,7 +90,6 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
   useEffect(() => { if (onChange && !deepEqual(value, parcel)) onChange(parcel) }, [parcel]);
-
 
   return (
     <div key={key}>
@@ -219,7 +218,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
         <SelectField
           name="weight_unit"
           onChange={handleChange}
-          value={parcel.weight_unit || ParcelWeightUnitEnum.Kg}
+          value={parcel.weight_unit || WeightUnitEnum.KG}
           className="is-small is-fullwidth"
           fieldClass="column is-2 mb-0 px-1 py-2"
           required>

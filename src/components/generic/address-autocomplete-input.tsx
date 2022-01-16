@@ -15,6 +15,11 @@ interface AddressAutocompleteInputComponent extends InputFieldComponent {
 }
 
 const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, children, ...props }) => {
+  const Props = {
+    required,
+    ...props,
+    ...(Object.keys(props).includes('value') ? { value: props.value || "" } : {}),
+  };
   const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
   const container = useRef<HTMLDivElement | null>(null);
   const [key] = useState<string>(`predictions_${Date.now()}`);
@@ -67,13 +72,20 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
     <div className={`field ${fieldClass}`} key={key} ref={container}>
       {label !== undefined && <label className="label is-capitalized" style={{ fontSize: ".8em" }}>
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
       <div className={`control ${controlClass}`}>
         <div className={`dropdown input is-fullwidth p-0 ${isActive ? 'is-active' : ''} ${dropdownClass}`}
           style={{ border: 'none' }}
           key={`dropdown-input-${key}`}>
-          <input onChange={onChange} onClick={onClick} autoComplete={address_auto_complete?.is_enabled ? key : "on"} className={`input is-fullwidth ${className || ''}`} required={required} {...props} />
+          <input
+            onChange={onChange}
+            onClick={onClick}
+            autoComplete={address_auto_complete?.is_enabled ? key : "on"}
+            className={`input is-fullwidth ${className || ''}`}
+            {...Props} />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
               <nav className="panel dropped-panel">

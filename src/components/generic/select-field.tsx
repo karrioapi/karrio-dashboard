@@ -17,7 +17,9 @@ const SelectField: React.FC<SelectFieldComponent> = ({ label, className, fieldCl
 
       {label !== undefined && <label className="label is-capitalized" style={{ fontSize: ".8em" }}>
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
 
       <div className={`control ${controlClass}`}>

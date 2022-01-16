@@ -28,7 +28,9 @@ const NameInput: React.FC<NameInputComponent> = ({ disableSuggestion, onValueCha
       {!disableSuggestion && <datalist id="address_templates">
         {(templates || [])
           .map(template => (
-            <option key={template.id} value={template.address?.person_name as string}>{template.label} - {formatAddress(template?.address as any)}</option>
+            <option key={template.id} value={template.address?.person_name as string}>
+              {template.label} - {formatAddress(template?.address as any)}
+            </option>
           ))
         }
       </datalist>}

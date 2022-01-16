@@ -1,4 +1,3 @@
-import { ShipmentStatusEnum } from "@purplship/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -14,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType } from "@purplship/graphql";
+import { MetadataObjectType, ShipmentStatus } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import { CustomsType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
@@ -61,7 +60,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>
               </button>}
-            {(isNone(shipment.label) && shipment.status === ShipmentStatusEnum.Created) &&
+            {(isNone(shipment.label) && shipment.status === ShipmentStatus.created) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
             {!isNone(shipmentId) &&
@@ -153,11 +152,11 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
                 {(shipment.selected_rate?.extra_charges || []).map((charge, index) => <div key={index} className="columns m-0">
                   <div className="column is-5 is-size-7 px-0 py-1">
-                    <span className="is-uppercase">{charge.name?.toLocaleLowerCase()}</span>
+                    <span className="is-uppercase">{charge?.name?.toLocaleLowerCase()}</span>
                   </div>
                   <div className="is-size-7 py-1 has-text-grey has-text-right" style={{ minWidth: '100px' }}>
-                    <span className="mr-1">{charge.amount}</span>
-                    {!isNone(charge.currency) && <span>{charge.currency}</span>}
+                    <span className="mr-1">{charge?.amount}</span>
+                    {!isNone(charge?.currency) && <span>{charge?.currency}</span>}
                   </div>
                 </div>)}
               </div>

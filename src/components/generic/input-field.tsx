@@ -22,7 +22,9 @@ const InputField: React.FC<InputFieldComponent> = ({ label, required, className,
     <div className={`field ${fieldClass}`}>
       {label !== undefined && <label className="label is-capitalized" style={{ fontSize: ".8em" }}>
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
       {addonLeft && addonLeft}
       <p className={`control ${controlClass}`}>

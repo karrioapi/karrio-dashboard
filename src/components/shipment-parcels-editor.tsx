@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { NotificationType, ParcelType, ShipmentType } from '@/lib/types';
-import { deepEqual, formatDimension, isNone } from '@/lib/helper';
+import { deepEqual, formatDimension, isNone, isNoneOrEmpty } from '@/lib/helper';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import ButtonField from '@/components/generic/button-field';
 import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
+import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/components/commodity-list-editor';
+import { ShipmentMutationContext } from '@/context/shipment-mutation';
 
 type ParcelCollection = Record<string, ParcelType>;
 interface ShipmentParcelsEditorProps {
@@ -20,21 +22,27 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const { default_parcel, called } = useContext(DefaultTemplatesData);
+  const { discardCommodity, discardParcel } = useContext(ShipmentMutationContext);
   const [parcels, setParcels] = React.useState<ParcelCollection>(toParcelCollection(defaultValue));
   const [isExpanded, setIsExpanded] = React.useState<{ [key: string]: boolean }>({});
   const [hasErrors, setHasErrors] = React.useState<{ [key: string]: boolean }>({});
   const [isValid, setIsValid] = React.useState<boolean>(true);
 
-  const updatedParcel = (uid: string, data: ParcelType) => {
+  const updateParcel = (uid: string, data: ParcelType) => {
     const newSate = { ...parcels, [uid]: data };
     setParcels(newSate);
   };
-  const removeParcel = (uid: string) => {
-    const newState = Object
-      .entries(parcels)
-      .reduce((acc, [key, parcel]) => (key === uid ? acc : { ...acc, [key]: parcel }), {});
+  const removeParcel = async (uid: string) => {
+    const { id } = parcels[uid];
+    if (isNoneOrEmpty(id)) {
+      const newState = Object
+        .entries(parcels)
+        .reduce((acc, [key, parcel]) => (key === uid ? acc : { ...acc, [key]: parcel }), {});
 
-    setParcels(newState);
+      setParcels(newState);
+    } else {
+      await discardParcel(id as string);
+    }
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,10 +121,21 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
                 </p>
               </a>
 
-              <ParcelForm
-                value={parcel}
-                onChange={change => { updatedParcel(uid, change); }}
-              />
+              <ParcelForm value={parcel} onChange={change => updateParcel(uid, change)} />
+              <CommodityCollectionEditor
+                defaultValue={parcel.items}
+                onRemove={discardCommodity}
+                onChange={(items) => updateParcel(uid, { ...parcel, items })}
+              >
+                <CommodityCollectionEditorContext.Consumer>{({ commodities, isExpanded }) => (<>
+                  <a className="is-size-7 has-text-info has-text-weight-semibold">
+                    {commodities.length == 0 ? 'No' : commodities.length} item(s) declared
+                    <span className="icon is-small pl-2">
+                      <i className={`fas ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-up'}`}></i>
+                    </span>
+                  </a>
+                </>)}</CommodityCollectionEditorContext.Consumer>
+              </CommodityCollectionEditor>
 
             </div>
           </article>
@@ -128,7 +147,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
       <button
         type='button'
         className="button is-default is-small"
-        onClick={() => updatedParcel(`parcel-${Date.now()}`, (default_parcel || DEFAULT_PARCEL_CONTENT) as ParcelType)}>
+        onClick={() => updateParcel(`parcel-${Date.now()}`, (default_parcel || DEFAULT_PARCEL_CONTENT) as ParcelType)}>
         <span className="icon is-small">
           <i className="fas fa-plus"></i>
         </span>

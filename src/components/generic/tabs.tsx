@@ -1,21 +1,22 @@
+import { addUrlParam } from '@/lib/helper';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
-  onSwitch: (tab: string) => void;
   eventKey?: string;
   tabClass?: string;
   tabContainerClass?: string;
+  onSwitch?: (tab: string) => void;
 }
 interface TabStateInterface {
-  tabs: string[];
   disabledTabs?: string[];
+  tabs: string[];
   selected: string;
   selectTab: (tab: string, disabled?: string[] | undefined) => void;
 }
 
 export const TabStateContext = React.createContext<TabStateInterface>({} as TabStateInterface);
 
-export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[]; }> = ({ children, tabs, disabledTabs }) => {
+export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[]; setSelectedToURL?: boolean; }> = ({ children, tabs, disabledTabs, setSelectedToURL }) => {
   const [selected, setSelected] = useState<string>(tabs[0]);
 
   const selectTab = (tab: string, disabled?: string[]) => {
@@ -24,7 +25,9 @@ export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[
     if (disabled && disabled.includes(tab)) { return; };
 
     setSelected(tab);
-  }
+  };
+
+  useEffect(() => { setSelectedToURL && addUrlParam('tab', selected); }, [selected]);
 
   return (
     <TabStateContext.Provider value={{

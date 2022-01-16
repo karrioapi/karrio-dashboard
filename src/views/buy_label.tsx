@@ -5,7 +5,6 @@ import AddressForm from '@/components/form-parts/address-form';
 import ShipmentOptions from '@/components/form-parts/shipment-options';
 import LiveRates from '@/components/live-rates';
 import Tabs, { TabStateContext, TabStateProvider } from '@/components/generic/tabs';
-import { ShipmentStatusEnum } from '@purplship/rest';
 import { isNone } from '@/lib/helper';
 import ShipmentProvider, { LabelData, } from '@/context/shipment-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -24,7 +23,7 @@ import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ShipmentMutationProvider, { ShipmentMutationContext } from '@/context/shipment-mutation';
 import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
-import { PartialShipmentUpdateInput } from '@purplship/graphql';
+import { PartialShipmentUpdateInput, ShipmentStatus } from '@purplship/graphql';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -83,7 +82,7 @@ export default function LabelPage(pageProps: any) {
       if (!called && !loading && loadShipment) {
         loadShipment(id as string)
           .then(({ status }) => {
-            if (isNone(status) || status === ShipmentStatusEnum.Created) {
+            if (isNone(status) || status === ShipmentStatus.created) {
               setKey(`${id}-${Date.now()}`);
             } else {
               notify({ type: NotificationType.info, message: 'Label already purchased!' });

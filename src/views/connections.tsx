@@ -5,16 +5,15 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import Tabs, { TabStateContext, TabStateProvider } from "@/components/generic/tabs";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";
-import { APIReference } from "@/context/references-provider";
 import SystemConnectionsProvider, { SystemConnections } from "@/context/system-connections-provider";
 import UserConnectionsProvider, { UserConnections } from "@/context/user-connections-provider";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
-import ConnectionMutationProvider, { ConnectionMutationContext } from "@/context/connection-mutation";
+import ConnectionMutationProvider from "@/context/connection-mutation";
 import { useRouter } from "next/dist/client/router";
-import { getURLSearchParams, insertUrlParam, isNoneOrEmpty } from "@/lib/helper";
+import { isNoneOrEmpty } from "@/lib/helper";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -32,9 +31,6 @@ export default function ConnectionsPage(pageProps: any) {
     const system_connections = useContext(SystemConnections);
 
     const onChange = async () => refetch && await refetch();
-    const onTabSwitch = (tab: string) => {
-      insertUrlParam({ ...getURLSearchParams(), tab });
-    };
 
     useEffect(() => {
       (!user_connections.loading && user_connections.load) && user_connections.load();
@@ -66,7 +62,7 @@ export default function ConnectionsPage(pageProps: any) {
 
         <div className="table-container">
 
-          <Tabs tabClass="is-capitalized has-text-weight-semibold" onSwitch={onTabSwitch} style={{ position: 'relative' }}>
+          <Tabs tabClass="is-capitalized has-text-weight-semibold" style={{ position: 'relative' }}>
 
             <UserConnectionList />
 
@@ -89,7 +85,7 @@ export default function ConnectionsPage(pageProps: any) {
             <SystemConnectionsProvider>
               <UserConnectionsProvider>
 
-                <TabStateProvider tabs={tabs}>
+                <TabStateProvider tabs={tabs} setSelectedToURL={true}>
                   <Component />
                 </TabStateProvider>
 

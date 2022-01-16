@@ -104,9 +104,9 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
 
           <section className="modal-card-body">
             <div className="form-floating-header p-4">
-              <h3 className="subtitle is-3">{isNew ? 'New' : 'Update'} Address</h3>
+              <span className="has-text-weight-bold is-size-6">Edit address</span>
             </div>
-            <div className="p-3 my-5"></div>
+            <div className="p-3 my-2"></div>
 
             {payload !== undefined && <AddressForm value={payload as any} name="template" onChange={onChange}>
 

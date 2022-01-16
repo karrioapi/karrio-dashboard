@@ -238,7 +238,7 @@ hr {
 .mode-indicator {
   position: sticky;
   top: 60px;
-  z-index: 0;
+  z-index: 1;
   border-top: 1px solid rgb(196, 76, 52);
   padding: 0;
   text-align: center;
@@ -331,4 +331,16 @@ td > div.dropdown.is-active .dropdown-menu {
   max-height: 11em;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.modal-card {
+  max-height: 80vh !important;
+}
+
+.modal-card-body {
+  background-color: #f9f9f9;
+}
+
+pre.code {
+  border: 1px solid #eee;
 }

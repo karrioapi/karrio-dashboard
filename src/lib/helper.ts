@@ -1,6 +1,5 @@
-import { Shipment } from "@purplship/rest/index";
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { AddressType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 import React from "react";
 
 
@@ -93,7 +92,7 @@ export function formatValues(separator: string, ...args: any[]): string {
   return args.filter(d => d !== undefined).join(separator);
 }
 
-export function formatDimension(parcel?: Partial<ParcelType>): string {
+export function formatDimension(parcel?: Partial<ParcelType> | null): string {
   if (parcel !== undefined && parcel !== null) {
 
     const { dimension_unit, height, length, width } = parcel;
@@ -104,10 +103,10 @@ export function formatDimension(parcel?: Partial<ParcelType>): string {
   return 'Dimensions: None specified...';
 }
 
-export function formatWeight(parcel?: Partial<ParcelType> | Partial<CommodityType>): string {
-  if (parcel !== undefined && parcel !== null) {
+export function formatWeight(data?: { weight: number, weight_unit: string } | any): string {
+  if (data !== undefined && data !== null) {
 
-    const { weight, weight_unit } = parcel;
+    const { weight, weight_unit } = data;
 
     return `Weight: ${weight} ${weight_unit}`;
   }
@@ -138,7 +137,7 @@ export function cleanDict<T = object>(value: object): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-export function formatParcelLabel(parcel?: ParcelType): string {
+export function formatParcelLabel(parcel?: ParcelType | null): string {
   if (isNone(parcel) || (parcel && isNone(parcel?.package_preset) && isNone(parcel?.packaging_type))) {
     return '';
   }
@@ -249,6 +248,16 @@ export function insertUrlParam(params: {} | any) {
     }
     window.history.pushState({ path: newurl }, '', newurl);
   }
+}
+
+export function addUrlParam(key: string, value: string) {
+  insertUrlParam({ ...getURLSearchParams(), [key]: value });
+}
+
+export function removeUrlParam(param: string) {
+  const params = getURLSearchParams();
+  delete params[param];
+  insertUrlParam(params);
 }
 
 export function jsonify(value: any): string {

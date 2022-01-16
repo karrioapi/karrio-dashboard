@@ -10,7 +10,6 @@ import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
 import CopiableLink from "@/components/copiable-link";
 import AppLink from "@/components/app-link";
-import Expandable from "@/components/expandable";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -80,7 +79,7 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
 
         {notEmptyJSON(data) &&
           <div className="py-3">
-            <pre>
+            <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlight(data as string, { language: 'json' }).value,

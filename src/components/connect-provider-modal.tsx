@@ -10,7 +10,7 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { deepEqual, getURLSearchParams, insertUrlParam, isNone } from '@/lib/helper';
+import { deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
@@ -82,9 +82,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     setKey(`connection-${Date.now()}`);
     setIsDisabled(true);
     setIsActive(false);
-
-    const { modal, ...query } = getURLSearchParams();
-    insertUrlParam(query);
+    removeUrlParam('modal');
   };
   const handleOnChange = (property: string) => (e: React.ChangeEvent<any>) => {
     let new_state = { ...payload, [property]: e.target.value || null };
@@ -117,9 +115,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
         <form className="modal-card" onSubmit={handleSubmit}>
           <section className="modal-card-body">
             <div className="form-floating-header p-4">
-              <h3 className="subtitle is-3">{isNew ? 'Connect a Carrier' : 'Update a Carrier Connection'}</h3>
+              <span className="has-text-weight-bold is-size-6">Edit carrier account</span>
             </div>
-            <div className="p-3 my-5"></div>
+            <div className="p-3 my-2"></div>
 
             <SelectField value={payload.carrier_name} onChange={handleOnChange("carrier_name")} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
               <option value='none'>Select Carrier</option>

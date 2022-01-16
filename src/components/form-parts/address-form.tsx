@@ -1,4 +1,3 @@
-import { Address } from '@purplship/rest/index';
 import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { COUNTRY_WITH_POSTAL_CODE, deepEqual, isNone } from '@/lib/helper';
 import AddressAutocompleteInput from '@/components/generic/address-autocomplete-input';
@@ -19,14 +18,14 @@ export const DEFAULT_ADDRESS_CONTENT = {
   address_line1: '',
   address_line2: '',
   residential: false
-} as Partial<Address>;
+} as Partial<AddressType>;
 
 interface AddressFormComponent {
-  value?: Address;
+  value?: AddressType;
   default_value?: AddressType | null;
   shipment?: ShipmentType;
   name: "shipper" | "recipient" | "template";
-  onChange: (address: Address) => Promise<any>;
+  onChange: (address: AddressType) => Promise<any>;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {

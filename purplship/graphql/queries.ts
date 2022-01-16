@@ -83,17 +83,6 @@ query get_customs_info_templates($offset: Int, $first: Int) {
           invoice_date
           signer
           certify
-          commodities {
-            id
-            sku
-            weight
-            quantity
-            weight_unit
-            description
-            value_amount
-            value_currency
-            origin_country
-          }
           options
         }
       }
@@ -162,17 +151,6 @@ query get_default_templates {
         invoice_date
         signer
         certify
-        commodities {
-          id
-          sku
-          weight
-          quantity
-          weight_unit
-          description
-          value_amount
-          value_currency
-          origin_country
-        }
         options
       }
     }
@@ -189,6 +167,7 @@ query get_default_templates {
         weight_unit
         packaging_type
         package_preset
+        is_document
       }
       created_at
       updated_at
@@ -365,6 +344,31 @@ query get_shipment($id: String!) {
       address_line2
       validate_location
     }
+    parcels {
+      id
+      width
+      height
+      length
+      is_document
+      dimension_unit
+      weight
+      weight_unit
+      packaging_type
+      package_preset
+      items {
+        id
+        weight
+        description
+        quantity
+        sku
+        value_amount
+        weight_unit
+        value_currency
+        origin_country
+        metadata
+        parent_id
+      }
+    }
     label_type
     tracking_number
     shipment_identifier
@@ -393,12 +397,21 @@ query get_shipment($id: String!) {
       commodities {
         id
         weight
+        weight_unit
         description
         quantity
         sku
         value_amount
+        value_currency
         origin_country
+        metadata
+        parent_id
       }
+    }
+    payment {
+      paid_by
+      currency
+      account_number
     }
     selected_rate_id
     selected_rate {
@@ -506,6 +519,31 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
           address_line2
           validate_location
         }
+        parcels {
+          id
+          width
+          height
+          length
+          is_document
+          dimension_unit
+          weight
+          weight_unit
+          packaging_type
+          package_preset
+          items {
+            id
+            weight
+            description
+            quantity
+            sku
+            value_amount
+            weight_unit
+            value_currency
+            origin_country
+            metadata
+            parent_id
+          }
+        }
         label_type
         tracking_number
         shipment_identifier
@@ -534,12 +572,21 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
           commodities {
             id
             weight
+            weight_unit
             description
             quantity
             sku
             value_amount
+            value_currency
             origin_country
+            metadata
+            parent_id
           }
+        }
+        payment {
+          paid_by
+          currency
+          account_number
         }
         selected_rate_id
         selected_rate {
@@ -642,6 +689,31 @@ mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
         address_line2
         validate_location
       }
+      parcels {
+        id
+        width
+        height
+        length
+        is_document
+        dimension_unit
+        weight
+        weight_unit
+        packaging_type
+        package_preset
+        items {
+          id
+          weight
+          description
+          quantity
+          sku
+          value_amount
+          weight_unit
+          value_currency
+          origin_country
+          metadata
+          parent_id
+        }
+      }
       label_type
       tracking_number
       shipment_identifier
@@ -670,12 +742,21 @@ mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
         commodities {
           id
           weight
+          weight_unit
           description
           quantity
           sku
           value_amount
+          value_currency
           origin_country
+          metadata
+          parent_id
         }
+      }
+      payment {
+        paid_by
+        currency
+        account_number
       }
       selected_rate_id
       selected_rate {
@@ -889,6 +970,7 @@ query get_parcel_templates($offset: Int, $first: Int) {
           weight_unit
           packaging_type
           package_preset
+          is_document
         }
         created_at
         updated_at
@@ -1543,6 +1625,31 @@ query get_order($id: String!) {
         address_line2
         validate_location
       }
+      parcels {
+        id
+        width
+        height
+        length
+        is_document
+        dimension_unit
+        weight
+        weight_unit
+        packaging_type
+        package_preset
+        items {
+          id
+          weight
+          description
+          quantity
+          sku
+          value_amount
+          weight_unit
+          value_currency
+          origin_country
+          metadata
+          parent_id
+        }
+      }
       label_type
       tracking_number
       shipment_identifier
@@ -1571,12 +1678,21 @@ query get_order($id: String!) {
         commodities {
           id
           weight
+          weight_unit
           description
           quantity
           sku
           value_amount
+          value_currency
           origin_country
+          metadata
+          parent_id
         }
+      }
+      payment {
+        paid_by
+        currency
+        account_number
       }
       selected_rate_id
       selected_rate {
@@ -1725,6 +1841,31 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
             address_line2
             validate_location
           }
+          parcels {
+            id
+            width
+            height
+            length
+            is_document
+            dimension_unit
+            weight
+            weight_unit
+            packaging_type
+            package_preset
+            items {
+              id
+              weight
+              description
+              quantity
+              sku
+              value_amount
+              weight_unit
+              value_currency
+              origin_country
+              metadata
+              parent_id
+            }
+          }
           label_type
           tracking_number
           shipment_identifier
@@ -1753,12 +1894,21 @@ query get_orders($offset: Int, $first: Int, $status: [String], $address: String,
             commodities {
               id
               weight
+              weight_unit
               description
               quantity
               sku
               value_amount
+              value_currency
               origin_country
+              metadata
+              parent_id
             }
+          }
+          payment {
+            paid_by
+            currency
+            account_number
           }
           selected_rate_id
           selected_rate {

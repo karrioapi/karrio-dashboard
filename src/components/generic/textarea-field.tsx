@@ -16,7 +16,9 @@ const TextAreaField: React.FC<TextAreaFieldComponent> = ({ label, required, clas
     <div className={`field ${fieldClass}`}>
       {label !== undefined && <label className="label is-capitalized is-size-7">
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
       <div className={`control ${controlClass}`}>
         <textarea className={`textarea ${className}`} {...Props} />

@@ -9,7 +9,6 @@ import { useRouter } from "next/dist/client/router";
 import LogProvider, { Log } from "@/context/log-provider";
 import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
-import Expandable from "@/components/expandable";
 import AppLink from "@/components/app-link";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -84,7 +83,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
           <div className="py-3">
-            <pre>
+            <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlight(response as string, { language: 'json' }).value,
@@ -102,7 +101,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
           <div className="py-3">
-            <pre>
+            <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlight(data as string, { language: 'json' }).value,
@@ -120,7 +119,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
           <div className="py-3">
-            <pre>
+            <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlight(query_params as string, { language: 'json' }).value,

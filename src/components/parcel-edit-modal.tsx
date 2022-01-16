@@ -86,11 +86,14 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card">
 
-          <form className="modal-card-body" onSubmit={handleSubmit} onChange={e => setIsValid((e.target as any).checkValidity())}>
+          <form
+            className="modal-card-body"
+            onSubmit={handleSubmit}
+            onChange={e => setIsValid((e.target as any).checkValidity())}>
             <div className="form-floating-header p-4">
-              <h3 className="subtitle is-3">{isNew ? 'New' : 'Update'} Parcel</h3>
+              <span className="has-text-weight-bold is-size-6">Edit parcel</span>
             </div>
-            <div className="p-3 my-5"></div>
+            <div className="p-3 my-2"></div>
 
             {template !== undefined &&
               <ParcelForm

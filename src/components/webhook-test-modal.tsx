@@ -79,7 +79,7 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
               </SelectField>
 
               <div className="card-content py-3 px-0">
-                <pre style={{ height: '30vh', maxHeight: '30vh' }}>
+                <pre className="code p-1" style={{ height: '30vh', maxHeight: '30vh' }}>
                   <code
                     dangerouslySetInnerHTML={{
                       __html: hljs.highlight(payload, { language: 'json' }).value,
