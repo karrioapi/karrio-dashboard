@@ -12,15 +12,18 @@ import WebhooksProvider, { Webhooks } from "@/context/webhooks-provider";
 import { NotificationType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
+import { useRouter } from "next/dist/client/router";
+import { isNoneOrEmpty } from "@/lib/helper";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function WebhooksPage(pageProps: any) {
   const Component: React.FC<any> = ({ removeWebhook, updateWebhook }) => {
+    const router = useRouter();
     const { notify } = useContext(Notify)
     const { setLoading } = useContext(Loading);
-    const { loading, results, load, refetch } = useContext(Webhooks);
+    const { loading, results, called, load, refetch } = useContext(Webhooks);
     const { editWebhook } = useContext(WebhookEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
 
@@ -45,6 +48,12 @@ export default function WebhooksPage(pageProps: any) {
 
     useEffect(() => { !loading && load(); }, []);
     useEffect(() => { setLoading(loading); });
+    useEffect(() => {
+      if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+        const webhook = results.find(c => c.id === router.query.modal);
+        webhook && editWebhook({ webhook, onConfirm: update });
+      }
+    }, [router.query.modal, loading]);
 
     return (
       <>
@@ -96,10 +105,8 @@ export default function WebhooksPage(pageProps: any) {
                           <i className="fas fa-flask"></i>
                         </span>
                       </WebhookTestModal>
-                      <button className="button is-white" onClick={() => editWebhook({
-                        webhook: webhook,
-                        onConfirm: update,
-                      })}>
+                      <button className="button is-white"
+                        onClick={() => editWebhook({ webhook, onConfirm: update })}>
                         <span className="icon is-small">
                           <i className="fas fa-pen"></i>
                         </span>

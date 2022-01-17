@@ -17,6 +17,7 @@ import { MetadataObjectType, ShipmentStatus } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import { CustomsType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
+import Spinner from "@/components/spinner";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -27,7 +28,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const { setLoading } = useContext(Loading);
   const { printLabel } = useContext(LabelPrinterContext);
   const { printInvoice } = useContext(CustomInvoicePrinterContext);
-  const { shipment, loading, loadShipment } = useContext(LabelData);
+  const { shipment, loading, called, loadShipment } = useContext(LabelData);
   const { id } = router.query;
 
   const buyLabel = (_: React.MouseEvent) => {
@@ -35,11 +36,16 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   };
 
   useEffect(() => { setLoading(loading); });
-  useEffect(() => { (!loading && loadShipment) && loadShipment((id || shipmentId) as string); }, [id || shipmentId]);
+  useEffect(() => {
+    (!loading && loadShipment) && loadShipment((id || shipmentId) as string);
+  }, [id || shipmentId]);
 
   return (
     <>
-      {!isNone(shipment.id) && <>
+
+      {loading && <Spinner />}
+
+      {!loading && !isNone(shipment.id) && <>
         <div className="columns my-1">
           <div className="column is-6">
             <span className="subtitle is-size-7 has-text-weight-semibold">SHIPMENT</span>
@@ -312,7 +318,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       </>}
 
-      {!loading && isNone(shipment.id) && <div className="card my-6">
+      {called && !loading && isNone(shipment.id) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>

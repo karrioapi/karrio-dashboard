@@ -19,8 +19,8 @@ export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
 interface ParcelFormComponent {
   value?: ParcelType;
   shipment?: ShipmentType;
-  onChange?: (value: ParcelType) => void;
   prefixChilren?: React.ReactNode;
+  onChange?: (value: ParcelType) => void;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
@@ -52,6 +52,20 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
   const [parcel_type, setParcelType] = useState<string>(isNone(value?.package_preset) ? 'custom' : 'preset');
   const [dimension, setDimension] = useState<string | undefined>(formatDimension(isNone(value?.package_preset) ? undefined : value));
 
+  const isDimensionRequired = (parcel: ParcelType) => {
+    return !(
+      isNone(parcel.width) &&
+      isNone(parcel.height) &&
+      isNone(parcel.length)
+    );
+  };
+  const shouldShowDimension = (parcel_type: string) => {
+    if (parcel_type === 'custom') return false;
+    if (parcel_type !== 'preset') return true;
+    if ((parcel.package_preset || "") !== "") return true;
+    return false
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     let name: string = target.name;
@@ -74,19 +88,6 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
 
     dispatch({ name, value });
   };
-  const isDimensionRequired = (parcel: ParcelType) => {
-    return !(
-      isNone(parcel.width) &&
-      isNone(parcel.height) &&
-      isNone(parcel.length)
-    );
-  };
-  const shouldShowDimension = (parcel_type: string) => {
-    if (parcel_type === 'custom') return false;
-    if (parcel_type !== 'preset') return true;
-    if ((parcel.package_preset || "") !== "") return true;
-    return false
-  };
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
   useEffect(() => { if (onChange && !deepEqual(value, parcel)) onChange(parcel) }, [parcel]);
@@ -95,7 +96,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
     <div key={key}>
 
       {/* Primary parcel form content */}
-      {React.Children.map(prefixChilren, (child: any) => React.cloneElement(child, { ...child.props, parcel, onChange: handleChange }))}
+      {prefixChilren}
 
       {/* Default parcel form content */}
       <div className="columns m-0">
@@ -228,7 +229,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
       </div>
 
       {/* Extra parcel form content */}
-      {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, parcel, onChange: handleChange }))}
+      {children}
 
     </div>
   )

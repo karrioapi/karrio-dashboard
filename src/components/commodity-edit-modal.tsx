@@ -92,7 +92,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">{isNew ? 'Add' : 'Update'} commodity</span>
             </div>
-            <div className="p-3 my-2"></div>
+            <div className="p-3 my-4"></div>
 
             {commodity !== undefined && <>
               <div className="px-0 py-4" key={key}>

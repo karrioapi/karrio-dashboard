@@ -5,21 +5,23 @@ import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
-import { isNone } from "@/lib/helper";
+import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import ParcelMutationProvider, { ParcelMutationContext } from "@/context/parcel-template-mutation";
+import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ParcelsPage(pageProps: any) {
   const Component: React.FC<any> = () => {
+    const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { deleteTemplate } = useContext(ParcelMutationContext);
-    const { loading, templates, previous, next, load, loadMore, refetch } = useContext(ParcelTemplates);
+    const { loading, templates, previous, next, called, load, loadMore, refetch } = useContext(ParcelTemplates);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -29,6 +31,13 @@ export default function ParcelsPage(pageProps: any) {
 
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
+    useEffect(() => {
+      if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+        const parcelTemplate = templates.find(c => c.id === router.query.modal);
+        (parcelTemplate || router.query.modal === 'new')
+          && editParcel({ parcelTemplate, onConfirm: update });
+      }
+    }, [router.query.modal, loading]);
 
     return (
       <>

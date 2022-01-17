@@ -619,7 +619,7 @@ export interface get_shipment_shipment_selected_rate {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_shipment_shipment_selected_rate_extra_charges | null)[] | null;
+  extra_charges: get_shipment_shipment_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -641,7 +641,7 @@ export interface get_shipment_shipment_rates {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_shipment_shipment_rates_extra_charges | null)[] | null;
+  extra_charges: get_shipment_shipment_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -664,7 +664,7 @@ export interface get_shipment_shipment {
   status: ShipmentStatus;
   recipient: get_shipment_shipment_recipient;
   shipper: get_shipment_shipment_shipper;
-  parcels: (get_shipment_shipment_parcels | null)[];
+  parcels: get_shipment_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
@@ -677,11 +677,11 @@ export interface get_shipment_shipment {
   payment: get_shipment_shipment_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_shipment_shipment_selected_rate | null;
-  rates: (get_shipment_shipment_rates | null)[] | null;
+  rates: get_shipment_shipment_rates[] | null;
   options: any | null;
-  metadata: any | null;
+  metadata: any;
   meta: any | null;
-  messages: (get_shipment_shipment_messages | null)[] | null;
+  messages: get_shipment_shipment_messages[];
 }
 
 export interface get_shipment {
@@ -833,7 +833,7 @@ export interface get_shipments_shipments_edges_node_selected_rate {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_shipments_shipments_edges_node_selected_rate_extra_charges | null)[] | null;
+  extra_charges: get_shipments_shipments_edges_node_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -855,7 +855,7 @@ export interface get_shipments_shipments_edges_node_rates {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_shipments_shipments_edges_node_rates_extra_charges | null)[] | null;
+  extra_charges: get_shipments_shipments_edges_node_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -878,7 +878,7 @@ export interface get_shipments_shipments_edges_node {
   status: ShipmentStatus;
   recipient: get_shipments_shipments_edges_node_recipient;
   shipper: get_shipments_shipments_edges_node_shipper;
-  parcels: (get_shipments_shipments_edges_node_parcels | null)[];
+  parcels: get_shipments_shipments_edges_node_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
@@ -891,11 +891,11 @@ export interface get_shipments_shipments_edges_node {
   payment: get_shipments_shipments_edges_node_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_shipments_shipments_edges_node_selected_rate | null;
-  rates: (get_shipments_shipments_edges_node_rates | null)[] | null;
+  rates: get_shipments_shipments_edges_node_rates[] | null;
   options: any | null;
-  metadata: any | null;
+  metadata: any;
   meta: any | null;
-  messages: (get_shipments_shipments_edges_node_messages | null)[] | null;
+  messages: get_shipments_shipments_edges_node_messages[];
 }
 
 export interface get_shipments_shipments_edges {
@@ -1058,7 +1058,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_select
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges | null)[] | null;
+  extra_charges: partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -1080,7 +1080,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_rates 
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (partial_shipment_update_partial_shipment_update_shipment_rates_extra_charges | null)[] | null;
+  extra_charges: partial_shipment_update_partial_shipment_update_shipment_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -1103,7 +1103,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   status: ShipmentStatus;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
   shipper: partial_shipment_update_partial_shipment_update_shipment_shipper;
-  parcels: (partial_shipment_update_partial_shipment_update_shipment_parcels | null)[];
+  parcels: partial_shipment_update_partial_shipment_update_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
@@ -1116,11 +1116,11 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   payment: partial_shipment_update_partial_shipment_update_shipment_payment | null;
   selected_rate_id: string | null;
   selected_rate: partial_shipment_update_partial_shipment_update_shipment_selected_rate | null;
-  rates: (partial_shipment_update_partial_shipment_update_shipment_rates | null)[] | null;
+  rates: partial_shipment_update_partial_shipment_update_shipment_rates[] | null;
   options: any | null;
-  metadata: any | null;
+  metadata: any;
   meta: any | null;
-  messages: (partial_shipment_update_partial_shipment_update_shipment_messages | null)[] | null;
+  messages: partial_shipment_update_partial_shipment_update_shipment_messages[];
 }
 
 export interface partial_shipment_update_partial_shipment_update_errors {
@@ -1177,11 +1177,11 @@ export interface get_tracker_tracker {
   created_by: get_tracker_tracker_created_by;
   status: TrackerStatus;
   tracking_number: string;
-  events: (get_tracker_tracker_events | null)[] | null;
+  events: get_tracker_tracker_events[] | null;
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
-  messages: (get_tracker_tracker_messages | null)[] | null;
+  messages: get_tracker_tracker_messages[] | null;
   carrier_id: string;
   carrier_name: string;
 }
@@ -1237,11 +1237,11 @@ export interface get_trackers_trackers_edges_node {
   created_by: get_trackers_trackers_edges_node_created_by;
   status: TrackerStatus;
   tracking_number: string;
-  events: (get_trackers_trackers_edges_node_events | null)[] | null;
+  events: get_trackers_trackers_edges_node_events[] | null;
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
-  messages: (get_trackers_trackers_edges_node_messages | null)[] | null;
+  messages: get_trackers_trackers_edges_node_messages[] | null;
   carrier_id: string;
   carrier_name: string;
 }
@@ -1871,7 +1871,7 @@ export interface get_user_connections_user_connections_DHLPolandSettings {
   username: string;
   password: string;
   account_number: string;
-  services: (get_user_connections_user_connections_DHLPolandSettings_services | null)[] | null;
+  services: get_user_connections_user_connections_DHLPolandSettings_services[] | null;
 }
 
 export interface get_user_connections_user_connections_DHLUniversalSettings {
@@ -1971,7 +1971,7 @@ export interface get_user_connections_user_connections_GenericSettings {
   test: boolean;
   active: boolean;
   account_country_code: string;
-  services: (get_user_connections_user_connections_GenericSettings_services | null)[] | null;
+  services: get_user_connections_user_connections_GenericSettings_services[] | null;
   label_template: get_user_connections_user_connections_GenericSettings_label_template | null;
 }
 
@@ -2525,7 +2525,7 @@ export interface get_order_order_shipments_selected_rate {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_order_order_shipments_selected_rate_extra_charges | null)[] | null;
+  extra_charges: get_order_order_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -2547,7 +2547,7 @@ export interface get_order_order_shipments_rates {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_order_order_shipments_rates_extra_charges | null)[] | null;
+  extra_charges: get_order_order_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -2570,7 +2570,7 @@ export interface get_order_order_shipments {
   status: ShipmentStatus;
   recipient: get_order_order_shipments_recipient;
   shipper: get_order_order_shipments_shipper;
-  parcels: (get_order_order_shipments_parcels | null)[];
+  parcels: get_order_order_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
@@ -2583,10 +2583,10 @@ export interface get_order_order_shipments {
   payment: get_order_order_shipments_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_order_order_shipments_selected_rate | null;
-  rates: (get_order_order_shipments_rates | null)[] | null;
-  metadata: any | null;
+  rates: get_order_order_shipments_rates[] | null;
+  metadata: any;
   meta: any | null;
-  messages: (get_order_order_shipments_messages | null)[] | null;
+  messages: get_order_order_shipments_messages[];
 }
 
 export interface get_order_order {
@@ -2595,13 +2595,13 @@ export interface get_order_order {
   source: string | null;
   status: OrderStatus;
   shipping_address: get_order_order_shipping_address | null;
-  line_items: (get_order_order_line_items | null)[];
+  line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
   created_by: get_order_order_created_by;
   test_mode: boolean;
   metadata: any | null;
-  shipments: (get_order_order_shipments | null)[] | null;
+  shipments: get_order_order_shipments[] | null;
 }
 
 export interface get_order {
@@ -2788,7 +2788,7 @@ export interface get_orders_orders_edges_node_shipments_selected_rate {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_orders_orders_edges_node_shipments_selected_rate_extra_charges | null)[] | null;
+  extra_charges: get_orders_orders_edges_node_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -2810,7 +2810,7 @@ export interface get_orders_orders_edges_node_shipments_rates {
   base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
-  extra_charges: (get_orders_orders_edges_node_shipments_rates_extra_charges | null)[] | null;
+  extra_charges: get_orders_orders_edges_node_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
 }
@@ -2833,7 +2833,7 @@ export interface get_orders_orders_edges_node_shipments {
   status: ShipmentStatus;
   recipient: get_orders_orders_edges_node_shipments_recipient;
   shipper: get_orders_orders_edges_node_shipments_shipper;
-  parcels: (get_orders_orders_edges_node_shipments_parcels | null)[];
+  parcels: get_orders_orders_edges_node_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
@@ -2846,10 +2846,10 @@ export interface get_orders_orders_edges_node_shipments {
   payment: get_orders_orders_edges_node_shipments_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_orders_orders_edges_node_shipments_selected_rate | null;
-  rates: (get_orders_orders_edges_node_shipments_rates | null)[] | null;
-  metadata: any | null;
+  rates: get_orders_orders_edges_node_shipments_rates[] | null;
+  metadata: any;
   meta: any | null;
-  messages: (get_orders_orders_edges_node_shipments_messages | null)[] | null;
+  messages: get_orders_orders_edges_node_shipments_messages[];
 }
 
 export interface get_orders_orders_edges_node {
@@ -2858,13 +2858,13 @@ export interface get_orders_orders_edges_node {
   source: string | null;
   status: OrderStatus;
   shipping_address: get_orders_orders_edges_node_shipping_address | null;
-  line_items: (get_orders_orders_edges_node_line_items | null)[];
+  line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;
   created_by: get_orders_orders_edges_node_created_by;
   test_mode: boolean;
   metadata: any | null;
-  shipments: (get_orders_orders_edges_node_shipments | null)[] | null;
+  shipments: get_orders_orders_edges_node_shipments[] | null;
 }
 
 export interface get_orders_orders_edges {

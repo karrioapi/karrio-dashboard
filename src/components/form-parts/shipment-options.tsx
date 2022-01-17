@@ -12,7 +12,7 @@ import { MetadataObjectType } from '@purplship/graphql';
 
 interface ShipmentOptionsComponent {
   shipment: ShipmentType;
-  onChange: (changes: Partial<ShipmentType>) => Promise<any>;
+  onSubmit: (changes: Partial<ShipmentType>) => Promise<any>;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean }) {
@@ -28,7 +28,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
   };
 }
 
-const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onChange }) => {
+const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onSubmit }) => {
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const [options, dispatch] = useReducer(reducer, shipment?.options, () => shipment?.options);
@@ -54,10 +54,10 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onChang
     try {
       if (shipment.id !== undefined) {
         setLoading(true);
-        await onChange({ options, metadata, reference });
+        await onSubmit({ options, metadata, reference });
         notify({ type: NotificationType.success, message: 'Shipment options successfully updated!' });
       } else {
-        await onChange({ options, metadata, reference });
+        await onSubmit({ options, metadata, reference });
       }
     } catch (message: any) {
       notify({ type: NotificationType.error, message });

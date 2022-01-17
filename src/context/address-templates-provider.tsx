@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_address_templates, GET_ADDRESS_TEMPLATES, get_address_templates_address_templates_edges } from '@purplship/graphql';
-import { AddressTemplate } from '@/lib/types';
+import { AddressTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
 
 type Edges = (get_address_templates_address_templates_edges | null)[];
 export type AddressTemplatesType = LazyQueryResult<get_address_templates, any> & {
-  templates: AddressTemplate[];
+  templates: AddressTemplateType[];
   next?: number | null;
   previous?: number | null;
   load: () => void;
@@ -21,7 +21,7 @@ const AddressTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_address_templates>(GET_ADDRESS_TEMPLATES, { notifyOnNetworkStatusChange: true });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
-  const extract = (edges?: Edges) => (edges || []).map(item => item?.node as AddressTemplate);
+  const extract = (edges?: Edges) => (edges || []).map(item => item?.node as AddressTemplateType);
   const fetchMore = (options: any) => query?.fetchMore && query.fetchMore(options);
   const load = () => query.called ? fetchMore({ variables: PAGINATION }) : initialLoad({ variables });
   const loadMore = (offset?: number | null) => {

@@ -12,7 +12,7 @@ import SystemConnectionsProvider from "@/context/system-connections-provider";
 import { TrackerMutationContext } from "@/context/tracker-mutation";
 import TrackersProvider, { TrackersContext } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
-import { getURLSearchParams, insertUrlParam, isNone, isNoneOrEmpty, p } from "@/lib/helper";
+import { getURLSearchParams, isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
@@ -50,16 +50,16 @@ export default function TrackersPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchTrackers(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
-      if (!isNoneOrEmpty(modal)) {
-        addTracker({ onChange: fetchTrackers });
+      if (called && !loading && !isNoneOrEmpty(modal)) {
+        const tracker = trackers.find(t => t.id === modal);
+        (modal === 'new') && addTracker({ onChange: fetchTrackers });
+        tracker && previewTracker(tracker);
       }
-    }, [modal])
+    }, [modal, loading]);
 
     return (
       <>

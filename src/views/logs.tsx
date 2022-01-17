@@ -4,7 +4,7 @@ import { Loading } from "@/components/loader";
 import Spinner from "@/components/spinner";
 import StatusCode from "@/components/status-code-badge";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
-import { formatDateTimeLong, getURLSearchParams, isNone, p } from "@/lib/helper";
+import { formatDateTimeLong, getURLSearchParams, isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -33,11 +33,13 @@ export default function LogsPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchLogs(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => {
+      (called && !loading && !isNoneOrEmpty(router.query.modal))
+        && previewLog(router.query.modal as string);
+    }, [router.query.modal, loading]);
 
     return (
       <>

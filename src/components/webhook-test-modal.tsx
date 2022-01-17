@@ -66,7 +66,10 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
           <div className="modal-background" onClick={close}></div>
           <form className="modal-card" onSubmit={handleSubmit}>
             <section className="modal-card-body">
-              <h3 className="subtitle is-3">Test a Webhook endpoint</h3>
+              <div className="form-floating-header p-4">
+                <span className="has-text-weight-bold is-size-6">Test a webhook endpoint</span>
+              </div>
+              <div className="p-3 my-4"></div>
 
               <p className="is-subtitle is-size-6 has-text-weight-bold has-text-grey my-2">{webhook.url}</p>
 

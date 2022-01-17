@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext, useReducer, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
@@ -32,12 +32,12 @@ const DEFAULT_DUTY: Partial<DutyType> = {
 interface CustomsInfoFormComponent {
   value?: CustomsType;
   shipment?: ShipmentType;
-  cannotOptOut?: boolean;
-  onChange: (customs: CustomsType | null) => Promise<any>;
-  commodityDiscarded?: (id: string) => void
+  isTemplate?: boolean;
+  onChange?: (customs: CustomsType | null) => void;
+  onSubmit: (customs: CustomsType | null) => Promise<any>;
 }
 
-const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, cannotOptOut, onChange, commodityDiscarded }) => {
+const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, isTemplate, onSubmit, onChange }) => {
   const form = useRef<any>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
@@ -72,7 +72,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     e.preventDefault();
     try {
       setLoading(true);
-      await onChange(customs);
+      await onSubmit(customs);
 
       if (customs.id === undefined && shipment?.id !== undefined) {
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully added!' });
@@ -92,20 +92,19 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         await discardCustoms(shipment?.customs?.id as string);
         notify({ type: NotificationType.success, message: 'Customs declaration discarded successfully!' });
       } else {
-        onChange(null);
+        onSubmit(null);
       }
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
     setLoading(false);
   };
-  const updateCommodities = async (commodities: CommodityType[]) => {
-    dispatch({ name: 'commodities', value: commodities });
-  };
+
+  useEffect(() => { if (onChange && !deepEqual(value, customs)) onChange(customs) }, [customs]);
 
   return (
     <>
-      {!cannotOptOut && <div className="columns is-multiline mb-0">
+      {!isTemplate && <div className="columns is-multiline mb-0">
         <CheckBoxField defaultChecked={isNone(customs)} onChange={handleChange} name="optOut" fieldClass="column mb-0 is-12 px-3 py-3 has-text-weight-semibold">
           <span>Opt out of customs</span>
         </CheckBoxField>
@@ -122,7 +121,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
 
       {!isNone(customs) && <form className="pl-1 pr-2 pb-2" onSubmit={handleSubmit} ref={form}>
 
-        {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, customs, onChange: handleChange }))}
+        {children}
 
         {/* Customs Info */}
         <div className="columns is-multiline mb-0 mt-4">
@@ -195,7 +194,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         </div>
 
         {/* Commodities */}
-        {!cannotOptOut &&
+        {!isTemplate &&
           <div className="columns p-2 my-2 is-relative">
             <CommodityCollectionEditor
               defaultValue={customs.commodities}
@@ -278,7 +277,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
                 name="signer"
                 className="is-small"
                 fieldClass="column mb-0 is-12 px-2 py-2"
-                required={!cannotOptOut} />
+                required={!isTemplate} />
             )}
           </UserData.Consumer>
 
@@ -293,7 +292,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
           disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty) && deepEqual(value?.options, customs?.options)}>
-          <span>{isNone(shipment?.id) && !cannotOptOut ? 'Next' : 'Save'}</span>
+          <span>{isNone(shipment?.id) && !isTemplate ? 'Next' : 'Save'}</span>
         </ButtonField>
 
       </form>}

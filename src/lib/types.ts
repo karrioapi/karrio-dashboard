@@ -1,4 +1,4 @@
-import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_selected_rate, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, PaidByEnum, ServiceLevelModelSerializerInput, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
+import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, PaidByEnum, ServiceLevelModelSerializerInput, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
 import { CarrierSettingsCarrierNameEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
 
 
@@ -21,7 +21,7 @@ export type TrackerType = get_tracker_tracker & {
   messages?: MessageType[];
 };
 export type ChargeType = get_shipment_shipment_selected_rate_extra_charges;
-export type RateType = get_shipment_shipment_selected_rate;
+export type RateType = get_shipment_shipment_rates;
 export type PaymentType = get_shipment_shipment_payment;
 export type ShipmentType = get_shipment_shipment & {
   customs?: CustomsType;
@@ -37,7 +37,7 @@ export type OrderType = get_order_order & {
   shipments: ShipmentType[];
 };
 
-export type AddressTemplate = get_address_templates_address_templates_edges_node & {
+export type AddressTemplateType = get_address_templates_address_templates_edges_node & {
   address: AddressType;
 };
 export type CustomsTemplateType = get_customs_info_templates_customs_templates_edges_node & {
@@ -46,7 +46,7 @@ export type CustomsTemplateType = get_customs_info_templates_customs_templates_e
 export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_node & {
   parcel: ParcelType;
 };
-export type TemplateType = AddressTemplate & ParcelTemplateType & CustomsTemplateType;
+export type TemplateType = AddressTemplateType & ParcelTemplateType & CustomsTemplateType;
 
 export type ServiceLevelType = ServiceLevelModelSerializerInput;
 

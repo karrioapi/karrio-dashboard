@@ -1,7 +1,6 @@
 import { formatRef, isNone } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
-import { APIError, CustomsType, NotificationType, RequestError, ShipmentType } from '@/lib/types';
-import { Payment, PaymentPaidByEnum, Shipment, ShipmentLabelTypeEnum } from '@purplship/rest/index';
+import { APIError, CustomsType, NotificationType, PaymentType, RequestError, ShipmentType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
@@ -16,11 +15,11 @@ import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
 import RateDescription from '@/components/descriptions/rate-description';
 import MessagesDescription from '@/components/descriptions/messages-description';
+import { LabelTypeEnum, PaidByEnum } from '@purplship/graphql';
 
-interface LiveRatesComponent {
-}
+interface LiveRatesComponent { }
 
-const DEFAULT_PAYMENT: Partial<Payment> = { paid_by: PaymentPaidByEnum.Sender };
+const DEFAULT_PAYMENT: Partial<PaymentType> = { paid_by: PaidByEnum.sender };
 
 const LiveRates: React.FC<LiveRatesComponent> = () => {
   const router = useRouter();
@@ -30,8 +29,8 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
   const { loading, setLoading } = useContext(Loading);
   const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
   const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
-  const [label_type, setLabelType] = useState<ShipmentLabelTypeEnum>(shipment?.label_type as ShipmentLabelTypeEnum || ShipmentLabelTypeEnum.Pdf);
-  const [payment, setPayment] = useState<Partial<Payment>>(DEFAULT_PAYMENT);
+  const [label_type, setLabelType] = useState<LabelTypeEnum>(shipment?.label_type as LabelTypeEnum || LabelTypeEnum.PDF);
+  const [payment, setPayment] = useState<Partial<PaymentType>>(DEFAULT_PAYMENT);
   const [showMessage, setShowMessage] = useState(false);
 
   const computeDisabled = (shipment: ShipmentType) => {
@@ -42,13 +41,14 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
       loading === true
     );
   };
+
   const updateRates = async () => {
     if (computeDisabled(shipment)) return;
     try {
       setLoading(true);
-      let payload = { ...shipment };
-      const response = await fetchRates(payload as Shipment);
-      if (payload.id === undefined) router.push('' + response.id);
+      const { id } = shipment;
+      const response = await fetchRates(shipment);
+      if (id === undefined) router.push('' + response.id);
       if ((response.messages || []).length > 0) {
         const error: APIError = {
           error: {
@@ -75,7 +75,7 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
         label_type,
         selected_rate_id,
         payment: { ...payment, currency }
-      } as Shipment);
+      } as ShipmentType);
       notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
       router.push(basePath);
     } catch (message: any) {
@@ -137,7 +137,7 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
           <h6 className="is-title is-size-6 px-3 my-1 has-text-weight-semibold">Live Rates</h6>
 
           <div className="menu-list py-2 rates-list-box">
-            {shipment.rates?.map(rate => (
+            {(shipment.rates || []).map(rate => (
               <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
                 className={`columns m-0 p-1 ${rate.id === selected_rate_id ? 'has-text-grey-dark' : 'has-text-grey'}`}
                 onClick={() => setSelectedRate(rate.id)}>
@@ -180,20 +180,20 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
                 className="mr-1"
                 type="radio"
                 name="label_type"
-                defaultChecked={label_type === ShipmentLabelTypeEnum.Pdf}
-                onChange={() => setLabelType(ShipmentLabelTypeEnum.Pdf)}
+                defaultChecked={label_type === LabelTypeEnum.PDF}
+                onChange={() => setLabelType(LabelTypeEnum.PDF)}
               />
-              <span className="is-size-7 has-text-weight-bold">{ShipmentLabelTypeEnum.Pdf}</span>
+              <span className="is-size-7 has-text-weight-bold">{LabelTypeEnum.PDF}</span>
             </label>
             <label className="radio">
               <input
                 className="mr-1"
                 type="radio"
                 name="label_type"
-                defaultChecked={label_type === ShipmentLabelTypeEnum.Zpl}
-                onChange={() => setLabelType(ShipmentLabelTypeEnum.Zpl)}
+                defaultChecked={label_type === LabelTypeEnum.ZPL}
+                onChange={() => setLabelType(LabelTypeEnum.ZPL)}
               />
-              <span className="is-size-7 has-text-weight-bold">{ShipmentLabelTypeEnum.Zpl}</span>
+              <span className="is-size-7 has-text-weight-bold">{LabelTypeEnum.ZPL}</span>
             </label>
           </div>
 
@@ -205,20 +205,38 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
 
           <div className="control">
             <label className="radio">
-              <input className="mr-1" type="radio" name="paid_by" defaultChecked={payment.paid_by === PaymentPaidByEnum.Sender} onChange={() => setPayment({ paid_by: PaymentPaidByEnum.Sender })} />
-              <span className="is-size-7 has-text-weight-bold">{formatRef(PaymentPaidByEnum.Sender.toString())}</span>
+              <input
+                className="mr-1"
+                type="radio"
+                name="paid_by"
+                defaultChecked={payment.paid_by === PaidByEnum.sender}
+                onChange={() => setPayment({ paid_by: PaidByEnum.sender })}
+              />
+              <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
             </label>
             <label className="radio">
-              <input className="mr-1" type="radio" name="paid_by" defaultChecked={payment.paid_by === PaymentPaidByEnum.Recipient} onChange={() => setPayment({ ...payment, paid_by: PaymentPaidByEnum.Recipient })} />
-              <span className="is-size-7 has-text-weight-bold">{formatRef(PaymentPaidByEnum.Recipient.toString())}</span>
+              <input
+                className="mr-1"
+                type="radio"
+                name="paid_by"
+                defaultChecked={payment.paid_by === PaidByEnum.recipient}
+                onChange={() => setPayment({ ...payment, paid_by: PaidByEnum.recipient })}
+              />
+              <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
             </label>
             <label className="radio">
-              <input className="mr-1" type="radio" name="paid_by" defaultChecked={payment.paid_by === PaymentPaidByEnum.ThirdParty} onChange={() => setPayment({ ...payment, paid_by: PaymentPaidByEnum.ThirdParty })} />
-              <span className="is-size-7 has-text-weight-bold">{formatRef(PaymentPaidByEnum.ThirdParty.toString())}</span>
+              <input
+                className="mr-1"
+                type="radio"
+                name="paid_by"
+                defaultChecked={payment.paid_by === PaidByEnum.third_party}
+                onChange={() => setPayment({ ...payment, paid_by: PaidByEnum.third_party })}
+              />
+              <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.third_party.toString())}</span>
             </label>
           </div>
 
-          {(payment.paid_by !== PaymentPaidByEnum.Sender) &&
+          {(payment.paid_by !== PaidByEnum.sender) &&
             <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
               <InputField
                 label="account number"

@@ -9,17 +9,20 @@ import { NotificationType } from '@/lib/types';
 import { AppMode, computeMode } from '@/context/app-mode-provider';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import Spinner from '@/components/spinner';
+import { useRouter } from 'next/dist/client/router';
+import { isNoneOrEmpty } from '@/lib/helper';
 
 interface UserConnectionListView { }
 
 const UserConnectionList: React.FC<UserConnectionListView> = () => {
+  const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
   const { confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
-  const { user_connections, loading, refetch } = useContext(UserConnections);
+  const { user_connections, loading, called, refetch } = useContext(UserConnections);
   const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
   const onUpdate = async () => refetch && await refetch();
@@ -50,6 +53,12 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   };
 
   useEffect(() => { setLoading(loading); });
+  useEffect(() => {
+    if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+      const connection = user_connections.find(c => c.id === router.query.modal);
+      connection && editConnection({ connection, onConfirm: onUpdate });
+    }
+  }, [router.query.modal, user_connections]);
 
   return (
     <>

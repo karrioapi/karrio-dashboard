@@ -3,7 +3,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
-import { formatDateTimeLong, getURLSearchParams, isNone } from "@/lib/helper";
+import { formatDateTimeLong, getURLSearchParams, isNone, isNoneOrEmpty } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import EventsFilter from "@/components/filters/events-filter";
@@ -31,11 +31,13 @@ export default function EventsPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchEvents(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => {
+      (called && !loading && !isNoneOrEmpty(router.query.modal))
+        && previewEvent(router.query.modal as string);
+    }, [router.query.modal, loading, events]);
 
     return (
       <>

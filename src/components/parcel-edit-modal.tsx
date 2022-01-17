@@ -1,6 +1,6 @@
-import React, { EventHandler, useContext, useState } from 'react';
-import ParcelForm from '@/components/form-parts/parcel-form';
-import { deepEqual, isNone } from '@/lib/helper';
+import React, { useContext, useState } from 'react';
+import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
+import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { NotificationType, ParcelTemplateType } from '@/lib/types';
@@ -11,11 +11,9 @@ import ButtonField from './generic/button-field';
 import { CreateParcelTemplateInput, UpdateParcelTemplateInput } from '@purplship/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
-  parcel: {
-    packaging_type: "envelope",
-    weight_unit: 'KG',
-    dimension_unit: 'CM'
-  }
+  label: '',
+  is_default: false,
+  parcel: DEFAULT_PARCEL_CONTENT,
 } as ParcelTemplateType;
 
 type OperationType = {
@@ -37,16 +35,19 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`parcel-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
-  const [template, setTemplate] = useState<ParcelTemplateInput | undefined>();
+  const [template, setTemplate] = useState<ParcelTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
   const [isValid, setIsValid] = React.useState<boolean>(true);
 
   const editParcel = (operation: OperationType) => {
+    const template = operation.parcelTemplate || DEFAULT_TEMPLATE_CONTENT;
+
     setIsActive(true);
     setOperation(operation);
     setIsNew(isNone(operation.parcelTemplate));
-    setTemplate((operation.parcelTemplate || DEFAULT_TEMPLATE_CONTENT) as ParcelTemplateInput);
+    setTemplate(template as ParcelTemplateType);
     setKey(`parcel-${Date.now()}`);
+    addUrlParam('modal', template.id || 'new');
   };
   const close = (_?: React.MouseEvent, changed?: boolean) => {
     if (isNew) setTemplate(undefined);
@@ -55,18 +56,19 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
     setIsActive(false);
     setOperation(undefined);
     setKey(`parcel-${Date.now()}`);
+    removeUrlParam('modal');
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    const { id, label, is_default, parcel } = template as ParcelTemplateInput;
     e.preventDefault();
     try {
       setLoading(true);
       if (isNew) {
-        await createParcelTemplate({ label, is_default, parcel } as CreateParcelTemplateInput);
+        await createParcelTemplate(template as CreateParcelTemplateInput);
         notify({ type: NotificationType.success, message: 'Parcel successfully added!' });
       }
       else {
-        await updateParcelTemplate({ id, label, is_default, parcel } as UpdateParcelTemplateInput);
+        await updateParcelTemplate(template as UpdateParcelTemplateInput);
         notify({ type: NotificationType.success, message: 'Parcel successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 1500);
@@ -93,13 +95,14 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">Edit parcel</span>
             </div>
-            <div className="p-3 my-2"></div>
+            <div className="p-3 my-4"></div>
 
             {template !== undefined &&
               <ParcelForm
                 value={template.parcel}
                 onChange={(parcel: any) => setTemplate({ ...template, parcel })}
                 prefixChilren={<>
+
                   <div className="columns mb-0 px-2">
                     <InputField
                       label="label"
@@ -120,6 +123,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
                       <span>Set as default parcel</span>
                     </CheckBoxField>
                   </div>
+
                 </>}>
 
                 <div className="p-3 my-5"></div>
@@ -130,6 +134,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
                   disabled={!isValid || deepEqual(template, DEFAULT_TEMPLATE_CONTENT)}>
                   <span>Save</span>
                 </ButtonField>
+
               </ParcelForm>}
           </form>
 

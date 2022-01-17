@@ -1,5 +1,4 @@
 import React, { useState, useRef, useContext } from 'react';
-import { Shipment, ShipmentStatusEnum } from '@purplship/rest/index';
 import { LabelPrinterContext } from '@/components/label/label-printer';
 import { NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
@@ -9,6 +8,7 @@ import { AppMode } from '@/context/app-mode-provider';
 import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
+import { ShipmentStatus } from '@purplship/graphql';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -47,7 +47,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
   const displayDetails = (_: React.MouseEvent) => {
     router.push(basePath + '/shipments/' + shipment.id);
   };
-  const cancelShipment = (shipment: Shipment) => async (e: React.MouseEvent) => {
+  const cancelShipment = (shipment: ShipmentType) => async (e: React.MouseEvent) => {
     try {
       await voidLabel(shipment);
       notify({ type: NotificationType.success, message: 'Shipment successfully cancelled!' });
@@ -65,12 +65,12 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
           <span>Print Label</span>
         </a>
       </>}
-      {isNone(shipment.label) && shipment.status === ShipmentStatusEnum.Created && <>
+      {isNone(shipment.label) && shipment.status === ShipmentStatus.created && <>
         <a className="button is-small" onClick={createLabel} style={{ width: '70%' }}>
           <span>Buy Label</span>
         </a>
       </>}
-      {isNone(shipment.label) && shipment.status === ShipmentStatusEnum.Cancelled && <>
+      {isNone(shipment.label) && shipment.status === ShipmentStatus.cancelled && <>
         <a className="button is-small" onClick={displayDetails} style={{ width: '70%' }}>
           <span>View Shipment</span>
         </a>
@@ -94,10 +94,10 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
         <div className="dropdown-menu" id={`shipment-menu-${shipment.id}`} role="menu">
           <div className="dropdown-content">
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
-            {shipment.status !== ShipmentStatusEnum.Cancelled &&
-              <a className="dropdown-item" onClick={cancelShipment(shipment as Shipment)}>Cancel Shipment</a>}
+            {shipment.status !== ShipmentStatus.cancelled &&
+              <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
             {!isNone((shipment?.meta as any).custom_invoice) &&
-              <a className="dropdown-item" onClick={() => printInvoice(shipment as Shipment)}>Print Invoice</a>}
+              <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
           </div>
         </div>
       </div>

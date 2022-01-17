@@ -10,7 +10,7 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { deepEqual, isNone, removeUrlParam } from '@/lib/helper';
+import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
@@ -44,12 +44,43 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
 
   const editConnection = (operation: OperationType): void => {
+    const connection = operation.connection || DEFAULT_STATE();
+
     setIsActive(true);
     setIsDisabled(true);
-    setPayload(operation.connection || DEFAULT_STATE());
+    setPayload(connection);
     setIsNew(isNone(operation.connection));
     setOperation(operation);
     setKey(`connection-${Date.now()}`);
+    addUrlParam('modal', connection.id || 'new');
+  };
+  const close = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    if (isNew) setPayload(DEFAULT_STATE());
+    setKey(`connection-${Date.now()}`);
+    setIsDisabled(true);
+    setIsActive(false);
+    removeUrlParam('modal');
+  };
+
+  const handleOnChange = (property: string) => (e: React.ChangeEvent<any>) => {
+    let new_state = { ...payload, [property]: e.target.value || null };
+    if (property === 'carrier_name') {
+      setKey(`connection-${Date.now()}`);
+      new_state = { carrier_name: e.target.value, test: testMode };
+    } else if (property == 'test') {
+      new_state = { ...payload, test: e.target.checked };
+    }
+    setPayload(new_state);
+    setIsDisabled(deepEqual((operation.connection || DEFAULT_STATE), new_state));
+  };
+  const directChange = (property: string) => (value: any) => {
+    const new_state = { ...payload, [property]: value };
+    setPayload(new_state);
+    setIsDisabled(JSON.stringify(operation.connection || DEFAULT_STATE) === JSON.stringify(new_state));
+  };
+  const has = (property: string) => {
+    return hasProperty(payload.carrier_name as CarrierSettingsCarrierNameEnum, property);
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -76,33 +107,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
       setLoading(false);
     }
   };
-  const close = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    if (isNew) setPayload(DEFAULT_STATE());
-    setKey(`connection-${Date.now()}`);
-    setIsDisabled(true);
-    setIsActive(false);
-    removeUrlParam('modal');
-  };
-  const handleOnChange = (property: string) => (e: React.ChangeEvent<any>) => {
-    let new_state = { ...payload, [property]: e.target.value || null };
-    if (property === 'carrier_name') {
-      setKey(`connection-${Date.now()}`);
-      new_state = { carrier_name: e.target.value, test: testMode };
-    } else if (property == 'test') {
-      new_state = { ...payload, test: e.target.checked };
-    }
-    setPayload(new_state);
-    setIsDisabled(deepEqual((operation.connection || DEFAULT_STATE), new_state));
-  };
-  const directChange = (property: string) => (value: any) => {
-    const new_state = { ...payload, [property]: value };
-    setPayload(new_state);
-    setIsDisabled(JSON.stringify(operation.connection || DEFAULT_STATE) === JSON.stringify(new_state));
-  };
-  const has = (property: string) => {
-    return hasProperty(payload.carrier_name as CarrierSettingsCarrierNameEnum, property);
-  };
 
   return (
     <Notifier>
@@ -117,7 +121,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">Edit carrier account</span>
             </div>
-            <div className="p-3 my-2"></div>
+            <div className="p-3 my-4"></div>
 
             <SelectField value={payload.carrier_name} onChange={handleOnChange("carrier_name")} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
               <option value='none'>Select Carrier</option>

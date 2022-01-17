@@ -1,5 +1,6 @@
 import { BASE_PATH } from "@/client/context";
 import { AddressType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { FetchResult } from "@apollo/client";
 import React from "react";
 
 

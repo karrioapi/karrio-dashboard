@@ -1,5 +1,6 @@
 import MetadataMutationProvider from '@/context/metadata-mutation';
 import ShipmentProvider from '@/context/shipment-provider';
+import { addUrlParam, removeUrlParam } from '@/lib/helper';
 import { ShipmentComponent } from '@/views/shipment';
 import React, { useState } from 'react';
 
@@ -20,11 +21,13 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
     setShipmentId(shipmentId);
     setIsActive(true);
     setKey(`shipment-${Date.now()}`);
+    addUrlParam('modal', shipmentId);
   };
   const dismiss = (_?: any) => {
     setShipmentId(undefined);
     setIsActive(false);
     setKey(`shipment-${Date.now()}`);
+    removeUrlParam('modal');
   };
 
   return (

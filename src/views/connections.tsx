@@ -39,15 +39,12 @@ export default function ConnectionsPage(pageProps: any) {
     useEffect(() => { setLoading(user_connections?.loading || system_connections?.loading); });
     useEffect(() => { selectTab(isNoneOrEmpty(tab) ? tabs[0] : tab as string) }, [router.query]);
     useEffect(() => {
-      if (!isNoneOrEmpty(modal)) {
+      if (modal === 'new') {
         editConnection({
-          onConfirm: async () => {
-            await onChange();
-            selectTab(tabs[0]);
-          }
+          onConfirm: async () => { await onChange(); selectTab(tabs[0]); }
         });
       }
-    }, [modal])
+    }, [modal]);
 
     return (
       <>

@@ -13,11 +13,11 @@ type ParcelCollection = Record<string, ParcelType>;
 interface ShipmentParcelsEditorProps {
   defaultValue: ParcelType[];
   shipment?: ShipmentType;
-  onChange: (parcels: ParcelType[]) => Promise<any>;
+  onSubmit: (parcels: ParcelType[]) => Promise<any>;
 }
 
 
-const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultValue, shipment, onChange }) => {
+const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultValue, shipment, onSubmit }) => {
   const form = useRef<HTMLFormElement>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
@@ -48,7 +48,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
     e.preventDefault();
     try {
       setLoading(true);
-      await onChange(Object.values(parcels));
+      await onSubmit(Object.values(parcels));
       if (shipment?.id) {
         if (Object.values(parcels).some(({ id }) => id === undefined)) {
           notify({ type: NotificationType.success, message: 'Parcels added successfully' });

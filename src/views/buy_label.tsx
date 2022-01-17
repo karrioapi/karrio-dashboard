@@ -50,7 +50,7 @@ export default function LabelPage(pageProps: any) {
       let isDraft = id === 'new';
 
       if (isDraft) {
-        const update = await updateShipment(changes);
+        const update = updateShipment(changes);
         const disabledTabs = filterDisabled(tabs, update);
         const currentIndex = tabs.indexOf(tab || "");
         const nextTab = tabs.reduce((next, curr, index) => {
@@ -79,18 +79,14 @@ export default function LabelPage(pageProps: any) {
     };
 
     useEffect(() => {
-      if (!called && !loading && loadShipment) {
-        loadShipment(id as string)
-          .then(({ status }) => {
-            if (isNone(status) || status === ShipmentStatus.created) {
-              setKey(`${id}-${Date.now()}`);
-            } else {
-              notify({ type: NotificationType.info, message: 'Label already purchased!' });
-              router.push(basePath);
-            }
-          });
-      }
+      if (!called && !loading && loadShipment) { loadShipment(id as string); }
     }, []);
+    useEffect(() => {
+      if (shipment.status === ShipmentStatus.created) {
+        notify({ type: NotificationType.info, message: 'Label already purchased! redirecting...' });
+        setTimeout(() => router.push(basePath), 1000);
+      }
+    }, [shipment]);
     useEffect(() => {
       if (!template.called && !template.loading && template.load) template.load();
     }, []);
@@ -118,35 +114,35 @@ export default function LabelPage(pageProps: any) {
 
                     <AddressForm
                       key={`${ckey}-shipper`}
-                      value={shipment.shipper as any}
-                      default_value={default_address}
+                      value={shipment.shipper}
+                      default_value={default_address as any}
                       shipment={shipment}
-                      onChange={(shipper: any) => onChange({ shipper }, { tab: 'shipper', selectTab })}
+                      onSubmit={(shipper: any) => onChange({ shipper }, { tab: 'shipper', selectTab })}
                       name="shipper" />
 
                     <AddressForm
                       key={`${ckey}-recipient`}
-                      value={shipment.recipient as any}
+                      value={shipment.recipient}
                       shipment={shipment}
-                      onChange={(recipient: any) => onChange({ recipient }, { tab: 'recipient', selectTab })}
+                      onSubmit={(recipient: any) => onChange({ recipient }, { tab: 'recipient', selectTab })}
                       name="recipient" />
 
                     <ShipmentParcelsEditor
                       key={`${ckey}-parcels`}
-                      defaultValue={shipment.parcels as any}
-                      onChange={(parcels: any) => onChange({ parcels }, { tab: 'parcels', selectTab })}
+                      defaultValue={shipment.parcels}
+                      onSubmit={(parcels: any) => onChange({ parcels }, { tab: 'parcels', selectTab })}
                     />
 
                     <CustomsInfoForm
                       key={`${ckey}-customs`}
-                      value={shipment.customs as any}
+                      value={shipment.customs}
                       shipment={shipment}
-                      onChange={(customs: any) => onChange({ customs }, { tab: 'customs info', selectTab })} />
+                      onSubmit={(customs: any) => onChange({ customs }, { tab: 'customs info', selectTab })} />
 
                     <ShipmentOptions
                       key={`${ckey}-options`}
                       shipment={shipment}
-                      onChange={changes => onChange(changes)} />
+                      onSubmit={changes => onChange(changes)} />
 
                   </Tabs>
                 </>}</TabStateContext.Consumer>

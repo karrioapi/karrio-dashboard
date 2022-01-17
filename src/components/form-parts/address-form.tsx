@@ -25,7 +25,7 @@ interface AddressFormComponent {
   default_value?: AddressType | null;
   shipment?: ShipmentType;
   name: "shipper" | "recipient" | "template";
-  onChange: (address: AddressType) => Promise<any>;
+  onSubmit: (address: AddressType) => Promise<any>;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
@@ -40,7 +40,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 
-const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onChange, children }) => {
+const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onSubmit, children }) => {
   const { notify } = useContext(Notify);
   const form = useRef<HTMLFormElement>(null);
   const { states } = useContext(APIReference);
@@ -60,7 +60,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
     e.preventDefault();
     try {
       setLoading(true);
-      await onChange(address);
+      await onSubmit(address);
       address.id && notify({ type: NotificationType.success, message: name + ' Address successfully updated!' });
     } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
@@ -78,7 +78,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   return (
     <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>
 
-      {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, address, onChange: handleChange }))}
+      {children}
 
       <div className="columns mb-0">
         <NameInput label="name" onValueChange={(value, refresh) => { dispatch({ name: "partial", value }); refresh && setKey(`address-${Date.now()}`); }} value={address.person_name} disableSuggestion={isNone(shipment)} className="is-small" fieldClass="column mb-0 px-2 py-2" required />

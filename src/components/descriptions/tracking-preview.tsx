@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { formatDayDate, isNone, p } from '@/lib/helper';
+import { addUrlParam, formatDayDate, isNone, p, removeUrlParam } from '@/lib/helper';
 import { ListStatusEnum } from '@purplship/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { TrackerType, TrackingEventType } from '@/lib/types';
@@ -26,11 +26,13 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
     setKey(`tracker-${Date.now()}`);
     link.current?.setAttribute('href', `/tracking/${tracker.id}`);
     setSharingLink(link.current?.href as string);
+    addUrlParam('modal', tracker.id);
   };
   const dismiss = (_?: React.MouseEvent) => {
     setIsActive(false);
     setTracker(undefined);
     setKey(`tracker-${Date.now()}`);
+    removeUrlParam('modal');
   };
   const copy = (_: React.MouseEvent) => {
     var input = document.createElement('input');

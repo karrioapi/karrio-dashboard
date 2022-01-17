@@ -89,7 +89,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
               <div className="form-floating-header p-4">
                 <span className="has-text-weight-bold is-size-6">Track package</span>
               </div>
-              <div className="p-3 my-2"></div>
+              <div className="p-3 my-4"></div>
 
               <InputField label="Tracking Number" defaultValue="" onChange={e => setTrackingNumber(e.target.value)} fieldClass="mt-6" required />
 

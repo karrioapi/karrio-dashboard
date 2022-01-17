@@ -26,7 +26,7 @@ const ShortcutDropdown: React.FC<ShortcutDropdownComponent> = ({ ...props }) => 
 
           <div className="options-items py-1">
 
-            <AppLink href="/connections?modal=connect" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
+            <AppLink href="/connections?modal=new" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
               <i className="fas fa-link pr-2"></i>
               <span>Carrier account</span>
             </AppLink>
@@ -36,7 +36,7 @@ const ShortcutDropdown: React.FC<ShortcutDropdownComponent> = ({ ...props }) => 
               <span>Shipping label</span>
             </AppLink>
 
-            <AppLink href="/trackers?modal=track" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
+            <AppLink href="/trackers?modal=new" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
               <i className="fas fa-location-arrow pr-2"></i>
               <span>Package tracker</span>
             </AppLink>

@@ -1,13 +1,12 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_default_templates, GET_DEFAULT_TEMPLATES, get_default_templates_default_templates } from '@purplship/graphql';
-import { AddressType, CustomsType, ParcelType } from '@/lib/types';
+import { get_default_templates, GET_DEFAULT_TEMPLATES, get_default_templates_default_templates, get_default_templates_default_templates_default_address_address, get_default_templates_default_templates_default_customs_customs, get_default_templates_default_templates_default_parcel_parcel } from '@purplship/graphql';
 
 
 export type DefaultTemplatesType = LazyQueryResult<get_default_templates, any> & {
-  default_address?: AddressType | null;
-  default_customs?: CustomsType | null;
-  default_parcel?: ParcelType | null;
+  default_address: get_default_templates_default_templates_default_address_address | null;
+  default_customs: get_default_templates_default_templates_default_customs_customs | null;
+  default_parcel: get_default_templates_default_templates_default_parcel_parcel | null;
   load: (options?: any) => void;
 };
 
@@ -19,9 +18,9 @@ const TemplatesProvider: React.FC = ({ children }) => {
   const extract = (templates?: get_default_templates_default_templates) => {
     const { default_address, default_customs, default_parcel } = templates || {};
     return {
-      default_address: default_address?.address as AddressType,
-      default_customs: default_customs?.customs as CustomsType,
-      default_parcel: default_parcel?.parcel as ParcelType,
+      default_address: default_address ? default_address?.address : null,
+      default_customs: default_customs?.customs ? default_customs?.customs : null,
+      default_parcel: default_parcel?.parcel ? default_parcel?.parcel : null,
     };
   };
   const load = (options?: any) => result.called ? result.fetchMore({}) : initialLoad(options);
