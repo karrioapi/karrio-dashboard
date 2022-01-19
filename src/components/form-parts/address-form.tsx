@@ -45,9 +45,8 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   const form = useRef<HTMLFormElement>(null);
   const { states } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
-  const init = () => value || DEFAULT_ADDRESS_CONTENT;
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
-  const [address, dispatch] = useReducer(reducer, value, init);
+  const [address, dispatch] = useReducer(reducer, value || DEFAULT_ADDRESS_CONTENT);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -69,11 +68,16 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   };
 
   useEffect(() => {
-    if (isNone(value?.id) && !isNone(default_value)) {
+    if (value && isNone(value.id) && isNone(shipment?.id) && !isNone(default_value)) {
       dispatch({ name: "full", value: default_value as object });
       setKey(`address-${Date.now()}`);
     }
   }, [default_value, value]);
+  useEffect(() => {
+    if (shipment && !deepEqual(shipment[name as "shipper" | "recipient"], address)) {
+      dispatch({ name: "full", value: shipment[name as "shipper" | "recipient"] });
+    }
+  }, [shipment]);
 
   return (
     <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>

@@ -65,33 +65,22 @@ export default function LabelPage(pageProps: any) {
       } else {
         await mutation.updateShipment({ id, ...changes } as PartialShipmentUpdateInput);
       }
-
-      if (
-        !isDraft &&
-        // check if shipment related object being updated already exists
-        Object.values(changes).filter(
-          (change: any | any[]) => Array.isArray(change) ? change.some(item => !isNone(item.id)) : !isNone(change.id)
-        ).length === Object.values(changes).length
-      ) {
-        // trigger components to re-render
-        setKey(`${id}-${Date.now()}`);
-      }
     };
 
     useEffect(() => {
       if (!called && !loading && loadShipment) { loadShipment(id as string); }
     }, []);
     useEffect(() => {
-      if (shipment.status === ShipmentStatus.created) {
+      if (shipment.status && shipment.status !== ShipmentStatus.created) {
         notify({ type: NotificationType.info, message: 'Label already purchased! redirecting...' });
-        setTimeout(() => router.push(basePath), 1000);
+        setTimeout(() => router.push(basePath), 2000);
       }
     }, [shipment]);
     useEffect(() => {
       if (!template.called && !template.loading && template.load) template.load();
     }, []);
     useEffect(() => {
-      if (!ready && called && template.called) setReady(true);
+      if (!ready && called && template.called) setTimeout(() => setReady(true), 500);
     }, [template.called, called]);
 
     return (
@@ -108,14 +97,14 @@ export default function LabelPage(pageProps: any) {
           <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
 
             <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
-              <TabStateProvider tabs={tabs} disabledTabs={filterDisabled(tabs, shipment)}>
+              <TabStateProvider tabs={tabs} disabledTabs={filterDisabled(tabs, shipment)} setSelectedToURL>
                 <TabStateContext.Consumer>{({ selectTab }) => <>
                   <Tabs style={{ overflowY: 'auto', minHeight: '100%', maxHeight: '75vh' }}>
 
                     <AddressForm
                       key={`${ckey}-shipper`}
                       value={shipment.shipper}
-                      default_value={default_address as any}
+                      // default_value={default_address as any}
                       shipment={shipment}
                       onSubmit={(shipper: any) => onChange({ shipper }, { tab: 'shipper', selectTab })}
                       name="shipper" />
@@ -129,6 +118,7 @@ export default function LabelPage(pageProps: any) {
 
                     <ShipmentParcelsEditor
                       key={`${ckey}-parcels`}
+                      shipment={shipment}
                       defaultValue={shipment.parcels}
                       onSubmit={(parcels: any) => onChange({ parcels }, { tab: 'parcels', selectTab })}
                     />

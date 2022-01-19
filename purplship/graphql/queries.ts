@@ -110,7 +110,6 @@ query get_default_templates {
         country_code
         email
         phone_number
-        validation
         validate_location
       }
       created_at

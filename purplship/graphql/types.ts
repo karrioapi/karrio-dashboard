@@ -155,7 +155,6 @@ export interface get_default_templates_default_templates_default_address_address
   country_code: CountryCodeEnum;
   email: string | null;
   phone_number: string | null;
-  validation: any | null;
   validate_location: boolean | null;
 }
 

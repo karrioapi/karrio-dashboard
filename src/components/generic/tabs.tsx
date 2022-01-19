@@ -1,4 +1,5 @@
-import { addUrlParam } from '@/lib/helper';
+import { addUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { useRouter } from 'next/dist/client/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
@@ -13,10 +14,16 @@ interface TabStateInterface {
   selected: string;
   selectTab: (tab: string, disabled?: string[] | undefined) => void;
 }
+interface TabStateProviderProps {
+  tabs: string[];
+  disabledTabs?: string[];
+  setSelectedToURL?: boolean;
+}
 
 export const TabStateContext = React.createContext<TabStateInterface>({} as TabStateInterface);
 
-export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[]; setSelectedToURL?: boolean; }> = ({ children, tabs, disabledTabs, setSelectedToURL }) => {
+export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, tabs, disabledTabs, setSelectedToURL }) => {
+  const router = useRouter();
   const [selected, setSelected] = useState<string>(tabs[0]);
 
   const selectTab = (tab: string, disabled?: string[]) => {
@@ -28,6 +35,11 @@ export const TabStateProvider: React.FC<{ tabs: string[]; disabledTabs?: string[
   };
 
   useEffect(() => { setSelectedToURL && addUrlParam('tab', selected); }, [selected]);
+  useEffect(() => {
+    if (setSelectedToURL && !isNoneOrEmpty(router.query.tab) && router.query.tab !== selected) {
+      setSelected(router.query.tab as string);
+    }
+  }, [router.query.tab])
 
   return (
     <TabStateContext.Provider value={{

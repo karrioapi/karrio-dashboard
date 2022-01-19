@@ -27,6 +27,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
   const [isExpanded, setIsExpanded] = React.useState<{ [key: string]: boolean }>({});
   const [hasErrors, setHasErrors] = React.useState<{ [key: string]: boolean }>({});
   const [isValid, setIsValid] = React.useState<boolean>(true);
+  const [key, setKey] = React.useState<string>(`parcels-${Date.now()}`);
 
   const updateParcel = (uid: string, data: ParcelType) => {
     const newSate = { ...parcels, [uid]: data };
@@ -44,6 +45,22 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
       await discardParcel(id as string);
     }
   };
+  const removeParcelItem = async (id: string) => {
+    await discardCommodity(id);
+  };
+  const parcelListAreEqual = (list1: ParcelType[], list2: ParcelType[]) => {
+    if (list1.length !== list2.length) { return false; }
+
+    return list1.filter(parcel => {
+      const other = list2.find(p => p.id === parcel.id);
+      return !deepEqual(parcel, other);
+    }).length === 0;
+  }
+  const computeDisableState = (parcels: ParcelType[]) => {
+    if (!isValid) { return true; }
+    return parcelListAreEqual(parcels, defaultValue);
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -70,9 +87,14 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
       setIsExpanded({ ...isExpanded, [key]: true });
     }
   }, [parcels]);
+  useEffect(() => {
+    if (!parcelListAreEqual(shipment?.parcels || [], Object.values(parcels))) {
+      setParcels(toParcelCollection(shipment?.parcels || []));
+    }
+  }, [shipment]);
 
   return (
-    <form onSubmit={handleSubmit} onChange={e => setIsValid((e.target as any).checkValidity())}>
+    <form onSubmit={handleSubmit} onChange={e => setIsValid((e.target as any).checkValidity())} key={key}>
       {Object.entries(parcels).map(([uid, parcel], index) => (
         <React.Fragment key={uid}>
           <article className="panel is-white is-shadowless my-2 px-1 is-relative">
@@ -104,7 +126,9 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
                 setHasErrors({ ...isExpanded, [uid]: e.currentTarget.querySelectorAll('.is-danger').length > 0 });
               }}>
               <a>
-                <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setIsExpanded({ ...isExpanded, [uid]: false })}>
+                <p className="panel-heading is-fullwidth px-0 pt-3"
+                  onClick={() => setIsExpanded({ ...isExpanded, [uid]: false })}
+                  style={{ border: 'transparent' }}>
                   <span className="is-size-6 my-2 has-text-weight-semibold">Parcel details</span>
                   <span className="is-pulled-right">
                     {Object.keys(parcels).length > 1 && <button className="button is-white is-small mx-2"
@@ -124,7 +148,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
               <ParcelForm value={parcel} onChange={change => updateParcel(uid, change)} />
               <CommodityCollectionEditor
                 defaultValue={parcel.items}
-                onRemove={discardCommodity}
+                onRemove={removeParcelItem}
                 onChange={(items) => updateParcel(uid, { ...parcel, items })}
               >
                 <CommodityCollectionEditorContext.Consumer>{({ commodities, isExpanded }) => (<>
@@ -159,16 +183,17 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
         className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
-        disabled={!isValid || deepEqual(Object.values(parcels), defaultValue)}>
-        <span>{isNone(shipment) ? 'Next' : 'Save'}</span>
+        disabled={computeDisableState(Object.values(parcels))}>
+        <span>{isNone(shipment?.id) ? 'Next' : 'Save'}</span>
       </ButtonField>
     </form>
   );
 };
 
 function toParcelCollection(parcels: ParcelType[]): ParcelCollection {
-  return parcels.reduce((acc, parcel) => {
-    return { ...acc, [`parcel-${Date.now()}`]: parcel };
+  return parcels.reduce((acc, parcel, index) => {
+    const key = parcel.id || `parcel-${index}-${Date.now()}`;
+    return { ...acc, [key]: parcel };
   }, {});
 }
 

@@ -101,6 +101,11 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   };
 
   useEffect(() => { if (onChange && !deepEqual(value, customs)) onChange(customs) }, [customs]);
+  useEffect(() => {
+    if (shipment && !deepEqual(shipment.customs, customs)) {
+      dispatch({ name: "full", value: shipment.customs });
+    }
+  }, [shipment]);
 
   return (
     <>

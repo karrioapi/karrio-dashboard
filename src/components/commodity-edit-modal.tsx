@@ -73,9 +73,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     operation?.onChange && await operation?.onChange(commodity as CommodityType);
-    setTimeout(() => { setLoading(false); close(); }, 1000);
   };
 
   return (
@@ -186,7 +184,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                           <select
                             name="value_currency"
                             onChange={handleChange}
-                            value={commodity.value_currency}
+                            value={commodity.value_currency || CurrencyCodeEnum.USD}
                             required={!isNone(commodity?.value_amount)}>
                             {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
                           </select>
@@ -245,10 +243,10 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
               <div className="p-3 my-5"></div>
               <ButtonField
                 type="button"
-                className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
+                className="is-primary m-0"
                 fieldClass="form-floating-footer p-3"
                 controlClass="has-text-centered"
-                disabled={deepEqual(operation?.commodity, commodity)}
+                disabled={loading || deepEqual(operation?.commodity, commodity)}
                 onClick={handleSubmit}>
                 <span>{isNew ? 'Add' : 'Save'}</span>
               </ButtonField>

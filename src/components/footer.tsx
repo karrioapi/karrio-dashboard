@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import { APIReference } from '@/context/references-provider';
-import { p } from '@/lib/helper';
 
 
 const Footer: React.FC = () => {

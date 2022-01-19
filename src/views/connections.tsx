@@ -13,7 +13,6 @@ import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
 import ConnectionMutationProvider from "@/context/connection-mutation";
 import { useRouter } from "next/dist/client/router";
-import { isNoneOrEmpty } from "@/lib/helper";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -37,7 +36,6 @@ export default function ConnectionsPage(pageProps: any) {
       (!system_connections.loading && system_connections.load) && system_connections.load();
     }, []);
     useEffect(() => { setLoading(user_connections?.loading || system_connections?.loading); });
-    useEffect(() => { selectTab(isNoneOrEmpty(tab) ? tabs[0] : tab as string) }, [router.query]);
     useEffect(() => {
       if (modal === 'new') {
         editConnection({

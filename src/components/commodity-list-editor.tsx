@@ -32,15 +32,12 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
   };
   const removeCommodity = async (uid: string) => {
     const { id } = commodities[uid];
-    if (isNoneOrEmpty(id)) {
-      const newState = Object
-        .entries(commodities)
-        .reduce((acc, [key, item]) => (key === uid ? acc : { ...acc, [key]: item }), {});
+    id && onRemove && await onRemove(id);
+    const newState = Object
+      .entries(commodities)
+      .reduce((acc, [key, item]) => (key === uid ? acc : { ...acc, [key]: item }), {});
 
-      setCommodities(newState);
-    } else {
-      onRemove && await onRemove(id as string);
-    }
+    setCommodities(newState);
   };
 
   useEffect(() => {
@@ -80,7 +77,7 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
               </div>
             ))}
 
-            <div className="panel-block is-justify-content-space-between p-0">
+            <div className="panel-block is-justify-content-space-between p-0" style={{ border: 'transparent' }}>
               <button
                 type="button"
                 className="button is-white is-small has-text-primary"
@@ -103,8 +100,8 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
 };
 
 function toCommodityCollection(commodities?: CommodityType[]): CommodityCollection {
-  return (commodities || []).reduce((acc, commodity) => {
-    return { ...acc, [`commodity-${Date.now()}`]: commodity };
+  return (commodities || []).reduce((acc, commodity, index) => {
+    return { ...acc, [`commodity-${index}-${Date.now()}`]: commodity };
   }, {});
 }
 

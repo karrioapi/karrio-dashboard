@@ -26,7 +26,11 @@ const ShipmentProvider: React.FC = ({ children }) => {
     if (id === 'new') {
       setShipment(DEFAULT_SHIPMENT_DATA);
     } else {
-      load({ variables: { id } });
+      if (!result.called) {
+        load({ variables: { id } });
+      } else {
+        result.fetchMore({ variables: { id } });
+      }
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {
