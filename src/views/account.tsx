@@ -83,7 +83,7 @@ export default function AccountPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 
-      <TabStateProvider tabs={tabs} setSelectedToURL={true}>
+      <TabStateProvider tabs={tabs} setSelectedToURL>
         <Component />
       </TabStateProvider>
 

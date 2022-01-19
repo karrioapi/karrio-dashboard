@@ -1,11 +1,11 @@
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 
 export const NextSession = React.createContext<Session | null | undefined>(undefined);
 
 const NextSessionProvider: React.FC = ({ children }) => {
-  const [session] = useSession();
+  const { data: session } = useSession();
   const [sessionState, setSessionState] = React.useState<Session | null>(session as Session);
 
   React.useEffect(() => {

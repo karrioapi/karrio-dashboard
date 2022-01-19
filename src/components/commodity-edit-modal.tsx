@@ -42,7 +42,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
-  const { setLoading, loading } = useContext(Loading);
+  const { loading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);

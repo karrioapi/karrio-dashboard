@@ -5,7 +5,7 @@ import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@ap
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
@@ -31,7 +31,7 @@ AuthToken.subscribe(async ({ access }: { access?: string }) => {
 logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
 
 export const ClientsProvider: React.FC = ({ children }) => {
-  const [session] = useSession();
+  const { data: session } = useSession();
   const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any>>(graphqlClient.getValue());
   const [restCli, setRestCli] = React.useState<PurplshipClient | undefined>();
 
@@ -49,7 +49,7 @@ export const ClientsProvider: React.FC = ({ children }) => {
   return (
     <ApolloProvider client={graphqlCli}>
       <RestContext.Provider value={restCli}>
-        {(restCli && graphqlCli) && children}
+        {children}
       </RestContext.Provider>
     </ApolloProvider>
   );

@@ -3,7 +3,7 @@ import SectionLayout from "@/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import { getCookie } from "@/lib/helper";
 import { NextPage } from "next";
-import { signIn } from "next-auth/client";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";

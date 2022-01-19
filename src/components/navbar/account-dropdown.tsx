@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import { UserData } from '@/context/user-provider';
 import Link from 'next/link';
-import { signOut } from 'next-auth/client';
+import { signOut } from 'next-auth/react';
 import { APIReference } from '@/context/references-provider';
 
 

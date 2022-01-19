@@ -1,11 +1,10 @@
 import { TokenPair } from '@purplship/rest';
 import { authenticate, refreshToken, AuthToken, OrgToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
-import { NextApiRequest } from 'next';
 import getConfig from 'next/config';
-import NextAuth, { User } from 'next-auth';
+import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import Providers from 'next-auth/providers';
+import CredentialProvider from "next-auth/providers/credentials";
 import logger from '@/lib/logger';
 
 const { serverRuntimeConfig } = getConfig();
@@ -13,23 +12,19 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 const auth = NextAuth({
-  pages: {
-    signIn: '/login',
-  },
-  jwt: {
-    secret,
-    encryption: true,
-  },
+  secret,
+  pages: { signIn: '/login' },
+  session: { strategy: 'jwt' },
   providers: [
-    Providers.Credentials({
+    CredentialProvider({
       name: 'Credentials',
       credentials: {
         email: { label: "Email", type: "email", placeholder: "email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials: Record<"email" | "password" | "org_id", string>, req: NextApiRequest) {
+      async authorize(credentials) {
         try {
-          const token = await authenticate(credentials);
+          const token = await authenticate(credentials as any);
 
           return { accessToken: token.access, refreshToken: token.refresh };
         } catch (err) {
@@ -42,7 +37,7 @@ const auth = NextAuth({
     })
   ],
   callbacks: {
-    jwt: async (token: JWT, user?: User): Promise<JWT> => {
+    jwt: async ({ token, user }): Promise<JWT> => {
       if (user?.accessToken) {
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
@@ -87,7 +82,7 @@ const auth = NextAuth({
         }
       }
     },
-    session: async (session, token) => {
+    session: async ({ session, token }) => {
       const { org_id } = parseJwt(token.accessToken as string);
       session.org_id = org_id;
       session.error = token.error;
