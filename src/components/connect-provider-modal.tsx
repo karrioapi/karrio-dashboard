@@ -14,6 +14,8 @@ import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
+import MetadataEditor, { MetadataEditorContext } from './metadata-editor';
+import { MetadataObjectType } from '@purplship/graphql';
 
 type OperationType = {
   connection?: UserConnectionType;
@@ -203,6 +205,41 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 <CheckBoxField defaultChecked={payload.test} onChange={handleOnChange("test")}>Test Mode</CheckBoxField>
 
 
+                {has("metadata") && <>
+
+                  <hr className="mt-1 my-3" style={{ height: '1px' }} />
+
+                  <MetadataEditor
+                    id={payload.id}
+                    object_type={MetadataObjectType.carrier}
+                    metadata={payload.metadata}
+                    onChange={directChange("metadata")}
+                  >
+                    <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
+
+                      <div className="is-flex is-justify-content-space-between">
+                        <h2 className="title is-6 my-3">Metadata</h2>
+
+                        <button
+                          type="button"
+                          className="button is-default is-small is-align-self-center"
+                          disabled={isEditing}
+                          onClick={() => editMetadata()}>
+                          <span className="icon is-small">
+                            <i className="fas fa-pen"></i>
+                          </span>
+                          <span>Edit metadata</span>
+                        </button>
+                      </div>
+
+                      <hr className="mt-1 my-1" style={{ height: '1px' }} />
+
+                    </>)}</MetadataEditorContext.Consumer>
+                  </MetadataEditor>
+
+                </>}
+
+
                 <div className="p-3 my-5"></div>
                 <ButtonField type="submit"
                   className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
@@ -234,7 +271,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Generic]: ["name", "carrier_id", "test", "account_country_code", "label_template", "services"],
+    [CarrierSettingsCarrierNameEnum.Generic]: ["name", "carrier_id", "test", "account_country_code", "label_template", "services", "metadata"],
     [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test", "username", "password", "account_number", "user_token"],
     [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test", "client_id", "client_secret"],

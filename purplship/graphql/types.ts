@@ -1972,6 +1972,7 @@ export interface get_user_connections_user_connections_GenericSettings {
   account_country_code: string;
   services: get_user_connections_user_connections_GenericSettings_services[] | null;
   label_template: get_user_connections_user_connections_GenericSettings_label_template | null;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_PurolatorSettings {
@@ -3704,6 +3705,7 @@ export enum OrderStatus {
 
 // An enumeration.
 export enum MetadataObjectType {
+  carrier = "carrier",
   commodity = "commodity",
   order = "order",
   shipment = "shipment",
@@ -3712,37 +3714,38 @@ export enum MetadataObjectType {
 
 // null
 export interface CreateConnectionInput {
-  aramexsettings?: AramexSettingsInput | null;
-  australiapostsettings?: AustraliaPostSettingsInput | null;
-  canadapostsettings?: CanadaPostSettingsInput | null;
-  canparsettings?: CanparSettingsInput | null;
-  dhlexpresssettings?: DHLExpressSettingsInput | null;
-  dhlpolandsettings?: DHLPolandSettingsInput | null;
-  dhluniversalsettings?: DHLUniversalSettingsInput | null;
-  dicomsettings?: DicomSettingsInput | null;
-  eshippersettings?: EShipperSettingsInput | null;
-  fedexsettings?: FedexSettingsInput | null;
-  freightcomsettings?: FreightcomSettingsInput | null;
-  genericsettings?: GenericSettingsInput | null;
-  purolatorsettings?: PurolatorSettingsInput | null;
-  royalmailsettings?: RoyalMailSettingsInput | null;
-  sendlesettings?: SendleSettingsInput | null;
-  sfexpresssettings?: SFExpressSettingsInput | null;
-  tntsettings?: TNTSettingsInput | null;
-  upssettings?: UPSSettingsInput | null;
-  uspssettings?: USPSSettingsInput | null;
-  uspsinternationalsettings?: USPSInternationalSettingsInput | null;
-  yanwensettings?: YanwenSettingsInput | null;
-  yunexpresssettings?: YunExpressSettingsInput | null;
+  aramexsettings?: CreateAramexSettings | null;
+  australiapostsettings?: CreateAustraliaPostSettings | null;
+  canadapostsettings?: CreateCanadaPostSettings | null;
+  canparsettings?: CreateCanparSettings | null;
+  dhlexpresssettings?: CreateDHLExpressSettings | null;
+  dhlpolandsettings?: CreateDHLPolandSettings | null;
+  dhluniversalsettings?: CreateDHLUniversalSettings | null;
+  dicomsettings?: CreateDicomSettings | null;
+  eshippersettings?: CreateEShipperSettings | null;
+  fedexsettings?: CreateFedexSettings | null;
+  freightcomsettings?: CreateFreightcomSettings | null;
+  genericsettings?: CreateGenericSettings | null;
+  purolatorsettings?: CreatePurolatorSettings | null;
+  royalmailsettings?: CreateRoyalMailSettings | null;
+  sendlesettings?: CreateSendleSettings | null;
+  sfexpresssettings?: CreateSFExpressSettings | null;
+  tntsettings?: CreateTNTSettings | null;
+  upssettings?: CreateUPSSettings | null;
+  uspssettings?: CreateUSPSSettings | null;
+  uspsinternationalsettings?: CreateUSPSInternationalSettings | null;
+  yanwensettings?: CreateYanwenSettings | null;
+  yunexpresssettings?: CreateYunExpressSettings | null;
   clientMutationId?: string | null;
 }
 
 // null
-export interface AramexSettingsInput {
+export interface CreateAramexSettings {
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   account_pin: string;
@@ -3751,20 +3754,22 @@ export interface AramexSettingsInput {
 }
 
 // null
-export interface AustraliaPostSettingsInput {
+export interface CreateAustraliaPostSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   api_key: string;
   password: string;
   account_number: string;
 }
 
 // null
-export interface CanadaPostSettingsInput {
+export interface CreateCanadaPostSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   customer_number?: string | null;
@@ -3772,31 +3777,34 @@ export interface CanadaPostSettingsInput {
 }
 
 // null
-export interface CanparSettingsInput {
+export interface CreateCanparSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
 }
 
 // null
-export interface DHLExpressSettingsInput {
+export interface CreateDHLExpressSettings {
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   site_id: string;
   password: string;
   account_number?: string | null;
 }
 
 // null
-export interface DHLPolandSettingsInput {
+export interface CreateDHLPolandSettings {
   services?: (ServiceLevelModelSerializerInput | null)[] | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   account_number?: string | null;
@@ -3822,39 +3830,43 @@ export interface ServiceLevelModelSerializerInput {
 }
 
 // null
-export interface DHLUniversalSettingsInput {
+export interface CreateDHLUniversalSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   consumer_key: string;
   consumer_secret: string;
 }
 
 // null
-export interface DicomSettingsInput {
+export interface CreateDicomSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   billing_account: string;
 }
 
 // null
-export interface EShipperSettingsInput {
+export interface CreateEShipperSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
 }
 
 // null
-export interface FedexSettingsInput {
+export interface CreateFedexSettings {
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   password: string;
   meter_number: string;
   account_number: string;
@@ -3862,22 +3874,24 @@ export interface FedexSettingsInput {
 }
 
 // null
-export interface FreightcomSettingsInput {
+export interface CreateFreightcomSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
 }
 
 // null
-export interface GenericSettingsInput {
+export interface CreateGenericSettings {
   account_country_code?: string | null;
   services?: (ServiceLevelModelSerializerInput | null)[] | null;
   label_template?: LabelTemplateModelSerializerInput | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   name: string;
 }
 
@@ -3893,10 +3907,11 @@ export interface LabelTemplateModelSerializerInput {
 }
 
 // null
-export interface PurolatorSettingsInput {
+export interface CreatePurolatorSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   account_number: string;
@@ -3904,49 +3919,54 @@ export interface PurolatorSettingsInput {
 }
 
 // null
-export interface RoyalMailSettingsInput {
+export interface CreateRoyalMailSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   client_id: string;
   client_secret: string;
 }
 
 // null
-export interface SendleSettingsInput {
+export interface CreateSendleSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   sendle_id: string;
   api_key: string;
 }
 
 // null
-export interface SFExpressSettingsInput {
+export interface CreateSFExpressSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   partner_id: string;
   check_word: string;
 }
 
 // null
-export interface TNTSettingsInput {
+export interface CreateTNTSettings {
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   account_number: string;
 }
 
 // null
-export interface UPSSettingsInput {
+export interface CreateUPSSettings {
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   access_license_number: string;
@@ -3954,10 +3974,11 @@ export interface UPSSettingsInput {
 }
 
 // null
-export interface USPSSettingsInput {
+export interface CreateUSPSSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   mailer_id?: string | null;
@@ -3966,10 +3987,11 @@ export interface USPSSettingsInput {
 }
 
 // null
-export interface USPSInternationalSettingsInput {
+export interface CreateUSPSInternationalSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username: string;
   password: string;
   mailer_id?: string | null;
@@ -3978,57 +4000,60 @@ export interface USPSInternationalSettingsInput {
 }
 
 // null
-export interface YanwenSettingsInput {
+export interface CreateYanwenSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   customer_number: string;
   license_key: string;
 }
 
 // null
-export interface YunExpressSettingsInput {
+export interface CreateYunExpressSettings {
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   customer_number: string;
   api_secret: string;
 }
 
 // null
 export interface UpdateConnectionInput {
-  id?: string | null;
-  aramexsettings?: PartialAramexSettingsInput | null;
-  australiapostsettings?: PartialAustraliaPostSettingsInput | null;
-  canadapostsettings?: PartialCanadaPostSettingsInput | null;
-  canparsettings?: PartialCanparSettingsInput | null;
-  dhlexpresssettings?: PartialDHLExpressSettingsInput | null;
-  dhlpolandsettings?: PartialDHLPolandSettingsInput | null;
-  dhluniversalsettings?: PartialDHLUniversalSettingsInput | null;
-  dicomsettings?: PartialDicomSettingsInput | null;
-  eshippersettings?: PartialEShipperSettingsInput | null;
-  fedexsettings?: PartialFedexSettingsInput | null;
-  freightcomsettings?: PartialFreightcomSettingsInput | null;
-  genericsettings?: PartialGenericSettingsInput | null;
-  purolatorsettings?: PartialPurolatorSettingsInput | null;
-  royalmailsettings?: PartialRoyalMailSettingsInput | null;
-  sendlesettings?: PartialSendleSettingsInput | null;
-  sfexpresssettings?: PartialSFExpressSettingsInput | null;
-  tntsettings?: PartialTNTSettingsInput | null;
-  upssettings?: PartialUPSSettingsInput | null;
-  uspssettings?: PartialUSPSSettingsInput | null;
-  uspsinternationalsettings?: PartialUSPSInternationalSettingsInput | null;
-  yanwensettings?: PartialYanwenSettingsInput | null;
-  yunexpresssettings?: PartialYunExpressSettingsInput | null;
+  aramexsettings?: UpdateAramexSettings | null;
+  australiapostsettings?: UpdateAustraliaPostSettings | null;
+  canadapostsettings?: UpdateCanadaPostSettings | null;
+  canparsettings?: UpdateCanparSettings | null;
+  dhlexpresssettings?: UpdateDHLExpressSettings | null;
+  dhlpolandsettings?: UpdateDHLPolandSettings | null;
+  dhluniversalsettings?: UpdateDHLUniversalSettings | null;
+  dicomsettings?: UpdateDicomSettings | null;
+  eshippersettings?: UpdateEShipperSettings | null;
+  fedexsettings?: UpdateFedexSettings | null;
+  freightcomsettings?: UpdateFreightcomSettings | null;
+  genericsettings?: UpdateGenericSettings | null;
+  purolatorsettings?: UpdatePurolatorSettings | null;
+  royalmailsettings?: UpdateRoyalMailSettings | null;
+  sendlesettings?: UpdateSendleSettings | null;
+  sfexpresssettings?: UpdateSFExpressSettings | null;
+  tntsettings?: UpdateTNTSettings | null;
+  upssettings?: UpdateUPSSettings | null;
+  uspssettings?: UpdateUSPSSettings | null;
+  uspsinternationalsettings?: UpdateUSPSInternationalSettings | null;
+  yanwensettings?: UpdateYanwenSettings | null;
+  yunexpresssettings?: UpdateYunExpressSettings | null;
+  id: string;
   clientMutationId?: string | null;
 }
 
 // null
-export interface PartialAramexSettingsInput {
-  account_country_code?: string | null;
+export interface UpdateAramexSettings {
+  account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   account_pin?: string | null;
@@ -4037,20 +4062,22 @@ export interface PartialAramexSettingsInput {
 }
 
 // null
-export interface PartialAustraliaPostSettingsInput {
+export interface UpdateAustraliaPostSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   api_key?: string | null;
   password?: string | null;
   account_number?: string | null;
 }
 
 // null
-export interface PartialCanadaPostSettingsInput {
+export interface UpdateCanadaPostSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   customer_number?: string | null;
@@ -4058,90 +4085,77 @@ export interface PartialCanadaPostSettingsInput {
 }
 
 // null
-export interface PartialCanparSettingsInput {
+export interface UpdateCanparSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
 }
 
 // null
-export interface PartialDHLExpressSettingsInput {
+export interface UpdateDHLExpressSettings {
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   site_id?: string | null;
   password?: string | null;
   account_number?: string | null;
 }
 
 // null
-export interface PartialDHLPolandSettingsInput {
-  services?: (PartialServiceLevelModelSerializerInput | null)[] | null;
+export interface UpdateDHLPolandSettings {
+  services?: (ServiceLevelModelSerializerInput | null)[] | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   account_number?: string | null;
 }
 
 // null
-export interface PartialServiceLevelModelSerializerInput {
-  id?: string | null;
-  dimension_unit?: string | null;
-  weight_unit?: string | null;
-  currency?: string | null;
-  service_name?: string | null;
-  service_code?: string | null;
-  description?: string | null;
-  active?: boolean | null;
-  cost?: number | null;
-  estimated_transit_days?: number | null;
-  max_weight?: number | null;
-  max_width?: number | null;
-  max_height?: number | null;
-  max_length?: number | null;
-  domicile?: boolean | null;
-  international?: boolean | null;
-}
-
-// null
-export interface PartialDHLUniversalSettingsInput {
+export interface UpdateDHLUniversalSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   consumer_key?: string | null;
   consumer_secret?: string | null;
 }
 
 // null
-export interface PartialDicomSettingsInput {
+export interface UpdateDicomSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   billing_account?: string | null;
 }
 
 // null
-export interface PartialEShipperSettingsInput {
+export interface UpdateEShipperSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
 }
 
 // null
-export interface PartialFedexSettingsInput {
+export interface UpdateFedexSettings {
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   password?: string | null;
   meter_number?: string | null;
   account_number?: string | null;
@@ -4149,41 +4163,33 @@ export interface PartialFedexSettingsInput {
 }
 
 // null
-export interface PartialFreightcomSettingsInput {
+export interface UpdateFreightcomSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
 }
 
 // null
-export interface PartialGenericSettingsInput {
+export interface UpdateGenericSettings {
   account_country_code?: string | null;
-  services?: (PartialServiceLevelModelSerializerInput | null)[] | null;
-  label_template?: PartialLabelTemplateModelSerializerInput | null;
+  services?: (ServiceLevelModelSerializerInput | null)[] | null;
+  label_template?: LabelTemplateModelSerializerInput | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   name?: string | null;
 }
 
 // null
-export interface PartialLabelTemplateModelSerializerInput {
-  id?: string | null;
-  template_type?: string | null;
-  alias?: string | null;
-  template?: string | null;
-  description?: string | null;
-  width?: number | null;
-  height?: number | null;
-}
-
-// null
-export interface PartialPurolatorSettingsInput {
+export interface UpdatePurolatorSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   account_number?: string | null;
@@ -4191,49 +4197,54 @@ export interface PartialPurolatorSettingsInput {
 }
 
 // null
-export interface PartialRoyalMailSettingsInput {
+export interface UpdateRoyalMailSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   client_id?: string | null;
   client_secret?: string | null;
 }
 
 // null
-export interface PartialSendleSettingsInput {
+export interface UpdateSendleSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   sendle_id?: string | null;
   api_key?: string | null;
 }
 
 // null
-export interface PartialSFExpressSettingsInput {
+export interface UpdateSFExpressSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   partner_id?: string | null;
   check_word?: string | null;
 }
 
 // null
-export interface PartialTNTSettingsInput {
-  account_country_code?: string | null;
+export interface UpdateTNTSettings {
+  account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   account_number?: string | null;
 }
 
 // null
-export interface PartialUPSSettingsInput {
+export interface UpdateUPSSettings {
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   access_license_number?: string | null;
@@ -4241,10 +4252,11 @@ export interface PartialUPSSettingsInput {
 }
 
 // null
-export interface PartialUSPSSettingsInput {
+export interface UpdateUSPSSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   mailer_id?: string | null;
@@ -4253,10 +4265,11 @@ export interface PartialUSPSSettingsInput {
 }
 
 // null
-export interface PartialUSPSInternationalSettingsInput {
+export interface UpdateUSPSInternationalSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   username?: string | null;
   password?: string | null;
   mailer_id?: string | null;
@@ -4265,19 +4278,21 @@ export interface PartialUSPSInternationalSettingsInput {
 }
 
 // null
-export interface PartialYanwenSettingsInput {
+export interface UpdateYanwenSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   customer_number?: string | null;
   license_key?: string | null;
 }
 
 // null
-export interface PartialYunExpressSettingsInput {
+export interface UpdateYunExpressSettings {
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
+  metadata?: any | null;
   customer_number?: string | null;
   api_secret?: string | null;
 }

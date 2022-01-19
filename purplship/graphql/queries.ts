@@ -1309,6 +1309,7 @@ query get_user_connections($test: Boolean) {
         height
         description
       }
+      metadata
     }
     ... on PurolatorSettings {
       id
