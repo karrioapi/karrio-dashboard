@@ -1,7 +1,7 @@
 import { formatRef, isNone } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
 import { APIError, CustomsType, NotificationType, PaymentType, RequestError, ShipmentType } from '@/lib/types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import OptionsDescription from '@/components/descriptions/options-description';
@@ -17,21 +17,23 @@ import RateDescription from '@/components/descriptions/rate-description';
 import MessagesDescription from '@/components/descriptions/messages-description';
 import { LabelTypeEnum, PaidByEnum } from '@purplship/graphql';
 
-interface LiveRatesComponent { }
+interface LiveRatesComponent {
+  shipment: ShipmentType;
+}
 
 const DEFAULT_PAYMENT: Partial<PaymentType> = { paid_by: PaidByEnum.sender };
 
-const LiveRates: React.FC<LiveRatesComponent> = () => {
+const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
-  const { shipment } = useContext(LabelData);
   const { loading, setLoading } = useContext(Loading);
   const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
   const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
   const [label_type, setLabelType] = useState<LabelTypeEnum>(shipment?.label_type as LabelTypeEnum || LabelTypeEnum.PDF);
   const [payment, setPayment] = useState<Partial<PaymentType>>(DEFAULT_PAYMENT);
   const [showMessage, setShowMessage] = useState(false);
+  const [key, setKey] = useState<string>(`details-${Date.now()}`);
 
   const computeDisabled = (shipment: ShipmentType) => {
     return (
@@ -85,8 +87,10 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
     }
   };
 
+  useEffect(() => { setKey(`details-${Date.now()}`); }, [shipment]);
+
   return (
-    <div>
+    <div key={key}>
       <div className="columns is-multiline">
 
         <div className="column is-12 pb-2">
@@ -132,7 +136,7 @@ const LiveRates: React.FC<LiveRatesComponent> = () => {
 
         </div>}
 
-        <div className="column is-12 py-4 px-0" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
+        <div className="column is-12 py-4 px-0" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }} key={key}>
 
           <h6 className="is-title is-size-6 px-3 my-1 has-text-weight-semibold">Live Rates</h6>
 

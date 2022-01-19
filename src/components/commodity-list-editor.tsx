@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { CommodityType } from '@/lib/types';
 import CommodityDescription from '@/components/descriptions/commodity-description';
-import { deepEqual, isNoneOrEmpty } from '@/lib/helper';
+import { deepEqual } from '@/lib/helper';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 
 type CommodityCollection = Record<string, CommodityType>;

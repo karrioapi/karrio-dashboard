@@ -42,7 +42,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
-  const { loading } = useContext(Loading);
+  const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
@@ -73,7 +73,9 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     operation?.onChange && await operation?.onChange(commodity as CommodityType);
+    setTimeout(() => { setLoading(false); close(); }, 1000);
   };
 
   return (

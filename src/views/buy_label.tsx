@@ -43,7 +43,8 @@ export default function LabelPage(pageProps: any) {
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
     const tabs = ["shipper", "recipient", "parcels", "customs info", "options"];
     const [ready, setReady] = useState<boolean>(false);
-    const [ckey, setKey] = useState<string>(`${id}-${Date.now()}`);
+    const [ckey] = useState<string>(`${id}-${Date.now()}`);
+    const [previewKey, setPreviewKey] = useState<string>(`${id}-${Date.now()}`);
 
     const onChange = async (changes: Partial<ShipmentType>, { tab, selectTab }: ChangeContext | undefined = {}) => {
       if (changes === undefined) { return; }
@@ -65,6 +66,7 @@ export default function LabelPage(pageProps: any) {
       } else {
         await mutation.updateShipment({ id, ...changes } as PartialShipmentUpdateInput);
       }
+      setPreviewKey(`${id}-${Date.now()}`);
     };
 
     useEffect(() => {
@@ -142,8 +144,8 @@ export default function LabelPage(pageProps: any) {
           </div>
           <div className="column is-5 pb-6">
 
-            <div className="card px-3 py-3">
-              <LiveRates key={ckey} />
+            <div className="card px-3 py-3" key={previewKey}>
+              <LiveRates shipment={shipment} />
             </div>
 
           </div>
