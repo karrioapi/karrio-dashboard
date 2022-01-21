@@ -9,7 +9,6 @@ import ParcelDescription from '@/components/descriptions/parcel-description';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { LabelData } from '@/context/shipment-provider';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';

@@ -21,10 +21,12 @@ export const LabelData = React.createContext<LabelDataContext>({} as LabelDataCo
 const ShipmentProvider: React.FC = ({ children }) => {
   const [load, result] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT);
   const [shipment, setShipment] = useState<ShipmentType>(DEFAULT_SHIPMENT_DATA);
+  const [state, setState] = useState<any>({});
 
   const loadShipment = (id: string) => {
     if (id === 'new') {
       setShipment(DEFAULT_SHIPMENT_DATA);
+      setState({ ...result, loading: false, called: true });
     } else {
       if (!result.called) {
         load({ variables: { id } });
@@ -51,7 +53,8 @@ const ShipmentProvider: React.FC = ({ children }) => {
       ...result,
       shipment,
       loadShipment,
-      updateShipment
+      updateShipment,
+      ...state,
     }}>
       {children}
     </LabelData.Provider>

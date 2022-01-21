@@ -5,7 +5,6 @@ import AddressForm from '@/components/form-parts/address-form';
 import ShipmentOptions from '@/components/form-parts/shipment-options';
 import LiveRates from '@/components/live-rates';
 import Tabs, { TabStateContext, TabStateProvider } from '@/components/generic/tabs';
-import { isNone } from '@/lib/helper';
 import ShipmentProvider, { LabelData, } from '@/context/shipment-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Notify } from '@/components/notifier';
@@ -106,7 +105,7 @@ export default function LabelPage(pageProps: any) {
                     <AddressForm
                       key={`${ckey}-shipper`}
                       value={shipment.shipper}
-                      // default_value={default_address as any}
+                      default_value={default_address as any}
                       shipment={shipment}
                       onSubmit={(shipper: any) => onChange({ shipper }, { tab: 'shipper', selectTab })}
                       name="shipper" />

@@ -33,7 +33,7 @@ logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
 export const ClientsProvider: React.FC = ({ children }) => {
   const { data: session } = useSession();
   const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any>>(graphqlClient.getValue());
-  const [restCli, setRestCli] = React.useState<PurplshipClient | undefined>(restClient.getValue());
+  const [restCli, setRestCli] = React.useState<PurplshipClient | undefined>();
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
