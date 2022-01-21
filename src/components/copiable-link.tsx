@@ -4,7 +4,7 @@ interface CopiableLinkComponent extends React.InputHTMLAttributes<HTMLAnchorElem
   text: string;
 }
 
-const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, ...props }) => {
+const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, className, ...props }) => {
   const copyText = (_: React.MouseEvent) => {
     var input = document.createElement('input');
     input.setAttribute('value', text);
@@ -15,12 +15,13 @@ const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, ...props }) => {
   };
 
   return (
-    <a className="button is-white is-small m-1"
+    <a
+      className={className || "button is-white is-small m-1"}
       style={{ padding: '0', height: '20px' }}
       onClick={copyText}
       {...props}>
-      <span className="px-1">{text} </span>
-      <i className="fas fa-clipboard"></i>
+      <span>{text}</span>
+      <i className="fas fa-clipboard ml-2"></i>
     </a>
   )
 };

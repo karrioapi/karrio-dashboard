@@ -11,6 +11,7 @@ import { ConfirmModalContext } from '@/components/confirm-modal';
 import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
 import { isNoneOrEmpty } from '@/lib/helper';
+import CopiableLink from './copiable-link';
 
 interface UserConnectionListView { }
 
@@ -97,7 +98,10 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                 <div className="content is-small">
                   <ul>
                     <li>
-                      <span className="is-size-7 my-1 has-text-weight-semibold">carrier id: {connection.carrier_id}</span>
+                      <span className="is-size-7 my-1 has-text-weight-semibold">carrier name: {connection.carrier_name}</span>
+                    </li>
+                    <li>
+                      <CopiableLink className="button is-white is-small" text={connection.carrier_id} />
                     </li>
                   </ul>
                 </div>
