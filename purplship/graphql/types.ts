@@ -566,6 +566,19 @@ export interface get_shipment_shipment_customs_duty {
   declared_value: number | null;
 }
 
+export interface get_shipment_shipment_customs_commodities_parent {
+  id: string;
+  weight: number | null;
+  weight_unit: WeightUnitEnum | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  value_currency: CurrencyCodeEnum | null;
+  origin_country: CountryCodeEnum | null;
+  metadata: any | null;
+}
+
 export interface get_shipment_shipment_customs_commodities {
   id: string;
   weight: number | null;
@@ -578,6 +591,7 @@ export interface get_shipment_shipment_customs_commodities {
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
   parent_id: string | null;
+  parent: get_shipment_shipment_customs_commodities_parent | null;
 }
 
 export interface get_shipment_shipment_customs {
@@ -780,6 +794,19 @@ export interface get_shipments_shipments_edges_node_customs_duty {
   declared_value: number | null;
 }
 
+export interface get_shipments_shipments_edges_node_customs_commodities_parent {
+  id: string;
+  weight: number | null;
+  weight_unit: WeightUnitEnum | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  value_currency: CurrencyCodeEnum | null;
+  origin_country: CountryCodeEnum | null;
+  metadata: any | null;
+}
+
 export interface get_shipments_shipments_edges_node_customs_commodities {
   id: string;
   weight: number | null;
@@ -792,6 +819,7 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
   parent_id: string | null;
+  parent: get_shipments_shipments_edges_node_customs_commodities_parent | null;
 }
 
 export interface get_shipments_shipments_edges_node_customs {
@@ -1005,6 +1033,19 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   declared_value: number | null;
 }
 
+export interface partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent {
+  id: string;
+  weight: number | null;
+  weight_unit: WeightUnitEnum | null;
+  description: string | null;
+  quantity: number | null;
+  sku: string | null;
+  value_amount: number | null;
+  value_currency: CurrencyCodeEnum | null;
+  origin_country: CountryCodeEnum | null;
+  metadata: any | null;
+}
+
 export interface partial_shipment_update_partial_shipment_update_shipment_customs_commodities {
   id: string;
   weight: number | null;
@@ -1017,6 +1058,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
   parent_id: string | null;
+  parent: partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent | null;
 }
 
 export interface partial_shipment_update_partial_shipment_update_shipment_customs {
@@ -2392,6 +2434,7 @@ export interface get_order_order_line_items {
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
+  parent_id: string | null;
 }
 
 export interface get_order_order_created_by {
@@ -2655,6 +2698,7 @@ export interface get_orders_orders_edges_node_line_items {
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
+  parent_id: string | null;
 }
 
 export interface get_orders_orders_edges_node_created_by {
@@ -4395,7 +4439,6 @@ export interface PartialDuty {
 
 // null
 export interface PartialParcel {
-  id?: string | null;
   weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
   weight?: number | null;
@@ -4407,6 +4450,7 @@ export interface PartialParcel {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
+  reference_number?: string | null;
   items?: (PartialCommodity | null)[] | null;
 }
 
@@ -4434,7 +4478,6 @@ export interface CreateAddressTemplateInput {
 
 // null
 export interface CreateAddressTemplate {
-  id?: string | null;
   country_code: CountryCodeEnum;
   postal_code?: string | null;
   city?: string | null;
@@ -4511,6 +4554,7 @@ export interface CreateParcelTemplate {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
+  reference_number?: string | null;
   items?: (Commodity | null)[] | null;
 }
 
@@ -4579,7 +4623,6 @@ export interface UpdateParcelTemplateInput {
 
 // null
 export interface UpdateParcelTemplate {
-  id?: string | null;
   weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
   weight?: number | null;
@@ -4591,6 +4634,7 @@ export interface UpdateParcelTemplate {
   description?: string | null;
   content?: string | null;
   is_document?: boolean | null;
+  reference_number?: string | null;
   items?: (PartialCommodity | null)[] | null;
 }
 

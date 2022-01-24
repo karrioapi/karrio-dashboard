@@ -9,6 +9,9 @@ import InputField from '@/components/generic/input-field';
 import CountryInput from '@/components/generic/country-input';
 import TextAreaField from '@/components/generic/textarea-field';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
+import { APIReference } from '@/context/references-provider';
+import LineItemInput from './generic/line-item-input';
+import OrdersProvider from '@/context/orders-provider';
 
 export const DEFAULT_COMMODITY_CONTENT: Partial<CommodityType> = {
   weight: 0,
@@ -23,7 +26,7 @@ type OperationType = {
 type CommodityStateContextType = {
   editCommodity: (operation: OperationType) => void,
 };
-type stateValue = string | boolean | Partial<CommodityType> | undefined;
+type stateValue = string | boolean | Partial<CommodityType> | undefined | null;
 
 export const CommodityStateContext = React.createContext<CommodityStateContextType>({} as CommodityStateContextType);
 
@@ -42,6 +45,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
+  const { orders_management } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);
@@ -77,6 +81,10 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
     operation?.onChange && await operation?.onChange(commodity as CommodityType);
     setTimeout(() => { setLoading(false); close(); }, 1000);
   };
+  const loadLineItem = (item?: CommodityType) => {
+    const { id, ...content } = item || { id: null };
+    dispatch({ name: 'partial', value: { ...content, parent_id: id } });
+  };
 
   return (
     <Notifier>
@@ -97,6 +105,37 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
             {commodity !== undefined && <>
               <div className="px-0 py-4" key={key}>
 
+                {orders_management && <div className="columns is-multiline mb-4 px-1">
+
+                  <OrdersProvider>
+                    <LineItemInput
+                      name="parent_id"
+                      label="Order Line Item"
+                      value={commodity?.parent_id}
+                      onChange={loadLineItem}
+                      dropdownClass="is-small"
+                      className="is-small is-fullwidth"
+                      fieldClass="column is-11 mb-0 pl-2 pr-0 py-1"
+                      placeholder="Link an order line item"
+                    />
+                  </OrdersProvider>
+
+                  <div className="column m-0 px-0 py-1 is-flex is-align-items-flex-end">
+                    <button
+                      type="button"
+                      className="button is-white is-small"
+                      disabled={isNone(commodity?.parent_id)}
+                      title="unlink from order item"
+                      onClick={() => dispatch({ name: 'parent_id', value: null })}
+                    >
+                      <span className="icon is-small">
+                        <i className="fas fa-unlink"></i>
+                      </span>
+                    </button>
+                  </div>
+
+                </div>}
+
                 <div className="columns is-multiline mb-4 px-1">
 
                   <InputField
@@ -107,6 +146,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     className="is-small is-fullwidth"
                     fieldClass="column is-7 mb-0 px-2 py-1"
                     placeholder="0000001"
+                    disabled={!isNone(commodity?.parent_id)}
                   />
 
                   <CountryInput
@@ -116,6 +156,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     fieldClass="column mb-0 is-5 px-2 py-1"
                     value={commodity.origin_country}
                     onValueChange={value => dispatch({ name: "origin_country", value: value as string })}
+                    disabled={!isNone(commodity?.parent_id)}
                   />
 
                 </div>
@@ -151,6 +192,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                           className="input is-small"
                           onChange={handleChange}
                           value={commodity.weight}
+                          disabled={!isNone(commodity?.parent_id)}
                           required
                         />
                       </p>
@@ -159,7 +201,8 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                           <select
                             name="weight_unit"
                             onChange={handleChange}
-                            value={commodity.weight_unit || WeightUnitEnum.KG}>
+                            value={commodity.weight_unit || WeightUnitEnum.KG}
+                            disabled={!isNone(commodity?.parent_id)}>
                             {WEIGHT_UNITS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
                           </select>
                         </span>
@@ -179,6 +222,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                           className="input is-small"
                           onChange={handleChange}
                           value={commodity.value_amount || ""}
+                          disabled={!isNone(commodity?.parent_id)}
                         />
                       </p>
                       <p className="control">
@@ -187,7 +231,8 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                             name="value_currency"
                             onChange={handleChange}
                             value={commodity.value_currency || CurrencyCodeEnum.USD}
-                            required={!isNone(commodity?.value_amount)}>
+                            required={!isNone(commodity?.value_amount)}
+                            disabled={!isNone(commodity?.parent_id)}>
                             {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
                           </select>
                         </span>
@@ -207,6 +252,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     rows={2}
                     onChange={handleChange}
                     value={commodity?.description}
+                    disabled={!isNone(commodity?.parent_id)}
                   />
                 </div>
 

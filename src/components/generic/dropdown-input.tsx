@@ -13,15 +13,15 @@ export interface DropdownInputComponent extends React.AllHTMLAttributes<HTMLInpu
 
 
 const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, value, className, fieldClass, controlClass, dropdownClass, required, onValueChange, ...props }) => {
-  const btn = useRef<any>(null);
   const control = useRef<any>(null);
+  const btn = useRef<HTMLInputElement>(null);
   const [key, setKey] = useState<string>(`dropdown-${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-  const [country, setValue] = useState<string>();
+  const [selected, setSelected] = useState<string>();
 
-  const find = useCallback((country: string) => {
-    return items?.find(([key, val]) => key.toLowerCase() == country.toLowerCase() || val.toLowerCase() == country.toLowerCase())
+  const find = useCallback((selected?: string) => {
+    return items?.find(([key, val]) => key.toLowerCase() == selected?.toLowerCase() || val.toLowerCase() == selected?.toLowerCase())
   }, [items]);
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,19 +48,19 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
   };
   const onRefChange = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    const [key, country] = find(e.target.value) || [];
-    setValue(country || "");
+    const [key, selected] = find(e.target.value) || [];
+    setSelected(selected || "");
     onValueChange(key as string);
   };
   const onSelect = (key: string) => (_: React.MouseEvent) => {
-    setValue(key);
+    setSelected(key);
     onValueChange(key);
   };
 
   useEffect(() => {
-    if (!isNone(items) && !isNone(value)) {
-      const [_, country] = find(value as string) || [];
-      setValue(country);
+    if (!isNone(items)) {
+      const [_, selected] = find(value as string) || [];
+      setSelected(selected);
     }
   }, [items, value, find]);
 
@@ -74,10 +74,17 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
       </label>}
       <div className={`control ${controlClass}`}>
         <div className={`dropdown select is-fullwidth ${isActive ? 'is-active' : ''} ${dropdownClass}`} key={`dropdown-input-${key}`}>
-          <input name={name} onChange={onRefChange} value={country || ''} className="input is-fullwidth" style={{ position: 'absolute', zIndex: -1 }} required={required} />
-          <a onClick={handleOnClick} aria-haspopup="true" className={"dropdown-trigger input is-fullwidth px-2" + ` ${className}` || ''} style={{ justifyContent: 'left' }} aria-controls={`dropdown-input-`} ref={btn}>
-            <span>{country}</span>
-          </a>
+          <input
+            name={name}
+            onClick={handleOnClick}
+            onChange={onRefChange}
+            value={selected || ''}
+            className={"dropdown-trigger input is-clickable is-fullwidth px-2" + ` ${className}` || ''}
+            required={required}
+            aria-haspopup="true"
+            readOnly
+            {...props}
+          />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
@@ -87,19 +94,25 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
                   <input className={"input" + ` ${className}` || ''} type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
                 </p>
               </div>
-              <nav className="panel dropped-panel">
+
+              {items?.length === 0 && <div className="panel-block px-1 py-1">
+                No items found...
+              </div>}
+
+              <ul className="panel dropped-panel">
                 {(items || [])
                   .filter(([_, val]) => search === "" || val.toLowerCase().includes(search.toLowerCase()))
                   .map(([key, val], index) => (
-                    <a key={`${key}-${Date.now()}`}
-                      tabIndex={index}
+                    <li
+                      key={`${key}-${Date.now()}`}
+                      tabIndex={index + 1}
                       onClick={onSelect(key)}
-                      className={`panel-block  ${key === country ? 'is-active' : ''}`}>
+                      className={`panel-block is-clickable ${key === selected ? 'is-active' : ''}`}>
                       <span className='is-size-7'>{val}</span>
-                    </a>
+                    </li>
                   ))
                 }
-              </nav>
+              </ul>
             </div>
           </div>
         </div>
