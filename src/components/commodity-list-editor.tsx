@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CommodityType } from '@/lib/types';
 import CommodityDescription from '@/components/descriptions/commodity-description';
 import { deepEqual } from '@/lib/helper';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
+import { APIReference } from '@/context/references-provider';
+import LineItemSelector from '@/components/line-item-selector';
+import OrdersProvider from '@/context/orders-provider';
 
 type CommodityCollection = Record<string, CommodityType>;
 interface CommodityCollectionEditorProps {
@@ -23,6 +26,7 @@ export const CommodityCollectionEditorContext = React.createContext<CommodityCol
 } as CommodityCollectionEditorInterface);
 
 const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ defaultValue, children, className, onChange, onRemove, ...props }) => {
+  const { orders_management } = useContext(APIReference);
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [commodities, setCommodities] = React.useState<CommodityCollection>(toCommodityCollection(defaultValue));
 
@@ -77,7 +81,7 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
               </div>
             ))}
 
-            <div className="panel-block is-justify-content-space-between p-0" style={{ border: 'transparent' }}>
+            <div className="panel-block is-justify-content-space-between px-0 py-1" style={{ border: 'transparent' }}>
               <button
                 type="button"
                 className="button is-white is-small has-text-primary"
@@ -89,6 +93,10 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
                 </span>
                 <span>Add another item</span>
               </button>
+              {orders_management && <OrdersProvider setVariablesToURL={false}>
+                <LineItemSelector
+                  onChange={items => setCommodities({ ...commodities, ...toCommodityCollection(items as any) })} />
+              </OrdersProvider>}
             </div>
 
           </>)}</CommodityStateContext.Consumer>}

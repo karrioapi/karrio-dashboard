@@ -90,8 +90,17 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
             <div className="dropdown-content py-0">
 
               <div className="panel-block px-1 py-1">
-                <p className="control">
-                  <input className={"input" + ` ${className}` || ''} type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
+                <p className="control has-icons-left">
+                  <input
+                    type="text"
+                    className={"input" + ` ${className}` || ''}
+                    defaultValue={search || ''}
+                    onInput={onSearch}
+                    ref={control}
+                  />
+                  <span className="icon is-left is-small">
+                    <i className="fas fa-search" aria-hidden="true"></i>
+                  </span>
                 </p>
               </div>
 

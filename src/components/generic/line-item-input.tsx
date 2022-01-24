@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DropdownInput, { DropdownInputComponent } from '@/components/generic/dropdown-input';
-import { formatWeight, isNone, isNoneOrEmpty } from '@/lib/helper';
+import { formatOrderLineItem, isNone } from '@/lib/helper';
 import { OrdersContext } from '@/context/orders-provider';
-import { CommodityType, OrderType } from '@/lib/types';
+import { CommodityType } from '@/lib/types';
 
 interface LineItemInputComponent extends Omit<DropdownInputComponent, 'items' | 'onChange' | 'onValueChange'> {
   onChange?: (value?: CommodityType) => void;
@@ -13,11 +13,6 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
   const [lineItems, setLineItems] = useState<CommodityType[]>([]);
   const [items, setItems] = useState<[string, string][]>([]);
 
-  const summary = (order: OrderType, item: CommodityType, index: number) => {
-    const identifier = item.sku || item.description;
-    const info = isNoneOrEmpty(identifier) ? `${order.order_id} - item ${index}` : `${order.order_id} - ${identifier!.slice(0, 45)}...`;
-    return `${info} (${item.quantity} x ${formatWeight(item)})`;
-  };
   const handleChange = (key?: string | null) => {
     const item = lineItems.find(item => item.id === key);
     onChange && onChange(item);
@@ -28,12 +23,11 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
       const allItems = orders.map(order => order.line_items).flat();
       const dropdownItems = orders
         .map((order) => order.line_items.map(
-          (item, index) => [item.id, summary(order, item as any, index)]
-        ))
-        .reduce((acc, value) => acc.concat(value), []);
+          (item, index) => [item.id, formatOrderLineItem(order, item as any, index)] as [string, string]
+        )).flat();
 
       setLineItems(allItems);
-      setItems(dropdownItems as any);
+      setItems(dropdownItems);
     }
   }, [orders]);
   useEffect(() => {

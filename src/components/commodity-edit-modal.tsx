@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, useState } from 'react';
-import { deepEqual, isNone } from '@/lib/helper';
+import { deepEqual, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import { CommodityType, CURRENCY_OPTIONS, WEIGHT_UNITS } from '@/lib/types';
 import { CurrencyCodeEnum, MetadataObjectType, WeightUnitEnum } from '@purplship/graphql';
 import Notifier from '@/components/notifier';
@@ -52,6 +52,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   const [isNew, setIsNew] = useState<boolean>(true);
   const [commodity, dispatch] = useReducer(reducer, undefined, () => DEFAULT_COMMODITY_CONTENT);
   const [operation, setOperation] = useState<OperationType | undefined>();
+  const [isInvalid, setIsInvalid] = useState<boolean>(false);
 
   const editCommodity = (operation: OperationType) => {
     const commodity = (operation.commodity || DEFAULT_COMMODITY_CONTENT as CommodityType);
@@ -103,11 +104,13 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
             <div className="p-3 my-4"></div>
 
             {commodity !== undefined && <>
-              <div className="px-0 py-4" key={key}>
+              <div className="px-0 py-4" key={key} onChange={(e: any) => {
+                setIsInvalid(e.currentTarget.querySelectorAll('.is-danger').length > 0);
+              }}>
 
                 {orders_management && <div className="columns is-multiline mb-4 px-1">
 
-                  <OrdersProvider>
+                  <OrdersProvider setVariablesToURL={false}>
                     <LineItemInput
                       name="parent_id"
                       label="Order Line Item"
@@ -125,7 +128,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                       type="button"
                       className="button is-white is-small"
                       disabled={isNone(commodity?.parent_id)}
-                      title="unlink from order item"
+                      title="unlink order line item"
                       onClick={() => dispatch({ name: 'parent_id', value: null })}
                     >
                       <span className="icon is-small">
@@ -167,11 +170,13 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     label="Quantity"
                     name="quantity"
                     type="number"
-                    step="1" min="1"
+                    min="1"
+                    step="1"
                     className="is-small"
                     fieldClass="column mb-0 is-3 px-2 py-1"
                     onChange={handleChange}
                     value={commodity?.quantity}
+                    onInvalid={validityCheck(validationMessage('Please enter a valid quantity'))}
                     required
                   />
 
@@ -193,6 +198,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                           onChange={handleChange}
                           value={commodity.weight}
                           disabled={!isNone(commodity?.parent_id)}
+                          onInvalid={validityCheck(validationMessage('Please enter a valid weight'))}
                           required
                         />
                       </p>
@@ -294,7 +300,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                 className="is-primary m-0"
                 fieldClass="form-floating-footer p-3"
                 controlClass="has-text-centered"
-                disabled={loading || deepEqual(operation?.commodity, commodity)}
+                disabled={loading || isInvalid || deepEqual(operation?.commodity, commodity)}
                 onClick={handleSubmit}>
                 <span>{isNew ? 'Add' : 'Save'}</span>
               </ButtonField>

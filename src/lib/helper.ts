@@ -1,6 +1,5 @@
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
-import { FetchResult } from "@apollo/client";
+import { AddressType, CommodityType, CustomsType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 import React from "react";
 
 
@@ -77,6 +76,18 @@ export function formatCustomsLabel(customs: CustomsType): string {
   ]
     .filter(c => !isNone(c))
     .map(c => formatRef('' + c)).join(' - ');
+}
+
+export function formatCommodity(item: CommodityType, index?: number): string {
+  const identifier = item.sku || item.description;
+  const info = isNoneOrEmpty(identifier) ? `${index || 'item'} - ` : `${identifier!.slice(0, 45)}...`;
+  return `${info} | ${item.quantity} x ${formatWeight(item)}`;
+}
+
+export function formatOrderLineItem(order: OrderType, item: CommodityType, index?: number) {
+  const identifier = item.sku || item.description;
+  const info = isNoneOrEmpty(identifier) ? `${order.order_id} - item ${index || ''}` : `${order.order_id} - ${identifier!.slice(0, 45)}...`;
+  return `${info} (${item.quantity} x ${formatWeight(item)})`;
 }
 
 export function findPreset(presets: PresetCollection, package_preset?: string): Partial<ParcelType> | undefined {
