@@ -1,3 +1,5 @@
+Django==3.2.10
+
 carrier.aramex==2021.2
 carrier.australiapost==2021.2.1
 carrier.canadapost==2021.7
@@ -18,8 +20,8 @@ carrier.yunexpress==2021.2.1
 
 purplship==2021.8.1
 purplship-server==2021.7.7
-purplship-server.client==2021.7.2
-purplship-server.core==2021.7.7
+purplship-server.client==2021.7.3
+purplship-server.core==2021.7.8
 purplship-server.events==2021.7.7
 purplship-server.graph==2021.7
 purplship-server.manager==2021.7.7
@@ -29,7 +31,7 @@ purplship.aramex==2021.7
 purplship.australiapost==2021.8
 purplship.canadapost==2021.8.1
 purplship.canpar==2021.8
-purplship.dhl-express==2021.8
+purplship.dhl-express==2021.8.1
 purplship.dhl-universal==2021.8
 purplship.dicom==2021.8
 purplship.eshipper==2021.7

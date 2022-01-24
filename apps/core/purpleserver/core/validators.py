@@ -15,10 +15,24 @@ DIMENSIONS = ['width', 'height', 'length', 'dimension_unit']
 def dimensions_required_together(value):
     any_dimension_specified = any(value.get(dim) is not None for dim in DIMENSIONS)
     has_any_dimension_undefined = any(value.get(dim) is None for dim in DIMENSIONS)
+    dimension_unit_is_undefined = value.get("dimension_unit") is None
 
     if any_dimension_specified and has_any_dimension_undefined:
         raise serializers.ValidationError(
-            'When one dimension is specified, all must be specified with a dimension_unit'
+            {
+                "dimensions": "When one dimension is specified, all must be specified with a dimension_unit"
+            }
+        )
+
+    if (
+        any_dimension_specified
+        and not has_any_dimension_undefined
+        and dimension_unit_is_undefined
+    ):
+        raise serializers.ValidationError(
+            {
+                "dimension_unit": "dimension_unit is required when dimensions are specified"
+            }
         )
 
 
@@ -99,16 +113,28 @@ class AugmentedAddressSerializer(serializers.Serializer):
             data.update({**data, 'postal_code': formatted})
 
         # Format and validate Phone Number
-        if all(data.get(key) is not None and data.get(key) != "" for key in ['country_code', 'phone_number']):
-            phone_number = data['phone_number']
-            country_code = data['country_code']
+        if all(
+            data.get(key) is not None and data.get(key) != ""
+            for key in ["country_code", "phone_number"]
+        ):
+            phone_number = data["phone_number"]
+            country_code = data["country_code"]
 
             try:
                 formatted = phonenumbers.parse(phone_number, country_code)
-                data.update({**data, 'phone_number': phonenumbers.format_number(formatted, phonenumbers.PhoneNumberFormat.INTERNATIONAL)})
+                data.update(
+                    {
+                        **data,
+                        "phone_number": phonenumbers.format_number(
+                            formatted, phonenumbers.PhoneNumberFormat.INTERNATIONAL
+                        ),
+                    }
+                )
             except Exception as e:
                 logger.warning(e)
-                raise serializers.ValidationError({'postal_code': 'Invalid phone number format'})
+                raise serializers.ValidationError(
+                    {"phone_number": "Invalid phone number format"}
+                )
 
         return data
 

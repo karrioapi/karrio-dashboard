@@ -1,4 +1,5 @@
 wheel
+Django==3.2.10
 
 # carrier datatype libraries
 
@@ -59,7 +60,7 @@ purplship.aramex==2021.8
 purplship.australiapost==2021.8
 purplship.canadapost==2021.8.1
 purplship.canpar==2021.8
-purplship.dhl-express==2021.8
+purplship.dhl-express==2021.8.1
 purplship.dhl-universal==2021.8
 purplship.dicom==2021.8
 purplship.eshipper==2021.7
