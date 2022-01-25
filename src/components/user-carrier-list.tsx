@@ -98,10 +98,14 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                 <div className="content is-small">
                   <ul>
                     <li>
-                      <span className="is-size-7 my-1 has-text-weight-semibold">carrier name: {connection.carrier_name}</span>
+                      <span className="is-size-7 my-1 has-text-weight-semibold">
+                        carrier_name: {(connection as any).custom_carrier_name || connection.carrier_name}
+                      </span>
                     </li>
                     <li>
-                      <CopiableLink className="button is-white is-small" text={connection.carrier_id} />
+                      <span className="is-size-7 my-1 has-text-weight-semibold">
+                        carrier_id: <CopiableLink className="button is-white is-small" text={connection.carrier_id} />
+                      </span>
                     </li>
                   </ul>
                 </div>

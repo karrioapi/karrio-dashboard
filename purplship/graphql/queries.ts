@@ -1312,9 +1312,10 @@ query get_user_connections($test: Boolean) {
     }
     ... on GenericSettings {
       id
-      name
       carrier_id
       carrier_name
+      verbose_name
+      custom_carrier_name
       test
       active
       account_country_code

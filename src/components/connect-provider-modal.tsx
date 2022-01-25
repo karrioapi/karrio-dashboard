@@ -10,7 +10,7 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
+import { addUrlParam, deepEqual, isNone, removeUrlParam, validationMessage, validityCheck } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
@@ -42,6 +42,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const [isNew, setIsNew] = useState<boolean>(true);
   const [payload, setPayload] = useState<Partial<UserConnectionType | any>>(DEFAULT_STATE());
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
 
@@ -119,7 +120,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
         <div className="modal-background" onClick={close}></div>
         <form className="modal-card" onSubmit={handleSubmit}>
-          <section className="modal-card-body">
+          <section className="modal-card-body" onChange={(e: any) => {
+            setIsInvalid(e.currentTarget.querySelectorAll('.is-danger').length > 0);
+          }}>
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">Edit carrier account</span>
             </div>
@@ -138,7 +141,20 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
               <>
                 <hr />
 
-                {has("name") && <InputField label="Name" defaultValue={payload.name} onChange={handleOnChange("name")} className="is-small" required />}
+                {has("verbose_name") &&
+                  <InputField label="Verbose Name" defaultValue={payload.verbose_name}
+                    onChange={handleOnChange("verbose_name")}
+                    className="is-small"
+                    required
+                  />}
+
+                {has("custom_carrier_name") &&
+                  <InputField label="Slug" defaultValue={payload.custom_carrier_name}
+                    onInvalid={validityCheck(validationMessage('Please enter a valid slug'))}
+                    onChange={handleOnChange("custom_carrier_name")}
+                    className="is-small"
+                    required
+                  />}
 
                 <InputField label="Carrier Id" defaultValue={payload.carrier_id} onChange={handleOnChange("carrier_id")} className="is-small" required />
 
@@ -190,7 +206,15 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {has("account_entity") && <InputField label="Account Entity" defaultValue={payload.account_entity} onChange={handleOnChange("account_entity")} className="is-small" required />}
 
-                {has("account_country_code") && <CountryInput label="Account Country Code" onValueChange={directChange("account_country_code")} value={payload.account_country_code} className="is-small" required />}
+                {has("account_country_code") &&
+                  <CountryInput
+                    label="Account Country Code"
+                    onValueChange={directChange("account_country_code")}
+                    value={payload.account_country_code}
+                    className="is-small"
+                    dropdownClass="is-small"
+                    required
+                  />}
 
                 {has("mailer_id") && <InputField label="Mailer ID" defaultValue={payload.mailer_id} onChange={handleOnChange("mailer_id")} className="is-small" />}
 
@@ -245,7 +269,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
                   fieldClass="form-floating-footer p-3"
                   controlClass="has-text-centered"
-                  disabled={isDisabled}>
+                  disabled={isInvalid || isDisabled}>
                   <span>Submit</span>
                 </ButtonField>
               </>
@@ -271,7 +295,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Generic]: ["name", "carrier_id", "test", "account_country_code", "label_template", "services", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Generic]: ["verbose_name", "custom_carrier_name", "carrier_id", "test", "account_country_code", "label_template", "services", "metadata"],
     [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test", "username", "password", "account_number", "user_token"],
     [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test", "client_id", "client_secret"],

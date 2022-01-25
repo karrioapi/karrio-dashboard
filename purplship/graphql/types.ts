@@ -2006,9 +2006,10 @@ export interface get_user_connections_user_connections_GenericSettings_label_tem
 export interface get_user_connections_user_connections_GenericSettings {
   __typename: "GenericSettings";
   id: string;
-  name: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  verbose_name: string;
+  custom_carrier_name: string;
   test: boolean;
   active: boolean;
   account_country_code: string;
@@ -3936,7 +3937,8 @@ export interface CreateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  name: string;
+  verbose_name: string;
+  custom_carrier_name: string;
 }
 
 // null
@@ -4225,7 +4227,8 @@ export interface UpdateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  name?: string | null;
+  verbose_name?: string | null;
+  custom_carrier_name?: string | null;
 }
 
 // null
@@ -4439,6 +4442,7 @@ export interface PartialDuty {
 
 // null
 export interface PartialParcel {
+  id?: string | null;
   weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
   weight?: number | null;
@@ -4623,6 +4627,7 @@ export interface UpdateParcelTemplateInput {
 
 // null
 export interface UpdateParcelTemplate {
+  id?: string | null;
   weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
   weight?: number | null;
