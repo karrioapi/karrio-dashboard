@@ -19,7 +19,10 @@ type LabelDataContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
 export const LabelData = React.createContext<LabelDataContext>({} as LabelDataContext);
 
 const ShipmentProvider: React.FC = ({ children }) => {
-  const [load, result] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT);
+  const [load, { fetchMore, ...result }] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [shipment, setShipment] = useState<ShipmentType>(DEFAULT_SHIPMENT_DATA);
   const [state, setState] = useState<any>({});
 
@@ -28,11 +31,7 @@ const ShipmentProvider: React.FC = ({ children }) => {
       setShipment(DEFAULT_SHIPMENT_DATA);
       setState({ ...result, loading: false, called: true });
     } else {
-      if (!result.called) {
-        load({ variables: { id } });
-      } else {
-        result.fetchMore({ variables: { id } });
-      }
+      (fetchMore || load)({ variables: { id } });
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {

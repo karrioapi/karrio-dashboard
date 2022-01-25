@@ -13,7 +13,10 @@ export type OrderResultType = LazyQueryResult<get_order, get_orderVariables> & {
 export const Order = React.createContext<OrderResultType>({} as OrderResultType);
 
 const OrderProvider: React.FC = ({ children }) => {
-  const [load, result] = useLazyQuery<get_order, get_orderVariables>(GET_ORDER);
+  const [load, result] = useLazyQuery<get_order, get_orderVariables>(GET_ORDER, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [order, setOrder] = useState<Order>();
 
   const loadOrder = (id: string) => load({ variables: { id } });

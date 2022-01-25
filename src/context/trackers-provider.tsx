@@ -23,7 +23,10 @@ export const TrackersContext = React.createContext<TrackersType>({} as TrackersT
 
 const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
-  const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<TrackersFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as TrackerType);

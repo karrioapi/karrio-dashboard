@@ -21,7 +21,10 @@ type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
 export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
 const LogsProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<LogsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as LogType);

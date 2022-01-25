@@ -21,7 +21,10 @@ type EventsType = LazyQueryResult<get_events, any> & {
 export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
 const EventsProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<EventsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as EventType);

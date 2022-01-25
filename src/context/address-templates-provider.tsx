@@ -18,7 +18,10 @@ export type AddressTemplatesType = LazyQueryResult<get_address_templates, any> &
 export const AddressTemplates = React.createContext<AddressTemplatesType>({} as AddressTemplatesType);
 
 const AddressTemplatesProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_address_templates>(GET_ADDRESS_TEMPLATES, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_address_templates>(GET_ADDRESS_TEMPLATES, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as AddressTemplateType);

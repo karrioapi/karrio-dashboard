@@ -18,7 +18,10 @@ type CustomInfoTemplatesQueryResult = LazyQueryResult<get_customs_info_templates
 export const CustomInfoTemplates = React.createContext<CustomInfoTemplatesQueryResult>({} as CustomInfoTemplatesQueryResult);
 
 const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges): CustomsTemplateType[] => (edges || []).map(item => item?.node as CustomsTemplateType);

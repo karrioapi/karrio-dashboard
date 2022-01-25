@@ -23,7 +23,10 @@ export const ShipmentsContext = React.createContext<ShipmentsType>({} as Shipmen
 
 const ShipmentsProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
-  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true
+  });
   const [variables, setVariables] = useState<ShipmentsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as ShipmentType);

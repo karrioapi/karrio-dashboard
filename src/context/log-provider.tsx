@@ -13,7 +13,10 @@ export type LogResultType = LazyQueryResult<get_log, get_logVariables> & {
 export const Log = React.createContext<LogResultType>({} as LogResultType);
 
 const LogProvider: React.FC = ({ children }) => {
-  const [load, result] = useLazyQuery<get_log, get_logVariables>(GET_LOG);
+  const [load, result] = useLazyQuery<get_log, get_logVariables>(GET_LOG, {
+    fetchPolicy: "cache-and-network",
+    notifyOnNetworkStatusChange: true,
+  });
   const [log, setLog] = useState<Log>();
 
   const loadLog = (id: string) => load({ variables: { id: parseInt(id) } });
