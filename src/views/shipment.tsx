@@ -15,7 +15,7 @@ import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
 import { MetadataObjectType, ShipmentStatus } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
-import { CustomsType } from "@/lib/types";
+import { CustomsType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";
 
@@ -195,7 +195,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">PARCELS</p>
 
-              {shipment.parcels.map((parcel, index) => <React.Fragment key={index + "parcel-info"}>
+              {shipment.parcels.map((parcel: ParcelType, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                 <p className="is-size-7 my-1">{formatParcelLabel(parcel)}</p>
                 <p className="is-size-7 my-1 has-text-grey">{formatDimension(parcel)}</p>

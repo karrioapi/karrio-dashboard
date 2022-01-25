@@ -2638,12 +2638,13 @@ export interface get_order_order {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_order_order_shipping_address | null;
+  shipping_address: get_order_order_shipping_address;
   line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
   created_by: get_order_order_created_by;
   test_mode: boolean;
+  options: any | null;
   metadata: any | null;
   shipments: get_order_order_shipments[] | null;
 }
@@ -2902,12 +2903,13 @@ export interface get_orders_orders_edges_node {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_orders_orders_edges_node_shipping_address | null;
+  shipping_address: get_orders_orders_edges_node_shipping_address;
   line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;
   created_by: get_orders_orders_edges_node_created_by;
   test_mode: boolean;
+  options: any | null;
   metadata: any | null;
   shipments: get_orders_orders_edges_node_shipments[] | null;
 }

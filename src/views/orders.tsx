@@ -12,6 +12,7 @@ import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
 import { AddressType } from "@/lib/types";
+import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -20,6 +21,7 @@ export default function OrdersPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
+    const { previewOrder } = useContext(OrderPreviewContext);
     const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
 
@@ -37,6 +39,10 @@ export default function OrdersPage(pageProps: any) {
     useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchOrders(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => {
+      (called && !loading && !isNoneOrEmpty(router.query.modal))
+        && previewOrder(router.query.modal as string);
+    }, [router.query.modal, loading]);
 
     return (
       <>
@@ -84,7 +90,7 @@ export default function OrdersPage(pageProps: any) {
               </tr>
 
               {orders?.map(order => (
-                <tr key={order.id} className="items" onClick={() => { }}>
+                <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
                   <td className="carrier is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
                       {order.order_id}
@@ -142,9 +148,11 @@ export default function OrdersPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Orders - {(pageProps as any).references?.app_name}</title></Head>
       <OrdersProvider>
+        <OrderPreview>
 
-        <Component />
+          <Component />
 
+        </OrderPreview>
       </OrdersProvider>
     </DashboardLayout>
   ), pageProps)

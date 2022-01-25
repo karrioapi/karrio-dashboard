@@ -1619,6 +1619,7 @@ query get_order($id: String!) {
       full_name
     }
     test_mode
+    options
     metadata
     shipments {
       id
@@ -1836,6 +1837,7 @@ query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, 
           full_name
         }
         test_mode
+        options
         metadata
         shipments {
           id

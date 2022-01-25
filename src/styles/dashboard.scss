@@ -204,6 +204,14 @@ Purplship custom styling
   .date {
     width: 17%;
   }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #eeeeee;
+  }
 }
 
 hr {
