@@ -1,4 +1,4 @@
-import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, PaidByEnum, ServiceLevelModelSerializerInput, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
+import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, ServiceLevelModelSerializerInput, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
 import { CarrierSettingsCarrierNameEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
 
 
@@ -109,6 +109,11 @@ export const EVENT_TYPES: string[] = Array.from(new Set(
 export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
   Object
     .values(ShipmentStatus)
+));
+
+export const ORDER_STATUSES: string[] = Array.from(new Set(
+  Object
+    .values(OrderStatus)
 ));
 
 export const TRACKER_STATUSES: string[] = Array.from(new Set(

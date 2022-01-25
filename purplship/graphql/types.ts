@@ -2928,6 +2928,8 @@ export interface get_orders {
 export interface get_ordersVariables {
   offset?: number | null;
   first?: number | null;
+  order_id?: string | null;
+  source?: string | null;
   status?: (string | null)[] | null;
   address?: string | null;
   created_after?: any | null;
@@ -3404,6 +3406,12 @@ export enum WeightUnitEnum {
 }
 
 // An enumeration.
+export enum LabelTypeEnum {
+  PDF = "PDF",
+  ZPL = "ZPL",
+}
+
+// An enumeration.
 export enum ShipmentStatus {
   cancelled = "cancelled",
   created = "created",
@@ -3411,12 +3419,6 @@ export enum ShipmentStatus {
   purchased = "purchased",
   shipped = "shipped",
   transit = "transit",
-}
-
-// An enumeration.
-export enum LabelTypeEnum {
-  PDF = "PDF",
-  ZPL = "ZPL",
 }
 
 // An enumeration.
@@ -3745,7 +3747,7 @@ export enum OrderStatus {
   created = "created",
   delivered = "delivered",
   fulfilled = "fulfilled",
-  partially_fulfilled = "partially_fulfilled",
+  partial = "partial",
 }
 
 // An enumeration.
@@ -3845,7 +3847,7 @@ export interface CreateDHLExpressSettings {
 
 // null
 export interface CreateDHLPolandSettings {
-  services?: (ServiceLevelModelSerializerInput | null)[] | null;
+  services?: (ServiceLevel | null)[] | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3856,9 +3858,9 @@ export interface CreateDHLPolandSettings {
 }
 
 // null
-export interface ServiceLevelModelSerializerInput {
-  dimension_unit?: string | null;
-  weight_unit?: string | null;
+export interface ServiceLevel {
+  dimension_unit?: DimensionUnitEnum | null;
+  weight_unit?: WeightUnitEnum | null;
   currency?: string | null;
   service_name: string;
   service_code: string;
@@ -3931,8 +3933,8 @@ export interface CreateFreightcomSettings {
 // null
 export interface CreateGenericSettings {
   account_country_code?: string | null;
-  services?: (ServiceLevelModelSerializerInput | null)[] | null;
-  label_template?: LabelTemplateModelSerializerInput | null;
+  services?: (ServiceLevel | null)[] | null;
+  label_template?: LabelTemplate | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3942,9 +3944,8 @@ export interface CreateGenericSettings {
 }
 
 // null
-export interface LabelTemplateModelSerializerInput {
-  id?: string | null;
-  template_type?: string | null;
+export interface LabelTemplate {
+  template_type?: LabelTypeEnum | null;
   alias: string;
   template: string;
   description?: string | null;
@@ -4154,7 +4155,7 @@ export interface UpdateDHLExpressSettings {
 
 // null
 export interface UpdateDHLPolandSettings {
-  services?: (ServiceLevelModelSerializerInput | null)[] | null;
+  services?: (PartialServiceLevel | null)[] | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4162,6 +4163,26 @@ export interface UpdateDHLPolandSettings {
   username?: string | null;
   password?: string | null;
   account_number?: string | null;
+}
+
+// null
+export interface PartialServiceLevel {
+  id?: string | null;
+  dimension_unit?: DimensionUnitEnum | null;
+  weight_unit?: WeightUnitEnum | null;
+  currency?: string | null;
+  service_name?: string | null;
+  service_code?: string | null;
+  description?: string | null;
+  active?: boolean | null;
+  cost?: number | null;
+  estimated_transit_days?: number | null;
+  max_weight?: number | null;
+  max_width?: number | null;
+  max_height?: number | null;
+  max_length?: number | null;
+  domicile?: boolean | null;
+  international?: boolean | null;
 }
 
 // null
@@ -4221,14 +4242,25 @@ export interface UpdateFreightcomSettings {
 // null
 export interface UpdateGenericSettings {
   account_country_code?: string | null;
-  services?: (ServiceLevelModelSerializerInput | null)[] | null;
-  label_template?: LabelTemplateModelSerializerInput | null;
+  services?: (PartialServiceLevel | null)[] | null;
+  label_template?: PartialLabelTemplate | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
   verbose_name?: string | null;
   custom_carrier_name?: string | null;
+}
+
+// null
+export interface PartialLabelTemplate {
+  id?: string | null;
+  template_type?: LabelTypeEnum | null;
+  alias?: string | null;
+  template?: string | null;
+  description?: string | null;
+  width?: number | null;
+  height?: number | null;
 }
 
 // null

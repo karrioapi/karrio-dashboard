@@ -188,6 +188,24 @@ Purplship custom styling
   }
 }
 
+.orders-table {
+  .order {
+    width: 15%;
+  }
+  .source {
+    width: 8%;
+  }
+  .status {
+    width: 10%;
+  }
+  .customer {
+    min-width: 40%;
+  }
+  .date {
+    width: 17%;
+  }
+}
+
 hr {
   background-color: #dddddd;
 }

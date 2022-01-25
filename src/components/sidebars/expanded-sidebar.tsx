@@ -12,7 +12,7 @@ interface ExpandedSidebarComponent { }
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
   const sidebar = useRef<HTMLDivElement>(null);
-  const { multi_organizations } = useContext(APIReference);
+  const { multi_organizations, orders_management } = useContext(APIReference);
   const { testMode, basePath, switchMode } = useContext(AppMode);
   const [showTemplateMenus, setShowTemplateMenus] = React.useState(false);
 
@@ -35,7 +35,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span></span>
         </button>
       </div>
-      <div className="sidebar-menu has-slimscroll py-6" style={{ height: "calc(100% - 60px)" }}>
+      <div className="sidebar-menu has-slimscroll py-4" style={{ height: "calc(100% - 60px)" }}>
         <AppLink href="/" className={"menu-item " + isActive(basePath)} shallow={false} prefetch={false}>
           <span className="has-text-weight-semibold">Shipments</span>
         </AppLink>
@@ -43,6 +43,11 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         <AppLink href="/trackers" className={"menu-item " + isActive("/trackers")} shallow={false} prefetch={false}>
           <span className="has-text-weight-semibold">Trackers</span>
         </AppLink>
+
+        {orders_management &&
+          <AppLink href="/orders" className={"menu-item " + isActive("/orders")} shallow={false} prefetch={false}>
+            <span className="has-text-weight-semibold">Orders</span>
+          </AppLink>}
 
         <AppLink href="/connections" className={"menu-item " + isActive("/connections")} shallow={false} prefetch={false}>
           <span className="has-text-weight-semibold">Carriers</span>
@@ -92,18 +97,18 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
 
         {testMode ?
           <a className="menu-item mode-menu-item" onClick={switchMode}>
-            <i className="fas fa-toggle-on"></i>
+            <i className="fas fa-toggle-on pr-2"></i>
             <span className="mode-menu-item has-text-weight-semibold">Viewing test data</span>
           </a>
           :
           <a className="menu-item has-text-grey" onClick={switchMode}>
-            <i className="fas fa-toggle-off"></i>
+            <i className="fas fa-toggle-off pr-2"></i>
             <span className="has-text-weight-semibold">View test data</span>
           </a>
         }
 
         <AppLink href="/settings/account" className={"menu-item " + isActive("/settings/account")}>
-          <i className="fas fa-cog"></i>
+          <i className="fas fa-cog pr-2"></i>
           <span className="has-text-weight-semibold">Account Settings</span>
         </AppLink>
       </div>

@@ -34,7 +34,7 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
       return isNoneOrEmpty(options[key as keyof OrdersFilterType]) ? acc : {
         ...acc,
         [key]: (
-          ["order_id", "status", "source"].includes(key)
+          ["status", "option_key"].includes(key)
             ? [].concat(options[key as keyof OrdersFilterType]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )

@@ -101,8 +101,9 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
   });
 
   const GRAPHQL_QUERIES = [
-    'logs', 'events', 'shipments', 'trackers', 'shipment',
-    'customs_templates', 'address_templates', 'parcel_templates'
+    'logs', 'events', 'trackers', 'shipments', 'shipment',
+    'customs_templates', 'address_templates', 'parcel_templates',
+    'orders', 'order',
   ];
 
   return new ApolloClient({

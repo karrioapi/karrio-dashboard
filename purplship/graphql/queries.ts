@@ -1786,8 +1786,8 @@ query get_order($id: String!) {
 `;
 
 export const GET_ORDERS = gql`
-query get_orders($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
-  orders(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
+query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
+  orders(offset: $offset, first: $first, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
     pageInfo {
       hasNextPage
       hasPreviousPage
