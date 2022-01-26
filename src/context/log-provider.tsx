@@ -14,7 +14,7 @@ export const Log = React.createContext<LogResultType>({} as LogResultType);
 
 const LogProvider: React.FC = ({ children }) => {
   const [load, result] = useLazyQuery<get_log, get_logVariables>(GET_LOG, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [log, setLog] = useState<Log>();

@@ -22,7 +22,7 @@ export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
 const LogsProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<LogsFilterType & { offset: number }>(PAGINATION);

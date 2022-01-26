@@ -26,7 +26,6 @@ export interface get_address_templates_address_templates_edges_node_address {
   country_code: CountryCodeEnum;
   email: string | null;
   phone_number: string | null;
-  validation: any | null;
   validate_location: boolean | null;
 }
 
@@ -35,8 +34,6 @@ export interface get_address_templates_address_templates_edges_node {
   is_default: boolean;
   label: string;
   address: get_address_templates_address_templates_edges_node_address;
-  created_at: any;
-  updated_at: any;
 }
 
 export interface get_address_templates_address_templates_edges {
@@ -72,29 +69,11 @@ export interface get_customs_info_templates_customs_templates_pageInfo {
   endCursor: string | null;    // When paginating forwards, the cursor to continue.
 }
 
-export interface get_customs_info_templates_customs_templates_edges_node_customs_duty_bill_to {
-  company_name: string | null;
-  person_name: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
-  postal_code: string | null;
-  residential: boolean | null;
-  city: string | null;
-  state_code: string | null;
-  country_code: CountryCodeEnum;
-  email: string | null;
-  phone_number: string | null;
-  validation: any | null;
-  validate_location: boolean | null;
-}
-
 export interface get_customs_info_templates_customs_templates_edges_node_customs_duty {
   paid_by: PaidByEnum | null;
   currency: CurrencyCodeEnum | null;
   account_number: string | null;
   declared_value: number | null;
-  bill_to: get_customs_info_templates_customs_templates_edges_node_customs_duty_bill_to | null;
-  id: string | null;
 }
 
 export interface get_customs_info_templates_customs_templates_edges_node_customs {
@@ -163,24 +142,6 @@ export interface get_default_templates_default_templates_default_address {
   is_default: boolean;
   label: string;
   address: get_default_templates_default_templates_default_address_address;
-  created_at: any;
-  updated_at: any;
-}
-
-export interface get_default_templates_default_templates_default_customs_customs_duty_bill_to {
-  company_name: string | null;
-  person_name: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
-  postal_code: string | null;
-  residential: boolean | null;
-  city: string | null;
-  state_code: string | null;
-  country_code: CountryCodeEnum;
-  email: string | null;
-  phone_number: string | null;
-  validation: any | null;
-  validate_location: boolean | null;
 }
 
 export interface get_default_templates_default_templates_default_customs_customs_duty {
@@ -188,8 +149,6 @@ export interface get_default_templates_default_templates_default_customs_customs
   currency: CurrencyCodeEnum | null;
   account_number: string | null;
   declared_value: number | null;
-  bill_to: get_default_templates_default_templates_default_customs_customs_duty_bill_to | null;
-  id: string | null;
 }
 
 export interface get_default_templates_default_templates_default_customs_customs {
@@ -229,8 +188,6 @@ export interface get_default_templates_default_templates_default_parcel {
   is_default: boolean;
   label: string;
   parcel: get_default_templates_default_templates_default_parcel_parcel;
-  created_at: any;
-  updated_at: any;
 }
 
 export interface get_default_templates_default_templates {
@@ -1138,8 +1095,6 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   id: string;  // The ID of the object.
   carrier_id: string | null;
   carrier_name: string | null;
-  created_at: any;
-  updated_at: any;
   created_by: partial_shipment_update_partial_shipment_update_shipment_created_by;
   status: ShipmentStatus;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
@@ -1325,8 +1280,6 @@ export interface get_webhook_webhook_created_by {
 
 export interface get_webhook_webhook {
   id: string;  // The ID of the object.
-  created_at: any;
-  updated_at: any;
   created_by: get_webhook_webhook_created_by;
   enabled_events: string[];
   url: string;
@@ -1433,8 +1386,6 @@ export interface get_parcel_templates_parcel_templates_edges_node {
   is_default: boolean;
   label: string;
   parcel: get_parcel_templates_parcel_templates_edges_node_parcel;
-  created_at: any;
-  updated_at: any;
 }
 
 export interface get_parcel_templates_parcel_templates_edges {

@@ -14,6 +14,7 @@ import Head from "next/head";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import { isNoneOrEmpty } from "@/lib/helper";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -26,6 +27,7 @@ export default function WebhooksPage(pageProps: any) {
     const { loading, results, called, load, refetch } = useContext(Webhooks);
     const { editWebhook } = useContext(WebhookEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -49,11 +51,12 @@ export default function WebhooksPage(pageProps: any) {
     useEffect(() => { !loading && load(); }, []);
     useEffect(() => { setLoading(loading); });
     useEffect(() => {
-      if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
         const webhook = results.find(c => c.id === router.query.modal);
         webhook && editWebhook({ webhook, onConfirm: update });
+        setInitialized(true);
       }
-    }, [router.query.modal, loading]);
+    }, [router.query.modal, called]);
 
     return (
       <>

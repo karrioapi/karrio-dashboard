@@ -43,7 +43,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
   useEffect(() => {
     (!loading && load) && (called ? loadMore : load)({
       first: 100,
-      status: ['created', 'partially_fulfilled']
+      status: ['created', 'partial']
     });
   }, []);
   useEffect(() => {

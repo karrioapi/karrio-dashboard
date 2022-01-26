@@ -11,6 +11,7 @@ import { CustomsType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -23,6 +24,7 @@ export default function CustomsInfoPage(pageProps: any) {
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
     const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(CustomInfoTemplates);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -33,12 +35,14 @@ export default function CustomsInfoPage(pageProps: any) {
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
     useEffect(() => {
-      if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
         const customsTemplate = templates.find(c => c.id === router.query.modal);
-        (customsTemplate || router.query.modal === 'new')
-          && editCustomsInfo({ customsTemplate, onConfirm: update });
+        if (customsTemplate || router.query.modal === 'new') {
+          editCustomsInfo({ customsTemplate, onConfirm: update });
+        }
+        setInitialized(true);
       }
-    }, [router.query.modal, loading]);
+    }, [router.query.modal, called]);
 
     return (
       <>

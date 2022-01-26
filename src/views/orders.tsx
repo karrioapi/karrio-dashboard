@@ -24,6 +24,7 @@ export default function OrdersPage(pageProps: any) {
     const { previewOrder } = useContext(OrderPreviewContext);
     const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const fetchOrders = (extra: Partial<typeof variables> = {}) => {
       const query = {
@@ -40,9 +41,11 @@ export default function OrdersPage(pageProps: any) {
     useEffect(() => { fetchOrders(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
-      (called && !loading && !isNoneOrEmpty(router.query.modal))
-        && previewOrder(router.query.modal as string);
-    }, [router.query.modal, loading]);
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        previewOrder(router.query.modal as string);
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>

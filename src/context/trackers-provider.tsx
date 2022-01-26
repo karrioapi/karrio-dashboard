@@ -24,7 +24,7 @@ export const TrackersContext = React.createContext<TrackersType>({} as TrackersT
 const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
   const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<TrackersFilterType & { offset: number }>(PAGINATION);

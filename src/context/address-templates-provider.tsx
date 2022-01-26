@@ -19,7 +19,7 @@ export const AddressTemplates = React.createContext<AddressTemplatesType>({} as 
 
 const AddressTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_address_templates>(GET_ADDRESS_TEMPLATES, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<any>(PAGINATION);

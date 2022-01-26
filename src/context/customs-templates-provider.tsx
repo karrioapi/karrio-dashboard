@@ -19,7 +19,7 @@ export const CustomInfoTemplates = React.createContext<CustomInfoTemplatesQueryR
 
 const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<any>(PAGINATION);

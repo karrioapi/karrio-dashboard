@@ -30,6 +30,7 @@ export default function ShipmentsPage(pageProps: any) {
     const { previewShipment } = useContext(ShipmentPreviewContext);
     const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const fetchShipments = (extra: Partial<typeof variables> = {}) => {
       const query = {
@@ -48,9 +49,11 @@ export default function ShipmentsPage(pageProps: any) {
     useEffect(() => { fetchShipments(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
-      (called && !loading && !isNoneOrEmpty(router.query.modal))
-        && previewShipment(router.query.modal as string);
-    }, [router.query.modal, loading]);
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        previewShipment(router.query.modal as string);
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>

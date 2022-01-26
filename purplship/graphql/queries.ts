@@ -27,11 +27,8 @@ query get_address_templates($offset: Int, $first: Int) {
           country_code
           email
           phone_number
-          validation
           validate_location
         }
-        created_at
-        updated_at
       }
     }
   }
@@ -62,22 +59,6 @@ query get_customs_info_templates($offset: Int, $first: Int) {
             currency
             account_number
             declared_value
-            bill_to {
-              company_name
-              person_name
-              address_line1
-              address_line2
-              postal_code
-              residential
-              city
-              state_code
-              country_code
-              email
-              phone_number
-              validation
-              validate_location
-            }
-            id
           }
           invoice
           invoice_date
@@ -112,8 +93,6 @@ query get_default_templates {
         phone_number
         validate_location
       }
-      created_at
-      updated_at
     }
     default_customs {
       id
@@ -129,22 +108,6 @@ query get_default_templates {
           currency
           account_number
           declared_value
-          bill_to {
-            company_name
-            person_name
-            address_line1
-            address_line2
-            postal_code
-            residential
-            city
-            state_code
-            country_code
-            email
-            phone_number
-            validation
-            validate_location
-          }
-          id
         }
         invoice
         invoice_date
@@ -168,8 +131,6 @@ query get_default_templates {
         package_preset
         is_document
       }
-      created_at
-      updated_at
     }
   }
 }
@@ -673,8 +634,6 @@ mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
       id
       carrier_id
       carrier_name
-      created_at
-      updated_at
       created_by {
         email
         full_name
@@ -936,8 +895,6 @@ export const GET_WEBHOOK = gql`
 query get_webhook($id: String!) {
   webhook(id: $id) {
     id
-    created_at
-    updated_at
     created_by {
       email
       full_name
@@ -1007,8 +964,6 @@ query get_parcel_templates($offset: Int, $first: Int) {
           package_preset
           is_document
         }
-        created_at
-        updated_at
       }
     }
   }

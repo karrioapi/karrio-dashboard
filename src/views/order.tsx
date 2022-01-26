@@ -100,7 +100,6 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
               {order.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                 <p className="is-size-7 my-1">{formatCommodity(item as any, index)}</p>
-                <p className="is-size-7 my-1 has-text-grey">{formatWeight(item)}</p>
               </React.Fragment>)}
             </div>
           </div>

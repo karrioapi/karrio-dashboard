@@ -19,7 +19,7 @@ export const ParcelTemplates = React.createContext<ParcelTemplatesType>({} as Pa
 
 const ParcelTemplatesProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_parcel_templates>(GET_PARCEL_TEMPLATES, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<any>(PAGINATION);

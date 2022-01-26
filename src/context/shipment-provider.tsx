@@ -20,7 +20,7 @@ export const LabelData = React.createContext<LabelDataContext>({} as LabelDataCo
 
 const ShipmentProvider: React.FC = ({ children }) => {
   const [load, { fetchMore, ...result }] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [shipment, setShipment] = useState<ShipmentType>(DEFAULT_SHIPMENT_DATA);

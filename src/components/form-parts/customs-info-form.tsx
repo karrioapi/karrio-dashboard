@@ -35,9 +35,10 @@ interface CustomsInfoFormComponent {
   isTemplate?: boolean;
   onChange?: (customs: CustomsType | null) => void;
   onSubmit: (customs: CustomsType | null) => Promise<any>;
+  onTemplateChange?: (isUnchanged: boolean) => boolean;
 }
 
-const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, isTemplate, onSubmit, onChange }) => {
+const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, isTemplate, onSubmit, onChange, onTemplateChange }) => {
   const form = useRef<any>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
@@ -61,6 +62,16 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     }
   }, value, () => value);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
+
+  const computeDisableState = (state: CustomsType): boolean => {
+    const isUnchanged = (
+      deepEqual(value, state) &&
+      deepEqual(value?.duty, state?.duty) &&
+      deepEqual(value?.options, state?.options)
+    );
+
+    return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
+  }
 
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: keyof CustomsType, value: object }>) => {
     const target = event.target;
@@ -296,7 +307,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
-          disabled={deepEqual(value, customs) && deepEqual(value?.duty, customs?.duty) && deepEqual(value?.options, customs?.options)}>
+          disabled={computeDisableState(customs)}>
           <span>{isNone(shipment?.id) && !isTemplate ? 'Next' : 'Save'}</span>
         </ButtonField>
 

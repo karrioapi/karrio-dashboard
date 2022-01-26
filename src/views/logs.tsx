@@ -21,6 +21,7 @@ export default function LogsPage(pageProps: any) {
     const { previewLog } = useContext(LogPreviewContext);
     const { loading, called, logs, next, previous, variables, load, loadMore } = useContext(LogsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const fetchLogs = (extra: Partial<typeof variables> = {}) => {
       const query = {
@@ -37,9 +38,11 @@ export default function LogsPage(pageProps: any) {
     useEffect(() => { fetchLogs(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
-      (called && !loading && !isNoneOrEmpty(router.query.modal))
-        && previewLog(router.query.modal as string);
-    }, [router.query.modal, loading]);
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        previewLog(router.query.modal as string);
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>

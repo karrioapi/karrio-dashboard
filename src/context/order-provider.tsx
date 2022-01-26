@@ -14,7 +14,7 @@ export const Order = React.createContext<OrderResultType>({} as OrderResultType)
 
 const OrderProvider: React.FC = ({ children }) => {
   const [load, result] = useLazyQuery<get_order, get_orderVariables>(GET_ORDER, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [order, setOrder] = useState<Order>();

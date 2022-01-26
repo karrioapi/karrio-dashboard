@@ -33,7 +33,7 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
   useEffect(() => {
     (!loading && load) && (called ? loadMore : load)({
       first: 100,
-      status: ['created', 'partially_fulfilled']
+      status: ['created', 'partial']
     });
   }, []);
 

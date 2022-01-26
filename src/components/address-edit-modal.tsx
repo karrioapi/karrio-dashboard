@@ -9,6 +9,7 @@ import { AddressMutationContext } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from '@purplship/graphql';
+import { useRouter } from 'next/dist/client/router';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',
@@ -29,6 +30,7 @@ export const AddressEditContext = React.createContext<AddressEditContextType>({}
 interface AddressEditModalComponent { }
 
 const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => {
+  const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { createAddressTemplate, updateAddressTemplate } = useContext(AddressMutationContext);
@@ -67,7 +69,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
 
     setTemplate({ ...template, [name]: value } as AddressTemplateType);
   };
-  const handleSubmit = async (address: AddressType) => {
+  const handleSubmit = async ({ validation, ...address }: AddressType | any) => {
     const payload = { ...template, address };
 
     try {

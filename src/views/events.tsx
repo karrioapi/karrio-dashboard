@@ -19,6 +19,7 @@ export default function EventsPage(pageProps: any) {
     const { previewEvent } = useContext(EventPreviewContext);
     const { loading, called, events, next, previous, variables, load, loadMore } = useContext(EventsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const fetchEvents = (extra: Partial<typeof variables> = {}) => {
       const query = {
@@ -35,9 +36,11 @@ export default function EventsPage(pageProps: any) {
     useEffect(() => { fetchEvents(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
-      (called && !loading && !isNoneOrEmpty(router.query.modal))
-        && previewEvent(router.query.modal as string);
-    }, [router.query.modal, loading, events]);
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        previewEvent(router.query.modal as string);
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>

@@ -57,9 +57,6 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   };
 
   const handleChange = (event: React.ChangeEvent<any>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
     const target = event.target;
     const name = target.name;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -104,9 +101,14 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
 
             {template !== undefined &&
               <CustomsInfoForm
-                value={template.customs}
+                value={operation?.customsTemplate?.customs}
                 onSubmit={async customs => handleSubmit(customs as TemplateType['customs'])}
                 onChange={customs => setTemplate({ ...template, customs: customs as TemplateType['customs'] })}
+                onTemplateChange={(isUnchanged) => (
+                  isUnchanged &&
+                  template.label === operation?.customsTemplate?.label &&
+                  template.is_default === operation?.customsTemplate?.is_default
+                )}
                 isTemplate={true}>
 
                 <div className="columns mb-2">

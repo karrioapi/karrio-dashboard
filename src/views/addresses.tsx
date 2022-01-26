@@ -23,6 +23,7 @@ export default function AddressPage(pageProps: any) {
     const { editAddress } = useContext(AddressEditContext);
     const { deleteAddressTemplate } = useContext(AddressMutationContext);
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(AddressTemplates);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async (_?: React.MouseEvent) => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -33,12 +34,14 @@ export default function AddressPage(pageProps: any) {
     useEffect(() => { (!loading && load) && load() }, []);
     useEffect(() => { setLoading(loading); });
     useEffect(() => {
-      if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
         const addressTemplate = templates.find(c => c.id === router.query.modal);
-        (addressTemplate || router.query.modal === 'new')
-          && editAddress({ addressTemplate, onConfirm: update });
+        if (addressTemplate || router.query.modal === 'new') {
+          editAddress({ addressTemplate, onConfirm: update });
+        }
+        setInitialized(true);
       }
-    }, [router.query.modal, loading]);
+    }, [router.query.modal, called]);
 
     return (
       <>

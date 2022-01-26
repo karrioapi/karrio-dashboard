@@ -14,7 +14,7 @@ export const Event = React.createContext<EventResultType>({} as EventResultType)
 
 const EventProvider: React.FC = ({ children }) => {
   const [load, result] = useLazyQuery<get_event, get_eventVariables>(GET_EVENT, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [event, setEvent] = useState<Event>();

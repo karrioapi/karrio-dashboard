@@ -22,7 +22,7 @@ export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
 const EventsProvider: React.FC = ({ children }) => {
   const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<EventsFilterType & { offset: number }>(PAGINATION);

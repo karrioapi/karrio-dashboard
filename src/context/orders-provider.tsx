@@ -24,7 +24,7 @@ export const OrdersContext = React.createContext<OrdersType>({} as OrdersType);
 const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const { testMode } = useContext(AppMode);
   const [initialLoad, query] = useLazyQuery<get_orders, OrdersFilterType>(GET_ORDERS, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [variables, setVariables] = useState<OrdersFilterType & { offset: number }>(PAGINATION);
