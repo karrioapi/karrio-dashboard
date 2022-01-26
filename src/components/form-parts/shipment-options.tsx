@@ -163,7 +163,6 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onSubmi
       <hr className="column p-0 my-5" />
 
       <MetadataEditor
-        id={shipment.id}
         object_type={MetadataObjectType.shipment}
         metadata={metadata}
         onChange={setMetadata}

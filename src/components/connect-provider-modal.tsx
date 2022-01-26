@@ -153,6 +153,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                     onInvalid={validityCheck(validationMessage('Please enter a valid slug'))}
                     onChange={handleOnChange("custom_carrier_name")}
                     className="is-small"
+                    pattern="^[a-z0-9_]+$"
                     required
                   />}
 
@@ -234,7 +235,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   <hr className="mt-1 my-3" style={{ height: '1px' }} />
 
                   <MetadataEditor
-                    id={payload.id}
                     object_type={MetadataObjectType.carrier}
                     metadata={payload.metadata}
                     onChange={directChange("metadata")}

@@ -31,9 +31,10 @@ const THEME: Collection = {
 
 interface CarrierBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> {
   carrier?: CarrierSettingsCarrierNameEnum | string;
+  custom_name?: string;
 }
 
-const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, className, ...props }) => {
+const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, className, ...props }) => {
   const { carriers } = useContext(APIReference);
   const name = carrier || '';
 
@@ -41,7 +42,7 @@ const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, className, ...
     <>
       {carriers && (
         <strong className={`${className} ${THEME[name] || 'is-light'}`} {...props}>
-          {(carriers as Collection)[name] || "Not Selected"}
+          {custom_name || (carriers as Collection)[name] || "Not Selected"}
         </strong>
       )}
     </>

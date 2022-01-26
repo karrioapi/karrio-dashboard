@@ -82,7 +82,11 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
             <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || (testMode !== connection.test && viewOtherMode)) ? 'table-row' : 'none' }}>
               <td className="carrier">
-                <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" />
+                <CarrierBadge
+                  carrier={connection.carrier_name}
+                  custom_name={(connection as any).verbose_name}
+                  className="box has-text-weight-bold"
+                />
               </td>
               <td className="mode is-vcentered">
                 {connection.test && <span className="tag is-warning is-centered">Test</span>}
