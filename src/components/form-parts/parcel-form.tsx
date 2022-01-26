@@ -90,7 +90,12 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
   };
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
-  useEffect(() => { if (onChange && !deepEqual(value, parcel)) onChange(parcel) }, [parcel]);
+  useEffect(() => {
+    if (onChange && !deepEqual(value, parcel)) {
+      const { validation, ...changes } = parcel;
+      onChange(changes);
+    }
+  }, [parcel]);
 
   return (
     <div key={key}>

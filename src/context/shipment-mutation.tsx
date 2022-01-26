@@ -5,15 +5,15 @@ import { LabelData } from '@/context/shipment-provider';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
-import { DISCARD_COMMODITY, discard_commodityVariables, DISCARD_CUSTOMS, DISCARD_PARCEL, discard_parcelVariables, PartialShipmentUpdateInput, partial_shipment_updateVariables, partial_shipment_update_partial_shipment_update, PARTIAL_UPDATE_SHIPMENT } from '@purplship/graphql';
-import { RequestError, ShipmentType } from '@/lib/types';
+import { DISCARD_COMMODITY, discard_commodityVariables, DISCARD_CUSTOMS, DISCARD_PARCEL, discard_parcelVariables, PartialShipmentUpdateInput, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from '@purplship/graphql';
+import { ShipmentType } from '@/lib/types';
 
 
 export type ShipmentMutator = {
   fetchRates: (shipment: ShipmentType) => Promise<Shipment>;
   buyLabel: (shipment: ShipmentType) => Promise<Shipment>;
   voidLabel: (shipment: ShipmentType) => Promise<OperationResponse>;
-  updateShipment: (data: PartialShipmentUpdateInput) => Promise<ShipmentType>;
+  updateShipment: (data: PartialShipmentUpdateInput) => Promise<void>;
   discardCommodity: (id: string) => Promise<void>;
   discardCustoms: (id: string) => Promise<void>;
   discardParcel: (id: string) => Promise<void>;
@@ -56,14 +56,7 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
 
   const updateShipment = async (data: PartialShipmentUpdateInput) => (
     updateShipmentMutation({ variables: { data } })
-      .then(({ data }: any) => {
-        if (data.partial_shipment_update.errors) {
-          throw new RequestError(data.partial_shipment_update.errors);
-        }
-        const shipment = data.partial_shipment_update.shipment as ShipmentType;
-        state.updateShipment(shipment);
-        return shipment;
-      })
+      .then(() => state.loadShipment(state.shipment.id))
   );
   const discardCommodity = async (id: string) => (
     discardCommodityMutation({ variables: { data: { id } } })
