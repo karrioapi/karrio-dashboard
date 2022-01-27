@@ -9,17 +9,17 @@ interface LineItemInputComponent extends Omit<DropdownInputComponent, 'items' | 
 }
 
 const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props }) => {
-  const { orders, loading, called, loadMore, load } = useContext(OrdersContext);
-  const [lineItems, setLineItems] = useState<CommodityType[]>([]);
+  const { orders, called } = useContext(OrdersContext);
+  const [lineItems, setLineItems] = useState<CommodityType[]>();
   const [items, setItems] = useState<[string, string][]>([]);
 
   const handleChange = (key?: string | null) => {
-    const item = lineItems.find(item => item.id === key);
+    const item = (lineItems || []).find(item => item.id === key);
     onChange && onChange(item);
   };
 
   useEffect(() => {
-    if (!isNone(orders)) {
+    if (called && !isNone(orders)) {
       const allItems = orders.map(order => order.line_items).flat();
       const dropdownItems = orders
         .map((order) => order.line_items.map(
@@ -29,13 +29,7 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
       setLineItems(allItems);
       setItems(dropdownItems);
     }
-  }, [orders]);
-  useEffect(() => {
-    (!loading && load) && (called ? loadMore : load)({
-      first: 100,
-      status: ['created', 'partial']
-    });
-  }, []);
+  }, [called, orders]);
 
   return (
     <DropdownInput

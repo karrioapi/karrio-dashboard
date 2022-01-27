@@ -116,6 +116,12 @@ export interface Parcel {
      */
     items?: Array<Commodity>;
     /**
+     * The parcel reference number. (can be used as tracking number for custom carriers)
+     * @type {string}
+     * @memberof Parcel
+     */
+    reference_number?: string | null;
+    /**
      * Specifies the object type
      * @type {string}
      * @memberof Parcel
@@ -162,6 +168,7 @@ export function ParcelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Pa
         'weight_unit': json['weight_unit'],
         'dimension_unit': !exists(json, 'dimension_unit') ? undefined : json['dimension_unit'],
         'items': !exists(json, 'items') ? undefined : ((json['items'] as Array<any>).map(CommodityFromJSON)),
+        'reference_number': !exists(json, 'reference_number') ? undefined : json['reference_number'],
         'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
     };
 }
@@ -188,6 +195,7 @@ export function ParcelToJSON(value?: Parcel | null): any {
         'weight_unit': value.weight_unit,
         'dimension_unit': value.dimension_unit,
         'items': value.items === undefined ? undefined : ((value.items as Array<any>).map(CommodityToJSON)),
+        'reference_number': value.reference_number,
         'object_type': value.object_type,
     };
 }

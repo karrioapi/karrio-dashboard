@@ -38,7 +38,7 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
       return purplship!.shipments.create({ data: shipment as any, test: testMode });
     }
   })()).then(
-    (response) => { state.loadShipment(state.shipment.id); return response; }
+    (response) => { state.loadShipment(response.id as string); return response; }
   );
   const buyLabel = async (shipment: ShipmentType) => handleFailure(
     purplship!.shipments.purchase({

@@ -1,5 +1,4 @@
-import React, { EventHandler, useContext, useState } from 'react';
-import { Shipment } from '@purplship/rest/index';
+import React, { useContext, useState } from 'react';
 import AddressForm, { DEFAULT_ADDRESS_CONTENT } from '@/components/form-parts/address-form';
 import { addUrlParam, isNone, removeUrlParam } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';

@@ -9,7 +9,7 @@ interface LineItemSelectorComponent {
 }
 
 const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...props }) => {
-  const { orders, loading, called, loadMore, load } = useContext(OrdersContext);
+  const { orders, loading, called } = useContext(OrdersContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [selection, setSelection] = useState<string[]>([]);
   const [lineItems, setLineItems] = useState<CommodityType[]>([]);
@@ -41,17 +41,11 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
   };
 
   useEffect(() => {
-    (!loading && load) && (called ? loadMore : load)({
-      first: 100,
-      status: ['created', 'partial']
-    });
-  }, []);
-  useEffect(() => {
-    if (!isNone(orders)) {
+    if (called && !isNone(orders)) {
       const allItems = orders.map(order => order.line_items).flat();
       setLineItems(allItems);
     }
-  }, [orders]);
+  }, [called, orders]);
 
   return (
     <>

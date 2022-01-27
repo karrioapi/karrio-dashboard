@@ -37,8 +37,8 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
       router.push(`${(new URLSearchParams(location.search)).get('next')?.replace(BASE_PATH, "") || '/'}`);
     } else {
       setShowError(true);
+      setTimeout(() => setIsLoading(false), 1000);
     }
-    setTimeout(() => setIsLoading(false), 1000);
   };
 
   return (

@@ -134,15 +134,33 @@ export function isNoneOrEmpty(value: any): boolean {
 }
 
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {
-  const clean_value1 = Object.entries(value1 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
-  const clean_value2 = Object.entries(value2 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
-
+  const clean_value1 = Object.entries(value1 || {})
+    .reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
+  const clean_value2 = Object.entries(value2 || {})
+    .reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
 
   return (
     JSON.stringify(clean_value1, Object.keys(clean_value1 || {}).sort()) ===
     JSON.stringify(clean_value2, Object.keys(clean_value2 || {}).sort())
   );
 }
+
+function deepEqual2(k: string, v: any) {
+  if (k === null) { return undefined; }
+  if (v instanceof Array) {
+    console.log(k);
+    return v.map(d => JSON.parse(JSON.stringify(d, (window as any).deepEqual2)));
+  }
+  // if (v instanceof Object) {
+  //   return JSON.parse(JSON.stringify(
+  //     Object.keys(v)
+  //       .sort()
+  //       .reduce((acc, key) => ({ [key]: v[key] }), {}), replacer));
+  // }
+  return v;
+}
+
+if (typeof window !== 'undefined') (window as any).deepEqual2 = deepEqual2;
 
 // Remove undefined values from objects
 export function cleanDict<T = object>(value: object): T {

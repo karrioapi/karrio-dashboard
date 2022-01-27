@@ -72,7 +72,7 @@ export interface CommodityData {
      * @type {string}
      * @memberof CommodityData
      */
-    parent_id?: string;
+    parent_id?: string | null;
     /**
      * 
      * <details>

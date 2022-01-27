@@ -1,4 +1,4 @@
-import { isNone } from '@/lib/helper';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from 'react';
 
 
@@ -20,8 +20,12 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
   const [search, setSearch] = useState<string>("");
   const [selected, setSelected] = useState<string>();
 
-  const find = useCallback((selected?: string) => {
-    return items?.find(([key, val]) => key.toLowerCase() == selected?.toLowerCase() || val.toLowerCase() == selected?.toLowerCase())
+  const find = useCallback((selection?: string) => {
+    if (isNoneOrEmpty(selection)) { return ["", ""]; }
+    return items?.find(([key, val]) => (
+      key.toLowerCase().trim() == selection?.toLowerCase().trim() ||
+      val.toLowerCase().trim() == selection?.toLowerCase().trim()
+    ))
   }, [items]);
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,11 +52,11 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
   };
   const onRefChange = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    const [key, selected] = find(e.target.value) || [];
-    setSelected(selected || "");
+    const [key, value] = find(e.target.value) || [];
+    setSelected(value);
     onValueChange(key as string);
   };
-  const onSelect = (key: string) => (_: React.MouseEvent) => {
+  const onSelect = (key: string) => (e: React.MouseEvent) => {
     setSelected(key);
     onValueChange(key);
   };
@@ -75,7 +79,6 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
       <div className={`control ${controlClass}`}>
         <div className={`dropdown select is-fullwidth ${isActive ? 'is-active' : ''} ${dropdownClass}`} key={`dropdown-input-${key}`}>
           <input
-            name={name}
             onClick={handleOnClick}
             onChange={onRefChange}
             value={selected || ''}
@@ -84,6 +87,11 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
             aria-haspopup="true"
             readOnly
             {...props}
+          />
+          <input
+            style={{ zIndex: -1, position: "absolute", right: 0 }}
+            name={name}
+            onChange={onRefChange}
           />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>

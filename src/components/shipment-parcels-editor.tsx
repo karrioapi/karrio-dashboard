@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { NotificationType, ParcelType, ShipmentType } from '@/lib/types';
+import { CommodityType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { deepEqual, formatDimension, isNone, isNoneOrEmpty } from '@/lib/helper';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -10,6 +10,7 @@ import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/c
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 
 type ParcelCollection = Record<string, ParcelType>;
+type ParcelItemCollection = Record<string, CommodityType[]>;
 interface ShipmentParcelsEditorProps {
   defaultValue: ParcelType[];
   shipment?: ShipmentType;
@@ -24,6 +25,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
   const { default_parcel, called } = useContext(DefaultTemplatesData);
   const { discardCommodity, discardParcel } = useContext(ShipmentMutationContext);
   const [parcels, setParcels] = React.useState<ParcelCollection>(toParcelCollection(defaultValue));
+  const [parcelItems, setParcelItems] = React.useState<ParcelItemCollection>({});
   const [isExpanded, setIsExpanded] = React.useState<{ [key: string]: boolean }>({});
   const [hasErrors, setHasErrors] = React.useState<{ [key: string]: boolean }>({});
   const [isValid, setIsValid] = React.useState<boolean>(true);
@@ -42,12 +44,29 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
 
       setParcels(newState);
     } else {
-      await discardParcel(id as string);
+      setLoading(true);
+      try {
+        await discardParcel(id as string);
+      } catch (message: any) {
+        notify({ type: NotificationType.error, message });
+      }
+      setLoading(false);
     }
   };
+  const updateParcelItem = (uid: string) => async (item: CommodityType) => {
+    const { id } = parcels[uid];
+    await onSubmit([{ id, items: [item] }] as any);
+  }
   const removeParcelItem = async (id: string) => {
-    await discardCommodity(id);
+    setLoading(true);
+    try {
+      await discardCommodity(id);
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
+    }
+    setLoading(false);
   };
+
   const parcelListAreEqual = (list1: ParcelType[], list2: ParcelType[]) => {
     if (list1.length !== list2.length) { return false; }
 
@@ -60,14 +79,24 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
     if (!isValid) { return true; }
     return parcelListAreEqual(parcels, defaultValue);
   }
+  const mergeParcelsData = (parcels: ParcelCollection, parcelItems: ParcelItemCollection): ParcelType[] => {
+    const newParcels = Object.entries(parcels).reduce((acc, [key, parcel]) => {
+      const items = parcelItems[key] || [];
+      return { ...acc, [key]: { ...parcel, items } };
+    }, {});
+
+    return Object.values(newParcels);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await onSubmit(Object.values(parcels));
+      const payload = mergeParcelsData(parcels, parcelItems);
+      await onSubmit(payload);
+
       if (shipment?.id) {
-        if (Object.values(parcels).some(({ id }) => id === undefined)) {
+        if (payload.some(({ id }) => id === undefined)) {
           notify({ type: NotificationType.success, message: 'Parcels added successfully' });
         } else {
           notify({ type: NotificationType.success, message: 'Parcels updated successfully' });
@@ -149,7 +178,9 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
               <CommodityCollectionEditor
                 defaultValue={parcel.items}
                 onRemove={removeParcelItem}
-                onChange={(items) => updateParcel(uid, { ...parcel, items })}
+                onUpdate={updateParcelItem(uid)}
+                onChange={(items) => setParcelItems({ ...parcelItems, [uid]: items })}
+                pickLineItems
               >
                 <CommodityCollectionEditorContext.Consumer>{({ commodities, isExpanded }) => (<>
                   <a className="is-size-7 has-text-info has-text-weight-semibold">
@@ -183,7 +214,7 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
         className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
-        disabled={computeDisableState(Object.values(parcels))}>
+        disabled={computeDisableState(mergeParcelsData(parcels, parcelItems))}>
         <span>{isNone(shipment?.id) ? 'Next' : 'Save'}</span>
       </ButtonField>
     </form>

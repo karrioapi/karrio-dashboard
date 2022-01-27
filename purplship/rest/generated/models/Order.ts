@@ -135,7 +135,7 @@ export enum OrderStatusEnum {
     Cancelled = 'cancelled',
     Fulfilled = 'fulfilled',
     Delivered = 'delivered',
-    PartiallyFulfilled = 'partially_fulfilled'
+    Partial = 'partial'
 }
 
 export function OrderFromJSON(json: any): Order {

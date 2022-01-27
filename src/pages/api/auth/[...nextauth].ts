@@ -64,6 +64,7 @@ const auth = NextAuth({
 
       // Access token has expired, try to update it OR orgId has changed
       try {
+        logger.info('Refreshing expired token...');
         const { access, refresh } = await refreshToken(token.refreshToken as string);
 
         return {

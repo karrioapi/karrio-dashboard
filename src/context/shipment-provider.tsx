@@ -45,7 +45,7 @@ const ShipmentProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     result.data?.shipment && setShipment(result.data?.shipment as ShipmentType);
-  }, [result]);
+  }, [result.data?.shipment]);
 
   return (
     <LabelData.Provider value={{

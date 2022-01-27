@@ -109,12 +109,6 @@ export interface Rate {
      */
     meta?: object | null;
     /**
-     * The system carrier configuration id
-     * @type {string}
-     * @memberof Rate
-     */
-    carrier_ref?: string | null;
-    /**
      * Specified whether it was created with a carrier in test mode
      * @type {boolean}
      * @memberof Rate
@@ -145,7 +139,6 @@ export function RateFromJSONTyped(json: any, ignoreDiscriminator: boolean): Rate
         'transit_days': !exists(json, 'transit_days') ? undefined : json['transit_days'],
         'extra_charges': !exists(json, 'extra_charges') ? undefined : ((json['extra_charges'] as Array<any>).map(ChargeFromJSON)),
         'meta': !exists(json, 'meta') ? undefined : json['meta'],
-        'carrier_ref': !exists(json, 'carrier_ref') ? undefined : json['carrier_ref'],
         'test_mode': json['test_mode'],
     };
 }
@@ -172,7 +165,6 @@ export function RateToJSON(value?: Rate | null): any {
         'transit_days': value.transit_days,
         'extra_charges': value.extra_charges === undefined ? undefined : ((value.extra_charges as Array<any>).map(ChargeToJSON)),
         'meta': value.meta,
-        'carrier_ref': value.carrier_ref,
         'test_mode': value.test_mode,
     };
 }

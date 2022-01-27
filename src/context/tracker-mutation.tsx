@@ -12,7 +12,7 @@ type TrackerMutator = {
 
 export const TrackerMutationContext = React.createContext<TrackerMutator>({} as TrackerMutator);
 
-const TrackerMutationProvider: React.FC<{}> = ({ children }) => {
+const TrackerMutationProvider: React.FC = ({ children }) => {
   const purplship = useContext(RestContext);
 
   const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(

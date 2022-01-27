@@ -1,6 +1,6 @@
-import { isNone } from '@/lib/helper';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import { Collection } from '@/lib/types';
-import React, { ChangeEvent, useContext, useEffect, useRef } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { APIReference } from '@/context/references-provider';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
 
@@ -10,25 +10,18 @@ interface StateInputComponent extends InputFieldComponent {
   country_code?: string;
 }
 
-const StateInput: React.FC<StateInputComponent> = ({ name, onValueChange, value, country_code, ...props }) => {
+const StateInput: React.FC<StateInputComponent> = ({ name, country_code, value, onValueChange, ...props }) => {
   const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
-  const { states } = useContext(APIReference);
-  const fname = (code_or_name?: string) => {
-    const [_, name] = find(states as Collection<Collection<string>>, code_or_name, country_code);
-    return name;
-  };
+  const { states } = useContext(APIReference) as { states?: Collection<Collection<string>> };
+
   const onChange = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    let [code, name] = find(states as Collection<Collection<string>>, e.target.value, country_code);
-    onValueChange(code || null);
-
-    if (!isNone(code) && e.target.value === code) e.currentTarget.value = name;
+    let code = find(states, e.target.value, country_code);
+    onValueChange(code || e.target.value);
   };
 
-  useEffect(() => { }, [states]);
-
   return (
-    <InputField onChange={onChange} onClick={onClick} value={fname(value)} list="state_or_provinces" {...props}>
+    <InputField onChange={onChange} onClick={onClick} defaultValue={value} list="state_or_provinces" {...props}>
       <datalist id="state_or_provinces">
         {Object
           .entries(states || {})
@@ -42,24 +35,37 @@ const StateInput: React.FC<StateInputComponent> = ({ name, onValueChange, value,
         }
       </datalist>
     </InputField>
-  )
+  );
 };
 
-function find(states?: Collection<Collection<string>>, code_or_name?: string, current_country?: string): [string, string] | [] {
-  const country_code: string = (
-    Object
-      .keys(states || {})
-      .filter(country => !isNone(current_country) && current_country === country)
-      .find(country => (
-        Object.keys(states ? states[country] : {}).includes(code_or_name as string)
-        || Object.values(states ? states[country] : {}).includes(code_or_name as string)
-      )) || ''
-  );
+function find(states?: Collection<Collection<string>>, code_or_name?: string, current_country?: string): string | null {
+  const retrieve = (countryStates: Collection<string>) => {
+    const state = code_or_name || '';
 
-  return (Object
-    .entries(states ? states[country_code] || {} : {})
-    .find(([code, name]) => code === code_or_name || name === code_or_name) || []
-  );
+    return Object
+      .keys(countryStates)
+      .find(key => {
+        const value = countryStates[key];
+        return (
+          key === state.toLocaleUpperCase() ||
+          value.toLocaleLowerCase().includes(state.toLocaleLowerCase())
+        );
+      });
+  };
+
+
+  return Object
+    .entries(states || {})
+    .reduce<string | null>((acc, [country, data]) => {
+      if (isNoneOrEmpty(code_or_name)) return acc;
+
+      const state = retrieve(data as Collection<string>);
+
+      if (state && !acc) { return state; }
+      if (state && country === current_country) { return state; }
+
+      return acc;
+    }, null);
 }
 
 export default StateInput;

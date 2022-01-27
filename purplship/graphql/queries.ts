@@ -366,18 +366,6 @@ query get_shipment($id: String!) {
         origin_country
         metadata
         parent_id
-        parent {
-          id
-          weight
-          weight_unit
-          description
-          quantity
-          sku
-          value_amount
-          value_currency
-          origin_country
-          metadata
-        }
       }
     }
     payment {
@@ -553,18 +541,6 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
             origin_country
             metadata
             parent_id
-            parent {
-              id
-              weight
-              weight_unit
-              description
-              quantity
-              sku
-              value_amount
-              value_currency
-              origin_country
-              metadata
-            }
           }
         }
         payment {

@@ -35,7 +35,7 @@ interface CommodityEditModalComponent { }
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
     case 'partial':
-      return isNone(value) ? undefined : { ...(value as CommodityType) };
+      return isNone(value) ? undefined : { ...(state || {}), ...(value as CommodityType) };
     case 'value_amount':
       const value_currency = isNone(value) ? state.value_currency : CurrencyCodeEnum.USD;
       return { ...state, [name]: value, value_currency };
@@ -66,6 +66,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   const close = (_?: React.MouseEvent) => {
     setIsActive(false);
     setOperation(undefined);
+    dispatch({ name: 'partial', value: undefined });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | any>) => {
@@ -80,7 +81,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
     e.preventDefault();
     setLoading(true);
     operation?.onChange && await operation?.onChange(commodity as CommodityType);
-    setTimeout(() => { setLoading(false); close(); }, 1000);
+    setTimeout(() => { setLoading(false); close(); }, 600);
   };
   const loadLineItem = (item?: CommodityType) => {
     const { id, ...content } = item || { id: null };
@@ -110,18 +111,16 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
 
                 {orders_management && <div className="columns is-multiline mb-4 px-1">
 
-                  <OrdersProvider setVariablesToURL={false}>
-                    <LineItemInput
-                      name="parent_id"
-                      label="Order Line Item"
-                      value={commodity?.parent_id}
-                      onChange={loadLineItem}
-                      dropdownClass="is-small"
-                      className="is-small is-fullwidth"
-                      fieldClass="column is-11 mb-0 pl-2 pr-0 py-1"
-                      placeholder="Link an order line item"
-                    />
-                  </OrdersProvider>
+                  <LineItemInput
+                    name="parent_id"
+                    label="Order Line Item"
+                    value={commodity?.parent_id}
+                    onChange={loadLineItem}
+                    dropdownClass="is-small"
+                    className="is-small is-fullwidth"
+                    fieldClass="column is-11 mb-0 pl-2 pr-0 py-1"
+                    placeholder="Link an order line item"
+                  />
 
                   <div className="column m-0 px-0 py-1 is-flex is-align-items-flex-end">
                     <button

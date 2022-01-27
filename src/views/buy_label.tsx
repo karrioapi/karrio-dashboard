@@ -23,6 +23,8 @@ import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ShipmentMutationProvider, { ShipmentMutationContext } from '@/context/shipment-mutation';
 import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
 import { PartialShipmentUpdateInput, ShipmentStatus } from '@purplship/graphql';
+import { isNone } from '@/lib/helper';
+import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -40,6 +42,7 @@ export default function LabelPage(pageProps: any) {
     const mutation = useContext(ShipmentMutationContext);
     const { shipment, called, loading, loadShipment, updateShipment } = useContext(LabelData);
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
+    const orders = useContext(OrdersContext);
     const tabs = ["shipper", "recipient", "parcels", "customs info", "options"];
     const [ready, setReady] = useState<boolean>(false);
     const [ckey] = useState<string>(`${id}-${Date.now()}`);
@@ -81,8 +84,14 @@ export default function LabelPage(pageProps: any) {
       if (!template.called && !template.loading && template.load) template.load();
     }, []);
     useEffect(() => {
-      if (!ready && called && template.called) setTimeout(() => setReady(true), 500);
-    }, [template.called, called]);
+      if (!orders.called && !orders.loading && orders.load) orders.load({
+        first: 100,
+        status: ['created', 'partial']
+      });
+    }, []);
+    useEffect(() => {
+      if (!ready && called && template.called && orders.called) setTimeout(() => setReady(true), 500);
+    }, [template.called, orders.called, called]);
 
     return (
       <>
@@ -98,7 +107,7 @@ export default function LabelPage(pageProps: any) {
           <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
 
             <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
-              <TabStateProvider tabs={tabs} disabledTabs={filterDisabled(tabs, shipment)} setSelectedToURL>
+              <TabStateProvider tabs={tabs} disabledTabs={filterDisabled(tabs, shipment)} setSelectedToURL={!isNone(shipment.id)}>
                 <TabStateContext.Consumer>{({ selectTab }) => <>
                   <Tabs style={{ overflowY: 'auto', minHeight: '100%', maxHeight: '75vh' }}>
 
@@ -162,15 +171,17 @@ export default function LabelPage(pageProps: any) {
       <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>
       <ShipmentProvider>
         <TemplatesProvider>
-          <ParcelTemplatesProvider>
-            <AddressTemplatesProvider>
-              <ShipmentMutationProvider>
+          <OrdersProvider setVariablesToURL={false}>
+            <ParcelTemplatesProvider>
+              <AddressTemplatesProvider>
+                <ShipmentMutationProvider>
 
-                <Component />
+                  <Component />
 
-              </ShipmentMutationProvider>
-            </AddressTemplatesProvider>
-          </ParcelTemplatesProvider>
+                </ShipmentMutationProvider>
+              </AddressTemplatesProvider>
+            </ParcelTemplatesProvider>
+          </OrdersProvider>
         </TemplatesProvider>
       </ShipmentProvider>
     </DashboardLayout>

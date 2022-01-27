@@ -61,7 +61,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <i className="fas fa-print"></i>
               <span className="ml-1">Print Label</span>
             </button>}
-            {!isNone((shipment?.meta as any).custom_invoice) &&
+            {!isNone((shipment?.meta as any).invoice) &&
               <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>

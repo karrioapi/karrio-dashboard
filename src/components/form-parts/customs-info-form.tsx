@@ -61,17 +61,32 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         return { ...state, [name]: value };
     }
   }, value, () => value);
+  const [commodities, setCommodities] = useState<CommodityType[]>([]);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
-  const computeDisableState = (state: CustomsType): boolean => {
+  const computeDisableState = (state: CustomsType, commoditiesState: CommodityType[]): boolean => {
     const isUnchanged = (
       deepEqual(value, state) &&
       deepEqual(value?.duty, state?.duty) &&
-      deepEqual(value?.options, state?.options)
+      deepEqual(value?.options, state?.options) &&
+      deepEqual(value?.commodities, commodities)
     );
 
     return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
   }
+
+  const updateCustomsCommodity = async (commodity: CommodityType) => {
+    await onSubmit([{ id: customs.id, commodities: [commodity] }] as any);
+  }
+  const removeCustomsCommodity = async (id: string) => {
+    setLoading(true);
+    try {
+      await discardCommodity(id);
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
+    }
+    setLoading(false);
+  };
 
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: keyof CustomsType, value: object }>) => {
     const target = event.target;
@@ -83,7 +98,8 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     e.preventDefault();
     try {
       setLoading(true);
-      await onSubmit(customs);
+      const payload = { ...customs, commodities };
+      await onSubmit(payload);
 
       if (customs.id === undefined && shipment?.id !== undefined) {
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully added!' });
@@ -214,14 +230,15 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           <div className="columns p-2 my-2 is-relative">
             <CommodityCollectionEditor
               defaultValue={customs.commodities}
-              onRemove={discardCommodity}
-              onChange={commodities => dispatch({ name: 'commodities', value: commodities })}
+              onRemove={removeCustomsCommodity}
+              onUpdate={updateCustomsCommodity}
+              onChange={commodities => setCommodities(commodities)}
               className="is-white column is-12 p-0"
               style={{ border: "1px #ddd solid" }}
             >
-              <CommodityCollectionEditorContext.Consumer>{({ commodities, isExpanded }) => (
+              <CommodityCollectionEditorContext.Consumer>{({ commodities }) => (
                 <>
-                  <p className="panel-heading select is-small is-fullwidth p-0 pt-1">
+                  <p className="panel-heading is-clickable select is-small is-fullwidth p-0 pt-1">
                     <span className="is-size-6">{commodities.length == 0 ? 'No' : commodities.length} customs commodity(s) declared</span>
                   </p>
 
@@ -241,7 +258,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         {/* Customs Options */}
         <div className="columns p-2 my-2">
           <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
-            <div className="p-2">
+            <div className="p-2 is-clickable">
               <p className="panel-heading select is-small is-fullwidth p-0 pt-1" onClick={() => setOptionsExpanded(!optionsExpanded)}>
                 <span className="is-size-6">Customs identifications</span>
               </p>
@@ -307,7 +324,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
-          disabled={computeDisableState(customs)}>
+          disabled={computeDisableState(customs, commodities)}>
           <span>{isNone(shipment?.id) && !isTemplate ? 'Next' : 'Save'}</span>
         </ButtonField>
 

@@ -523,19 +523,6 @@ export interface get_shipment_shipment_customs_duty {
   declared_value: number | null;
 }
 
-export interface get_shipment_shipment_customs_commodities_parent {
-  id: string;
-  weight: number | null;
-  weight_unit: WeightUnitEnum | null;
-  description: string | null;
-  quantity: number | null;
-  sku: string | null;
-  value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
-  metadata: any | null;
-}
-
 export interface get_shipment_shipment_customs_commodities {
   id: string;
   weight: number | null;
@@ -548,7 +535,6 @@ export interface get_shipment_shipment_customs_commodities {
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
   parent_id: string | null;
-  parent: get_shipment_shipment_customs_commodities_parent | null;
 }
 
 export interface get_shipment_shipment_customs {
@@ -751,19 +737,6 @@ export interface get_shipments_shipments_edges_node_customs_duty {
   declared_value: number | null;
 }
 
-export interface get_shipments_shipments_edges_node_customs_commodities_parent {
-  id: string;
-  weight: number | null;
-  weight_unit: WeightUnitEnum | null;
-  description: string | null;
-  quantity: number | null;
-  sku: string | null;
-  value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
-  metadata: any | null;
-}
-
 export interface get_shipments_shipments_edges_node_customs_commodities {
   id: string;
   weight: number | null;
@@ -776,7 +749,6 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   origin_country: CountryCodeEnum | null;
   metadata: any | null;
   parent_id: string | null;
-  parent: get_shipments_shipments_edges_node_customs_commodities_parent | null;
 }
 
 export interface get_shipments_shipments_edges_node_customs {

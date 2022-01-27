@@ -4,6 +4,7 @@ import { get_orders, GET_ORDERS, get_orders_orders_edges, get_ordersVariables } 
 import { OrderType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
+import { APIReference } from './references-provider';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
@@ -23,6 +24,7 @@ export const OrdersContext = React.createContext<OrdersType>({} as OrdersType);
 
 const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const { testMode } = useContext(AppMode);
+  const { orders_management } = useContext(APIReference);
   const [initialLoad, query] = useLazyQuery<get_orders, OrdersFilterType>(GET_ORDERS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -61,6 +63,8 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
     return Promise.resolve(initialLoad({ variables: requestVariables }));
   };
   const load = (options?: OrdersFilterType) => loadMore(options);
+
+  if (!orders_management) return <>{children}</>;
 
   return (
     <OrdersContext.Provider value={{

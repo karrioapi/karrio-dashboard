@@ -24,7 +24,7 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
     setShipment(undefined);
   };
   const conputeSource = (shipment: ShipmentType) => {
-    return `data:application/pdf;base64, ${encodeURI((shipment?.meta as any).custom_invoice as string)}`;
+    return `data:application/pdf;base64, ${encodeURI((shipment?.meta as any).invoice as string)}`;
   };
 
   return (

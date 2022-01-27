@@ -96,7 +96,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
             {shipment.status !== ShipmentStatus.cancelled &&
               <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
-            {!isNone((shipment?.meta as any).custom_invoice) &&
+            {!isNone((shipment?.meta as any).invoice) &&
               <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
           </div>
         </div>

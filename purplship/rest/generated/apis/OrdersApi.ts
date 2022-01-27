@@ -289,5 +289,5 @@ export enum ListStatusEnum {
     Cancelled = 'cancelled',
     Fulfilled = 'fulfilled',
     Delivered = 'delivered',
-    PartiallyFulfilled = 'partially_fulfilled'
+    Partial = 'partial'
 }

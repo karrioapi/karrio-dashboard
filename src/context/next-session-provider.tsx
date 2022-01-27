@@ -1,3 +1,4 @@
+import { AuthToken } from '@/client/context';
 import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React from 'react';
@@ -10,6 +11,12 @@ const NextSessionProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     if (session?.error !== sessionState?.error || session?.accessToken !== sessionState?.accessToken || session === null) {
+      if (session?.accessToken && session?.accessToken !== AuthToken.value?.access) {
+        AuthToken.next({
+          ...(AuthToken.value || {}),
+          access: session.accessToken,
+        } as any);
+      }
       setSessionState(session as Session);
     }
   }, [session]);

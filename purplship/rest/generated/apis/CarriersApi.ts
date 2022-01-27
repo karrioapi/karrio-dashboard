@@ -23,6 +23,10 @@ import {
     ErrorResponseToJSON,
 } from '../models';
 
+export interface GetServicesRequest {
+    carrierName: GetServicesCarrierNameEnum;
+}
+
 export interface ListRequest {
     limit?: number;
     offset?: number;
@@ -36,6 +40,42 @@ export interface ListRequest {
  * 
  */
 export class CarriersApi extends runtime.BaseAPI {
+
+    /**
+     * Retrieve a carrier\'s services
+     * Get carrier services
+     */
+    async getServicesRaw(requestParameters: GetServicesRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
+            throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling getServices.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/carriers/{carrier_name}/services`.replace(`{${"carrier_name"}}`, encodeURIComponent(String(requestParameters.carrierName))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Retrieve a carrier\'s services
+     * Get carrier services
+     */
+    async getServices(requestParameters: GetServicesRequest, initOverrides?: RequestInit): Promise<{ [key: string]: object; }> {
+        const response = await this.getServicesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Returns the list of configured carriers
@@ -95,6 +135,34 @@ export class CarriersApi extends runtime.BaseAPI {
 
 }
 
+/**
+    * @export
+    * @enum {string}
+    */
+export enum GetServicesCarrierNameEnum {
+    Aramex = 'aramex',
+    Australiapost = 'australiapost',
+    Canadapost = 'canadapost',
+    Canpar = 'canpar',
+    DhlExpress = 'dhl_express',
+    DhlPoland = 'dhl_poland',
+    DhlUniversal = 'dhl_universal',
+    Dicom = 'dicom',
+    Eshipper = 'eshipper',
+    Fedex = 'fedex',
+    Freightcom = 'freightcom',
+    Generic = 'generic',
+    Purolator = 'purolator',
+    Royalmail = 'royalmail',
+    Sendle = 'sendle',
+    SfExpress = 'sf_express',
+    Tnt = 'tnt',
+    Ups = 'ups',
+    Usps = 'usps',
+    UspsInternational = 'usps_international',
+    Yanwen = 'yanwen',
+    Yunexpress = 'yunexpress'
+}
 /**
     * @export
     * @enum {string}

@@ -14,7 +14,7 @@ interface AddressAutocompleteInputComponent extends InputFieldComponent {
   dropdownClass?: string;
 }
 
-const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, children, ...props }) => {
+const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, name, children, ...props }) => {
   const Props = {
     required,
     ...props,
@@ -64,9 +64,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
   }, [isActive, onBodyClick]);
-  useEffect(() => {
-    setIsActive(!!predictions.length);
-  }, [predictions]);
+  useEffect(() => { setIsActive(!!predictions.length); }, [predictions]);
 
   const content = (_: any) => (
     <div className={`field ${fieldClass}`} key={key} ref={container}>
@@ -81,11 +79,18 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
           style={{ border: 'none' }}
           key={`dropdown-input-${key}`}>
           <input
+            name={name}
+            onChange={e => updater.next({ address_line1: e.target.value || "" })}
+            style={{ position: 'absolute', right: 0, zIndex: -1 }}
+          />
+          <input
+            name={name}
             onChange={onChange}
             onClick={onClick}
-            autoComplete={address_auto_complete?.is_enabled ? key : "on"}
             className={`input is-fullwidth ${className || ''}`}
-            {...Props} />
+            {...(address_auto_complete?.is_enabled ? { autoComplete: key } : {})}
+            {...Props}
+          />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
               <nav className="panel dropped-panel">

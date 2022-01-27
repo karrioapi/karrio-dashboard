@@ -39,7 +39,10 @@ export interface OrderData {
      */
     order_id: string;
     /**
+     * 
      * The order's source.
+     * 
+     * e.g. API, POS, ERP, Shopify, Woocommerce, etc.
      * @type {string}
      * @memberof OrderData
      */

@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import { PurplshipClient, TokenObtainPair, TokenPair } from "@purplship/rest/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, filter } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
@@ -17,16 +17,18 @@ export const PURPLSHIP_API = (
     : publicRuntimeConfig?.PURPLSHIP_API_URL
 )
 
-export const AuthToken = new Subject<TokenPair>();
+export const AuthToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
 export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
 export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
 export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 
-AuthToken.subscribe(async ({ access }: { access?: string }) => {
-  graphqlClient.next(createGrapQLContext(access));
-  restClient.next(createRestContext(access));
-});
+AuthToken
+  .pipe(filter(token => !isNone(token)))
+  .subscribe(async (token?: any) => {
+    graphqlClient.next(createGrapQLContext(token?.access));
+    restClient.next(createRestContext(token?.access));
+  });
 
 logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
 
