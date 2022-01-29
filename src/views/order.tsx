@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import OrderProvider, { Order } from "@/context/order-provider";
-import { formatAddressLocation, formatDateTime, formatWeight, isNone, formatCommodity } from "@/lib/helper";
+import { formatAddressLocation, formatDateTime, isNone, formatCommodity } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -34,6 +34,8 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
       {loading && <Spinner />}
 
       {!loading && order && <>
+
+        {/* Header section */}
         <div className="columns my-1">
           <div className="column is-6">
             <span className="subtitle is-size-7 has-text-weight-semibold">ORDER</span>
@@ -56,6 +58,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
           </div>
         </div>
 
+        {/* Reference and highlights section */}
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
         <div className="columns mb-4">
@@ -74,12 +77,14 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
         </div>
 
 
-        <h2 className="title is-5 my-4">Order Details</h2>
+        <h2 className="title is-5 my-5">Order Details</h2>
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
         <div className="mt-3 mb-6">
 
-          <div className="columns my-0">
+          {/* address and line items section */}
+          <div className="columns my-0 is-multiline">
+            {/* Shipping Address section */}
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ADDRESS</p>
 
@@ -94,6 +99,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
               <p className="is-size-6 my-1">{formatAddressLocation(order.shipping_address)}</p>
             </div>
 
+            {/* Line Items section */}
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">LINE ITEMS</p>
 
@@ -104,8 +110,8 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
             </div>
           </div>
 
+          {/* Options section */}
           <div className="columns mt-6 mb-0 is-multiline">
-
             {(Object.values(order.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ORDER OPTIONS</p>
 
@@ -120,7 +126,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         </div>
 
-
+        {/* Metadata section */}
         <MetadataEditor
           id={order.id}
           object_type={MetadataObjectType.order}
@@ -148,6 +154,40 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
           </>)}</MetadataEditorContext.Consumer>
         </MetadataEditor>
+
+        <div className="my-6 pt-1"></div>
+
+        {/* Shipments section */}
+        <h2 className="title is-5 my-4">Shipments</h2>
+
+        {(order.shipments || []).length == 0 && <div>No shipments</div>}
+
+        {(order.shipments || []).length > 0 && <div className="table-container">
+          <table className="related-item-table table is-hoverable is-fullwidth">
+            <tbody>
+              {(order.shipments || []).map(shipment => (
+                <tr key={shipment.id} className="items is-clickable">
+                  <td className="status is-vcentered p-0">
+                    <AppLink href={`/shipments/${shipment.id}`} className="pr-2">
+                      <StatusBadge status={shipment.status as string} style={{ width: '80%' }} />
+                    </AppLink>
+                  </td>
+                  <td className="description is-vcentered p-0">
+                    <AppLink href={`/shipments/${shipment.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                      {shipment.id}{' '}{shipment.tracking_number && <strong> - {shipment.tracking_number}</strong>}
+                    </AppLink>
+                  </td>
+                  <td className="date is-vcentered p-0">
+                    <AppLink href={`/shipments/${shipment.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                      <span>{formatDateTime(shipment.created_at)}</span>
+                    </AppLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>}
+
 
       </>}
 

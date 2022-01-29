@@ -214,6 +214,21 @@ Purplship custom styling
   }
 }
 
+.related-item-table {
+  border-top: 2px solid #eee;
+  border-bottom: 2px solid #eee;
+
+  .status {
+    width: 8%;
+  }
+  .description {
+    min-width: 40%;
+  }
+  .date {
+    width: 15%;
+  }
+}
+
 hr {
   background-color: #dddddd;
 }
