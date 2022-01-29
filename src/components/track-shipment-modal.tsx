@@ -85,7 +85,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           {isActive && <form className="modal-card" onSubmit={create}>
-            <section className="modal-card-body">
+            <section className="modal-card-body modal-form">
               <div className="form-floating-header p-4">
                 <span className="has-text-weight-bold is-size-6">Track package</span>
               </div>

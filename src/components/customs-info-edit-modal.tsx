@@ -93,7 +93,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card">
 
-          <section className="modal-card-body">
+          <section className="modal-card-body modal-form">
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">Edit customs info</span>
             </div>

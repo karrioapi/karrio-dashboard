@@ -98,7 +98,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card max-modal-height">
 
-          <section className="modal-card-body">
+          <section className="modal-card-body modal-form">
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">{isNew ? 'Add' : 'Update'} commodity</span>
             </div>

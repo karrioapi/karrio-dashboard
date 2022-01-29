@@ -120,7 +120,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
         <div className="modal-background" onClick={close}></div>
         <form className="modal-card" onSubmit={handleSubmit}>
-          <section className="modal-card-body" onChange={(e: any) => {
+          <section className="modal-card-body modal-form" onChange={(e: any) => {
             setIsInvalid(e.currentTarget.querySelectorAll('.is-danger').length > 0);
           }}>
             <div className="form-floating-header p-4">

@@ -89,7 +89,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
         <div className="modal-card">
 
           <form
-            className="modal-card-body"
+            className="modal-card-body modal-form"
             onSubmit={handleSubmit}
             onChange={e => setIsValid((e.target as any).checkValidity())}>
             <div className="form-floating-header p-4">

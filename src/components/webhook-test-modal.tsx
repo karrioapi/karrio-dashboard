@@ -65,7 +65,7 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           <form className="modal-card" onSubmit={handleSubmit}>
-            <section className="modal-card-body">
+            <section className="modal-card-body modal-form">
               <div className="form-floating-header p-4">
                 <span className="has-text-weight-bold is-size-6">Test a webhook endpoint</span>
               </div>

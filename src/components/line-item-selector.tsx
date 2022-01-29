@@ -60,7 +60,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card max-modal-height">
 
-          <section className="modal-card-body p-2">
+          <section className="modal-card-body modal-form p-2">
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">Select line items</span>
             </div>
