@@ -20,7 +20,7 @@ type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
 
 export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
-const LogsProvider: React.FC = ({ children }) => {
+const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -46,7 +46,7 @@ const LogsProvider: React.FC = ({ children }) => {
 
     const requestVariables = { ...params };
 
-    insertUrlParam(requestVariables);
+    setVariablesToURL && insertUrlParam(requestVariables);
     setVariables(requestVariables);
 
     if (query.called) {

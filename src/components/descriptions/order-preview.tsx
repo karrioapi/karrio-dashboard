@@ -1,3 +1,5 @@
+import EventsProvider from '@/context/events-provider';
+import LogsProvider from '@/context/logs-provider';
 import MetadataMutationProvider from '@/context/metadata-mutation';
 import OrderProvider from '@/context/order-provider';
 import { addUrlParam, removeUrlParam } from '@/lib/helper';
@@ -42,9 +44,15 @@ const OrderPreview: React.FC<OrderPreviewComponent> = ({ children }) => {
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
             <OrderProvider>
-              <MetadataMutationProvider>
-                <OrderComponent orderId={orderId} />
-              </MetadataMutationProvider>
+              <EventsProvider setVariablesToURL={false}>
+                <LogsProvider setVariablesToURL={false}>
+                  <MetadataMutationProvider>
+
+                    <OrderComponent orderId={orderId} />
+
+                  </MetadataMutationProvider>
+                </LogsProvider>
+              </EventsProvider>
             </OrderProvider>
           </section>
         </div>}

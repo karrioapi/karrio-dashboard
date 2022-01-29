@@ -20,7 +20,7 @@ type EventsType = LazyQueryResult<get_events, any> & {
 
 export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
-const EventsProvider: React.FC = ({ children }) => {
+const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -46,7 +46,7 @@ const EventsProvider: React.FC = ({ children }) => {
 
     const requestVariables = { ...params };
 
-    insertUrlParam(requestVariables);
+    setVariablesToURL && insertUrlParam(requestVariables);
     setVariables(requestVariables);
 
     if (query.called) {

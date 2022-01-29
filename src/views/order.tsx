@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import OrderProvider, { Order } from "@/context/order-provider";
-import { formatAddressLocation, formatDateTime, isNone, formatCommodity } from "@/lib/helper";
+import { formatAddressLocation, formatDateTime, isNone, formatCommodity, formatDateTimeLong } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -13,12 +13,17 @@ import { MetadataObjectType } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";
+import EventsProvider, { EventsContext } from "@/context/events-provider";
+import LogsProvider, { LogsContext } from "@/context/logs-provider";
+import StatusCode from "@/components/status-code-badge";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
   const router = useRouter();
+  const logs = useContext(LogsContext);
+  const events = useContext(EventsContext);
   const { setLoading } = useContext(Loading);
   const { order, loading, called, loadOrder } = useContext(Order);
   const { id } = router.query;
@@ -27,6 +32,12 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
   useEffect(() => {
     (!loading && loadOrder) && loadOrder((id || orderId) as string);
   }, [id || orderId]);
+  useEffect(() => {
+    if (called && !isNone(order)) {
+      (!logs.called && !logs.loading && logs.load) && logs.load({ entity_id: order?.id });
+      (!events.called && !events.loading && events.load) && events.load({ entity_id: order?.id });
+    }
+  }, [called, order]);
 
   return (
     <>
@@ -188,6 +199,70 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
           </table>
         </div>}
 
+        <div className="my-6 pt-1"></div>
+
+        {/* Logs section */}
+        <h2 className="title is-5 my-4">Logs</h2>
+
+        {logs.loading && <Spinner />}
+
+        {!logs.loading && (logs.logs || []).length == 0 && <div>No logs</div>}
+
+        {!logs.loading && (logs.logs || []).length > 0 && <div className="table-container">
+          <table className="related-item-table table is-hoverable is-fullwidth">
+            <tbody>
+              {(logs.logs || []).map(log => (
+                <tr key={log.id} className="items is-clickable">
+                  <td className="status is-vcentered p-0">
+                    <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
+                      <StatusCode code={log.status_code as number} />
+                    </AppLink>
+                  </td>
+                  <td className="description is-vcentered p-0">
+                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                      {`${log.method} ${log.path}`}
+                    </AppLink>
+                  </td>
+                  <td className="date is-vcentered p-0">
+                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                      <span>{formatDateTimeLong(log.requested_at)}</span>
+                    </AppLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>}
+
+        <div className="my-6 pt-1"></div>
+
+        {/* Events section */}
+        <h2 className="title is-5 my-4">Events</h2>
+
+        {events.loading && <Spinner />}
+
+        {!events.loading && (events.events || []).length == 0 && <div>No events</div>}
+
+        {!events.loading && (events.events || []).length > 0 && <div className="table-container">
+          <table className="related-item-table table is-hoverable is-fullwidth">
+            <tbody>
+              {(events.events || []).map(event => (
+                <tr key={event.id} className="items is-clickable">
+                  <td className="description is-vcentered p-0">
+                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                      {`${event.type}`}
+                    </AppLink>
+                  </td>
+                  <td className="date is-vcentered p-0">
+                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                      <span>{formatDateTimeLong(event.created_at)}</span>
+                    </AppLink>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>}
 
       </>}
 
@@ -208,11 +283,15 @@ export default function OrderPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Order - {(pageProps as any).references?.app_name}</title></Head>
       <OrderProvider>
-        <MetadataMutationProvider>
+        <EventsProvider setVariablesToURL={false}>
+          <LogsProvider setVariablesToURL={false}>
+            <MetadataMutationProvider>
 
-          <OrderComponent />
+              <OrderComponent />
 
-        </MetadataMutationProvider>
+            </MetadataMutationProvider>
+          </LogsProvider>
+        </EventsProvider>
       </OrderProvider>
     </DashboardLayout>
   ), pageProps);

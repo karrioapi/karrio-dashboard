@@ -1,3 +1,5 @@
+import EventsProvider from '@/context/events-provider';
+import LogsProvider from '@/context/logs-provider';
 import MetadataMutationProvider from '@/context/metadata-mutation';
 import ShipmentProvider from '@/context/shipment-provider';
 import { addUrlParam, removeUrlParam } from '@/lib/helper';
@@ -42,9 +44,15 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
             <ShipmentProvider>
-              <MetadataMutationProvider>
-                <ShipmentComponent shipmentId={shipmentId} />
-              </MetadataMutationProvider>
+              <EventsProvider setVariablesToURL={false}>
+                <LogsProvider setVariablesToURL={false}>
+                  <MetadataMutationProvider>
+
+                    <ShipmentComponent shipmentId={shipmentId} />
+
+                  </MetadataMutationProvider>
+                </LogsProvider>
+              </EventsProvider>
             </ShipmentProvider>
           </section>
         </div>}
