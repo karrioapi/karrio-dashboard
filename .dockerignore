@@ -2,6 +2,7 @@
 *
 
 !/public/
+!/purplship/
 !/src/
 !/package.json
 !/package-lock.json
