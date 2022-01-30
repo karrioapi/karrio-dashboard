@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_trackers, GET_TRACKERS, get_trackers_trackers_edges, get_trackersVariables } from '@/purplship/graphql';
+import { get_trackers, GET_TRACKERS, get_trackers_trackers_edges, get_trackersVariables } from '@purplship/graphql';
 import { TrackerType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
@@ -23,7 +23,10 @@ export const TrackersContext = React.createContext<TrackersType>({} as TrackersT
 
 const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
-  const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<TrackersFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as TrackerType);

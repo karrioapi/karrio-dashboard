@@ -1,4 +1,5 @@
 import EventProvider from '@/context/event-provider';
+import { addUrlParam, removeUrlParam } from '@/lib/helper';
 import { EventComponent } from '@/views/event';
 import React, { useState } from 'react';
 
@@ -19,11 +20,13 @@ const EventPreview: React.FC<EventPreviewComponent> = ({ children }) => {
     setEventId(eventId);
     setIsActive(true);
     setKey(`event-${Date.now()}`);
+    addUrlParam('modal', eventId);
   };
   const dismiss = (_?: React.MouseEvent) => {
     setEventId(undefined);
     setIsActive(false);
     setKey(`event-${Date.now()}`);
+    removeUrlParam('modal');
   };
 
   return (

@@ -1,36 +1,33 @@
-import { Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, Shipment } from '@/purplship/rest/index';
-import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import SelectField from '@/components/generic/select-field';
-import ButtonField from '@/components/generic/button-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
-import { deepEqual, findPreset, formatDimension, formatRef, isNone } from '@/lib/helper';
-import { DIMENSION_UNITS, NotificationType, PresetCollection, WEIGHT_UNITS } from '@/lib/types';
+import { deepEqual, findPreset, formatDimension, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
+import { DIMENSION_UNITS, ParcelType, PresetCollection, ShipmentType, WEIGHT_UNITS } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { ParcelTemplates } from '@/context/parcel-templates-provider';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
+import { DimensionUnitEnum, WeightUnitEnum } from '@purplship/graphql';
 
-type stateValue = string | boolean | Partial<Parcel>;
-export const DEFAULT_PARCEL_CONTENT: Partial<Parcel> = {
+type stateValue = string | boolean | Partial<ParcelType>;
+export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
   packaging_type: "envelope",
   is_document: false,
-  weight_unit: ParcelWeightUnitEnum.Kg,
-  dimension_unit: ParcelDimensionUnitEnum.Cm,
+  weight_unit: WeightUnitEnum.KG,
+  dimension_unit: DimensionUnitEnum.CM,
 };
 
 interface ParcelFormComponent {
-  value?: Parcel;
-  shipment?: Shipment;
-  update: (data: { changes?: Partial<Shipment>, refresh?: boolean }) => void;
+  value?: ParcelType;
+  shipment?: ShipmentType;
+  prefixChilren?: React.ReactNode;
+  onChange?: (value: ParcelType) => void;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
     case 'parcel_type':
     case 'package_preset':
-      const { width, height, length, dimension_unit, packaging_type, package_preset } = value as Parcel;
+      const { width, height, length, dimension_unit, packaging_type, package_preset } = value as ParcelType;
       return {
         ...state,
         width: width || null,
@@ -41,24 +38,33 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
         package_preset: package_preset || null
       };
     case 'template':
-      return { ...(value as Parcel) };
+      return { ...(value as ParcelType) };
     default:
       return { ...state, [name]: value }
   }
 }
 
-const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, children }) => {
-  const { notify } = useContext(Notify);
-  const { loading, setLoading } = useContext(Loading);
-  const { updateParcel } = useContext(ShipmentMutationContext);
+const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, prefixChilren, onChange }) => {
   const { packaging_types, package_presets } = useContext(APIReference);
   const { templates, load, ...state } = useContext(ParcelTemplates);
-  const form = useRef<HTMLFormElement>(null);
   const [key] = useState<string>(`parcel-${Date.now()}`);
   const [parcel, dispatch] = useReducer(reducer, value, () => value || DEFAULT_PARCEL_CONTENT);
   const [parcel_type, setParcelType] = useState<string>(isNone(value?.package_preset) ? 'custom' : 'preset');
   const [dimension, setDimension] = useState<string | undefined>(formatDimension(isNone(value?.package_preset) ? undefined : value));
-  const nextTab = shipment?.shipper.country_code === shipment?.recipient.country_code ? 'options' : 'customs info';
+
+  const isDimensionRequired = (parcel: ParcelType) => {
+    return !(
+      isNone(parcel.width) &&
+      isNone(parcel.height) &&
+      isNone(parcel.length)
+    );
+  };
+  const shouldShowDimension = (parcel_type: string) => {
+    if (parcel_type === 'custom') return false;
+    if (parcel_type !== 'preset') return true;
+    if ((parcel.package_preset || "") !== "") return true;
+    return false
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -67,7 +73,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
     if (name === 'parcel_type') {
       const template = (templates || []).find(p => p.id === value)?.parcel;
-      const preset = { ...parcel, package_preset: undefined } as Partial<Parcel>;
+      const preset = { ...parcel, package_preset: undefined } as Partial<ParcelType>;
 
       setParcelType(value as string);
       setDimension(formatDimension(value === 'custom' ? undefined : template || preset));
@@ -82,57 +88,31 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
     dispatch({ name, value });
   };
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    try {
-      if (parcel.id !== undefined) {
-        setLoading(true);
-        await updateParcel(parcel as Parcel);
-        notify({ type: NotificationType.success, message: 'Parcel successfully updated!' });
-        update({ refresh: true });
-        setLoading(false);
-      } else {
-        update({ changes: { parcels: [parcel] } });
-        form.current?.dispatchEvent(
-          new CustomEvent('label-select-tab', { bubbles: true, detail: { nextTab } })
-        );
-      }
-    } catch (err: any) {
-      notify({ type: NotificationType.error, message: err });
-    }
-  };
-  const isDimensionRequired = (parcel: Parcel) => {
-    return !(
-      isNone(parcel.width) &&
-      isNone(parcel.height) &&
-      isNone(parcel.length)
-    );
-  };
-  const shouldShowDimension = (parcel_type: string) => {
-    if (parcel_type === 'custom') return false;
-    if (parcel_type !== 'preset') return true;
-    if ((parcel.package_preset || "") !== "") return true;
-    return false
-  };
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
-
-
+  useEffect(() => {
+    if (onChange && !deepEqual(value, parcel)) {
+      const { validation, ...changes } = parcel;
+      onChange(changes);
+    }
+  }, [parcel]);
 
   return (
-    <form className="px-1 py-2" onSubmit={handleSubmit} key={key} ref={form}>
+    <div key={key}>
 
-      {React.Children.map(children, (child: any) => React.cloneElement(child, { ...child.props, parcel, onChange: handleChange }))}
+      {/* Primary parcel form content */}
+      {prefixChilren}
 
-      <div className="columns mb-0 px-2">
+      {/* Default parcel form content */}
+      <div className="columns m-0">
 
-        <CheckBoxField name="is_document" onChange={handleChange} defaultChecked={parcel.is_document} fieldClass="column mb-0 is-12 px-2 py-2">
+        <CheckBoxField name="is_document" onChange={handleChange} defaultChecked={parcel.is_document} fieldClass="column mb-0 is-12 px-0 py-2">
           <span>Document Only</span>
         </CheckBoxField>
 
       </div>
 
-      <SelectField name="parcel_type" onChange={handleChange} value={parcel_type} className="is-fullwidth" required>
+      <SelectField name="parcel_type" onChange={handleChange} value={parcel_type} className="is-small is-fullwidth" required>
         <optgroup label="New">
           <option value='custom'>Custom Measurements</option>
           <option value='preset'>Carrier Parcel Presets</option>
@@ -145,7 +125,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
       {(parcel_type === 'preset') && <>
 
-        <SelectField name="package_preset" onChange={handleChange} value={parcel.package_preset} className="is-fullwidth is-capitalized" required>
+        <SelectField name="package_preset" onChange={handleChange} value={parcel.package_preset} className="is-small is-fullwidth is-capitalized" required>
           <option value="">Select a Carrier Provided Parcel</option>
 
           {Object
@@ -182,14 +162,41 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
             }
           </SelectField>
 
-          <span className="is-size-7 my-3">W:</span>
-          <InputField type="number" step="any" min="0" name="width" onChange={handleChange} value={parcel.width} className="is-small" fieldClass="column mb-0 px-1 py-2" required={isDimensionRequired(parcel)} />
+          <span className="is-size-7 mt-4">W:</span>
+          <InputField
+            type="number" step="any" min="0"
+            name="width"
+            onChange={validityCheck(handleChange)}
+            value={parcel.width}
+            className="is-small"
+            fieldClass="column mb-0 px-1 py-2"
+            required={isDimensionRequired(parcel)}
+            onInvalid={validityCheck(validationMessage('Please enter a valid width'))}
+          />
 
-          <span className="is-size-7 my-3">H:</span>
-          <InputField type="number" step="any" min="0" name="height" onChange={handleChange} value={parcel.height} className="is-small" fieldClass="column mb-0 px-1 py-2" required={isDimensionRequired(parcel)} />
+          <span className="is-size-7 mt-4">H:</span>
+          <InputField
+            type="number" step="any" min="0"
+            name="height"
+            onChange={validityCheck(handleChange)}
+            value={parcel.height}
+            className="is-small"
+            fieldClass="column mb-0 px-1 py-2"
+            required={isDimensionRequired(parcel)}
+            onInvalid={validityCheck(validationMessage('Please enter a valid height'))}
+          />
 
-          <span className="is-size-7 my-3">L:</span>
-          <InputField type="number" step="any" min="0" name="length" onChange={handleChange} value={parcel.length} className="is-small" fieldClass="column mb-0 px-1 py-2" required={isDimensionRequired(parcel)} />
+          <span className="is-size-7 mt-4">L:</span>
+          <InputField
+            type="number" step="any" min="0"
+            name="length"
+            onChange={validityCheck(handleChange)}
+            value={parcel.length}
+            className="is-small"
+            fieldClass="column mb-0 px-1 py-2"
+            required={isDimensionRequired(parcel)}
+            onInvalid={validityCheck(validationMessage('Please enter a valid length'))}
+          />
 
           <SelectField name="dimension_unit" onChange={handleChange} value={parcel.dimension_unit} className="is-small is-fullwidth" fieldClass="column mb-0 px-1 py-2" required={isDimensionRequired(parcel)}>
             {DIMENSION_UNITS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
@@ -203,24 +210,33 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, update, ch
 
       <div className="columns mb-4 px-2">
 
-        <InputField type="number" step="any" min="0" name="weight" onChange={handleChange} value={parcel.weight || ""} className="is-small" fieldClass="column is-2 mb-0 px-1 py-2" required />
+        <InputField
+          type="number" step="any" min="0"
+          name="weight"
+          value={parcel.weight || ""}
+          className="is-small"
+          fieldClass="column is-2 mb-0 px-1 py-2"
+          onChange={validityCheck(handleChange)}
+          onInvalid={validityCheck(validationMessage('Please enter a valid weight'))}
+          required
+        />
 
-        <SelectField name="weight_unit" onChange={handleChange} value={parcel.weight_unit || ParcelWeightUnitEnum.Kg} className="is-small is-fullwidth" fieldClass="column is-2 mb-0 px-1 py-2" required>
+        <SelectField
+          name="weight_unit"
+          onChange={handleChange}
+          value={parcel.weight_unit || WeightUnitEnum.KG}
+          className="is-small is-fullwidth"
+          fieldClass="column is-2 mb-0 px-1 py-2"
+          required>
           {WEIGHT_UNITS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
         </SelectField>
 
       </div>
 
-      <div className="p-3 my-5"></div>
-      <ButtonField type="submit"
-        className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
-        fieldClass="form-floating-footer p-3"
-        controlClass="has-text-centered"
-        disabled={deepEqual(DEFAULT_PARCEL_CONTENT, parcel)}>
-        <span>Save</span>
-      </ButtonField>
+      {/* Extra parcel form content */}
+      {children}
 
-    </form>
+    </div>
   )
 };
 

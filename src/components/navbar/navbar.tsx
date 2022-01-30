@@ -1,5 +1,6 @@
 import React from 'react';
 import AccountDropdown from '@/components/navbar/account-dropdown';
+import ShortcutDropdown from './shortcut-dropdown';
 
 interface NavbarComponent { }
 
@@ -34,6 +35,8 @@ const Navbar: React.FC<NavbarComponent> = () => {
         <div className="nav-item mobile-item is-flex mobile-search-trigger">
           <i className="fas fa-search"></i>
         </div>
+
+        <ShortcutDropdown />
 
         <AccountDropdown />
 

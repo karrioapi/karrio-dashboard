@@ -1,74 +1,61 @@
-import React, { useContext, useState } from 'react';
-import { Address, Customs, Parcel, PurplshipClient, Shipment } from '@/purplship/rest/index';
-import { handleFailure } from '@/lib/helper';
-import { RequestError } from '@/lib/types';
-import { RestContext } from '@/client/context';
+import React, { useEffect, useState } from 'react';
+import { AddressType, ParcelType, ShipmentType } from '@/lib/types';
+import { LazyQueryResult, useLazyQuery } from '@apollo/client';
+import { get_shipment, GET_SHIPMENT, get_shipmentVariables } from '@purplship/graphql';
 
 const DEFAULT_SHIPMENT_DATA = {
-  shipper: {} as Address,
-  recipient: {} as Address,
-  parcels: [] as Parcel[],
+  shipper: {} as AddressType,
+  recipient: {} as AddressType,
+  parcels: [] as ParcelType[],
   options: {}
-} as Shipment;
+} as ShipmentType;
 
-type ShipmentType = Shipment | Shipment & { customs: Customs & { options: any } };
-
-type LabelDataContext = {
+type LabelDataContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
   shipment: ShipmentType;
-  loading: boolean;
-  called: boolean;
-  error?: RequestError;
-  loadShipment: (id?: string) => Promise<Shipment>;
-  updateShipment: (data: Partial<Shipment>) => void;
+  loadShipment: (id: string) => void;
+  updateShipment: (data: Partial<ShipmentType>) => ShipmentType;
 };
 
 export const LabelData = React.createContext<LabelDataContext>({} as LabelDataContext);
 
 const ShipmentProvider: React.FC = ({ children }) => {
-  const purplship = useContext(RestContext);
-  const [error, setError] = useState<RequestError>();
-  const [shipment, setValue] = useState<Shipment>(DEFAULT_SHIPMENT_DATA);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [called, setCalled] = useState<boolean>(false);
+  const [load, { fetchMore, ...result }] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
+  const [shipment, setShipment] = useState<ShipmentType>(DEFAULT_SHIPMENT_DATA);
+  const [state, setState] = useState<any>({});
 
-  const loadShipment = async (id?: string) => {
-    setError(undefined);
-    setLoading(true);
-    setCalled(true);
-
-    return new Promise<Shipment>(async (resolve) => {
-      if (id === 'new') {
-        setValue(DEFAULT_SHIPMENT_DATA);
-        setLoading(false);
-        return resolve(DEFAULT_SHIPMENT_DATA);
-      }
-
-      await handleFailure(
-        (purplship as PurplshipClient).shipments.retrieve({ id: id as string }),
-      )
-        .then(r => { setValue(r as any); resolve(r as any); })
-        .catch(e => { setError(e); setValue({} as Shipment); })
-        .then(() => setLoading(false));
-    });
+  const loadShipment = (id: string) => {
+    if (id === 'new') {
+      setShipment(DEFAULT_SHIPMENT_DATA);
+      setState({ ...result, loading: false, called: true });
+    } else {
+      (fetchMore || load)({ variables: { id } });
+    }
   };
-  const updateShipment = (data: Partial<Shipment>) => {
-    const new_state = { ...shipment, ...data };
+  const updateShipment = (data: Partial<ShipmentType>) => {
+    const newState = { ...shipment, ...data } as ShipmentType;
     Object.entries(data).forEach(([key, val]) => {
-      if (val === undefined) delete new_state[key as keyof Shipment];
+      if (val === undefined) delete newState[key as keyof ShipmentType];
     });
-    setValue(new_state);
+    setShipment(newState);
+    return newState;
   };
+
+  useEffect(() => {
+    result.data?.shipment && setShipment(result.data?.shipment as ShipmentType);
+  }, [result.data?.shipment]);
 
   return (
     <LabelData.Provider value={{
+      ...result,
       shipment,
-      error,
-      called,
-      loading,
       loadShipment,
-      updateShipment
+      updateShipment,
+      ...state,
     }}>
-      {purplship && children}
+      {children}
     </LabelData.Provider>
   );
 };

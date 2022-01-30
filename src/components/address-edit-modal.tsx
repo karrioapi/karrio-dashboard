@@ -1,89 +1,92 @@
-import React, { EventHandler, useContext, useState } from 'react';
-import { Shipment } from '@/purplship/rest/index';
-import AddressForm from '@/components/form-parts/address-form';
-import { isNone } from '@/lib/helper';
+import React, { useContext, useState } from 'react';
+import AddressForm, { DEFAULT_ADDRESS_CONTENT } from '@/components/form-parts/address-form';
+import { addUrlParam, isNone, removeUrlParam } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from './generic/checkbox-field';
-import { AddressTemplate, NotificationType } from '@/lib/types';
+import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types';
 import { AddressMutationContext } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
+import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from '@purplship/graphql';
+import { useRouter } from 'next/dist/client/router';
 
 const DEFAULT_TEMPLATE_CONTENT = {
-  address: {
-    residential: false,
-    country_code: 'CA',
-    state_code: 'QC'
-  }
-} as AddressTemplate;
+  label: '',
+  is_default: false,
+  address: DEFAULT_ADDRESS_CONTENT,
+} as AddressTemplateType;
 
 type OperationType = {
-  addressTemplate?: AddressTemplate;
+  addressTemplate?: AddressTemplateType;
   onConfirm: () => Promise<any>;
 };
 type AddressEditContextType = {
   editAddress: (operation: OperationType) => void,
 };
-type ExtendedAddress = AddressTemplate['address'] & { label: string; is_default?: boolean; };
-type ExtendedShipment = Shipment & { template: ExtendedAddress; };
 
 export const AddressEditContext = React.createContext<AddressEditContextType>({} as AddressEditContextType);
 
 interface AddressEditModalComponent { }
 
 const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => {
+  const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { createAddressTemplate, updateAddressTemplate } = useContext(AddressMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
-  const [payload, setPayload] = useState<ExtendedAddress | undefined>();
+  const [template, setTemplate] = useState<AddressTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
 
   const editAddress = (operation: OperationType) => {
-    const { label, is_default, address } = operation.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
+    const template = operation.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setIsActive(true);
     setOperation(operation);
     setIsNew(isNone(operation.addressTemplate));
-    setPayload({ ...address, label, is_default } as ExtendedAddress);
+    setTemplate(template);
     setKey(`address-${Date.now()}`);
+    addUrlParam('modal', template.id || 'new');
   };
   const close = (_?: React.MouseEvent, changed?: boolean) => {
-    if (isNew) setPayload(undefined);
+    if (isNew) setTemplate(undefined);
     if (changed && operation?.onConfirm !== undefined) operation?.onConfirm();
     setIsActive(false);
     setOperation(undefined);
     setKey(`address-${Date.now()}`);
+    removeUrlParam('modal');
   };
-  const update = async ({ changes }: any) => {
-    setLoading(true);
-    const { label, is_default, ...address } = (changes as ExtendedShipment).template;
-    if (isNew) {
-      await createAddressTemplate({ label, is_default, address: address });
-      notify({ type: NotificationType.success, message: 'Address successfully added!' });
-    }
-    else {
-      await updateAddressTemplate({ label, is_default, address: address, id: operation?.addressTemplate?.id as string });
-      notify({ type: NotificationType.success, message: 'Address successfully updated!' });
-    }
 
-    setTimeout(() => close(undefined, true), 2000);
+  const handleChange = (event: React.ChangeEvent<any>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target;
+    const name = target.name;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+
+    setTemplate({ ...template, [name]: value } as AddressTemplateType);
+  };
+  const handleSubmit = async ({ validation, ...address }: AddressType | any) => {
+    const payload = { ...template, address };
+
+    try {
+      setLoading(true);
+      if (isNew) {
+        await createAddressTemplate(payload as CreateAddressTemplateInput);
+        notify({ type: NotificationType.success, message: 'Address successfully added!' });
+      }
+      else {
+        await updateAddressTemplate(payload as UpdateAddressTemplateInput);
+        notify({ type: NotificationType.success, message: 'Address successfully updated!' });
+      }
+      setTimeout(() => close(undefined, true), 2000);
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
+    }
     setLoading(false);
   };
-  const Extension: React.FC<{ onChange?: EventHandler<any>; address?: ExtendedAddress }> = ({ onChange, address }) => (
-    <>
-      <div className="columns mb-0">
-        <InputField label="label" name="label" onChange={onChange} defaultValue={address?.label} fieldClass="column mb-0 px-2 py-2" required />
-      </div>
-      <div className="columns mb-1">
-        <CheckBoxField name="is_default" onChange={onChange} defaultChecked={address?.is_default} fieldClass="column mb-0 px-2 py-2">
-          <span>Set as default address</span>
-        </CheckBoxField>
-      </div>
-    </>
-  );
 
   return (
     <Notifier>
@@ -95,17 +98,39 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card">
 
-          <section className="modal-card-body">
+          <section className="modal-card-body modal-form">
             <div className="form-floating-header p-4">
-              <h3 className="subtitle is-3">{isNew ? 'New' : 'Update'} Address</h3>
+              <span className="has-text-weight-bold is-size-6">Edit address</span>
             </div>
-            <div className="p-3 my-5"></div>
+            <div className="p-3 my-4"></div>
 
-            {payload !== undefined && <AddressForm value={payload as any} name="template" update={update}>
+            {template !== undefined &&
+              <AddressForm
+                name="template"
+                value={template.address}
+                onSubmit={async address => handleSubmit(address)}>
 
-              <Extension />
+                <div className="columns mb-0">
+                  <InputField
+                    label="label"
+                    name="label"
+                    onChange={handleChange}
+                    defaultValue={template?.label}
+                    className="is-small"
+                    fieldClass="column mb-0 px-2 py-2"
+                    required />
+                </div>
+                <div className="columns mb-1">
+                  <CheckBoxField
+                    name="is_default"
+                    onChange={handleChange}
+                    defaultChecked={template?.is_default}
+                    fieldClass="column mb-0 px-2 pt-3 pb-2">
+                    <span>Set as default address</span>
+                  </CheckBoxField>
+                </div>
 
-            </AddressForm>}
+              </AddressForm>}
           </section>
 
         </div>

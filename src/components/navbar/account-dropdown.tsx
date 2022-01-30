@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import { UserData } from '@/context/user-provider';
 import Link from 'next/link';
-import { signOut } from 'next-auth/client';
+import { signOut } from 'next-auth/react';
 import { APIReference } from '@/context/references-provider';
 
 
@@ -13,15 +13,14 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
   const { admin } = useContext(APIReference);
   const [isActive, setIsActive] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
   const handleOnClick = (e: React.MouseEvent) => {
-    if (!isActive) {
-      setIsActive(true);
-      document.addEventListener('click', onBodyClick);
-    }
-    e.stopPropagation();
+    setIsActive(!isActive);
+    if (!isActive) document.addEventListener('click', onBodyClick);
+    else document.removeEventListener('click', onBodyClick);
   };
   const onBodyClick = (e: MouseEvent) => {
-    if (e.target !== btn.current) {
+    if (!btn.current?.contains(e.target as Node) && !menu.current?.contains(e.target as Node)) {
       setIsActive(false);
       document.removeEventListener('click', onBodyClick);
     }
@@ -29,12 +28,12 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
 
   return (
     <div className={`dropdown-wrap is-right ${isActive ? "is-active" : ""}`} {...props}>
-      <button className="dropdown-button button is-medium" onClick={handleOnClick} ref={btn}>
+      <button className="dropdown-button is-rounded button is-small p-1" onClick={handleOnClick} ref={btn}>
         <span className="icon">
-          <i className="fas fa-user"></i>
+          <i className="is-size-6 fas fa-user"></i>
         </span>
       </button>
-      <div className="drop-menu">
+      <div className="drop-menu" ref={menu}>
         <div className="menu-inner">
           {user?.full_name !== undefined && user?.full_name !== null && user?.full_name !== '' && <>
             <div className="menu-header">

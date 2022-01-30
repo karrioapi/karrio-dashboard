@@ -1,10 +1,10 @@
 import { AuthToken, OrgToken, graphqlClient, PURPLSHIP_API, restClient } from "@/client/context";
 import { gql } from "@apollo/client";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import { References } from "@/purplship/rest";
+import { References } from "@purplship/rest";
 import logger from "@/lib/logger";
 import { Response } from "node-fetch";
 

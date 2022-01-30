@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@/purplship/graphql';
+import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@purplship/graphql';
 import { LogType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 
@@ -20,8 +20,11 @@ type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
 
 export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
-const LogsProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, { notifyOnNetworkStatusChange: true });
+const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
+  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<LogsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as LogType);
@@ -43,7 +46,7 @@ const LogsProvider: React.FC = ({ children }) => {
 
     const requestVariables = { ...params };
 
-    insertUrlParam(requestVariables);
+    setVariablesToURL && insertUrlParam(requestVariables);
     setVariables(requestVariables);
 
     if (query.called) {

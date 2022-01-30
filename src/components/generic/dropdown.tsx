@@ -13,9 +13,8 @@ const Dropdown: React.FC<DropdownComponent> = ({ children, ...props }) => {
 
   const handleOnClick = (e: React.MouseEvent) => {
     setIsActive(!isActive);
-    if (!isActive) document.addEventListener('click', onBodyClick);
-    else document.removeEventListener('click', onBodyClick);
-    e.stopPropagation();
+    if (!isActive) { document.addEventListener('click', onBodyClick); }
+    else { document.removeEventListener('click', onBodyClick); }
   };
   const onBodyClick = (e: MouseEvent) => {
     if (!triggerWrapper.current?.contains(e.target as Node) && !menuWrapper.current?.contains(e.target as Node)) {

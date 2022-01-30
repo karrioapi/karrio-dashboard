@@ -1,4 +1,4 @@
-import { TrackingEvent } from "@/purplship/rest";
+import { TrackingEvent } from "@purplship/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -26,6 +26,7 @@ export { getServerSideProps } from "@/lib/middleware";
 export default function TrackersPage(pageProps: any) {
   const Component: React.FC<any> = () => {
     const router = useRouter();
+    const { modal } = router.query;
     const { setLoading } = useContext(Loading);
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
@@ -33,6 +34,7 @@ export default function TrackersPage(pageProps: any) {
     const { addTracker } = useContext(TrackerModalContext);
     const { loading, called, trackers, next, previous, variables, load, loadMore } = useContext(TrackersContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const remove = (id?: string) => async () => {
       await removeTracker(id as string);
@@ -49,11 +51,17 @@ export default function TrackersPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchTrackers(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => {
+      if (called && !initialized && !isNoneOrEmpty(modal)) {
+        const tracker = trackers.find(t => t.id === modal);
+        (modal === 'new') && addTracker({ onChange: fetchTrackers });
+        tracker && previewTracker(tracker);
+        setInitialized(true);
+      }
+    }, [modal, called]);
 
     return (
       <>

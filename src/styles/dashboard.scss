@@ -188,6 +188,47 @@ Purplship custom styling
   }
 }
 
+.orders-table {
+  .order {
+    width: 15%;
+  }
+  .source {
+    width: 8%;
+  }
+  .status {
+    width: 10%;
+  }
+  .customer {
+    min-width: 40%;
+  }
+  .date {
+    width: 17%;
+  }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #eeeeee;
+  }
+}
+
+.related-item-table {
+  border-top: 2px solid #eee;
+  border-bottom: 2px solid #eee;
+
+  .status {
+    width: 8%;
+  }
+  .description {
+    min-width: 40%;
+  }
+  .date {
+    width: 15%;
+  }
+}
+
 hr {
   background-color: #dddddd;
 }
@@ -329,8 +370,18 @@ td > div.dropdown.is-active .dropdown-menu {
 
 .rates-list-box {
   max-height: 11em;
-  overflow: hidden;
-  &:hover {
-    overflow-y: scroll;
-  }
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.modal-card {
+  max-height: 80vh !important;
+}
+
+.modal-form {
+  background-color: #f9f9f9;
+}
+
+pre.code {
+  border: 1px solid #eee;
 }

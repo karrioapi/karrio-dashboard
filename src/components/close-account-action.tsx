@@ -2,7 +2,7 @@ import { NotificationType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
 import UserMutation from '@/context/user-mutation';
 import { Notify } from '@/components/notifier';
-import { signOut } from 'next-auth/client';
+import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/dist/client/router';
 
 interface CloseAccountActionComponent extends React.InputHTMLAttributes<HTMLDivElement> { }

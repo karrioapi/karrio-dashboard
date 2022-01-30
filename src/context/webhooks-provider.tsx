@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { WebhookList } from '@/purplship/rest/index';
+import { WebhookList } from '@purplship/rest/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination } from '@/lib/helper';

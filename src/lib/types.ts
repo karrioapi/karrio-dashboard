@@ -1,29 +1,54 @@
-import { Address, CarrierSettingsCarrierNameEnum, Commodity, Customs, Message, Parcel, ParcelDimensionUnitEnum, ParcelWeightUnitEnum, PaymentCurrencyEnum, PaymentPaidByEnum, Shipment, ShipmentStatusEnum, TrackingEvent, TrackingStatus, TrackingStatusStatusEnum, WebhookEnabledEventsEnum } from '@/purplship/rest/index';
-import { get_address_templates_address_templates_edges_node, get_address_templates_address_templates_edges_node_address, get_customs_info_templates_customs_templates_edges_node, get_customs_info_templates_customs_templates_edges_node_customs, get_customs_info_templates_customs_templates_edges_node_customs_commodities, get_events_events_edges_node, get_logs_logs_edges_node, get_parcel_templates_parcel_templates_edges_node, get_parcel_templates_parcel_templates_edges_node_parcel, get_shipment_shipment, get_trackers_trackers_edges_node, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, ServiceLevelModelSerializerInput } from '@/purplship/graphql';
+import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
+import { CarrierSettingsCarrierNameEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
 
 
-export type MessageType = Message | get_tracker_tracker_messages;
+export type MessageType = get_tracker_tracker_messages;
 export type LogType = get_logs_logs_edges_node;
 export type EventType = get_events_events_edges_node;
-export type AddressType = Address | get_address_templates_address_templates_edges_node_address
-export type ParcelType = Parcel | get_parcel_templates_parcel_templates_edges_node_parcel;
-export type CustomsType = Customs | get_customs_info_templates_customs_templates_edges_node_customs;
-export type TrackingEventType = TrackingEvent | get_tracker_tracker_events;
-export type TrackerType = (TrackingStatus | get_tracker_tracker) & {
-  events?: TrackingEventType[],
-  messages?: MessageType[]
+export type AddressType = get_shipment_shipment_shipper;
+export type CommodityType = get_shipment_shipment_customs_commodities;
+export type DutyType = get_shipment_shipment_customs_duty;
+export type CustomsType = get_shipment_shipment_customs & {
+  commodities: CommodityType[];
+  duty?: DutyType;
 };
-export type ShipmentType = Shipment | get_shipment_shipment;
-
-export type AddressTemplate = get_address_templates_address_templates_edges_node;
-export type CustomsTemplateType = get_customs_info_templates_customs_templates_edges_node;
-export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_node;
-export type TemplateType = AddressTemplate & ParcelTemplateType & CustomsTemplateType;
-export type CommodityType = (Commodity | get_customs_info_templates_customs_templates_edges_node_customs_commodities) & {
-  id: string;
+export type ParcelType = get_shipment_shipment_parcels & {
+  items: CommodityType[];
+};
+export type TrackingEventType = get_tracker_tracker_events;
+export type TrackerType = get_tracker_tracker & {
+  events: TrackingEventType[];
+  messages?: MessageType[];
+};
+export type ChargeType = get_shipment_shipment_selected_rate_extra_charges;
+export type RateType = get_shipment_shipment_rates;
+export type PaymentType = get_shipment_shipment_payment;
+export type ShipmentType = get_shipment_shipment & {
+  customs?: CustomsType;
+  parcels: ParcelType[];
+  shipper: AddressType;
+  recipient: AddressType;
+  rates?: RateType[];
+  messages?: MessageType[];
+  selected_rate?: RateType;
+};
+export type OrderType = get_order_order & {
+  line_items: CommodityType[];
+  shipments: ShipmentType[];
 };
 
-export type ServiceLevelType = ServiceLevelModelSerializerInput;
+export type AddressTemplateType = get_address_templates_address_templates_edges_node & {
+  address: AddressType;
+};
+export type CustomsTemplateType = get_customs_info_templates_customs_templates_edges_node & {
+  customs: CustomsType;
+};
+export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_node & {
+  parcel: ParcelType;
+};
+export type TemplateType = AddressTemplateType & ParcelTemplateType & CustomsTemplateType;
+
+export type ServiceLevelType = PartialServiceLevel;
 
 export interface View {
   path: string
@@ -42,7 +67,7 @@ export interface Notification {
 }
 
 export interface LabelData {
-  shipment: Shipment;
+  shipment: ShipmentType;
 }
 
 export type Collection<T = string> = {
@@ -51,29 +76,29 @@ export type Collection<T = string> = {
 
 export type PresetCollection = {
   [carrier_name: string]: {
-    [code: string]: Partial<Parcel>
+    [code: string]: Partial<ParcelType>
   }
 };
 
 export const PAYOR_OPTIONS = Array.from(new Set(
   Object
-    .values(PaymentPaidByEnum)
+    .values(PaidByEnum)
     .filter(key => key.toLowerCase() === key)
 ));
 
 export const CURRENCY_OPTIONS = Array.from(new Set(
   Object
-    .values(PaymentCurrencyEnum)
+    .values(CurrencyCodeEnum)
 ));
 
 export const DIMENSION_UNITS = Array.from(new Set(
   Object
-    .values(ParcelDimensionUnitEnum)
+    .values(DimensionUnitEnum)
 ));
 
 export const WEIGHT_UNITS = Array.from(new Set(
   Object
-    .values(ParcelWeightUnitEnum)
+    .values(WeightUnitEnum)
 ));
 
 export const EVENT_TYPES: string[] = Array.from(new Set(
@@ -83,12 +108,17 @@ export const EVENT_TYPES: string[] = Array.from(new Set(
 
 export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
   Object
-    .values(ShipmentStatusEnum)
+    .values(ShipmentStatus)
+));
+
+export const ORDER_STATUSES: string[] = Array.from(new Set(
+  Object
+    .values(OrderStatus)
 ));
 
 export const TRACKER_STATUSES: string[] = Array.from(new Set(
   Object
-    .values(TrackingStatusStatusEnum)
+    .values(TrackerStatus)
 ));
 
 export const CARRIER_NAMES: string[] = Array.from(new Set(
@@ -96,7 +126,7 @@ export const CARRIER_NAMES: string[] = Array.from(new Set(
     .values(CarrierSettingsCarrierNameEnum)
 ));
 
-export type ErrorMessage = Message & {
+export type ErrorMessage = MessageType & {
   carrier_id?: string;
   carrier_name?: string;
 };

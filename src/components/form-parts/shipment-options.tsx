@@ -1,18 +1,18 @@
-import { Shipment } from '@/purplship/rest/index';
-import React, { FormEvent, useContext, useReducer } from 'react';
+import React, { FormEvent, useContext, useReducer, useState } from 'react';
 import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
 import { cleanDict, deepEqual, isNone } from '@/lib/helper';
-import { CURRENCY_OPTIONS, NotificationType } from '@/lib/types';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
+import { CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
+import MetadataEditor, { MetadataEditorContext } from '../metadata-editor';
+import { MetadataObjectType } from '@purplship/graphql';
 
 interface ShipmentOptionsComponent {
-  shipment: Shipment;
-  update: (data: { changes?: Partial<Shipment>, refresh?: boolean }) => void;
+  shipment: ShipmentType;
+  onSubmit: (changes: Partial<ShipmentType>) => Promise<any>;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean }) {
@@ -28,12 +28,20 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
   };
 }
 
-const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update }) => {
+const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onSubmit }) => {
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
-  const { setOptions } = useContext(ShipmentMutationContext);
   const [options, dispatch] = useReducer(reducer, shipment?.options, () => shipment?.options);
+  const [metadata, setMetadata] = useState<any>(shipment?.metadata);
+  const [reference, setReference] = useState(shipment?.reference);
 
+  const computeDisable = (shipment: ShipmentType, options: any, metadata: any, reference?: string | null) => {
+    return (
+      (deepEqual(shipment.options, options) || (options === {} && shipment.options === {}))
+      && (deepEqual(shipment.metadata, metadata) || (metadata === {} && shipment.metadata === {}))
+      && shipment.reference === reference
+    )
+  }
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     const name: string = target.name;
@@ -46,20 +54,34 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update 
     try {
       if (shipment.id !== undefined) {
         setLoading(true);
-        await setOptions(shipment.id, options);
-        notify({ type: NotificationType.success, message: 'Shipment Options successfully updated!' });
-        update({ refresh: true });
+        await onSubmit({ options, metadata, reference });
+        notify({ type: NotificationType.success, message: 'Shipment options successfully updated!' });
       } else {
-        update({ changes: { options } });
+        await onSubmit({ options, metadata, reference });
       }
-    } catch (err: any) {
-      notify({ type: NotificationType.error, message: err });
+    } catch (message: any) {
+      notify({ type: NotificationType.error, message });
     }
     setLoading(false);
   };
 
   return (
     <form className="px-1 py-2" onSubmit={handleSubmit}>
+
+      <div className="">
+
+        <InputField
+          label="Shipment reference"
+          name="reference"
+          defaultValue={reference as string}
+          onChange={e => setReference(e.target.value || null)}
+          placeholder="shipment reference"
+          className="is-small"
+          autoComplete="off" />
+
+      </div>
+
+      <hr className="column p-0 my-5" />
 
       <div className="columns is-multiline mb-0">
 
@@ -90,6 +112,15 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update 
         </div>
       </div>
 
+      <div className="columns is-multiline mb-0 px-1 my-2">
+
+        <SelectField label="shipment currency" value={options?.currency} onChange={handleChange} name="currency" className="is-small is-fullwidth" fieldClass="column is-4 mb-0 px-1 py-2" required={!isNone(options?.insurance) || !isNone(options?.cash_on_delivery) || !isNone(options?.declared_value)}>
+          <option value="">Select a currency</option>
+
+          {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
+        </SelectField>
+
+      </div>
 
       <div className="columns is-multiline mb-0 pt-2">
 
@@ -129,24 +160,41 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, update 
         </div>
       </div>
 
+      <hr className="column p-0 my-5" />
 
-      <div className="columns is-multiline mb-0 px-1">
+      <MetadataEditor
+        object_type={MetadataObjectType.shipment}
+        metadata={metadata}
+        onChange={setMetadata}
+      >
+        <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
 
-        <SelectField label="shipment currency" value={options?.currency} onChange={handleChange} name="currency" className="is-small is-fullwidth" fieldClass="column is-3 mb-0 px-1 py-2" required={!isNone(options?.insurance) || !isNone(options?.cash_on_delivery) || !isNone(options?.declared_value)}>
-          <option value="">Select a currency</option>
+          <div className="is-flex is-justify-content-space-between">
+            <h2 className="title is-6 my-3">Metadata</h2>
 
-          {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
-        </SelectField>
+            <button
+              type="button"
+              className="button is-default is-small is-align-self-center"
+              disabled={isEditing}
+              onClick={() => editMetadata()}>
+              <span className="icon is-small">
+                <i className="fas fa-pen"></i>
+              </span>
+              <span>Edit metadata</span>
+            </button>
+          </div>
 
-      </div>
+          <hr className="mt-1 my-1" style={{ height: '1px' }} />
 
+        </>)}</MetadataEditorContext.Consumer>
+      </MetadataEditor>
 
       <div className="p-3 my-5"></div>
       <ButtonField type="submit"
         className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
-        disabled={deepEqual(shipment.options, options) || (options === {} && shipment.options === {})}>
+        disabled={computeDisable(shipment, options, metadata, reference)}>
         <span>Save</span>
       </ButtonField>
 

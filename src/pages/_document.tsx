@@ -8,6 +8,7 @@ class AppDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta charSet="utf-8" />
           <link rel="favicon" sizes="180x180" href={p`/favicon.ico`} />
           <link rel="apple-touch-icon" sizes="180x180" href={p`/apple-touch-icon.png`} />
           <link rel="icon" type="image/png" sizes="32x32" href={p`/favicon-32x32.png`} />

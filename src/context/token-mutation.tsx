@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { GetToken, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from '@/purplship/graphql';
+import { GetToken, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from '@purplship/graphql';
 import { TokenData } from '@/context/token-provider';
 
 type TemplateMutator<T> = T & {

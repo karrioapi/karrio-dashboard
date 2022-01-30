@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GetToken, GetToken_token, GET_TOKEN } from '@/purplship/graphql';
+import { GetToken, GetToken_token, GET_TOKEN } from '@purplship/graphql';
 
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {

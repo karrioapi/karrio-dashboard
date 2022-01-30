@@ -10,7 +10,6 @@ import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
 import CopiableLink from "@/components/copiable-link";
 import AppLink from "@/components/app-link";
-import Expandable from "@/components/expandable";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -44,18 +43,18 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
           </div>
 
           <div className="column is-6 pb-0">
+            <p className="has-text-right">
+              <CopiableLink text={event?.id as string} title="Copy ID" />
+            </p>
             {!isNone(eventId) && <p className="has-text-right">
               <AppLink
                 href={`/developers/events/${eventId}`} target="blank"
-                className="button is-white has-text-info is-medium px-2">
+                className="button is-default has-text-info is-small mx-1">
                 <span className="icon">
                   <i className="fas fa-external-link-alt"></i>
                 </span>
               </AppLink>
             </p>}
-            <p className="has-text-right">
-              <CopiableLink text={event?.id as string} title="Copy ID" />
-            </p>
           </div>
         </div>
 
@@ -79,15 +78,15 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
         {notEmptyJSON(data) &&
-          <Expandable className="py-3">
-            <pre>
+          <div className="py-3">
+            <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlight(data as string, { language: 'json' }).value,
                 }}
               />
             </pre>
-          </Expandable>}
+          </div>}
 
       </>}
     </>

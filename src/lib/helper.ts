@@ -1,6 +1,6 @@
-import { Shipment } from "@/purplship/rest/index";
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { AddressType, CommodityType, CustomsType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import React from "react";
 
 
 const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
@@ -78,6 +78,18 @@ export function formatCustomsLabel(customs: CustomsType): string {
     .map(c => formatRef('' + c)).join(' - ');
 }
 
+export function formatCommodity(item: CommodityType, index?: number): string {
+  const identifier = item.sku || item.description;
+  const info = isNoneOrEmpty(identifier) ? `${index || 'item'} - ` : `${identifier!.slice(0, 45)}...`;
+  return `${info} | ${item.quantity} x ${formatWeight(item)}`;
+}
+
+export function formatOrderLineItem(order: OrderType, item: CommodityType, index?: number) {
+  const identifier = item.sku || item.description;
+  const info = isNoneOrEmpty(identifier) ? `${order.order_id} - item ${index || ''}` : `${order.order_id} - ${identifier!.slice(0, 45)}...`;
+  return `${info} (${item.quantity} x ${formatWeight(item)})`;
+}
+
 export function findPreset(presets: PresetCollection, package_preset?: string): Partial<ParcelType> | undefined {
   const carrier = Object.values(presets).find((carrier) => {
     return Object.keys(carrier).includes(package_preset as string);
@@ -92,7 +104,7 @@ export function formatValues(separator: string, ...args: any[]): string {
   return args.filter(d => d !== undefined).join(separator);
 }
 
-export function formatDimension(parcel?: Partial<ParcelType>): string {
+export function formatDimension(parcel?: Partial<ParcelType> | null): string {
   if (parcel !== undefined && parcel !== null) {
 
     const { dimension_unit, height, length, width } = parcel;
@@ -103,10 +115,10 @@ export function formatDimension(parcel?: Partial<ParcelType>): string {
   return 'Dimensions: None specified...';
 }
 
-export function formatWeight(parcel?: Partial<ParcelType> | Partial<CommodityType>): string {
-  if (parcel !== undefined && parcel !== null) {
+export function formatWeight(data?: { weight: number, weight_unit: string } | any): string {
+  if (data !== undefined && data !== null) {
 
-    const { weight, weight_unit } = parcel;
+    const { weight, weight_unit } = data;
 
     return `Weight: ${weight} ${weight_unit}`;
   }
@@ -122,9 +134,10 @@ export function isNoneOrEmpty(value: any): boolean {
 }
 
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {
-  const clean_value1 = Object.entries(value1 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
-  const clean_value2 = Object.entries(value2 || {}).reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
-
+  const clean_value1 = Object.entries(value1 || {})
+    .reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
+  const clean_value2 = Object.entries(value2 || {})
+    .reduce((p, [k, v]) => ({ ...p, [k]: v === null ? undefined : v }), {});
 
   return (
     JSON.stringify(clean_value1, Object.keys(clean_value1 || {}).sort()) ===
@@ -132,12 +145,29 @@ export function deepEqual(value1?: object | null, value2?: object | null): boole
   );
 }
 
+function deepEqual2(k: string, v: any) {
+  if (k === null) { return undefined; }
+  if (v instanceof Array) {
+    console.log(k);
+    return v.map(d => JSON.parse(JSON.stringify(d, (window as any).deepEqual2)));
+  }
+  // if (v instanceof Object) {
+  //   return JSON.parse(JSON.stringify(
+  //     Object.keys(v)
+  //       .sort()
+  //       .reduce((acc, key) => ({ [key]: v[key] }), {}), replacer));
+  // }
+  return v;
+}
+
+if (typeof window !== 'undefined') (window as any).deepEqual2 = deepEqual2;
+
 // Remove undefined values from objects
 export function cleanDict<T = object>(value: object): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-export function formatParcelLabel(parcel?: ParcelType): string {
+export function formatParcelLabel(parcel?: ParcelType | null): string {
   if (isNone(parcel) || (parcel && isNone(parcel?.package_preset) && isNone(parcel?.packaging_type))) {
     return '';
   }
@@ -250,6 +280,35 @@ export function insertUrlParam(params: {} | any) {
   }
 }
 
+export function addUrlParam(key: string, value: string) {
+  insertUrlParam({ ...getURLSearchParams(), [key]: value });
+}
+
+export function removeUrlParam(param: string) {
+  const params = getURLSearchParams();
+  delete params[param];
+  insertUrlParam(params);
+}
+
 export function jsonify(value: any): string {
   return JSON.stringify(typeof value == 'string' ? JSON.parse(value) : value, null, 2);
+}
+
+export function validationMessage(message: string) {
+  return (e: React.FormEvent | any) => {
+    e.target.validity.valid && e.target.setCustomValidity(message);
+  }
+}
+
+export function validityCheck(nested?: (e: React.FormEvent | any) => void) {
+  return (e: React.FormEvent | any) => {
+    if (e.target.validity.valid) {
+      e.target.setCustomValidity('');
+      e.target.classList.remove('is-danger');
+    } else {
+      e.target.classList.add('is-danger');
+    }
+
+    return nested && nested(e);
+  }
 }

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
 import { OrgToken, refreshToken } from '@/client/context';
 import { getToken } from 'next-auth/jwt';
-import { getSession } from 'next-auth/client';
+import { getSession } from "next-auth/react";
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
@@ -11,7 +11,7 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 export default async function OrgAPI(req: NextApiRequest, res: NextApiResponse) {
   try {
     const orgId = req.query.org_id as string;
-    const current = await getToken({ req, secret, encryption: true });
+    const current = await getToken({ req, secret });
 
     const token = await refreshToken(current?.refreshToken as string, orgId);
     OrgToken.next(token);

@@ -1,7 +1,7 @@
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import CloseAccountAction from "@/components/close-account-action";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import Tabs from "@/components/generic/tabs";
+import Tabs, { TabStateProvider } from "@/components/generic/tabs";
 import Head from "next/head";
 import { useContext } from "react";
 import ProfileUpdateInput from "@/components/profile-update-input";
@@ -13,6 +13,8 @@ export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function AccountPage(pageProps: any) {
+  const tabs = ['Profile', 'Account'];
+
   const Component: React.FC = () => {
     const { multi_organizations, app_name } = useContext(APIReference);
 
@@ -22,7 +24,7 @@ export default function AccountPage(pageProps: any) {
           <span className="title is-4">Account Settings</span>
         </header>
 
-        <Tabs tabs={['Profile', 'Account']}>
+        <Tabs>
           <div>
             <div className="columns py-6">
               <div className="column is-5 pr-6">
@@ -81,7 +83,9 @@ export default function AccountPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
 
-      <Component />
+      <TabStateProvider tabs={tabs} setSelectedToURL>
+        <Component />
+      </TabStateProvider>
 
     </DashboardLayout>
   ), pageProps)

@@ -5,21 +5,25 @@ import ParcelDescription from "@/components/descriptions/parcel-description";
 import { Loading } from "@/components/loader";
 import ParcelEditModal, { ParcelEditContext } from "@/components/parcel-edit-modal";
 import ParcelTemplatesProvider, { ParcelTemplates } from "@/context/parcel-templates-provider";
-import { isNone } from "@/lib/helper";
+import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import ParcelMutationProvider, { ParcelMutationContext } from "@/context/parcel-template-mutation";
+import { useRouter } from "next/dist/client/router";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ParcelsPage(pageProps: any) {
   const Component: React.FC<any> = () => {
+    const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { deleteTemplate } = useContext(ParcelMutationContext);
-    const { loading, templates, previous, next, load, loadMore, refetch } = useContext(ParcelTemplates);
+    const { loading, templates, previous, next, called, load, loadMore, refetch } = useContext(ParcelTemplates);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -29,14 +33,24 @@ export default function ParcelsPage(pageProps: any) {
 
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
+    useEffect(() => {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        const parcelTemplate = templates.find(c => c.id === router.query.modal);
+        if (parcelTemplate || router.query.modal === 'new') {
+          editParcel({ parcelTemplate, onConfirm: update });
+        }
+        setInitialized(true);
+      }
+      called && setInitialized(true);
+    }, [router.query.modal, called]);
 
     return (
       <>
 
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Parcels</span>
-          <button className="button is-success is-pulled-right" onClick={() => editParcel({ onConfirm: update })}>
-            <span>New Parcel</span>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editParcel({ onConfirm: update })}>
+            <span>Create parcel</span>
           </button>
         </header>
 

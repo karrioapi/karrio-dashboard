@@ -6,21 +6,25 @@ import CustomsInfoDescription from "@/components/descriptions/customs-info-descr
 import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
 import CustomsMutationProvider, { CustomsMutationContext } from "@/context/customs-template-mutation";
-import { isNone } from "@/lib/helper";
+import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
+import { useRouter } from "next/dist/client/router";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function CustomsInfoPage(pageProps: any) {
   const Component: React.FC<any> = () => {
+    const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
     const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
-    const { loading, templates, next, previous, load, loadMore, refetch } = useContext(CustomInfoTemplates);
+    const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(CustomInfoTemplates);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -30,14 +34,23 @@ export default function CustomsInfoPage(pageProps: any) {
 
     useEffect(() => { !loading && load() }, []);
     useEffect(() => { setLoading(loading); });
+    useEffect(() => {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        const customsTemplate = templates.find(c => c.id === router.query.modal);
+        if (customsTemplate || router.query.modal === 'new') {
+          editCustomsInfo({ customsTemplate, onConfirm: update });
+        }
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>
 
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Customs</span>
-          <button className="button is-success is-pulled-right" onClick={() => editCustomsInfo({ onConfirm: update })}>
-            <span>New Customs Info</span>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editCustomsInfo({ onConfirm: update })}>
+            <span>Create customs info</span>
           </button>
         </header>
 

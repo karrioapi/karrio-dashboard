@@ -1,4 +1,5 @@
 import LogProvider from '@/context/log-provider';
+import { addUrlParam, removeUrlParam } from '@/lib/helper';
 import { LogComponent } from '@/views/log';
 import React, { useState } from 'react';
 
@@ -19,11 +20,13 @@ const LogPreview: React.FC<LogPreviewComponent> = ({ children }) => {
     setLogId(logId);
     setIsActive(true);
     setKey(`log-${Date.now()}`);
+    addUrlParam('modal', logId);
   };
   const dismiss = (_?: React.MouseEvent) => {
     setLogId(undefined);
     setIsActive(false);
     setKey(`log-${Date.now()}`);
+    removeUrlParam('modal');
   };
 
   return (

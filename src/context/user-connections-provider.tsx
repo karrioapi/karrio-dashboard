@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_user_connections, GET_USER_CONNECTIONS, get_user_connections_user_connections } from '@/purplship/graphql';
+import { get_user_connections, GET_USER_CONNECTIONS, get_user_connections_user_connections } from '@purplship/graphql';
 
 
 export type UserConnectionType = get_user_connections_user_connections;

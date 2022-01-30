@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { InputFieldComponent } from '@/components/generic/input-field';
-import { Address } from '@/purplship/rest/index';
+import { Address } from '@purplship/rest/index';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { Subject } from 'rxjs/internal/Subject';
 import { APIReference } from '@/context/references-provider';
@@ -14,7 +14,12 @@ interface AddressAutocompleteInputComponent extends InputFieldComponent {
   dropdownClass?: string;
 }
 
-const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, children, ...props }) => {
+const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({ onValueChange, country_code, label, required, dropdownClass, className, fieldClass, controlClass, name, children, ...props }) => {
+  const Props = {
+    required,
+    ...props,
+    ...(Object.keys(props).includes('value') ? { value: props.value || "" } : {}),
+  };
   const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
   const container = useRef<HTMLDivElement | null>(null);
   const [key] = useState<string>(`predictions_${Date.now()}`);
@@ -59,21 +64,33 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
   }, [isActive, onBodyClick]);
-  useEffect(() => {
-    setIsActive(!!predictions.length);
-  }, [predictions]);
+  useEffect(() => { setIsActive(!!predictions.length); }, [predictions]);
 
   const content = (_: any) => (
     <div className={`field ${fieldClass}`} key={key} ref={container}>
       {label !== undefined && <label className="label is-capitalized" style={{ fontSize: ".8em" }}>
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
       <div className={`control ${controlClass}`}>
         <div className={`dropdown input is-fullwidth p-0 ${isActive ? 'is-active' : ''} ${dropdownClass}`}
           style={{ border: 'none' }}
           key={`dropdown-input-${key}`}>
-          <input onChange={onChange} onClick={onClick} autoComplete={address_auto_complete?.is_enabled ? key : "on"} className="input is-fullwidth" required={required} {...props} />
+          <input
+            name={name}
+            onChange={e => updater.next({ address_line1: e.target.value || "" })}
+            style={{ position: 'absolute', right: 0, zIndex: -1 }}
+          />
+          <input
+            name={name}
+            onChange={onChange}
+            onClick={onClick}
+            className={`input is-fullwidth ${className || ''}`}
+            {...(address_auto_complete?.is_enabled ? { autoComplete: key } : {})}
+            {...Props}
+          />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
               <nav className="panel dropped-panel">

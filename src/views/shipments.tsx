@@ -8,10 +8,9 @@ import ModeIndicator from "@/components/mode-indicator";
 import ShipmentMenu from "@/components/shipment-menu";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
-import { AppMode } from "@/context/app-mode-provider";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -31,6 +30,7 @@ export default function ShipmentsPage(pageProps: any) {
     const { previewShipment } = useContext(ShipmentPreviewContext);
     const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [initialized, setInitialized] = React.useState(false);
 
     const fetchShipments = (extra: Partial<typeof variables> = {}) => {
       const query = {
@@ -48,6 +48,12 @@ export default function ShipmentsPage(pageProps: any) {
     });
     useEffect(() => { fetchShipments(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        previewShipment(router.query.modal as string);
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>
@@ -99,7 +105,7 @@ export default function ShipmentsPage(pageProps: any) {
               </tr>
 
               {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id as string)}>
+                <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id)}>
                   <td className="carrier is-vcentered has-text-centered">
                     {!isNone(shipment.carrier_name) &&
                       <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />

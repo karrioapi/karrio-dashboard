@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@/purplship/graphql';
+import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@purplship/graphql';
 import { ShipmentType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
@@ -23,7 +23,10 @@ export const ShipmentsContext = React.createContext<ShipmentsType>({} as Shipmen
 
 const ShipmentsProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
-  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true
+  });
   const [variables, setVariables] = useState<ShipmentsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as ShipmentType);

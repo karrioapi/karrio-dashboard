@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_events, GET_EVENTS, get_events_events_edges, get_eventsVariables } from '@/purplship/graphql';
+import { get_events, GET_EVENTS, get_events_events_edges, get_eventsVariables } from '@purplship/graphql';
 import { EventType } from '@/lib/types';
 import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
 
@@ -20,8 +20,11 @@ type EventsType = LazyQueryResult<get_events, any> & {
 
 export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
-const EventsProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, { notifyOnNetworkStatusChange: true });
+const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
+  const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<EventsFilterType & { offset: number }>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as EventType);
@@ -43,7 +46,7 @@ const EventsProvider: React.FC = ({ children }) => {
 
     const requestVariables = { ...params };
 
-    insertUrlParam(requestVariables);
+    setVariablesToURL && insertUrlParam(requestVariables);
     setVariables(requestVariables);
 
     if (query.called) {

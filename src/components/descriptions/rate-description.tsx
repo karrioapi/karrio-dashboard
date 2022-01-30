@@ -1,9 +1,9 @@
 import React from 'react';
-import { Rate } from '@/purplship/rest/index';
 import { formatRef, isNone } from '@/lib/helper';
+import { RateType } from '@/lib/types';
 
 interface RateDescriptionComponent {
-  rate: Rate;
+  rate: RateType;
 }
 
 const RateDescription: React.FC<RateDescriptionComponent> = ({ rate }) => {

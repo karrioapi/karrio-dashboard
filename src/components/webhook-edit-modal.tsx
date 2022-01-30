@@ -2,12 +2,12 @@ import React, { useContext, useReducer, useState } from 'react';
 import { NotificationType, EVENT_TYPES } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
-import { Webhook, WebhookData } from '@/purplship/rest/index';
+import { Webhook, WebhookData } from '@purplship/rest/index';
 import { Notify } from '@/components/notifier';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
-import { deepEqual, isNone } from '@/lib/helper';
+import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import { Loading } from '@/components/loader';
 
 type OperationType = {
@@ -50,13 +50,16 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
       setIsNew(isNone(operation.webhook));
       dispatch({ name: 'partial', value: operation.webhook || DEFAULT_STATE });
       setKey(`webhook-${Date.now()}`);
+      addUrlParam('modal', operation.webhook?.id || 'new');
     };
     const close = (_?: React.MouseEvent) => {
       if (isNew) dispatch({ name: 'partial', value: DEFAULT_STATE });
       setIsActive(false);
       setOperation(undefined);
       setKey(`webhook-${Date.now()}`);
+      removeUrlParam('modal');
     };
+
     const handleChange = (event: React.ChangeEvent<any>) => {
       event.preventDefault();
       const target = event.target;
@@ -99,11 +102,11 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           <form className="modal-card" onSubmit={handleSubmit}>
-            <section className="modal-card-body">
+            <section className="modal-card-body modal-form">
               <div className="form-floating-header p-4">
-                <h3 className="subtitle is-3">{isNew ? 'Add ' : 'Update '} a Webhook endpoint</h3>
+                <span className="has-text-weight-bold is-size-6">{isNew ? 'Add ' : 'Update '} a webhook endpoint</span>
               </div>
-              <div className="p-3 my-5"></div>
+              <div className="p-3 my-4"></div>
 
               <InputField label="Endpoint URL" name="url" value={payload?.url} onChange={handleChange} className="is-small" required />
 

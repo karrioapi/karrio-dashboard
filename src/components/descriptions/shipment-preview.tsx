@@ -1,4 +1,8 @@
+import EventsProvider from '@/context/events-provider';
+import LogsProvider from '@/context/logs-provider';
+import MetadataMutationProvider from '@/context/metadata-mutation';
 import ShipmentProvider from '@/context/shipment-provider';
+import { addUrlParam, removeUrlParam } from '@/lib/helper';
 import { ShipmentComponent } from '@/views/shipment';
 import React, { useState } from 'react';
 
@@ -19,11 +23,13 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
     setShipmentId(shipmentId);
     setIsActive(true);
     setKey(`shipment-${Date.now()}`);
+    addUrlParam('modal', shipmentId);
   };
   const dismiss = (_?: any) => {
     setShipmentId(undefined);
     setIsActive(false);
     setKey(`shipment-${Date.now()}`);
+    removeUrlParam('modal');
   };
 
   return (
@@ -38,7 +44,15 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
             <ShipmentProvider>
-              <ShipmentComponent shipmentId={shipmentId} />
+              <EventsProvider setVariablesToURL={false}>
+                <LogsProvider setVariablesToURL={false}>
+                  <MetadataMutationProvider>
+
+                    <ShipmentComponent shipmentId={shipmentId} />
+
+                  </MetadataMutationProvider>
+                </LogsProvider>
+              </EventsProvider>
             </ShipmentProvider>
           </section>
         </div>}

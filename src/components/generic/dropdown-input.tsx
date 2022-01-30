@@ -1,4 +1,4 @@
-import { isNone } from '@/lib/helper';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from 'react';
 
 
@@ -12,16 +12,20 @@ export interface DropdownInputComponent extends React.AllHTMLAttributes<HTMLInpu
 }
 
 
-const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, value, fieldClass, controlClass, dropdownClass, required, onValueChange, ...props }) => {
-  const btn = useRef<any>(null);
+const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, value, className, fieldClass, controlClass, dropdownClass, required, onValueChange, ...props }) => {
   const control = useRef<any>(null);
+  const btn = useRef<HTMLInputElement>(null);
   const [key, setKey] = useState<string>(`dropdown-${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-  const [country, setValue] = useState<string>();
+  const [selected, setSelected] = useState<string>();
 
-  const find = useCallback((country: string) => {
-    return items?.find(([key, val]) => key.toLowerCase() == country.toLowerCase() || val.toLowerCase() == country.toLowerCase())
+  const find = useCallback((selection?: string) => {
+    if (isNoneOrEmpty(selection)) { return ["", ""]; }
+    return items?.find(([key, val]) => (
+      key.toLowerCase().trim() == selection?.toLowerCase().trim() ||
+      val.toLowerCase().trim() == selection?.toLowerCase().trim()
+    ))
   }, [items]);
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,19 +52,19 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
   };
   const onRefChange = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    const [key, country] = find(e.target.value) || [];
-    setValue(country || "");
+    const [key, value] = find(e.target.value) || [];
+    setSelected(value);
     onValueChange(key as string);
   };
-  const onSelect = (key: string) => (_: React.MouseEvent) => {
-    setValue(key);
+  const onSelect = (key: string) => (e: React.MouseEvent) => {
+    setSelected(key);
     onValueChange(key);
   };
 
   useEffect(() => {
-    if (!isNone(items) && !isNone(value)) {
-      const [_, country] = find(value as string) || [];
-      setValue(country);
+    if (!isNone(items)) {
+      const [_, selected] = find(value as string) || [];
+      setSelected(selected);
     }
   }, [items, value, find]);
 
@@ -68,36 +72,64 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
     <div className={`field ${fieldClass}`} key={key}>
       {label !== undefined && <label className="label is-capitalized" style={{ fontSize: ".8em" }}>
         {label}
-        {required && <span className="icon is-small has-text-danger small-icon"><i className="fas fa-asterisk"></i></span>}
+        {required && <span className="icon is-small has-text-danger small-icon">
+          <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
+        </span>}
       </label>}
       <div className={`control ${controlClass}`}>
         <div className={`dropdown select is-fullwidth ${isActive ? 'is-active' : ''} ${dropdownClass}`} key={`dropdown-input-${key}`}>
-          <input name={name} onChange={onRefChange} value={country || ''} className="input is-fullwidth" style={{ position: 'absolute', zIndex: -1 }} required={required} />
-          <a onClick={handleOnClick} aria-haspopup="true" className="dropdown-trigger input is-fullwidth px-2" style={{ justifyContent: 'left' }} aria-controls={`dropdown-input-`} ref={btn}>
-            <span>{country}</span>
-          </a>
+          <input
+            onClick={handleOnClick}
+            onChange={onRefChange}
+            value={selected || ''}
+            className={"dropdown-trigger input is-clickable is-fullwidth px-2" + ` ${className}` || ''}
+            required={required}
+            aria-haspopup="true"
+            readOnly
+            {...props}
+          />
+          <input
+            style={{ zIndex: -1, position: "absolute", right: 0 }}
+            name={name}
+            onChange={onRefChange}
+          />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
             <div className="dropdown-content py-0">
 
               <div className="panel-block px-1 py-1">
-                <p className="control">
-                  <input className="input" type="text" defaultValue={search || ''} onInput={onSearch} ref={control} />
+                <p className="control has-icons-left">
+                  <input
+                    type="text"
+                    className={"input" + ` ${className}` || ''}
+                    defaultValue={search || ''}
+                    onInput={onSearch}
+                    ref={control}
+                  />
+                  <span className="icon is-left is-small">
+                    <i className="fas fa-search" aria-hidden="true"></i>
+                  </span>
                 </p>
               </div>
-              <nav className="panel dropped-panel">
+
+              {items?.length === 0 && <div className="panel-block px-1 py-1">
+                No items found...
+              </div>}
+
+              <ul className="panel dropped-panel">
                 {(items || [])
                   .filter(([_, val]) => search === "" || val.toLowerCase().includes(search.toLowerCase()))
                   .map(([key, val], index) => (
-                    <a key={`${key}-${Date.now()}`}
-                      tabIndex={index}
+                    <li
+                      key={`${key}-${Date.now()}`}
+                      tabIndex={index + 1}
                       onClick={onSelect(key)}
-                      className={`panel-block  ${key === country ? 'is-active' : ''}`}>
-                      <span>{val}</span>
-                    </a>
+                      className={`panel-block is-clickable ${key === selected ? 'is-active' : ''}`}>
+                      <span className='is-size-7'>{val}</span>
+                    </li>
                   ))
                 }
-              </nav>
+              </ul>
             </div>
           </div>
         </div>

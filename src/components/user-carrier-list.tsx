@@ -2,29 +2,34 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
 import CarrierBadge from '@/components/carrier-badge';
 import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
-import ConnectionMutation from '@/context/connection-mutation';
+import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import { AppMode, computeMode } from '@/context/app-mode-provider';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import Spinner from '@/components/spinner';
+import { useRouter } from 'next/dist/client/router';
+import { isNoneOrEmpty } from '@/lib/helper';
+import CopiableLink from './copiable-link';
 
 interface UserConnectionListView { }
 
-const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<UserConnectionListView>(({ updateConnection, deleteConnection }) => {
+const UserConnectionList: React.FC<UserConnectionListView> = () => {
+  const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
   const { confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
-  const { user_connections, loading, refetch } = useContext(UserConnections);
+  const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
+  const { user_connections, loading, called, refetch } = useContext(UserConnections);
   const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
   const onUpdate = async () => refetch && await refetch();
   const toggle = ({ __typename, active, id }: UserConnectionType) => async () => {
     try {
-      const data = { [__typename.toLowerCase()]: { id, active: !active } };
+      const data = { [__typename.toLowerCase()]: { active: !active } };
       await updateConnection({ id, ...data });
       notify({
         type: NotificationType.success,
@@ -49,6 +54,12 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
   };
 
   useEffect(() => { setLoading(loading); });
+  useEffect(() => {
+    if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
+      const connection = user_connections.find(c => c.id === router.query.modal);
+      connection && editConnection({ connection, onConfirm: onUpdate });
+    }
+  }, [router.query.modal, user_connections]);
 
   return (
     <>
@@ -71,7 +82,11 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
 
             <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || (testMode !== connection.test && viewOtherMode)) ? 'table-row' : 'none' }}>
               <td className="carrier">
-                <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" />
+                <CarrierBadge
+                  carrier={connection.carrier_name}
+                  custom_name={(connection as any).verbose_name}
+                  className="box has-text-weight-bold"
+                />
               </td>
               <td className="mode is-vcentered">
                 {connection.test && <span className="tag is-warning is-centered">Test</span>}
@@ -87,7 +102,14 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
                 <div className="content is-small">
                   <ul>
                     <li>
-                      <span className="is-size-7 my-1 has-text-weight-semibold">carrier id: {connection.carrier_id}</span>
+                      <span className="is-size-7 my-1 has-text-weight-semibold">
+                        carrier_name: {(connection as any).custom_carrier_name || connection.carrier_name}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="is-size-7 my-1 has-text-weight-semibold">
+                        carrier_id: <CopiableLink className="button is-white is-small" text={connection.carrier_id} />
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -130,6 +152,6 @@ const UserConnectionList: React.FC<UserConnectionListView> = ConnectionMutation<
 
     </>
   );
-});
+}
 
 export default UserConnectionList;

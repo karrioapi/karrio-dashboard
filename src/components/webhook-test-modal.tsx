@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { NotificationType } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
-import { Webhook } from '@/purplship/rest/index';
+import { Webhook } from '@purplship/rest/index';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import SelectField from '@/components/generic/select-field';
@@ -65,8 +65,11 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           <form className="modal-card" onSubmit={handleSubmit}>
-            <section className="modal-card-body">
-              <h3 className="subtitle is-3">Test a Webhook endpoint</h3>
+            <section className="modal-card-body modal-form">
+              <div className="form-floating-header p-4">
+                <span className="has-text-weight-bold is-size-6">Test a webhook endpoint</span>
+              </div>
+              <div className="p-3 my-4"></div>
 
               <p className="is-subtitle is-size-6 has-text-weight-bold has-text-grey my-2">{webhook.url}</p>
 
@@ -79,7 +82,7 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
               </SelectField>
 
               <div className="card-content py-3 px-0">
-                <pre style={{ height: '30vh', maxHeight: '30vh' }}>
+                <pre className="code p-1" style={{ height: '30vh', maxHeight: '30vh' }}>
                   <code
                     dangerouslySetInnerHTML={{
                       __html: hljs.highlight(payload, { language: 'json' }).value,

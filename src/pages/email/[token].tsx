@@ -1,8 +1,8 @@
-import { References } from "@/purplship/rest";
+import { References } from "@purplship/rest";
 import SectionLayout from "@/layouts/section-layout";
 import Spinner from "@/components/spinner";
 import APIReferenceProvider from "@/context/references-provider";
-import { CONFIRM_EMAIL } from "@/purplship/graphql";
+import { CONFIRM_EMAIL } from "@purplship/graphql";
 import { isNone } from "@/lib/helper";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";

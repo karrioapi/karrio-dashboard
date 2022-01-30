@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useContext, useEffect } from 'react';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
 import { formatAddress, isNone } from '@/lib/helper';
-import { Address } from '@/purplship/rest/index';
+import { Address } from '@purplship/rest/index';
 import { AddressTemplates } from '@/context/address-templates-provider';
 
 interface NameInputComponent extends InputFieldComponent {
@@ -28,7 +28,9 @@ const NameInput: React.FC<NameInputComponent> = ({ disableSuggestion, onValueCha
       {!disableSuggestion && <datalist id="address_templates">
         {(templates || [])
           .map(template => (
-            <option key={template.id} value={template.address?.person_name as string}>{template.label} - {formatAddress(template?.address as any)}</option>
+            <option key={template.id} value={template.address?.person_name as string}>
+              {template.label} - {formatAddress(template?.address as any)}
+            </option>
           ))
         }
       </datalist>}

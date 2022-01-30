@@ -10,6 +10,7 @@ import { TrackerMutationContext } from '@/context/tracker-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
+import { removeUrlParam } from '@/lib/helper';
 
 type Connection = UserConnectionType | SystemConnectionType;
 type OperationType = {
@@ -48,6 +49,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
     setTrackingNumber(undefined);
     setKey(`tracker-${Date.now()}`);
     (updated && operation?.onChange) && operation.onChange();
+    removeUrlParam('modal');
   };
   const create = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -83,8 +85,11 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
           {isActive && <form className="modal-card" onSubmit={create}>
-            <section className="modal-card-body">
-              <h3 className="subtitle is-3">Track a Shipment</h3>
+            <section className="modal-card-body modal-form">
+              <div className="form-floating-header p-4">
+                <span className="has-text-weight-bold is-size-6">Track package</span>
+              </div>
+              <div className="p-3 my-4"></div>
 
               <InputField label="Tracking Number" defaultValue="" onChange={e => setTrackingNumber(e.target.value)} fieldClass="mt-6" required />
 

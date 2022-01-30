@@ -6,21 +6,24 @@ import AddressDescription from "@/components/descriptions/address-description";
 import GoogleGeocodingScript from "@/components/google-geocoding-script";
 import { Loading } from "@/components/loader";
 import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-templates-provider";
-import { isNone } from "@/lib/helper";
+import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import AddressMutationProvider, { AddressMutationContext } from "@/context/address-template-mutation";
+import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from '@/lib/middleware';
 
 
 export default function AddressPage(pageProps: any) {
   const Component: React.FC<any> = () => {
+    const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { confirmDeletion } = useContext(ConfirmModalContext);
     const { editAddress } = useContext(AddressEditContext);
     const { deleteAddressTemplate } = useContext(AddressMutationContext);
-    const { loading, templates, next, previous, load, loadMore, refetch } = useContext(AddressTemplates);
+    const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(AddressTemplates);
+    const [initialized, setInitialized] = React.useState(false);
 
     const update = async (_?: React.MouseEvent) => refetch && await refetch();
     const remove = (id: string) => async () => {
@@ -30,13 +33,22 @@ export default function AddressPage(pageProps: any) {
 
     useEffect(() => { (!loading && load) && load() }, []);
     useEffect(() => { setLoading(loading); });
+    useEffect(() => {
+      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+        const addressTemplate = templates.find(c => c.id === router.query.modal);
+        if (addressTemplate || router.query.modal === 'new') {
+          editAddress({ addressTemplate, onConfirm: update });
+        }
+        setInitialized(true);
+      }
+    }, [router.query.modal, called]);
 
     return (
       <>
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Addresses</span>
-          <button className="button is-success is-pulled-right" onClick={() => editAddress({ onConfirm: update })}>
-            <span>New Address</span>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editAddress({ onConfirm: update })}>
+            <span>Create address</span>
           </button>
         </header>
 

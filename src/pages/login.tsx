@@ -1,9 +1,9 @@
-import { References } from "@/purplship/rest";
+import { References } from "@purplship/rest";
 import SectionLayout from "@/layouts/section-layout";
 import APIReferenceProvider from "@/context/references-provider";
 import { getCookie } from "@/lib/helper";
 import { NextPage } from "next";
-import { signIn } from "next-auth/client";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
@@ -37,8 +37,8 @@ const LoginPage: NextPage<any, { references: References }> = ({ references }) =>
       router.push(`${(new URLSearchParams(location.search)).get('next')?.replace(BASE_PATH, "") || '/'}`);
     } else {
       setShowError(true);
+      setTimeout(() => setIsLoading(false), 1000);
     }
-    setTimeout(() => setIsLoading(false), 1000);
   };
 
   return (

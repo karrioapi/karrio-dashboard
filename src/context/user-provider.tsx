@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GetUser, GetUser_user, GET_USER } from '@/purplship/graphql';
+import { GetUser, GetUser_user, GET_USER } from '@purplship/graphql';
 
 export type UserType = GetUser_user;
 type UserDataType = LazyQueryResult<GetUser, any> & { user: UserType };

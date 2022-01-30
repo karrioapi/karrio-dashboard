@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, MutationFunctionOptions, MutationResult, useMutation } from '@apollo/client';
-import { MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, SystemCarrierMutationInput } from '@/purplship/graphql';
+import { MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, SystemCarrierMutationInput } from '@purplship/graphql';
 
 export type ConnectionMutator<T> = T & {
   mutateConnection: (data: SystemCarrierMutationInput) => Promise<FetchResult<SystemCarrierMutationInput, Record<string, any>, Record<string, any>>>;

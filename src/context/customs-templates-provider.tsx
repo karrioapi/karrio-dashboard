@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@/purplship/graphql';
+import { get_customs_info_templates, get_customs_info_templates_customs_templates_edges, GET_CUSTOMS_TEMPLATES } from '@purplship/graphql';
 import { CustomsTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;
@@ -18,7 +18,10 @@ type CustomInfoTemplatesQueryResult = LazyQueryResult<get_customs_info_templates
 export const CustomInfoTemplates = React.createContext<CustomInfoTemplatesQueryResult>({} as CustomInfoTemplatesQueryResult);
 
 const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_customs_info_templates>(GET_CUSTOMS_TEMPLATES, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges): CustomsTemplateType[] => (edges || []).map(item => item?.node as CustomsTemplateType);

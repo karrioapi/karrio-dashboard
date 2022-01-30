@@ -7,7 +7,7 @@ import { isNone, p } from '@/lib/helper';
 
 
 const OrganizationDropdown: React.FC = () => {
-  const btn = useRef<HTMLButtonElement>(null);
+  const btn = useRef<HTMLInputElement>(null);
   const { authenticateOrg, ...token } = useContext(TokenData);
   const { load, organizations, organization, loading, called } = useContext(Organizations);
   const { setLoading } = useContext(Loading);
@@ -53,27 +53,35 @@ const OrganizationDropdown: React.FC = () => {
 
   return (
     <>
-      {((organizations || []).length > 0) && <div className={`dropdown ${active ? 'is-active' : ''}`}>
-        <div className="dropdown-trigger">
-          <button className="button is-light" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={btn}>
-            <i className="fas fa-store"></i>
-            <span className="px-3">{selected?.name}</span>
-            <span className="icon is-small">
-              <i className="fas fa-angle-down" aria-hidden="true"></i>
+      {((organizations || []).length > 0) &&
+        <div className={`dropdown ${active ? 'is-active' : ''}`} style={{ width: '100%' }}>
+          <div className="dropdown-trigger control has-icons-left" style={{ width: '100%' }}>
+            <div className="select is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={btn}>
+              <input
+                type="text"
+                className="input is-clickable"
+                value={selected?.name || "All Organizations"}
+                onChange={() => { }}
+                readOnly
+              />
+            </div>
+
+            <span className="icon is-left">
+              <i className="fas fa-store"></i>
             </span>
-          </button>
-        </div>
-        <div className="dropdown-menu" id="dropdown-menu" role="menu">
-          <div className="dropdown-content">
-            {(organizations || []).map(org => (
-              <a key={org.id} className={`dropdown-item ${(org.id === selected?.id) ? 'is-active' : ''}`} onClick={select(org)}>
-                <i className="fas fa-store"></i>
-                <span className="px-2">{org.name}</span>
-              </a>
-            ))}
           </div>
-        </div>
-      </div>}
+
+          <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: '100%' }}>
+            <div className="dropdown-content">
+              {(organizations || []).map(org => (
+                <a key={org.id} className={`dropdown-item ${(org.id === selected?.id) ? 'is-active' : ''}`} onClick={select(org)}>
+                  <i className="fas fa-store"></i>
+                  <span className="px-2">{org.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>}
 
       {(!loading && (organizations || []).length === 0) &&
         <Image src={p`/icon.svg`} className="mt-2" width="70" height="100%" alt="logo" />}

@@ -1,34 +1,31 @@
 import React from 'react';
 import { FetchResult, MutationFunctionOptions, MutationResult, useMutation } from '@apollo/client';
-import { CreateOrganizationInput, CREATE_ORGANIZATION, create_connectionVariables, UpdateOrganizationInput, UPDATE_ORGANIZATION, update_connectionVariables } from '@/purplship/graphql';
+import { CreateOrganizationInput, CREATE_ORGANIZATION, create_connectionVariables, UpdateOrganizationInput, UPDATE_ORGANIZATION, update_connectionVariables, create_organizationVariables, update_organizationVariables } from '@purplship/graphql';
 
-export type OrganizationMutator<T> = T & {
+type OrganizationMutator = {
   createOrganization: (data: CreateOrganizationInput) => Promise<FetchResult<CreateOrganizationInput, Record<string, any>, Record<string, any>>>;
   updateOrganization: (data: UpdateOrganizationInput) => Promise<FetchResult<UpdateOrganizationInput, Record<string, any>, Record<string, any>>>;
 }
-
 export type OrganizationMutationType = (options?: MutationFunctionOptions<create_connectionVariables, {
   data: Partial<CreateOrganizationInput>;
 }> | undefined) => Promise<FetchResult<CreateOrganizationInput, Record<string, any>, Record<string, any>>>;
 export type OrganizationMutationResultType = MutationResult<CreateOrganizationInput>;
 
-const OrganizationMutation = <T extends {}>(Component: React.FC<OrganizationMutator<T>>) => {
-  return ({ children, ...props }: any) => {
-    const [createMutation] = useMutation<CreateOrganizationInput, create_connectionVariables>(CREATE_ORGANIZATION);
-    const [updateMutation] = useMutation<UpdateOrganizationInput, update_connectionVariables>(UPDATE_ORGANIZATION);
 
-    const createOrganization = (data: CreateOrganizationInput) => createMutation({ variables: { data } });
-    const updateOrganization = (data: UpdateOrganizationInput) => updateMutation({ variables: { data } });
+export const OrganizationMutationContext = React.createContext<OrganizationMutator>({} as OrganizationMutator);
 
-    return (
-      <Component {...props}
-        createOrganization={createOrganization}
-        updateOrganization={updateOrganization}
-      >
-        {children}
-      </Component>
-    );
-  };
-}
+const OrganizationMutationProvider: React.FC = ({ children }: any) => {
+  const [createMutation] = useMutation<CreateOrganizationInput, create_organizationVariables>(CREATE_ORGANIZATION);
+  const [updateMutation] = useMutation<UpdateOrganizationInput, update_organizationVariables>(UPDATE_ORGANIZATION);
 
-export default OrganizationMutation;
+  const createOrganization = (data: CreateOrganizationInput) => createMutation({ variables: { data } });
+  const updateOrganization = (data: UpdateOrganizationInput) => updateMutation({ variables: { data } });
+
+  return (
+    <OrganizationMutationContext.Provider value={{ createOrganization, updateOrganization }}>
+      {children}
+    </OrganizationMutationContext.Provider>
+  );
+};
+
+export default OrganizationMutationProvider;

@@ -1,4 +1,4 @@
-import { ShipmentStatusEnum } from '@/purplship/rest/index';
+import { ShipmentStatusEnum } from '@purplship/rest/index';
 import React from 'react';
 
 interface StatusBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> {
@@ -7,13 +7,15 @@ interface StatusBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> 
 
 const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...props }) => {
   const color = {
-    "created": "is-info is-light",
-    "purchased": "is-info is-light",
+    "created": "is-primary is-light",
     "cancelled": "is-light",
-    "shipped": "is-link is-light",
-    "in-transit": "is-link is-light",
-    "pending": "is-info is-light",
+    "partial": "is-info is-light",
+    "purchased": "is-info is-light",
+    "in-transit": "is-info is-light",
+    "pending": "is-primary is-light",
+    "fulfilled": "is-success is-light",
     "delivered": "is-success is-light",
+    "shipped": "is-success is-light",
     "incident": "is-error is-light",
   }[status || ""] || "is-light";
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from '@/purplship/graphql';
+import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from '@purplship/graphql';
 import { ParcelTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;
@@ -18,7 +18,10 @@ export type ParcelTemplatesType = LazyQueryResult<get_parcel_templates, any> & {
 export const ParcelTemplates = React.createContext<ParcelTemplatesType>({} as ParcelTemplatesType);
 
 const ParcelTemplatesProvider: React.FC = ({ children }) => {
-  const [initialLoad, query] = useLazyQuery<get_parcel_templates>(GET_PARCEL_TEMPLATES, { notifyOnNetworkStatusChange: true });
+  const [initialLoad, query] = useLazyQuery<get_parcel_templates>(GET_PARCEL_TEMPLATES, {
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
+  });
   const [variables, setVariables] = useState<any>(PAGINATION);
 
   const extract = (edges?: Edges) => (edges || []).map(item => item?.node as ParcelTemplateType);
