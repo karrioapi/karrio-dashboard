@@ -2569,7 +2569,7 @@ export interface get_order_order {
   test_mode: boolean;
   options: any | null;
   metadata: any | null;
-  shipments: get_order_order_shipments[] | null;
+  shipments: get_order_order_shipments[];
 }
 
 export interface get_order {
@@ -2834,7 +2834,7 @@ export interface get_orders_orders_edges_node {
   test_mode: boolean;
   options: any | null;
   metadata: any | null;
-  shipments: get_orders_orders_edges_node_shipments[] | null;
+  shipments: get_orders_orders_edges_node_shipments[];
 }
 
 export interface get_orders_orders_edges {
