@@ -5,7 +5,7 @@ import { GetToken, GetToken_token, GET_TOKEN } from '@purplship/graphql';
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {
   token: TokenType;
-  load: () => any;
+  load: () => Promise<any>;
   authenticateOrg: (org_id: string) => Promise<any | undefined>
 };
 

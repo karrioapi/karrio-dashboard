@@ -16,8 +16,8 @@ type OrdersType = LazyQueryResult<get_orders, OrdersFilterType> & {
   next?: number | null;
   previous?: number | null;
   variables: OrdersFilterType;
-  load: (options?: OrdersFilterType) => Promise<void>;
-  loadMore: (options?: OrdersFilterType) => Promise<void>;
+  load: (options?: OrdersFilterType) => Promise<any>;
+  loadMore: (options?: OrdersFilterType) => Promise<any>;
 };
 
 export const OrdersContext = React.createContext<OrdersType>({} as OrdersType);
@@ -68,14 +68,14 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
 
   return (
     <OrdersContext.Provider value={{
+      ...query,
       load,
       loadMore,
       variables,
       orders: extract(query?.data?.orders?.edges),
       next: query.data?.orders?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
-      ...query
-    } as OrdersType}>
+    }}>
       {children}
     </OrdersContext.Provider>
   );

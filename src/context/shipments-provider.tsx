@@ -15,8 +15,8 @@ type ShipmentsType = LazyQueryResult<get_shipments, ShipmentsFilterType> & {
   next?: number | null;
   previous?: number | null;
   variables: ShipmentsFilterType;
-  load: (options?: ShipmentsFilterType) => Promise<void>;
-  loadMore: (options?: ShipmentsFilterType) => Promise<void>;
+  load: (options?: ShipmentsFilterType) => Promise<any>;
+  loadMore: (options?: ShipmentsFilterType) => Promise<any>;
 };
 
 export const ShipmentsContext = React.createContext<ShipmentsType>({} as ShipmentsType);
@@ -64,13 +64,13 @@ const ShipmentsProvider: React.FC = ({ children }) => {
 
   return (
     <ShipmentsContext.Provider value={{
+      ...query,
       load,
       loadMore,
       variables,
       shipments: extract(query?.data?.shipments?.edges),
       next: query.data?.shipments?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
-      ...query
     } as ShipmentsType}>
       {children}
     </ShipmentsContext.Provider>

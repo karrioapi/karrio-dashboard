@@ -8,7 +8,7 @@ export type OrganizationType = get_organizations_organizations;
 type OrganizationsQueryResult = LazyQueryResult<get_organizations, any> & {
   organizations: OrganizationType[];
   organization: OrganizationType;
-  load: () => void;
+  load: () => Promise<any>;
 };
 
 export const Organizations = React.createContext<OrganizationsQueryResult>({} as OrganizationsQueryResult);

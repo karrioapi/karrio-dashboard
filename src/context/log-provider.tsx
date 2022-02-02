@@ -6,7 +6,7 @@ import { get_log, GET_LOG, get_logVariables, get_log_log } from '@purplship/grap
 type Log = get_log_log;
 export type LogResultType = LazyQueryResult<get_log, get_logVariables> & {
   log?: Log;
-  loadLog: (id: string) => void;
+  loadLog: (id: string) => Promise<any>;
   setLog: React.Dispatch<React.SetStateAction<get_log_log | undefined>>;
 };
 

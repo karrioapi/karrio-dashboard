@@ -15,8 +15,8 @@ type TrackersType = LazyQueryResult<get_trackers, TrackersFilterType> & {
   next?: number | null;
   previous?: number | null;
   variables: TrackersFilterType;
-  load: (options?: TrackersFilterType) => Promise<void>;
-  loadMore: (options?: TrackersFilterType) => Promise<void>;
+  load: (options?: TrackersFilterType) => Promise<any>;
+  loadMore: (options?: TrackersFilterType) => Promise<any>;
 };
 
 export const TrackersContext = React.createContext<TrackersType>({} as TrackersType);
@@ -64,14 +64,14 @@ const TrackersProvider: React.FC = ({ children }) => {
 
   return (
     <TrackersContext.Provider value={{
+      ...query,
       load,
       loadMore,
       variables,
       trackers: extract(query?.data?.trackers?.edges),
       next: query.data?.trackers?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
-      ...query
-    } as TrackersType}>
+    }}>
       {children}
     </TrackersContext.Provider>
   );

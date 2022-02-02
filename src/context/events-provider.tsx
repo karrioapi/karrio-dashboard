@@ -14,8 +14,8 @@ type EventsType = LazyQueryResult<get_events, any> & {
   events: EventType[];
   next?: number | null;
   previous?: number | null;
-  load: (options?: EventsFilterType) => void;
-  loadMore: (options?: EventsFilterType) => void;
+  load: (options?: EventsFilterType) => Promise<any>;
+  loadMore: (options?: EventsFilterType) => Promise<any>;
 };
 
 export const EventsContext = React.createContext<EventsType>({} as EventsType);
@@ -62,13 +62,13 @@ const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
 
   return (
     <EventsContext.Provider value={{
+      ...query,
       load,
       loadMore,
       variables,
       events: extract(query?.data?.events?.edges),
       next: query.data?.events?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
-      ...query
     } as EventsType}>
       {children}
     </EventsContext.Provider>

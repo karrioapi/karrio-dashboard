@@ -7,7 +7,7 @@ export type DefaultTemplatesType = LazyQueryResult<get_default_templates, any> &
   default_address: get_default_templates_default_templates_default_address_address | null;
   default_customs: get_default_templates_default_templates_default_customs_customs | null;
   default_parcel: get_default_templates_default_templates_default_parcel_parcel | null;
-  load: (options?: any) => void;
+  load: (options?: any) => Promise<any>;
 };
 
 export const DefaultTemplatesData = React.createContext<DefaultTemplatesType>({} as DefaultTemplatesType);

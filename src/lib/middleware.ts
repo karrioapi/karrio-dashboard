@@ -31,8 +31,7 @@ export async function connectAPI(): Promise<{ references?: References }> {
       const references = await restClient.value.API.data();
 
       // TODO:: implement version compatibility check here.
-
-      resolve({ references });
+      resolve({ references: JSON.parse(JSON.stringify(references)) });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${PURPLSHIP_API})`, e);
 

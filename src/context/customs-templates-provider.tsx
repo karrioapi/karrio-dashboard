@@ -12,7 +12,7 @@ type CustomInfoTemplatesQueryResult = LazyQueryResult<get_customs_info_templates
   next?: number | null;
   previous?: number | null;
   load: () => void;
-  loadMore: (cursor?: number | null) => void;
+  loadMore: (cursor?: number | null) => Promise<any>;
 };
 
 export const CustomInfoTemplates = React.createContext<CustomInfoTemplatesQueryResult>({} as CustomInfoTemplatesQueryResult);

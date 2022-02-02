@@ -30,12 +30,12 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
       <div className="sidebar-header pl-5">
         {multi_organizations
           ? <OrganizationDropdown />
-          : <Image src={p`/icon.svg`} className="mt-2" width="70" height="100%" alt="logo" />}
+          : <Image src={p`/icon.svg`} className="mt-2" width="50" height="100%" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>
       </div>
-      <div className="sidebar-menu has-slimscroll py-4" style={{ height: "calc(100% - 60px)" }}>
+      <div className="sidebar-menu has-slimscroll py-5" style={{ height: "calc(100% - 60px)" }}>
         <AppLink href="/" className={"menu-item " + isActive(basePath)} shallow={false} prefetch={false}>
           <span className="has-text-weight-semibold">Shipments</span>
         </AppLink>

@@ -7,5 +7,5 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
 
   res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59')
 
-  return { props: { ...metadata } };
+  return { props: { ...JSON.parse(JSON.stringify(metadata)) } };
 };
