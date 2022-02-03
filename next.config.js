@@ -1,7 +1,6 @@
 const path = require('path')
 
 module.exports = {
-  swcMinify: true,
   basePath: process.env.BASE_PATH || '',
   reactStrictMode: true,
   sassOptions: {
