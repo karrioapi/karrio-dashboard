@@ -3,7 +3,7 @@ import { useRouter } from 'next/dist/client/router';
 import UserProvider from '@/context/user-provider';
 import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
-import { AuthToken } from '@/client/context';
+import { AuthToken, restClient } from '@/client/context';
 import { TokenPair } from '@purplship/rest';
 import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
@@ -48,7 +48,7 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
       }
     }, [session]);
 
-    if (!session) return <></>;
+    if (!restClient.value) return <></>;
 
     return (
       <ContextProviders {...(pageProps || {})}>

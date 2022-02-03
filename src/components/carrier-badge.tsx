@@ -2,6 +2,7 @@ import { Collection } from '@/lib/types';
 import { CarrierSettingsCarrierNameEnum } from '@purplship/rest/index';
 import React, { useContext } from 'react';
 import { APIReference } from '@/context/references-provider';
+import { formatCarrierSlug } from '@/lib/helper';
 
 const THEME: Collection = {
   'aramex': 'is-aramex',
@@ -29,23 +30,22 @@ const THEME: Collection = {
   'yunexpress': 'is-yunexpress',
 };
 
-interface CarrierBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> {
+interface CarrierBadgeComponent extends React.AllHTMLAttributes<HTMLDivElement> {
   carrier?: CarrierSettingsCarrierNameEnum | string;
   custom_name?: string;
+  short?: boolean;
 }
 
-const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, className, ...props }) => {
+const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, short, className, ...props }) => {
   const { carriers } = useContext(APIReference);
   const name = carrier || '';
 
   return (
-    <>
-      {carriers && (
-        <strong className={`${className} ${THEME[name] || 'is-light'}`} {...props}>
-          {custom_name || (carriers as Collection)[name] || "Not Selected"}
-        </strong>
-      )}
-    </>
+    <div className={`${className} ${THEME[name] || 'is-light'}`} {...props}>
+      {custom_name
+        ? (short ? formatCarrierSlug(custom_name) : custom_name)
+        : (carriers as Collection)[name] || "Not Selected"}
+    </div>
   );
 };
 

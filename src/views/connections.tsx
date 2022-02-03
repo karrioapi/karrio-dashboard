@@ -51,7 +51,7 @@ export default function ConnectionsPage(pageProps: any) {
         <header className="px-2 pt-1 pb-4">
           <span className="title is-4">Carriers</span>
           <button className="button is-primary is-small is-pulled-right" onClick={() => editConnection({ onConfirm: onChange })}>
-            <span>Connect a Carrier</span>
+            <span>Register a carrier</span>
           </button>
         </header>
 

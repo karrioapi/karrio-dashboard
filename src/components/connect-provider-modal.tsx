@@ -142,7 +142,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 <hr />
 
                 {has("verbose_name") &&
-                  <InputField label="Verbose Name" defaultValue={payload.verbose_name}
+                  <InputField label="Display Name" defaultValue={payload.verbose_name}
                     onChange={handleOnChange("verbose_name")}
                     className="is-small"
                     required

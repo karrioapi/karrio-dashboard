@@ -10,12 +10,6 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer py-6">
       <div className="content columns">
-        <div className="column"></div>
-        <div className="column has-text-centered">
-          <a href={app_website}>
-            <Image src={p`/icon.svg`} width="50" height="100%" alt={app_name} />
-          </a>
-        </div>
         <div className="column has-text-right-desktop">
           <a className="button is-white footer-api-reference-link" target="_blank" rel="noreferrer" href={openapi}>
             <span>API Reference</span>

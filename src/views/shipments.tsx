@@ -19,6 +19,8 @@ import ShipmentMutationProvider from "@/context/shipment-mutation";
 import ShipmentsFilter from "@/components/filters/shipments-filter";
 import { AddressType } from "@/lib/types";
 import ShipmentPreview, { ShipmentPreviewContext } from "@/components/descriptions/shipment-preview";
+import AppBadge from "@/components/app-badge";
+import CarrierBadge from "@/components/carrier-badge";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -106,15 +108,20 @@ export default function ShipmentsPage(pageProps: any) {
 
               {shipments?.map(shipment => (
                 <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id)}>
-                  <td className="carrier is-vcentered has-text-centered">
-                    {!isNone(shipment.carrier_name) &&
+                  <td className="carrier is-vcentered has-text-centered p-1">
+                    {isNone(shipment.carrier_name) && <AppBadge />}
+                    {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
                       <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
-                    }
-                    {isNone(shipment.carrier_name) &&
-                      <Image src={p`/logo.svg`} width="100%" height="25" alt="logo" />
-                    }
+                    </div>}
+                    {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
+                      <CarrierBadge
+                        className="has-background-primary has-text-weight-bold has-text-white-bis"
+                        style={{ margin: '1px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                        custom_name={shipment.carrier_id as string}
+                        short
+                      />}
                   </td>
-                  <td className="service is-vcentered p-1">
+                  <td className="service is-vcentered p-1 pl-2">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
                       {!isNone(shipment.carrier_name) && formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
                       {isNone(shipment.carrier_name) && "NOT COMPLETED"}

@@ -125,6 +125,13 @@ export function formatWeight(data?: { weight: number, weight_unit: string } | an
   return 'Weight: None specified...';
 }
 
+export function formatCarrierSlug(name?: string) {
+  const raw_name = (name || "").replaceAll('-', ' ').replaceAll('_', ' ').split(' ')[0];
+  const count = raw_name.length > 10 ? 9 : 10;
+  const short_name = raw_name.slice(0, count) + (count === 9 ? "." : "");
+  return short_name;
+}
+
 export function isNone(value: any): boolean {
   return value === null || value === undefined;
 }

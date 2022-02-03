@@ -10,7 +10,7 @@ export const UserData = React.createContext<UserDataType>({} as UserDataType);
 const UserProvider: React.FC = ({ children }) => {
   const [initialLoad, result] = useLazyQuery<GetUser>(GET_USER);
 
-  useEffect(() => { if (!result.called) initialLoad(); }, []);
+  useEffect(() => { if (!result.called && initialLoad) initialLoad(); }, []);
 
   return (
     <UserData.Provider value={{ user: result.data?.user as UserType, ...result }}>
