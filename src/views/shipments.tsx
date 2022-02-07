@@ -171,7 +171,7 @@ export default function ShipmentsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Shipments - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
         <LabelPrinter>
           <CustomInvoicePrinter>

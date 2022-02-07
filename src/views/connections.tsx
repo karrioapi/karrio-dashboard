@@ -18,7 +18,7 @@ export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ConnectionsPage(pageProps: any) {
-  const tabs = ['Your Accounts', `${(pageProps as any).references?.app_name || ''} Accounts`];
+  const tabs = ['Your Accounts', `${(pageProps as any).metadata?.APP_NAME || ''} Accounts`];
 
   const Component: React.FC = () => {
     const router = useRouter();
@@ -73,7 +73,7 @@ export default function ConnectionsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Carrier Connections - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Carrier Connections - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ConfirmModal>
         <ConnectionMutationProvider>
           <ConnectProviderModal>

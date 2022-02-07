@@ -148,7 +148,7 @@ export default function WebhooksPage(pageProps: any) {
 
   const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
     <DashboardLayout>
-      <Head><title>Webhooks - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Webhooks - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <WebhooksProvider>
         <WebhookEditModal>

@@ -3,8 +3,7 @@ import { useRouter } from 'next/dist/client/router';
 import UserProvider from '@/context/user-provider';
 import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
-import { AuthToken, restClient } from '@/client/context';
-import { TokenPair } from '@purplship/rest';
+import { ClientsProvider } from '@/client/context';
 import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
 import TokenProvider from '@/context/token-provider';
@@ -29,7 +28,7 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
 
   return (
     <>
-      <UserProvider {...props}>{NestedContexts}</UserProvider>
+      <UserProvider user={(props as any).user}>{NestedContexts}</UserProvider>
     </>
   );
 };
@@ -43,20 +42,17 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
       if (session === null || session?.error === "RefreshAccessTokenError") {
         router.push('/login?next=' + window.location.pathname + window.location.search);
       }
-      if (session?.accessToken) {
-        AuthToken.next({ access: session?.accessToken } as TokenPair);
-      }
     }, [session]);
 
-    if (!restClient.value) return <></>;
-
     return (
-      <ContextProviders {...(pageProps || {})}>
-        <ErrorBoundary>
-          {children}
-          <Footer />
-        </ErrorBoundary>
-      </ContextProviders>
+      <ClientsProvider authenticated>
+        <ContextProviders {...(pageProps || {})}>
+          <ErrorBoundary>
+            {session && children}
+            <Footer />
+          </ErrorBoundary>
+        </ContextProviders>
+      </ClientsProvider>
     );
   };
 

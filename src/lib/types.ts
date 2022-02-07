@@ -1,5 +1,6 @@
-import { CurrencyCodeEnum, DimensionUnitEnum, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
+import { CurrencyCodeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
 import { CarrierSettingsCarrierNameEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
+import { Session } from 'next-auth';
 
 
 export type MessageType = get_tracker_tracker_messages;
@@ -171,3 +172,49 @@ export const HTTP_METHODS = [
   "PATCH",
   "DELETE",
 ];
+
+export type SessionType = Session & { accessToken: string, org_id?: string };
+export type ContextDataType = {
+  data: {
+    user: GetUser_user,
+    organizations?: get_organizations_organizations[]
+  }
+};
+
+export interface Metadata {
+  VERSION: string;
+  APP_NAME: string;
+  APP_WEBSITE?: string;
+  MULTI_ORGANIZATIONS: boolean;
+  ORDERS_MANAGEMENT: boolean;
+  admin: string;
+  openapi: string;
+  graphql: string;
+};
+
+export interface References {
+  VERSION: string;
+  APP_NAME: string;
+  APP_WEBSITE: string;
+  MULTI_ORGANIZATIONS: boolean;
+  ORDERS_MANAGEMENT: boolean;
+  admin: string;
+  openapi: string;
+  graphql: string;
+  address_auto_complete: object;
+  countries: object;
+  currencies: object;
+  carriers: object;
+  customs_content_type: object;
+  incoterms: object;
+  states: object;
+  services: object;
+  service_names: object;
+  options: object;
+  option_names: object;
+  package_presets: object;
+  packaging_types: object;
+  payment_types: object;
+  carrier_capabilities: object;
+  service_levels: object;
+}

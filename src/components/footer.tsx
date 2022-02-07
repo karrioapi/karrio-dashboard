@@ -1,11 +1,9 @@
 import React, { useContext } from 'react';
-import Image from 'next/image';
 import { APIReference } from '@/context/references-provider';
-import { p } from '@/lib/helper';
 
 
 const Footer: React.FC = () => {
-  const { app_website, app_name, openapi, graphql } = useContext(APIReference);
+  const { openapi, graphql } = useContext(APIReference);
 
   return (
     <footer className="footer py-6">

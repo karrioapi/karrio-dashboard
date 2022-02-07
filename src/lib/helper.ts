@@ -129,7 +129,7 @@ export function formatCarrierSlug(name?: string) {
   const raw_name = (name || "").replaceAll('-', ' ').replaceAll('_', ' ').split(' ')[0];
   const count = raw_name.length > 10 ? 9 : 10;
   const short_name = raw_name.slice(0, count) + (count === 9 ? "." : "");
-  return short_name;
+  return short_name.toUpperCase();
 }
 
 export function isNone(value: any): boolean {

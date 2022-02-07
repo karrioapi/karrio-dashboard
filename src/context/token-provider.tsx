@@ -1,6 +1,7 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetToken, GetToken_token, GET_TOKEN } from '@purplship/graphql';
+import { insertUrlParam } from '@/lib/helper';
 
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {
@@ -18,7 +19,8 @@ const TokenProvider: React.FC = ({ children }) => {
   const load = () => result.called ? fetchMore({}) : initialLoad({});
   const authenticateOrg = async (org_id: string) => {
     await fetch(`/api/orgauth?org_id=${org_id}`);
-    setTimeout(() => location.reload(), 1000);
+    insertUrlParam({});
+    setTimeout(() => location.reload(), 800);
   };
 
   return (

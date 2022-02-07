@@ -45,7 +45,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
-  const { orders_management } = useContext(APIReference);
+  const { ORDERS_MANAGEMENT } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);
@@ -109,7 +109,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                 setIsInvalid(e.currentTarget.querySelectorAll('.is-danger').length > 0);
               }}>
 
-                {orders_management && <div className="columns is-multiline mb-4 px-1">
+                {ORDERS_MANAGEMENT && <div className="columns is-multiline mb-4 px-1">
 
                   <LineItemInput
                     name="parent_id"

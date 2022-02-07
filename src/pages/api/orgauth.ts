@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
-import { OrgToken, refreshToken } from '@/client/context';
+import { OrgToken } from '@/client/context';
 import { getToken } from 'next-auth/jwt';
 import { getSession } from "next-auth/react";
+import { refreshToken } from '@/lib/auth';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;

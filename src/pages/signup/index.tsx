@@ -1,9 +1,7 @@
-import { References } from "@purplship/rest";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
-import APIReferenceProvider from "@/context/references-provider";
 import UserMutation from "@/context/user-mutation";
 import { RegisterUserInput, register_user_register_user_errors } from "@purplship/graphql";
 import { NextPage } from "next";
@@ -12,6 +10,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useReducer, useState } from "react";
 import logger from "@/lib/logger";
+import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -123,19 +122,17 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
   )
 });
 
-const SignUp: NextPage<any, { references: References }> = ({ references }) => {
+const SignUp: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
   return (
     <>
-      <APIReferenceProvider references={references}>
-        <SectionLayout>
-          <Head><title>Sign Up - {references?.app_name}</title></Head>
+      <SectionLayout metadata={metadata}>
+        <Head><title>Sign Up - {metadata?.APP_NAME}</title></Head>
 
-          <LoadingProvider>
-            <Component />
-          </LoadingProvider>
+        <LoadingProvider>
+          <Component />
+        </LoadingProvider>
 
-        </SectionLayout>
-      </APIReferenceProvider>
+      </SectionLayout>
     </>
   )
 };

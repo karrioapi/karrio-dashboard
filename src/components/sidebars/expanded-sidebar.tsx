@@ -12,7 +12,7 @@ interface ExpandedSidebarComponent { }
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
   const sidebar = useRef<HTMLDivElement>(null);
-  const { multi_organizations, orders_management } = useContext(APIReference);
+  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT } = useContext(APIReference);
   const { testMode, basePath, switchMode } = useContext(AppMode);
   const [showTemplateMenus, setShowTemplateMenus] = React.useState(false);
 
@@ -28,7 +28,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   return (
     <div className="plex-sidebar" ref={sidebar}>
       <div className="sidebar-header pl-5">
-        {multi_organizations
+        {MULTI_ORGANIZATIONS
           ? <OrganizationDropdown />
           : <Image src={p`/icon.svg`} className="mt-2" width="50" height="100%" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
@@ -44,7 +44,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span className="has-text-weight-semibold">Trackers</span>
         </AppLink>
 
-        {orders_management &&
+        {ORDERS_MANAGEMENT &&
           <AppLink href="/orders" className={"menu-item " + isActive("/orders")} shallow={false} prefetch={false}>
             <span className="has-text-weight-semibold">Orders</span>
           </AppLink>}

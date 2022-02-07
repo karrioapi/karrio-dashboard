@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { OperationResponse, Shipment } from '@purplship/rest/index';
 import { handleFailure } from '@/lib/helper';
-import { LabelData } from '@/context/shipment-provider';
+import { LabelData } from '@/context/label-data-provider';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
@@ -56,19 +56,19 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
 
   const updateShipment = async (data: PartialShipmentUpdateInput) => (
     updateShipmentMutation({ variables: { data } })
-      .then(() => state.loadShipment(state.shipment.id))
+      .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardCommodity = async (id: string) => (
     discardCommodityMutation({ variables: { data: { id } } })
-      .then(() => state.loadShipment(state.shipment.id))
+      .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardCustoms = async (id: string) => (
     discardCustomsMutation({ variables: { data: { id } } })
-      .then(() => state.loadShipment(state.shipment.id))
+      .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardParcel = async (id: string) => (
     discardParcelMutation({ variables: { data: { id } } })
-      .then(() => state.loadShipment(state.shipment.id))
+      .then(() => state?.loadShipment(state.shipment.id))
   );
 
   return (

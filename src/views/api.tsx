@@ -73,7 +73,7 @@ export default function ApiPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>API Keys - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>API Keys - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <Component />
     </DashboardLayout>
   ), pageProps)

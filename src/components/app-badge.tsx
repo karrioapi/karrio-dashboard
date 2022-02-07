@@ -5,7 +5,7 @@ import { formatCarrierSlug } from '@/lib/helper';
 interface AppBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> { }
 
 const AppBadge: React.FC<AppBadgeComponent> = ({ className, ...props }) => {
-  const { app_name } = useContext(APIReference);
+  const { APP_NAME } = useContext(APIReference);
 
   return (
     <strong
@@ -13,7 +13,7 @@ const AppBadge: React.FC<AppBadgeComponent> = ({ className, ...props }) => {
       style={{ fontSize: '90%', borderRadius: '4px' }}
       {...props}
     >
-      {formatCarrierSlug(app_name)}
+      {formatCarrierSlug(APP_NAME)}
     </strong>
   );
 };

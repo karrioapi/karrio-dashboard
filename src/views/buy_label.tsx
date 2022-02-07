@@ -5,7 +5,7 @@ import AddressForm from '@/components/form-parts/address-form';
 import ShipmentOptions from '@/components/form-parts/shipment-options';
 import LiveRates from '@/components/live-rates';
 import Tabs, { TabStateContext, TabStateProvider } from '@/components/generic/tabs';
-import ShipmentProvider, { LabelData, } from '@/context/shipment-provider';
+import LabelDataProvider, { LabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Notify } from '@/components/notifier';
 import { AppMode } from '@/context/app-mode-provider';
@@ -168,8 +168,8 @@ export default function LabelPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
-      <Head><title>Buy Label - {(pageProps as any).references?.app_name}</title></Head>
-      <ShipmentProvider>
+      <Head><title>Buy Label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <LabelDataProvider>
         <TemplatesProvider>
           <OrdersProvider setVariablesToURL={false}>
             <ParcelTemplatesProvider>
@@ -183,7 +183,7 @@ export default function LabelPage(pageProps: any) {
             </ParcelTemplatesProvider>
           </OrdersProvider>
         </TemplatesProvider>
-      </ShipmentProvider>
+      </LabelDataProvider>
     </DashboardLayout>
   ), pageProps);
 }

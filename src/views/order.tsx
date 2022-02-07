@@ -281,7 +281,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 export default function OrderPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Order - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Order - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrderProvider>
         <EventsProvider setVariablesToURL={false}>
           <LogsProvider setVariablesToURL={false}>

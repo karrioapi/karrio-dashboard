@@ -105,7 +105,7 @@ export default function EventsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Events - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Events - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <EventsProvider>
         <EventPreview>
           <Component />

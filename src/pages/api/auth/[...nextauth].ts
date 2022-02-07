@@ -1,11 +1,12 @@
 import { TokenPair } from '@purplship/rest';
-import { authenticate, refreshToken, AuthToken, OrgToken } from '@/client/context';
+import { OrgToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
 import getConfig from 'next/config';
 import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import CredentialProvider from "next-auth/providers/credentials";
 import logger from '@/lib/logger';
+import { authenticate, refreshToken } from '@/lib/auth';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
@@ -47,7 +48,6 @@ const auth = NextAuth({
       // Refresh the token with a new organization if provideed
       if (!isNone(OrgToken.value)) {
         logger.info('Refreshing token with new organization');
-        AuthToken.next(OrgToken.value as TokenPair);
         const { access, refresh } = OrgToken.value as TokenPair;
         return {
           ...token,
@@ -76,8 +76,6 @@ const auth = NextAuth({
       } catch (error) {
         logger.log(error);
 
-        AuthToken.next({} as TokenPair);
-
         return {
           error: "RefreshAccessTokenError",
         }
@@ -88,8 +86,6 @@ const auth = NextAuth({
       session.org_id = org_id;
       session.error = token.error;
       session.accessToken = token.accessToken;
-
-      AuthToken.next({ access: session.accessToken } as TokenPair);
 
       return session
     }

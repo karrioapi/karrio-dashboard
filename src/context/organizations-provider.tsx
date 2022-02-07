@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from '@purplship/graphql';
 
@@ -15,6 +15,7 @@ export const Organizations = React.createContext<OrganizationsQueryResult>({} as
 
 const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_id: string }> = ({ children, organizations, org_id }) => {
   const [initialLoad, result] = useLazyQuery<get_organizations>(GET_ORGANIZATIONS);
+  const [state, setState] = useState<OrganizationType[]>(organizations);
 
   const load = () => result.called ? result.fetchMore({}) : initialLoad({});
   const extractList = (results: any[]): OrganizationType[] => (results).filter(r => r !== null);
@@ -23,11 +24,15 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
     return current || {}
   };
 
+  useEffect(() => {
+    result.data?.organizations && setState(extractList(result.data?.organizations));
+  }, [result.data?.organizations]);
+
   return (
     <Organizations.Provider value={{
       load,
-      organization: extractCurrent(result.data?.organizations || organizations || []),
-      organizations: extractList(result.data?.organizations || organizations || []),
+      organization: extractCurrent(state),
+      organizations: state,
       ...result
     }}>
       {children}

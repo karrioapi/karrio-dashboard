@@ -1,4 +1,3 @@
-import { References } from "@purplship/rest";
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider from "@/components/loader";
@@ -10,11 +9,12 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 import { p } from "@/lib/helper";
+import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
 
-export default function Page({ references }: { references: References }) {
+export default function Page({ metadata }: { metadata: Metadata }) {
 
   const Component: React.FC<{}> = () => {
     const router = useRouter();
@@ -71,16 +71,14 @@ export default function Page({ references }: { references: References }) {
 
   return (
     <>
-      <APIReferenceProvider references={references}>
-        <SectionLayout>
-          <Head><title>Password Reset - {references?.app_name}</title></Head>
+      <SectionLayout metadata={metadata}>
+        <Head><title>Password Reset - {metadata?.APP_NAME}</title></Head>
 
-          <LoadingProvider>
-            <Component />
-          </LoadingProvider>
+        <LoadingProvider>
+          <Component />
+        </LoadingProvider>
 
-        </SectionLayout>
-      </APIReferenceProvider>
+      </SectionLayout>
     </>
   )
 }

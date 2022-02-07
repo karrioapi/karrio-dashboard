@@ -1,5 +1,5 @@
 import { restClient } from "@/client/context";
-import { connectAPI } from "@/lib/middleware";
+import { checkAPI } from "@/lib/middleware";
 import { GetServerSideProps } from "next"
 
 
@@ -7,7 +7,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res, params }) =>
   const id = params?.id as string;
 
   try {
-    const metadata = await connectAPI();
+    const metadata = await checkAPI();
 
     // Retrieve tracker by id
     const data = await restClient.value.trackers.retrieves({ idOrTrackingNumber: id })

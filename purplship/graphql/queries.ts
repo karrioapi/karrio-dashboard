@@ -1,8 +1,7 @@
 import { gql } from "@apollo/client";
 
 
-export const GET_ADDRESS_TEMPLATES = gql`
-query get_address_templates($offset: Int, $first: Int) {
+export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($offset: Int, $first: Int) {
   address_templates(offset: $offset, first: $first) {
     pageInfo {
       hasNextPage
@@ -35,8 +34,7 @@ query get_address_templates($offset: Int, $first: Int) {
 }
 `;
 
-export const GET_CUSTOMS_TEMPLATES = gql`
-query get_customs_info_templates($offset: Int, $first: Int) {
+export const GET_CUSTOMS_TEMPLATES = gql`query get_customs_info_templates($offset: Int, $first: Int) {
   customs_templates(offset: $offset, first: $first) {
     pageInfo {
       hasNextPage
@@ -72,8 +70,7 @@ query get_customs_info_templates($offset: Int, $first: Int) {
 }
 `;
 
-export const GET_DEFAULT_TEMPLATES = gql`
-query get_default_templates {
+export const GET_DEFAULT_TEMPLATES = gql`query get_default_templates {
   default_templates {
     default_address {
       id
@@ -136,30 +133,27 @@ query get_default_templates {
 }
 `;
 
-export const CREATE_CONNECTION = gql`
-  mutation create_connection($data: CreateConnectionInput!) {
-    create_connection(input: $data) {
-      errors {
-        field
-        messages
-      }
+export const CREATE_CONNECTION = gql`mutation create_connection($data: CreateConnectionInput!) {
+  create_connection(input: $data) {
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const UPDATE_CONNECTION = gql`
-  mutation update_connection($data: UpdateConnectionInput!) {
-    update_connection(input: $data) {
-      errors {
-        field
-        messages
-      }
+export const UPDATE_CONNECTION = gql`mutation update_connection($data: UpdateConnectionInput!) {
+  update_connection(input: $data) {
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const GET_ORGANIZATIONS = gql`
-query get_organizations {
+export const GET_ORGANIZATIONS = gql`query get_organizations {
   organizations {
     id
     name
@@ -179,40 +173,36 @@ query get_organizations {
 }
 `;
 
-export const DELETE_CONNECTION = gql`
-  mutation delete_connection($data: DeleteConnectionInput!) {
-    delete_connection(input: $data) {
-      id
-    }
+export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteConnectionInput!) {
+  delete_connection(input: $data) {
+    id
   }
+}
 `;
 
-export const CREATE_ORGANIZATION = gql`
-  mutation create_organization($data: CreateOrganizationInput!) {
-    create_organization(input: $data) {
-      id
-      errors {
-        field
-        messages
-      }
+export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationInput!) {
+  create_organization(input: $data) {
+    id
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const UPDATE_ORGANIZATION = gql`
-  mutation update_organization($data: UpdateOrganizationInput!) {
-    update_organization(input: $data) {
-      id
-      errors {
-        field
-        messages
-      }
+export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: UpdateOrganizationInput!) {
+  update_organization(input: $data) {
+    id
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const GET_LOG = gql`
-query get_log($id: Int!) {
+export const GET_LOG = gql`query get_log($id: Int!) {
   log(id: $id) {
     id
     username_persistent
@@ -230,8 +220,7 @@ query get_log($id: Int!) {
 }
 `;
 
-export const GET_LOGS = gql`
-query get_logs($offset: Int, $first: Int, $status: String, $api_endpoint: String, $date_after: DateTime, $date_before: DateTime, $entity_id: String, $method: [String], $status_code: [String]) {
+export const GET_LOGS = gql`query get_logs($offset: Int, $first: Int, $status: String, $api_endpoint: String, $date_after: DateTime, $date_before: DateTime, $entity_id: String, $method: [String], $status_code: [String]) {
   logs(offset: $offset, first: $first, status: $status, api_endpoint: $api_endpoint, date_after: $date_after, date_before: $date_before, entity_id: $entity_id, method: $method, status_code: $status_code) {
     pageInfo {
       hasNextPage
@@ -259,8 +248,7 @@ query get_logs($offset: Int, $first: Int, $status: String, $api_endpoint: String
 }
 `;
 
-export const GET_SHIPMENT = gql`
-query get_shipment($id: String!) {
+export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
   shipment(id: $id) {
     id
     carrier_id
@@ -426,8 +414,7 @@ query get_shipment($id: String!) {
 }
 `;
 
-export const GET_SHIPMENTS = gql`
-query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String], $test_mode: Boolean) {
+export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String], $test_mode: Boolean) {
   shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service, test_mode: $test_mode) {
     pageInfo {
       hasNextPage
@@ -603,8 +590,7 @@ query get_shipments($offset: Int, $first: Int, $status: [String], $address: Stri
 }
 `;
 
-export const PARTIAL_UPDATE_SHIPMENT = gql`
-mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
+export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
   partial_shipment_update(input: $data) {
     shipment {
       id
@@ -786,8 +772,7 @@ mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
 }
 `;
 
-export const GET_TRACKER = gql`
-query get_tracker($id: String!) {
+export const GET_TRACKER = gql`query get_tracker($id: String!) {
   tracker(id: $id) {
     id
     created_at
@@ -822,8 +807,7 @@ query get_tracker($id: String!) {
 
 `;
 
-export const GET_TRACKERS = gql`
-query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $test_mode: Boolean) {
+export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $test_mode: Boolean) {
   trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, test_mode: $test_mode) {
     pageInfo {
       hasNextPage
@@ -867,8 +851,7 @@ query get_trackers($offset: Int, $first: Int, $status: [String], $created_after:
 }
 `;
 
-export const GET_WEBHOOK = gql`
-query get_webhook($id: String!) {
+export const GET_WEBHOOK = gql`query get_webhook($id: String!) {
   webhook(id: $id) {
     id
     created_by {
@@ -885,8 +868,7 @@ query get_webhook($id: String!) {
 }
 `;
 
-export const GET_WEBHOOKS = gql`
-query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean, $test_mode: Boolean) {
+export const GET_WEBHOOKS = gql`query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean, $test_mode: Boolean) {
   webhooks(offset: $offset, first: $first, created_after: $created_after, created_before: $created_before, description: $description, events: $events, disabled: $disabled, test_mode: $test_mode) {
     pageInfo {
       hasNextPage
@@ -915,8 +897,7 @@ query get_webhooks($offset: Int, $first: Int, $description: String, $created_aft
 }
 `;
 
-export const GET_PARCEL_TEMPLATES = gql`
-query get_parcel_templates($offset: Int, $first: Int) {
+export const GET_PARCEL_TEMPLATES = gql`query get_parcel_templates($offset: Int, $first: Int) {
   parcel_templates(offset: $offset, first: $first) {
     pageInfo {
       hasNextPage
@@ -946,8 +927,7 @@ query get_parcel_templates($offset: Int, $first: Int) {
 }
 `;
 
-export const GET_SYSTEM_CONNECTIONS = gql`
-query get_system_connections($test: Boolean) {
+export const GET_SYSTEM_CONNECTIONS = gql`query get_system_connections($test: Boolean) {
   system_connections(test: $test) {
     id
     carrier_id
@@ -960,135 +940,123 @@ query get_system_connections($test: Boolean) {
 }
 `;
 
-export const MUTATE_SYSTEM_CONNECTION = gql`
-  mutation mutate_system_connection($data: SystemCarrierMutationInput!) {
-    mutate_system_connection(input: $data) {
-      carrier {
-        id
-        active
-      }
+export const MUTATE_SYSTEM_CONNECTION = gql`mutation mutate_system_connection($data: SystemCarrierMutationInput!) {
+  mutate_system_connection(input: $data) {
+    carrier {
+      id
+      active
     }
   }
+}
 `;
 
-export const CREATE_ADDRESS_TEMPLATE = gql`
-  mutation create_address_template($data: CreateAddressTemplateInput!) {
-    create_address_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const CREATE_CUSTOMS_TEMPLATE = gql`
-  mutation create_customs_template($data: CreateCustomsTemplateInput!) {
-    create_customs_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const CREATE_PARCEL_TEMPLATE = gql`
-  mutation create_parcel_template($data: CreateParcelTemplateInput!) {
-    create_parcel_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const UPDATED_ADDRESS_TEMPLATE = gql`
-  mutation update_address_template($data: UpdateAddressTemplateInput!) {
-    update_address_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const UPDATED_CUSTOMS_TEMPLATE = gql`
-  mutation update_customs_template($data: UpdateCustomsTemplateInput!) {
-    update_customs_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const UPDATED_PARCEL_TEMPLATE = gql`
-  mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
-    update_parcel_template(input: $data) {
-      template {
-        id
-      }
-      errors {
-        field
-        messages
-      }
-    }
-  }
-`;
-
-export const DELETE_TEMPLATE = gql`
-  mutation delete_template($data: DeleteTemplateInput!) {
-    delete_template(input: $data) {
+export const CREATE_ADDRESS_TEMPLATE = gql`mutation create_address_template($data: CreateAddressTemplateInput!) {
+  create_address_template(input: $data) {
+    template {
       id
     }
-  }
-`;
-
-export const DISCARD_COMMODITY = gql`
-  mutation discard_commodity($data: DiscardCommodityInput!) {
-    discard_commodity(input: $data) {
-      id
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const DISCARD_CUSTOMS = gql`
-  mutation discard_customs($data: DiscardCustomsInput!) {
-    discard_customs(input: $data) {
+export const CREATE_CUSTOMS_TEMPLATE = gql`mutation create_customs_template($data: CreateCustomsTemplateInput!) {
+  create_customs_template(input: $data) {
+    template {
       id
     }
-  }
-`;
-
-export const DISCARD_PARCEL = gql`
-  mutation discard_parcel($data: DiscardParcelInput!) {
-    discard_parcel(input: $data) {
-      id
+    errors {
+      field
+      messages
     }
   }
+}
 `;
 
-export const MUTATE_TOKEN = gql`
-mutation mutate_token($data: TokenMutationInput!) {
+export const CREATE_PARCEL_TEMPLATE = gql`mutation create_parcel_template($data: CreateParcelTemplateInput!) {
+  create_parcel_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const UPDATED_ADDRESS_TEMPLATE = gql`mutation update_address_template($data: UpdateAddressTemplateInput!) {
+  update_address_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const UPDATED_CUSTOMS_TEMPLATE = gql`mutation update_customs_template($data: UpdateCustomsTemplateInput!) {
+  update_customs_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const UPDATED_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
+  update_parcel_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const DELETE_TEMPLATE = gql`mutation delete_template($data: DeleteTemplateInput!) {
+  delete_template(input: $data) {
+    id
+  }
+}
+`;
+
+export const DISCARD_COMMODITY = gql`mutation discard_commodity($data: DiscardCommodityInput!) {
+  discard_commodity(input: $data) {
+    id
+  }
+}
+`;
+
+export const DISCARD_CUSTOMS = gql`mutation discard_customs($data: DiscardCustomsInput!) {
+  discard_customs(input: $data) {
+    id
+  }
+}
+`;
+
+export const DISCARD_PARCEL = gql`mutation discard_parcel($data: DiscardParcelInput!) {
+  discard_parcel(input: $data) {
+    id
+  }
+}
+`;
+
+export const MUTATE_TOKEN = gql`mutation mutate_token($data: TokenMutationInput!) {
   mutate_token(input: $data) {
     token {
       key
@@ -1097,17 +1065,15 @@ mutation mutate_token($data: TokenMutationInput!) {
 }
 `;
 
-export const GET_TOKEN = gql`
-  query GetToken($org_id: String) {
-    token(org_id: $org_id) {
-      key
-      created
-    }
+export const GET_TOKEN = gql`  query GetToken($org_id: String) {
+  token(org_id: $org_id) {
+    key
+    created
   }
+}
 `;
 
-export const GET_USER_CONNECTIONS = gql`
-query get_user_connections($test: Boolean) {
+export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolean) {
   user_connections(test: $test) {
     __typename
     ... on AramexSettings {
@@ -1386,8 +1352,7 @@ query get_user_connections($test: Boolean) {
 }
 `;
 
-export const GET_USER = gql`
-query GetUser {
+export const GET_USER = gql`query GetUser {
   user {
     email
     full_name
@@ -1398,8 +1363,7 @@ query GetUser {
 }
 `;
 
-export const UPDATE_USER = gql`
-mutation update_user($data: UpdateUserInput!) {
+export const UPDATE_USER = gql`mutation update_user($data: UpdateUserInput!) {
   update_user(input: $data) {
     email
     full_name
@@ -1414,8 +1378,7 @@ mutation update_user($data: UpdateUserInput!) {
 }
 `;
 
-export const CHANGE_PASSWORD = gql`
-mutation change_password($data: ChangePasswordInput!) {
+export const CHANGE_PASSWORD = gql`mutation change_password($data: ChangePasswordInput!) {
   change_password(input: $data) {
     errors {
       field
@@ -1425,8 +1388,7 @@ mutation change_password($data: ChangePasswordInput!) {
 }
 `;
 
-export const REGISTER_USER = gql`
-mutation register_user($data: RegisterUserInput!) {
+export const REGISTER_USER = gql`mutation register_user($data: RegisterUserInput!) {
   register_user(input: $data) {
     user {
       email
@@ -1441,16 +1403,14 @@ mutation register_user($data: RegisterUserInput!) {
 }
 `;
 
-export const CONFIRM_EMAIL = gql`
-mutation confirm_email($data: ConfirmEmailInput!) {
+export const CONFIRM_EMAIL = gql`mutation confirm_email($data: ConfirmEmailInput!) {
   confirm_email(input: $data) {
     success
   }
 }
 `;
 
-export const REQUEST_PASSWORD_RESET = gql`
-mutation request_password_reset($data: RequestPasswordResetInput!) {
+export const REQUEST_PASSWORD_RESET = gql`mutation request_password_reset($data: RequestPasswordResetInput!) {
   request_password_reset(input: $data) {
     errors {
       field
@@ -1460,8 +1420,7 @@ mutation request_password_reset($data: RequestPasswordResetInput!) {
 }
 `;
 
-export const CONFIRM_PASSWORD_RESET = gql`
-mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
+export const CONFIRM_PASSWORD_RESET = gql`mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
   confirm_password_reset(input: $data) {
     errors {
       field
@@ -1471,8 +1430,7 @@ mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
 }
 `;
 
-export const GET_EVENT = gql`
-query get_event($id: String!) {
+export const GET_EVENT = gql`query get_event($id: String!) {
   event(id: $id) {
     id
     type
@@ -1484,8 +1442,7 @@ query get_event($id: String!) {
 }
 `;
 
-export const GET_EVENTS = gql`
-query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String], $date_after: DateTime, $date_before: DateTime) {
+export const GET_EVENTS = gql`query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String], $date_after: DateTime, $date_before: DateTime) {
   events(offset: $offset, first: $first, entity_id: $entity_id, type: $type, date_after: $date_after, date_before: $date_before) {
     pageInfo {
       hasNextPage
@@ -1507,8 +1464,7 @@ query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String],
 }
 `;
 
-export const GET_ORDER = gql`
-query get_order($id: String!) {
+export const GET_ORDER = gql`query get_order($id: String!) {
   order(id: $id) {
     id
     order_id
@@ -1717,8 +1673,7 @@ query get_order($id: String!) {
 }
 `;
 
-export const GET_ORDERS = gql`
-query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
+export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
   orders(offset: $offset, first: $first, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
     pageInfo {
       hasNextPage
@@ -1937,8 +1892,7 @@ query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, 
 }
 `;
 
-export const MUTATE_METADATA = gql`
-mutation mutate_metadata($data: MutateMetadataInput!) {
+export const MUTATE_METADATA = gql`mutation mutate_metadata($data: MutateMetadataInput!) {
   mutate_metadata(input: $data) {
     id
     metadata

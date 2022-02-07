@@ -24,7 +24,7 @@ export const OrdersContext = React.createContext<OrdersType>({} as OrdersType);
 
 const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const { testMode } = useContext(AppMode);
-  const { orders_management } = useContext(APIReference);
+  const { ORDERS_MANAGEMENT } = useContext(APIReference);
   const [initialLoad, query] = useLazyQuery<get_orders, OrdersFilterType>(GET_ORDERS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -64,7 +64,7 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
   };
   const load = (options?: OrdersFilterType) => loadMore(options);
 
-  if (!orders_management) return <>{children}</>;
+  if (!ORDERS_MANAGEMENT) return <>{children}</>;
 
   return (
     <OrdersContext.Provider value={{
