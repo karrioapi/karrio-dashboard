@@ -187,9 +187,9 @@ export interface Metadata {
   APP_WEBSITE?: string;
   MULTI_ORGANIZATIONS: boolean;
   ORDERS_MANAGEMENT: boolean;
-  admin: string;
-  openapi: string;
-  graphql: string;
+  ADMIN: string;
+  OPENAPI: string;
+  GRAPHQL: string;
 };
 
 export interface References {
@@ -198,10 +198,10 @@ export interface References {
   APP_WEBSITE: string;
   MULTI_ORGANIZATIONS: boolean;
   ORDERS_MANAGEMENT: boolean;
-  admin: string;
-  openapi: string;
-  graphql: string;
-  address_auto_complete: object;
+  ADMIN: string;
+  OPENAPI: string;
+  GRAPHQL: string;
+  ADDRESS_AUTO_COMPLETE: object;
   countries: object;
   currencies: object;
   carriers: object;
