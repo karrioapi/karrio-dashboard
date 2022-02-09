@@ -4,7 +4,7 @@ import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
-import { deepEqual, formatRef, isNone } from '@/lib/helper';
+import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import { Collection, CommodityType, CURRENCY_OPTIONS, CustomsType, DutyType, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
 import { UserData } from '@/context/user-provider';
 import { APIReference } from '@/context/references-provider';
@@ -73,7 +73,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     );
 
     return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
-  }
+  };
 
   const updateCustomsCommodity = async (commodity: CommodityType) => {
     await onSubmit([{ id: customs.id, commodities: [commodity] }] as any);
@@ -226,34 +226,33 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         </div>
 
         {/* Commodities */}
-        {!isTemplate &&
-          <div className="columns p-2 my-2 is-relative">
-            <CommodityCollectionEditor
-              defaultValue={customs.commodities}
-              onRemove={removeCustomsCommodity}
-              onUpdate={updateCustomsCommodity}
-              onChange={commodities => setCommodities(commodities)}
-              className="is-white column is-12 p-0"
-              style={{ border: "1px #ddd solid" }}
-            >
-              <CommodityCollectionEditorContext.Consumer>{({ commodities }) => (
-                <>
-                  <p className="panel-heading is-clickable select is-small is-fullwidth p-0 pt-1">
-                    <span className="is-size-6">{commodities.length == 0 ? 'No' : commodities.length} customs commodity(s) declared</span>
-                  </p>
+        {!isTemplate && <div className="columns p-2 my-2 is-relative">
+          <CommodityCollectionEditor
+            defaultValue={customs.commodities}
+            onRemove={removeCustomsCommodity}
+            onUpdate={updateCustomsCommodity}
+            onChange={commodities => setCommodities(commodities)}
+            className="is-white column is-12 p-0"
+            style={{ border: "1px #ddd solid" }}
+          >
+            <CommodityCollectionEditorContext.Consumer>{({ commodities }) => (
+              <>
+                <p className="panel-heading is-clickable select is-small is-fullwidth p-0 pt-1">
+                  <span className="is-size-6">{commodities.length == 0 ? 'No' : commodities.length} customs commodity(s) declared</span>
+                </p>
 
-                  <input
-                    required
-                    name="commodities"
-                    style={{ position: 'absolute', top: 40, left: 60, zIndex: -10 }}
-                    onChange={() => { }}
-                    onInvalid={e => (e.target as any).setCustomValidity('Please add at least one commodity')}
-                    value={(commodities || []).length === 0 ? "" : "specified"}
-                  />
-                </>
-              )}</CommodityCollectionEditorContext.Consumer>
-            </CommodityCollectionEditor>
-          </div>}
+                <input
+                  required
+                  name="commodities"
+                  style={{ position: 'absolute', top: 40, left: 60, zIndex: -10 }}
+                  onChange={validityCheck(() => { })}
+                  onInvalid={validityCheck(validationMessage('Please add at least one commodity'))}
+                  value={(commodities || []).length === 0 ? "" : "specified"}
+                />
+              </>
+            )}</CommodityCollectionEditorContext.Consumer>
+          </CommodityCollectionEditor>
+        </div>}
 
         {/* Customs Options */}
         <div className="columns p-2 my-2">
@@ -325,7 +324,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
           disabled={computeDisableState(customs, commodities)}>
-          <span>{isNone(shipment?.id) && !isTemplate ? 'Next' : 'Save'}</span>
+          <span>{isTemplate || !isNone(shipment?.id) ? 'Save' : 'Next'}</span>
         </ButtonField>
 
       </form>}

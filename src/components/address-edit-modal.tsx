@@ -29,7 +29,6 @@ export const AddressEditContext = React.createContext<AddressEditContextType>({}
 interface AddressEditModalComponent { }
 
 const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => {
-  const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { createAddressTemplate, updateAddressTemplate } = useContext(AddressMutationContext);
@@ -42,16 +41,18 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   const editAddress = (operation: OperationType) => {
     const template = operation.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
 
-    setIsActive(true);
     setOperation(operation);
     setIsNew(isNone(operation.addressTemplate));
-    setTemplate(template);
+    setTemplate({ ...template });
+
+    setIsActive(true);
     setKey(`address-${Date.now()}`);
     addUrlParam('modal', template.id || 'new');
   };
   const close = (_?: React.MouseEvent, changed?: boolean) => {
     if (isNew) setTemplate(undefined);
     if (changed && operation?.onConfirm !== undefined) operation?.onConfirm();
+
     setIsActive(false);
     setOperation(undefined);
     setKey(`address-${Date.now()}`);
@@ -104,11 +105,19 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
             </div>
             <div className="p-3 my-4"></div>
 
-            {template !== undefined &&
+            {(template !== undefined) &&
               <AddressForm
                 name="template"
                 value={template.address}
-                onSubmit={async address => handleSubmit(address)}>
+                onSubmit={async address => handleSubmit(address)}
+                onTemplateChange={(isUnchanged) => {
+                  const defaultValue = operation?.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
+                  return (
+                    isUnchanged &&
+                    template.label === defaultValue.label &&
+                    template.is_default === defaultValue.is_default
+                  );
+                }}>
 
                 <div className="columns mb-0">
                   <InputField

@@ -4,7 +4,7 @@ import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { NotificationType, ParcelTemplateType } from '@/lib/types';
-import { ParcelMutationContext, ParcelTemplateInput } from '@/context/parcel-template-mutation';
+import { ParcelMutationContext } from '@/context/parcel-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import ButtonField from './generic/button-field';
@@ -39,13 +39,23 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
   const [operation, setOperation] = useState<OperationType | undefined>();
   const [isValid, setIsValid] = React.useState<boolean>(true);
 
+  const computeDisable = (isValid: boolean, template: ParcelTemplateType) => {
+    const defaultValue = operation?.parcelTemplate || DEFAULT_TEMPLATE_CONTENT;
+
+    return !isValid || (
+      template.label === defaultValue.label &&
+      template.is_default === defaultValue.is_default &&
+      deepEqual(template?.parcel, defaultValue.parcel)
+    );
+  };
+
   const editParcel = (operation: OperationType) => {
     const template = operation.parcelTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setIsActive(true);
     setOperation(operation);
     setIsNew(isNone(operation.parcelTemplate));
-    setTemplate(template as ParcelTemplateType);
+    setTemplate({ ...template });
     setKey(`parcel-${Date.now()}`);
     addUrlParam('modal', template.id || 'new');
   };
@@ -131,7 +141,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
                   className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
                   fieldClass="form-floating-footer p-3"
                   controlClass="has-text-centered"
-                  disabled={!isValid || deepEqual(template, DEFAULT_TEMPLATE_CONTENT)}>
+                  disabled={computeDisable(isValid, template)}>
                   <span>Save</span>
                 </ButtonField>
 

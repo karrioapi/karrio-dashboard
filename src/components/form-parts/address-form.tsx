@@ -26,6 +26,7 @@ interface AddressFormComponent {
   shipment?: ShipmentType;
   name: "shipper" | "recipient" | "template";
   onSubmit: (address: AddressType) => Promise<any>;
+  onTemplateChange?: (isUnchanged: boolean) => boolean;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
@@ -40,13 +41,21 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 
-const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onSubmit, children }) => {
+const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onSubmit, onTemplateChange, children }) => {
   const { notify } = useContext(Notify);
   const form = useRef<HTMLFormElement>(null);
   const { states } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [address, dispatch] = useReducer(reducer, value || DEFAULT_ADDRESS_CONTENT);
+
+  const computeDisableState = (state: AddressType): boolean => {
+    const isUnchanged = (
+      deepEqual(value || DEFAULT_ADDRESS_CONTENT, state)
+    );
+
+    return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
@@ -185,7 +194,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
         className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
         fieldClass="form-floating-footer p-3"
         controlClass="has-text-centered"
-        disabled={deepEqual(value || DEFAULT_ADDRESS_CONTENT, address)}>
+        disabled={computeDisableState(address)}>
         <span>{isNone(shipment?.id) && name !== "template" ? 'Next' : 'Save'}</span>
       </ButtonField>
 

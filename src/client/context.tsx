@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
 import { PurplshipClient, TokenObtainPair, TokenPair } from "@purplship/rest/index";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloConsumer, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject, filter, Subject } from "rxjs";
 import { isNone } from "@/lib/helper";
@@ -42,7 +42,9 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   return (
     <ApolloProvider client={graphqlCli || createGrapQLContext(session?.accessToken as string)}>
       <RestContext.Provider value={restCli}>
-        {children}
+        <ApolloConsumer>{
+          client => client && <>{children}</>
+        }</ApolloConsumer>
       </RestContext.Provider>
     </ApolloProvider>
   );

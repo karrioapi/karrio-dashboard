@@ -45,14 +45,16 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
     }, [session]);
 
     return (
-      <ClientsProvider authenticated>
-        <ContextProviders {...(pageProps || {})}>
-          <ErrorBoundary>
-            {session && children}
-            <Footer />
-          </ErrorBoundary>
-        </ContextProviders>
-      </ClientsProvider>
+      <>
+        <ClientsProvider authenticated={true}>
+          <ContextProviders {...(pageProps || {})}>
+            <ErrorBoundary>
+              {session && children}
+              <Footer />
+            </ErrorBoundary>
+          </ContextProviders>
+        </ClientsProvider>
+      </>
     );
   };
 
