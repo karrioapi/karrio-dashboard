@@ -3,7 +3,7 @@ import getConfig from 'next/config';
 import { PurplshipClient, TokenObtainPair, TokenPair } from "@purplship/rest/index";
 import { ApolloClient, ApolloConsumer, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { BehaviorSubject, filter, Subject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
@@ -23,6 +23,7 @@ export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQL
 export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
 export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
 export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
+const AuthToken = new BehaviorSubject<string | undefined>(undefined);
 
 
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
@@ -32,8 +33,10 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
+      AuthToken.next(session?.accessToken as string);
+
       setRestCli(createRestContext(session?.accessToken as string));
-      setGraphqlCli(createGrapQLContext(session?.accessToken as string));
+      !graphqlCli && setGraphqlCli(createGrapQLContext(session?.accessToken as string));
     }
   }, [session?.accessToken]);
 
@@ -42,9 +45,7 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   return (
     <ApolloProvider client={graphqlCli || createGrapQLContext(session?.accessToken as string)}>
       <RestContext.Provider value={restCli}>
-        <ApolloConsumer>{
-          client => client && <>{children}</>
-        }</ApolloConsumer>
+        {children}
       </RestContext.Provider>
     </ApolloProvider>
   );
@@ -68,7 +69,7 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
     return {
       headers: {
         ...headers,
-        authorization: accessToken ? `Bearer ${accessToken}` : "",
+        authorization: AuthToken.value ? `Bearer ${AuthToken.value}` : "",
       }
     }
   });

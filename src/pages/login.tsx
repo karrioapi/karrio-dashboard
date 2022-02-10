@@ -1,5 +1,5 @@
 import SectionLayout from "@/layouts/section-layout";
-import { getCookie } from "@/lib/helper";
+import { getCookie, p } from "@/lib/helper";
 import { NextPage } from "next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
@@ -33,7 +33,7 @@ export default function LoginPage(pageProps: any) {
     });
 
     if (response.ok) {
-      router.push(`${(new URLSearchParams(location.search)).get('next')?.replace(BASE_PATH, "") || '/'}`);
+      setTimeout(() => router.push(p`${(new URLSearchParams(location.search)).get('next') || '/'}`), 500);
     } else {
       setShowError(true);
       setTimeout(() => setIsLoading(false), 1000);

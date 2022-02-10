@@ -47,7 +47,7 @@ const auth = NextAuth({
 
       // Refresh the token with a new organization if provideed
       if (!isNone(OrgToken.value)) {
-        logger.info('Refreshing token with new organization');
+        logger.debug('Refreshing token with new organization');
         const { access, refresh } = OrgToken.value as TokenPair;
         return {
           ...token,
@@ -64,7 +64,7 @@ const auth = NextAuth({
 
       // Access token has expired, try to update it OR orgId has changed
       try {
-        logger.info('Refreshing expired token...');
+        logger.debug('Refreshing expired token...');
         const { access, refresh } = await refreshToken(token.refreshToken as string);
 
         return {
