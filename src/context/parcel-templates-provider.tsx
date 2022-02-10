@@ -11,7 +11,7 @@ export type ParcelTemplatesType = LazyQueryResult<get_parcel_templates, any> & {
   templates: ParcelTemplateType[];
   next?: number | null;
   previous?: number | null;
-  load: () => void;
+  load: () => Promise<any>;
   loadMore: (cursor?: number | null) => void;
 };
 

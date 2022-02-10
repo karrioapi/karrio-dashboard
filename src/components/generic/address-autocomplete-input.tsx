@@ -20,7 +20,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
     ...props,
     ...(Object.keys(props).includes('value') ? { value: props.value || "" } : {}),
   };
-  const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
+  const { ADDRESS_AUTO_COMPLETE } = useContext(APIReference) as { ADDRESS_AUTO_COMPLETE: any };
   const container = useRef<HTMLDivElement | null>(null);
   const [key] = useState<string>(`predictions_${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -54,13 +54,13 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
 
   useEffect(() => {
     if (
-      address_auto_complete && (
-        (address_auto_complete.provider !== 'google') ||
-        (address_auto_complete.provider === 'google' && !isNone((window as any).google))
+      ADDRESS_AUTO_COMPLETE && (
+        (ADDRESS_AUTO_COMPLETE.provider !== 'google') ||
+        (ADDRESS_AUTO_COMPLETE.provider === 'google' && !isNone((window as any).google))
       )) {
-      initPredictor(initDebouncedPrediction(address_auto_complete));
+      initPredictor(initDebouncedPrediction(ADDRESS_AUTO_COMPLETE));
     }
-  }, [address_auto_complete]);
+  }, [ADDRESS_AUTO_COMPLETE]);
   useEffect(() => {
     if (isActive) document.addEventListener('click', onBodyClick);
   }, [isActive, onBodyClick]);
@@ -88,7 +88,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
             onChange={onChange}
             onClick={onClick}
             className={`input is-fullwidth ${className || ''}`}
-            {...(address_auto_complete?.is_enabled ? { autoComplete: key } : {})}
+            {...(ADDRESS_AUTO_COMPLETE?.is_enabled ? { autoComplete: key } : {})}
             {...Props}
           />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>

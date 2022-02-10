@@ -12,10 +12,10 @@ import { ClientsProvider } from '@/client/context';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
+      <Head>
+        <meta name="viewport" content="viewport-fit=cover" />
+      </Head>
       <ClientsProvider>
-        <Head>
-          <meta name="viewport" content="viewport-fit=cover" />
-        </Head>
         <MainLayout error={pageProps?.error}>
           <Component {...pageProps} />
         </MainLayout>

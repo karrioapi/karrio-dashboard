@@ -7,7 +7,7 @@ export type UserConnectionType = get_user_connections_user_connections;
 
 type UserConnectionsQueryResult = LazyQueryResult<get_user_connections, any> & {
   user_connections: UserConnectionType[];
-  load: (options?: any) => void;
+  load: (options?: any) => Promise<any>;
 };
 
 export const UserConnections = React.createContext<UserConnectionsQueryResult>({} as UserConnectionsQueryResult);

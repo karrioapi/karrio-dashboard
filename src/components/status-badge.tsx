@@ -20,7 +20,7 @@ const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...pro
   }[status || ""] || "is-light";
 
   return (
-    <span className={`tag is-size-7 is-capitalized ${color} ${className}`} {...props}>{status}</span>
+    <span className={`tag is-size-7 is-capitalized has-text-weight-semibold ${color} ${className}`} {...props}>{status}</span>
   )
 };
 

@@ -12,7 +12,7 @@ export type AddressTemplatesType = LazyQueryResult<get_address_templates, any> &
   next?: number | null;
   previous?: number | null;
   load: () => void;
-  loadMore: (cursor?: number | null) => void;
+  loadMore: (cursor?: number | null) => Promise<any>;
 };
 
 export const AddressTemplates = React.createContext<AddressTemplatesType>({} as AddressTemplatesType);

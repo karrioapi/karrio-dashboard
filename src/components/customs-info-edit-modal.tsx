@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { addUrlParam, isNone, removeUrlParam } from '@/lib/helper';
 import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import InputField from '@/components/generic/input-field';
@@ -33,7 +33,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const { setLoading } = useContext(Loading);
   const { createCustomsTemplate, updateCustomsTemplate } = useContext(CustomsMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [key, setKey] = useState<string>(`customs-${Date.now()}`);
+  const [key, setKey] = useState<string>(`customs-info-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [template, setTemplate] = useState<CustomsTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
@@ -41,18 +41,21 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const editCustomsInfo = (operation: OperationType) => {
     const template = operation.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
 
-    setIsActive(true);
     setOperation(operation);
     setIsNew(isNone(operation.customsTemplate));
-    setTemplate(template);
-    setKey(`customs-${Date.now()}`);
+    setTemplate({ ...template });
+
+    setIsActive(true);
+    setKey(`customs-info-${Date.now()}`);
     addUrlParam('modal', template.id || 'new');
   };
   const close = (_?: React.MouseEvent, changed?: boolean) => {
     if (isNew) setTemplate(undefined);
     if (changed && operation?.onConfirm !== undefined) operation?.onConfirm();
+
     setIsActive(false);
-    setKey(`customs-${Date.now()}`);
+    setOperation(undefined);
+    setKey(`customs-info-${Date.now()}`);
     removeUrlParam('modal');
   };
 
@@ -99,16 +102,19 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
             </div>
             <div className="p-3 my-4"></div>
 
-            {template !== undefined &&
+            {(template !== undefined) &&
               <CustomsInfoForm
-                value={operation?.customsTemplate?.customs}
-                onSubmit={async customs => handleSubmit(customs as TemplateType['customs'])}
-                onChange={customs => setTemplate({ ...template, customs: customs as TemplateType['customs'] })}
-                onTemplateChange={(isUnchanged) => (
-                  isUnchanged &&
-                  template.label === operation?.customsTemplate?.label &&
-                  template.is_default === operation?.customsTemplate?.is_default
-                )}
+                value={template.customs}
+                onSubmit={async customs => handleSubmit(customs as CustomsType)}
+                onChange={(customs: any) => setTemplate({ ...template, customs } as CustomsTemplateType)}
+                onTemplateChange={(isUnchanged) => {
+                  const defaultValue = operation?.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
+                  return (
+                    isUnchanged &&
+                    template?.label === defaultValue.label &&
+                    template?.is_default === defaultValue.is_default
+                  );
+                }}
                 isTemplate={true}>
 
                 <div className="columns mb-2">

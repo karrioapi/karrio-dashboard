@@ -14,8 +14,8 @@ type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
   next?: number | null;
   previous?: number | null;
   variables: LogsFilterType;
-  load: (options?: LogsFilterType) => Promise<void>;
-  loadMore: (options?: LogsFilterType) => Promise<void>;
+  load: (options?: LogsFilterType) => Promise<any>;
+  loadMore: (options?: LogsFilterType) => Promise<any>;
 };
 
 export const LogsContext = React.createContext<LogsType>({} as LogsType);
@@ -62,14 +62,14 @@ const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, set
 
   return (
     <LogsContext.Provider value={{
+      ...query,
       load,
       loadMore,
-      variables,
       logs: extract(query?.data?.logs?.edges),
       next: query.data?.logs?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
-      ...query
-    } as LogsType}>
+      variables,
+    }}>
       {children}
     </LogsContext.Provider>
   );

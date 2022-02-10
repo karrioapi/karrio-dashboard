@@ -1,10 +1,10 @@
-import { CarrierSettingsCarrierNameEnum, References } from '@purplship/rest/index';
+import { CarrierSettingsCarrierNameEnum } from '@purplship/rest/index';
 import React, { useContext, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
-import { Collection, NotificationType, ServiceLevelType } from '@/lib/types';
+import { Collection, NotificationType, References, ServiceLevelType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
@@ -14,7 +14,7 @@ import { addUrlParam, deepEqual, isNone, removeUrlParam, validationMessage, vali
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
-import MetadataEditor, { MetadataEditorContext } from './metadata-editor';
+import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { MetadataObjectType } from '@purplship/graphql';
 
 type OperationType = {
@@ -142,7 +142,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 <hr />
 
                 {has("verbose_name") &&
-                  <InputField label="Verbose Name" defaultValue={payload.verbose_name}
+                  <InputField label="Display Name" defaultValue={payload.verbose_name}
                     onChange={handleOnChange("verbose_name")}
                     className="is-small"
                     required

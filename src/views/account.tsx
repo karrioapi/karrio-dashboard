@@ -16,7 +16,7 @@ export default function AccountPage(pageProps: any) {
   const tabs = ['Profile', 'Account'];
 
   const Component: React.FC = () => {
-    const { multi_organizations, app_name } = useContext(APIReference);
+    const { MULTI_ORGANIZATIONS, APP_NAME } = useContext(APIReference);
 
     return (
       <>
@@ -29,7 +29,7 @@ export default function AccountPage(pageProps: any) {
             <div className="columns py-6">
               <div className="column is-5 pr-6">
                 <p className="subtitle is-6 py-1">Profile</p>
-                <p className="is-size-7 pr-6">Your email address is your identity on {app_name} and is used to log in.</p>
+                <p className="is-size-7 pr-6">Your email address is your identity on {APP_NAME} and is used to log in.</p>
               </div>
 
               <div className="column is-7">
@@ -51,7 +51,7 @@ export default function AccountPage(pageProps: any) {
           </div>
 
           <div>
-            {multi_organizations && <>
+            {MULTI_ORGANIZATIONS && <>
 
               <OrganizationManagement />
 
@@ -81,7 +81,7 @@ export default function AccountPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Account Settings - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Account Settings - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <TabStateProvider tabs={tabs} setSelectedToURL>
         <Component />

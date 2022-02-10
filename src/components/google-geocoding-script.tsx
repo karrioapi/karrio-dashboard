@@ -4,12 +4,12 @@ import Script from 'next/script';
 
 
 const GoogleGeocodingScript: React.FC = () => {
-  const { address_auto_complete } = useContext(APIReference) as { address_auto_complete: any };
+  const { ADDRESS_AUTO_COMPLETE } = useContext(APIReference) as { ADDRESS_AUTO_COMPLETE: any };
 
   return (
     <>
-      {(address_auto_complete?.provider === 'google') &&
-        <Script src={`https://maps.googleapis.com/maps/api/js?key=${address_auto_complete.key}&libraries=places`}></Script>
+      {(ADDRESS_AUTO_COMPLETE?.provider === 'google') &&
+        <Script src={`https://maps.googleapis.com/maps/api/js?key=${ADDRESS_AUTO_COMPLETE.key}&libraries=places`}></Script>
       }
     </>
   )

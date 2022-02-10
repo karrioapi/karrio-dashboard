@@ -1,9 +1,9 @@
-import { connectAPI } from "@/lib/middleware";
+import { checkAPI } from "@/lib/middleware";
 import { GetServerSideProps } from "next";
 
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const metadata = await connectAPI().catch(_ => _);
+  const metadata = await checkAPI().catch(_ => _);
 
   res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59')
 

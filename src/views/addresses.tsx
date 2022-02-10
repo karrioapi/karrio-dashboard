@@ -131,7 +131,7 @@ export default function AddressPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
-      <Head><title>Address Templates - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Address Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <AddressTemplatesProvider>
         <AddressMutationProvider>
           <ConfirmModal>

@@ -41,7 +41,7 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
         <div className="modal-background" onClick={dismiss}></div>
 
-        {isActive && <div className="modal-card is-medium-modal">
+        {(isActive && shipmentId) && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
             <ShipmentProvider>
               <EventsProvider setVariablesToURL={false}>

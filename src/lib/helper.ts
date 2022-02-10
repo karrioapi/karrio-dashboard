@@ -125,6 +125,13 @@ export function formatWeight(data?: { weight: number, weight_unit: string } | an
   return 'Weight: None specified...';
 }
 
+export function formatCarrierSlug(name?: string) {
+  const raw_name = (name || "").replaceAll('-', ' ').replaceAll('_', ' ').split(' ')[0];
+  const count = raw_name.length > 10 ? 9 : 10;
+  const short_name = raw_name.slice(0, count) + (count === 9 ? "." : "");
+  return short_name.toUpperCase();
+}
+
 export function isNone(value: any): boolean {
   return value === null || value === undefined;
 }
@@ -144,23 +151,6 @@ export function deepEqual(value1?: object | null, value2?: object | null): boole
     JSON.stringify(clean_value2, Object.keys(clean_value2 || {}).sort())
   );
 }
-
-function deepEqual2(k: string, v: any) {
-  if (k === null) { return undefined; }
-  if (v instanceof Array) {
-    console.log(k);
-    return v.map(d => JSON.parse(JSON.stringify(d, (window as any).deepEqual2)));
-  }
-  // if (v instanceof Object) {
-  //   return JSON.parse(JSON.stringify(
-  //     Object.keys(v)
-  //       .sort()
-  //       .reduce((acc, key) => ({ [key]: v[key] }), {}), replacer));
-  // }
-  return v;
-}
-
-if (typeof window !== 'undefined') (window as any).deepEqual2 = deepEqual2;
 
 // Remove undefined values from objects
 export function cleanDict<T = object>(value: object): T {

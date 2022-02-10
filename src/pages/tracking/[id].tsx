@@ -1,16 +1,16 @@
-import { References, TrackingEvent, TrackingStatus } from "@purplship/rest";
+import { TrackingEvent, TrackingStatus } from "@purplship/rest";
 import { NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
 import { formatDayDate, isNone, p } from "@/lib/helper";
+import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/tracker';
 
 type DayEvents = { [k: string]: TrackingEvent[] };
 
-const Tracking: NextPage<{ id: string, references: References, tracker?: TrackingStatus, message?: string }> = ({ references, id, tracker, message }) => {
-  const { app_name, app_website } = references || {};
+const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingStatus, message?: string }> = ({ metadata, id, tracker, message }) => {
 
   const computeEvents = (tracker: TrackingStatus): DayEvents => {
     return (tracker?.events || []).reduce((days, event: TrackingEvent) => {
@@ -21,14 +21,14 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number || id} - {app_name}</title></Head>
+      <Head><title>Tracking - {tracker?.tracking_number || id} - {metadata.APP_NAME}</title></Head>
 
       <section className="hero is-fullheight p-2">
 
         <div className="container">
 
           <div className="has-text-centered my-4">
-            <Image src={p`/logo.svg`} width="130" height="100%" alt={app_name} />
+            <Image src={p`/logo.svg`} width="130" height="100%" alt={metadata.APP_NAME} />
           </div>
 
           {!isNone(tracker) && <>
@@ -94,13 +94,11 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
 
           </>}
 
-          {
-            !isNone(message) && <div className="card isolated-card my-6">
-              <div className="card-content has-text-centered ">
-                <p>{message}</p>
-              </div>
+          {!isNone(message) && <div className="card isolated-card my-6">
+            <div className="card-content has-text-centered ">
+              <p>{message}</p>
             </div>
-          }
+          </div>}
 
         </div >
 
@@ -109,7 +107,7 @@ const Tracking: NextPage<{ id: string, references: References, tracker?: Trackin
         <div className="hero-footer mb-4">
           <div className="content has-text-centered">
             <p>
-              <a href={app_website} className="button is-white">Powered by &copy; {app_name}</a>
+              <a href={metadata.APP_WEBSITE} className="button is-white">Powered by &copy; {metadata.APP_NAME}</a>
             </p>
           </div>
         </div>

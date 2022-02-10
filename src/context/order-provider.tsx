@@ -6,7 +6,7 @@ import { get_order, GET_ORDER, get_orderVariables, get_order_order } from '@purp
 type Order = get_order_order;
 export type OrderResultType = LazyQueryResult<get_order, get_orderVariables> & {
   order?: Order;
-  loadOrder: (id: string) => void;
+  loadOrder: (id: string) => Promise<any>;
   setOrder: React.Dispatch<React.SetStateAction<get_order_order | undefined>>;
 };
 
@@ -19,9 +19,7 @@ const OrderProvider: React.FC = ({ children }) => {
   });
   const [order, setOrder] = useState<Order>();
 
-  const loadOrder = (id: string) => {
-    (result.fetchMore || load)({ variables: { id } });
-  };
+  const loadOrder = (id: string) => (result.fetchMore || load)({ variables: { id } });
 
   useEffect(() => { setOrder(result.data?.order as Order); }, [result]);
 

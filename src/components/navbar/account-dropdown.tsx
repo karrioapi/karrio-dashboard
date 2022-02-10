@@ -10,7 +10,7 @@ interface AccountDropdownComponent { }
 
 const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
   const { user } = useContext(UserData);
-  const { admin } = useContext(APIReference);
+  const { ADMIN } = useContext(APIReference);
   const [isActive, setIsActive] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
@@ -54,7 +54,7 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
               </a>
             </Link>
 
-            {user?.is_staff && <a href={admin} target="_blank" rel="noreferrer" className="options-item">
+            {(user?.is_staff === true) && <a href={ADMIN} target="_blank" rel="noreferrer" className="options-item">
               <i className="fas fa-tools"></i>
               <div className="option-content">
                 <span>Admin Console</span>

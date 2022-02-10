@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetUser, GetUser_user, GET_USER } from '@purplship/graphql';
 
@@ -7,13 +7,16 @@ type UserDataType = LazyQueryResult<GetUser, any> & { user: UserType };
 
 export const UserData = React.createContext<UserDataType>({} as UserDataType);
 
-const UserProvider: React.FC = ({ children }) => {
-  const [initialLoad, result] = useLazyQuery<GetUser>(GET_USER);
+const UserProvider: React.FC<{ user: UserType }> = ({ user, children }) => {
+  const [_, result] = useLazyQuery<GetUser>(GET_USER);
+  const [state, setState] = useState<UserType>(user);
 
-  useEffect(() => { if (!result.called) initialLoad(); }, []);
+  useEffect(() => {
+    result.data?.user && setState(result.data?.user as UserType);
+  }, [result.data]);
 
   return (
-    <UserData.Provider value={{ user: result.data?.user as UserType, ...result }}>
+    <UserData.Provider value={{ user: state, ...result }}>
       {children}
     </UserData.Provider>
   );

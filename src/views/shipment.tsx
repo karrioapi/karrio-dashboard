@@ -6,7 +6,7 @@ import LabelPrinter, { LabelPrinterContext } from "@/components/label/label-prin
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
-import ShipmentProvider, { LabelData } from "@/context/shipment-provider";
+import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
 import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDateTimeLong, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -21,6 +21,7 @@ import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
+import CarrierBadge from "@/components/carrier-badge";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -33,17 +34,19 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const { setLoading } = useContext(Loading);
   const { printLabel } = useContext(LabelPrinterContext);
   const { printInvoice } = useContext(CustomInvoicePrinterContext);
-  const { shipment, loading, called, loadShipment } = useContext(LabelData);
+  const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
   const { id } = router.query;
 
   const buyLabel = (_: React.MouseEvent) => {
-    router.push(basePath + '/buy_label/' + shipment.id);
+    router.push(basePath + '/buy_label/' + shipment?.id);
   };
 
   useEffect(() => { setLoading(loading); });
   useEffect(() => {
-    (!loading && loadShipment) && loadShipment((id || shipmentId) as string);
-  }, [id || shipmentId]);
+    if (!called && !loading && loadShipment) {
+      loadShipment((id || shipmentId) as string);
+    }
+  }, [called, loading, id || shipmentId]);
   useEffect(() => {
     if (called && !isNone(shipment)) {
       (!logs.called && !logs.loading && logs.load) && logs.load({ first: 6, entity_id: shipment?.id });
@@ -54,9 +57,9 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   return (
     <>
 
-      {loading && <Spinner />}
+      {!called && loading && <Spinner />}
 
-      {!loading && !isNone(shipment.id) && <>
+      {(!loading && shipment) && <>
 
         {/* Header Section */}
         <div className="columns my-1">
@@ -106,7 +109,16 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
             <div className="p-4 mr-4">
               <span className="subtitle is-size-7 my-4">Courier</span><br />
-              <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={25} alt="logo" className="mt-1" />
+              {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
+                <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={25} alt="logo" className="mt-1" />
+              </div>}
+              {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
+                <CarrierBadge
+                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered"
+                  style={{ margin: '1px', width: '100px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                  custom_name={shipment.carrier_id as string}
+                  short
+                />}
             </div>
 
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
@@ -312,7 +324,6 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           id={shipment.id}
           object_type={MetadataObjectType.shipment}
           metadata={shipment.metadata}
-          onChange={() => loadShipment(shipment.id)}
         >
           <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
 
@@ -403,7 +414,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       </>}
 
-      {called && !loading && isNone(shipment.id) && <div className="card my-6">
+      {called && !loading && !shipment && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>
@@ -418,7 +429,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 export default function ShipmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Shipment - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentProvider>
         <EventsProvider setVariablesToURL={false}>
           <LogsProvider setVariablesToURL={false}>

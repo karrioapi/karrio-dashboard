@@ -149,7 +149,7 @@ export default function OrdersPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Orders - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrdersProvider>
         <OrderPreview>
 

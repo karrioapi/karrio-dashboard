@@ -12,9 +12,9 @@ type ResultType = WebhookList & {
   error?: RequestError;
   called: boolean;
   loading: boolean;
-  load: (options?: any) => void;
-  loadMore: (cursor: string) => void;
-  refetch: (options?: any) => void;
+  load: (options?: any) => Promise<any>;
+  loadMore: (cursor: string) => Promise<any>;
+  refetch: (options?: any) => Promise<any>;
 };
 export const Webhooks = React.createContext<ResultType>({} as ResultType);
 

@@ -1,9 +1,7 @@
-import { References } from "@purplship/rest";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
-import APIReferenceProvider from "@/context/references-provider";
 import UserMutation from "@/context/user-mutation";
 import { ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset_errors } from "@purplship/graphql";
 import { useRouter } from "next/dist/client/router";
@@ -11,6 +9,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
 import logger from "@/lib/logger";
+import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -112,19 +111,17 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
   )
 });
 
-export default function Page({ references }: { references: References }) {
+export default function Page({ metadata }: { metadata: Metadata }) {
   return (
     <>
-      <APIReferenceProvider references={references}>
-        <SectionLayout>
-          <Head><title>Password Reset - {references?.app_name}</title></Head>
+      <SectionLayout metadata={metadata}>
+        <Head><title>Password Reset - {metadata?.APP_NAME}</title></Head>
 
-          <LoadingProvider>
-            <Component />
-          </LoadingProvider>
+        <LoadingProvider>
+          <Component />
+        </LoadingProvider>
 
-        </SectionLayout>
-      </APIReferenceProvider>
+      </SectionLayout>
     </>
   )
 }

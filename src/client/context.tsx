@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
 import { PurplshipClient, TokenObtainPair, TokenPair } from "@purplship/rest/index";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloConsumer, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { BehaviorSubject, filter } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
@@ -15,41 +15,35 @@ export const PURPLSHIP_API = (
   typeof window === 'undefined'
     ? serverRuntimeConfig?.PURPLSHIP_HOSTNAME
     : publicRuntimeConfig?.PURPLSHIP_API_URL
-)
+);
 
-export const AuthToken = new BehaviorSubject<TokenPair | undefined>(undefined);
+logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
+
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
 export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
 export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
 export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
+const AuthToken = new BehaviorSubject<string | undefined>(undefined);
 
-AuthToken
-  .pipe(filter(token => !isNone(token)))
-  .subscribe(async (token?: any) => {
-    graphqlClient.next(createGrapQLContext(token?.access));
-    restClient.next(createRestContext(token?.access));
-  });
 
-logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
-
-export const ClientsProvider: React.FC = ({ children }) => {
+export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
   const { data: session } = useSession();
-  const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any>>(graphqlClient.getValue());
+  const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>();
   const [restCli, setRestCli] = React.useState<PurplshipClient | undefined>();
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
-      const newCli = createRestContext(session?.accessToken as string);
+      AuthToken.next(session?.accessToken as string);
 
-      if (newCli !== restCli) {
-        setGraphqlCli(createGrapQLContext(session?.accessToken as string));
-        setRestCli(newCli);
-      }
+      setRestCli(createRestContext(session?.accessToken as string));
+      !graphqlCli && setGraphqlCli(createGrapQLContext(session?.accessToken as string));
     }
   }, [session?.accessToken]);
 
+  if (authenticated && !graphqlCli) return <></>;
+
   return (
-    <ApolloProvider client={graphqlCli}>
+    <ApolloProvider client={graphqlCli || createGrapQLContext(session?.accessToken as string)}>
       <RestContext.Provider value={restCli}>
         {children}
       </RestContext.Provider>
@@ -57,28 +51,6 @@ export const ClientsProvider: React.FC = ({ children }) => {
   );
 };
 
-
-export async function authenticate(data: TokenObtainPair) {
-  const token = await restClient.getValue().API.authenticate({ data });
-
-  AuthToken.next(token);
-
-  return token;
-}
-
-export async function refreshToken(refresh: string, org_id?: string) {
-  const response = await restClient.getValue().API.refreshToken({
-    data: { refresh, ...(isNone(org_id) ? {} : { org_id }) }
-  });
-  const token = {
-    refresh: response.refresh,
-    access: response.access
-  } as TokenPair;
-
-  AuthToken.next(token);
-
-  return token;
-}
 
 function createRestContext(accessToken?: string): PurplshipClient {
   return new PurplshipClient({
@@ -97,7 +69,7 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
     return {
       headers: {
         ...headers,
-        authorization: accessToken ? `Bearer ${accessToken}` : "",
+        authorization: AuthToken.value ? `Bearer ${AuthToken.value}` : "",
       }
     }
   });

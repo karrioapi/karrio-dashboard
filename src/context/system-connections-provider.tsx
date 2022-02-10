@@ -7,7 +7,7 @@ export type SystemConnectionType = get_system_connections_system_connections;
 
 type SystemConnectionsQueryResult = LazyQueryResult<get_system_connections, any> & {
   system_connections: SystemConnectionType[];
-  load: (options?: any) => void;
+  load: (options?: any) => Promise<any>;
 };
 
 export const SystemConnections = React.createContext<SystemConnectionsQueryResult>({} as SystemConnectionsQueryResult);

@@ -176,7 +176,7 @@ export default function TrackersPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Trackers - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Trackers - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <UserConnectionsProvider>
         <SystemConnectionsProvider>
           <TrackerMutationProvider>

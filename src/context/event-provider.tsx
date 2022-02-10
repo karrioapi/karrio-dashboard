@@ -6,7 +6,7 @@ import { get_event, GET_EVENT, get_eventVariables, get_event_event } from '@purp
 type Event = get_event_event;
 export type EventResultType = LazyQueryResult<get_event, get_eventVariables> & {
   event?: Event;
-  loadEvent: (id: string) => void;
+  loadEvent: (id: string) => Promise<any>;
   setEvent: React.Dispatch<React.SetStateAction<get_event_event | undefined>>;
 };
 

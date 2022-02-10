@@ -140,7 +140,7 @@ export default function LogPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Log - {(pageProps as any).references?.app_name}</title></Head>
+      <Head><title>Log - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <LogProvider>
         <LogComponent />
       </LogProvider>
