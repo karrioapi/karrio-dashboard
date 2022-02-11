@@ -62,7 +62,7 @@ export default function WebhooksPage(pageProps: any) {
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-0 py-4">
           <span className="title is-4">Endpoints</span>
           <button className="button is-default is-pulled-right" onClick={() => editWebhook({ onConfirm: update })}>
             <span className="icon"><i className="fas fa-plus"></i></span>

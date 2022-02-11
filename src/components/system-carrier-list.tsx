@@ -40,7 +40,7 @@ const SystemConnectionList: React.FC<SystemConnectionListView> = SystemConnectio
           {(system_connections || []).map((connection) => (
 
             <tr key={`connection-${connection.id}-${Date.now()}`}>
-              <td className="carrier is-vcentered">
+              <td className="carrier is-vcentered pl-0">
                 <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" />
               </td>
               <td className="mode is-vcentered">

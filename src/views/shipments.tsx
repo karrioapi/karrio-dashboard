@@ -61,7 +61,7 @@ export default function ShipmentsPage(pageProps: any) {
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
+        <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Shipments</span>
           <div>
             <ShipmentsFilter />
@@ -115,8 +115,7 @@ export default function ShipmentsPage(pageProps: any) {
                     </div>}
                     {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
                       <CarrierBadge
-                        className="has-background-primary has-text-weight-bold has-text-white-bis"
-                        style={{ margin: '1px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                        className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
                         custom_name={shipment.carrier_id as string}
                         short
                       />}

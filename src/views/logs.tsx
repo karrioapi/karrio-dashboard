@@ -46,8 +46,7 @@ export default function LogsPage(pageProps: any) {
 
     return (
       <>
-
-        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
+        <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Logs</span>
           <LogsFilter />
         </header>

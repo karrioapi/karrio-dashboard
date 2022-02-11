@@ -114,8 +114,8 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </div>}
               {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
                 <CarrierBadge
-                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered"
-                  style={{ margin: '1px', width: '100px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered is-size-7 my-1"
+                  style={{ width: '100px' }}
                   custom_name={shipment.carrier_id as string}
                   short
                 />}

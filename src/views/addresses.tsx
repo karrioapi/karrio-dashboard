@@ -45,7 +45,7 @@ export default function AddressPage(pageProps: any) {
 
     return (
       <>
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-0 py-4">
           <span className="title is-4">Addresses</span>
           <button className="button is-primary is-small is-pulled-right" onClick={() => editAddress({ onConfirm: update })}>
             <span>Create address</span>
@@ -73,8 +73,8 @@ export default function AddressPage(pageProps: any) {
                       <span className="icon has-text-success"><i className="fas fa-check"></i></span> Default shipper address
                     </span>}
                   </td>
-                  <td className="action is-vcentered">
-                    <div className="buttons is-centered">
+                  <td className="action is-vcentered pr-0">
+                    <div className="buttons is-justify-content-end">
                       <button className="button is-white" onClick={() => editAddress({
                         addressTemplate: template,
                         onConfirm: update,
