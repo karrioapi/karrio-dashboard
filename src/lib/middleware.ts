@@ -92,15 +92,27 @@ function dataQuery(org_id?: string) {
     name
     slug
     token
-    user {
+    current_user {
       email
       full_name
       is_admin
+      is_staff
+      is_owner
+      last_login
     }
-    users {
+    members {
       email
       full_name
       is_admin
+      is_owner
+      invitation {
+        id
+        guid
+        invitee_identifier
+        created
+        modified
+      }
+      last_login
     }
   }
   `;

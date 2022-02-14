@@ -159,15 +159,27 @@ export const GET_ORGANIZATIONS = gql`query get_organizations {
     name
     slug
     token
-    user {
+    current_user {
       email
       full_name
       is_admin
+      is_staff
+      is_owner
+      last_login
     }
-    users {
+    members {
       email
       full_name
       is_admin
+      is_owner
+      invitation {
+        id
+        guid
+        invitee_identifier
+        created
+        modified
+      }
+      last_login
     }
   }
 }
@@ -1314,7 +1326,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
 }
 `;
 
-export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections($test: Boolean) {
+export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics($test: Boolean) {
   user_connections(test: $test) {
     __typename
     ... on AramexSettings {

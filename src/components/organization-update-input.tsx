@@ -5,7 +5,7 @@ import { OrganizationMutationContext } from '@/context/organization-mutation';
 import { Organizations, OrganizationType } from '@/context/organizations-provider';
 
 interface OrganizationUpdateInputComponent {
-  label: string;
+  label?: string;
   inputType: string;
   propertyKey: keyof OrganizationType;
 }
@@ -45,7 +45,7 @@ const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = ({ l
 
   return (
     <form className="field" onSubmit={handleSubmit} key={key}>
-      <label className="label">{label}</label>
+      {label && <label className="label">{label}</label>}
       <div className="control">
         <input
           className="input is-small mr-1"
@@ -53,7 +53,7 @@ const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = ({ l
           defaultValue={((organization || {}) as any)[propertyKey] || ""}
           type={inputType}
           style={{ maxWidth: "60%" }}
-          disabled={!organization?.user?.is_admin}
+          disabled={!organization?.current_user?.is_admin}
           required
         />
 
@@ -62,7 +62,7 @@ const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = ({ l
         <button className="button is-small"
           onClick={cancel}
           hidden={!hasChanged}
-          disabled={!organization?.user?.is_admin}
+          disabled={!organization?.current_user?.is_admin}
           style={{ visibility: (hasChanged ? "visible" : "hidden") }}>
           <span>Cancel</span>
         </button>

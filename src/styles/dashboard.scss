@@ -229,6 +229,21 @@ Purplship custom styling
   }
 }
 
+.members-table {
+  .member {
+    width: 40%;
+  }
+  .role {
+    width: 30%;
+  }
+  .last-login {
+    width: 20%;
+  }
+  .action {
+    width: 10%;
+  }
+}
+
 hr {
   background-color: #dddddd;
 }
