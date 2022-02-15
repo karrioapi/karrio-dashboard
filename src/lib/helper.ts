@@ -302,3 +302,11 @@ export function validityCheck(nested?: (e: React.FormEvent | any) => void) {
     return nested && nested(e);
   }
 }
+
+export function failsafe(fn: () => any, defaultValue: any = null) {
+  try {
+    return fn();
+  } catch (e) {
+    return defaultValue;
+  }
+}
