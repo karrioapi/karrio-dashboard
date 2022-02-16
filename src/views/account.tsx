@@ -53,7 +53,7 @@ export default function AccountPage(pageProps: any) {
               <div className="column is-5">
                 <p className="subtitle is-6 py-1">Close Account</p>
                 <p className="is-size-7">
-                  <strong>Warning:</strong> You will lose access to your Purplship services
+                  <strong>Warning:</strong> You will lose access to your {APP_NAME} services
                 </p>
               </div>
 
