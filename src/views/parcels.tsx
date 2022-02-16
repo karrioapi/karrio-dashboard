@@ -20,7 +20,7 @@ export default function ParcelsPage(pageProps: any) {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { deleteTemplate } = useContext(ParcelMutationContext);
     const { loading, templates, previous, next, called, load, loadMore, refetch } = useContext(ParcelTemplates);
     const [initialized, setInitialized] = React.useState(false);

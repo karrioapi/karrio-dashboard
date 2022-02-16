@@ -20,7 +20,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
-  const { confirmDeletion } = useContext(ConfirmModalContext);
+  const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
   const { user_connections, loading, called, refetch } = useContext(UserConnections);

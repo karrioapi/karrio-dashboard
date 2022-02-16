@@ -1,18 +1,22 @@
 import React, { useContext } from 'react';
 import OrganizationUpdateInput from '@/components/organization-update-input';
-import OrganizationMutationProvider, { OrganizationMutationContext } from '@/context/organization-mutation';
+import { OrganizationMutationContext } from '@/context/organization-mutation';
 import { Organizations } from '@/context/organizations-provider';
 import { formatDateTimeLong } from '@/lib/helper';
 import Dropdown from '@/components/generic/dropdown';
 import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
+import { useInviteMember } from '@/components/invite-member-modal';
+import { useConfirmModal } from '@/components/confirm-modal';
 
 interface OrganizationManagementComponent { }
 
 const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => {
   const { notify } = useContext(Notify);
+  const { confirm } = useConfirmModal();
   const { organization, load } = useContext(Organizations);
   const { deleteOrganizationInvitation } = useContext(OrganizationMutationContext);
+  const { sendInvites } = useInviteMember();
 
   const removeInvitation = (id: string) => async () => {
     try {
@@ -43,9 +47,13 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
 
       <header className="px-0 pt-4">
         <span className="subtitle is-5">Team</span>
-        {organization.current_user.is_admin && <button className="button is-primary is-small is-pulled-right">
-          <span>New member</span>
-        </button>}
+        {organization.current_user.is_admin &&
+          <button
+            className="button is-primary is-small is-pulled-right"
+            onClick={() => sendInvites({ onChange: load })}
+          >
+            <span>New member</span>
+          </button>}
       </header>
 
       <hr style={{ height: '1px' }} />
@@ -95,7 +103,14 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
 
                       {/* Menu items */}
                       <div className="dropdown-content">
-                        <a className="dropdown-item" onClick={removeInvitation(member.invitation.id)}>Remove...</a>
+                        <a
+                          className="dropdown-item"
+                          onClick={() => confirm({
+                            label: "user from team",
+                            identifier: member.invitation?.invitee_identifier as string,
+                            onConfirm: removeInvitation(member.invitation?.id as string),
+                          })}
+                        >Remove...</a>
                       </div>
                     </Dropdown>
                   </div>}

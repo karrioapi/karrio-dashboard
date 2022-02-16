@@ -19,7 +19,7 @@ export default function AddressPage(pageProps: any) {
   const Component: React.FC<any> = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { editAddress } = useContext(AddressEditContext);
     const { deleteAddressTemplate } = useContext(AddressMutationContext);
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(AddressTemplates);

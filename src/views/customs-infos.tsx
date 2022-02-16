@@ -20,7 +20,7 @@ export default function CustomsInfoPage(pageProps: any) {
   const Component: React.FC<any> = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
     const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(CustomInfoTemplates);

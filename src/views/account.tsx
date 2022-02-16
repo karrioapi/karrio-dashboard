@@ -7,6 +7,8 @@ import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import PasswordManagement from "@/components/password-management";
 import OrganizationMutationProvider from "@/context/organization-mutation";
+import InviteMemberProvider from "@/components/invite-member-modal";
+import ConfirmModal from "@/components/confirm-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -67,7 +69,9 @@ export default function AccountPage(pageProps: any) {
 
           {MULTI_ORGANIZATIONS && <div>
             <OrganizationMutationProvider>
-              <OrganizationManagement />
+              <InviteMemberProvider>
+                <OrganizationManagement />
+              </InviteMemberProvider>
             </OrganizationMutationProvider>
           </div>}
         </Tabs>
@@ -79,9 +83,11 @@ export default function AccountPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Account Settings - {APP_NAME}</title></Head>
 
-      <TabStateProvider tabs={tabs} setSelectedToURL>
-        <Component />
-      </TabStateProvider>
+      <ConfirmModal>
+        <TabStateProvider tabs={tabs} setSelectedToURL>
+          <Component />
+        </TabStateProvider>
+      </ConfirmModal>
 
     </DashboardLayout>
   ), pageProps)

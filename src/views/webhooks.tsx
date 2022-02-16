@@ -26,7 +26,7 @@ export default function WebhooksPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { loading, results, called, load, refetch } = useContext(Webhooks);
     const { editWebhook } = useContext(WebhookEditContext);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();

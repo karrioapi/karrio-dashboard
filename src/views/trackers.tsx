@@ -29,7 +29,7 @@ export default function TrackersPage(pageProps: any) {
     const { modal } = router.query;
     const { setLoading } = useContext(Loading);
     const { previewTracker } = useContext(TrackingPreviewContext);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { removeTracker } = useContext(TrackerMutationContext);
     const { addTracker } = useContext(TrackerModalContext);
     const { loading, called, trackers, next, previous, variables, load, loadMore } = useContext(TrackersContext);
