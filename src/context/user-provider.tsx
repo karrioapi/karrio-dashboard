@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetUser, GetUser_user, GET_USER } from '@purplship/graphql';
 
@@ -21,5 +21,10 @@ const UserProvider: React.FC<{ user: UserType }> = ({ user, children }) => {
     </UserData.Provider>
   );
 };
+
+export function useUser() {
+  const { user } = useContext(UserData);
+  return user;
+}
 
 export default UserProvider;

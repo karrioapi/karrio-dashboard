@@ -255,6 +255,26 @@ export interface update_connectionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: delete_connection
+// ====================================================
+
+export interface delete_connection_delete_connection {
+  id: string | null;
+}
+
+export interface delete_connection {
+  delete_connection: delete_connection_delete_connection | null;
+}
+
+export interface delete_connectionVariables {
+  data: DeleteConnectionInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: get_organizations
 // ====================================================
 
@@ -295,26 +315,6 @@ export interface get_organizations_organizations {
 
 export interface get_organizations {
   organizations: (get_organizations_organizations | null)[];
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: delete_connection
-// ====================================================
-
-export interface delete_connection_delete_connection {
-  id: string | null;
-}
-
-export interface delete_connection {
-  delete_connection: delete_connection_delete_connection | null;
-}
-
-export interface delete_connectionVariables {
-  data: DeleteConnectionInput;
 }
 
 
@@ -392,6 +392,62 @@ export interface send_organization_invites {
 
 export interface send_organization_invitesVariables {
   data: SendOrganizationInvitesInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_organization_invitation
+// ====================================================
+
+export interface get_organization_invitation_organization_invitation_invitee {
+  email: string;
+}
+
+export interface get_organization_invitation_organization_invitation {
+  invitee_identifier: string;  // The contact identifier for the invitee, email, phone number, social media handle, etc.
+  organization_name: string;
+  invitee: get_organization_invitation_organization_invitation_invitee | null;
+}
+
+export interface get_organization_invitation {
+  organization_invitation: get_organization_invitation_organization_invitation | null;
+}
+
+export interface get_organization_invitationVariables {
+  guid: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: accept_organization_invitation
+// ====================================================
+
+export interface accept_organization_invitation_accept_organization_invitation_organization {
+  id: string;
+}
+
+export interface accept_organization_invitation_accept_organization_invitation_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface accept_organization_invitation_accept_organization_invitation {
+  organization: accept_organization_invitation_accept_organization_invitation_organization | null;
+  errors: (accept_organization_invitation_accept_organization_invitation_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface accept_organization_invitation {
+  accept_organization_invitation: accept_organization_invitation_accept_organization_invitation | null;
+}
+
+export interface accept_organization_invitationVariables {
+  data: AcceptOrganizationInvitationInput;
 }
 
 
@@ -4691,6 +4747,12 @@ export interface SendOrganizationInvitesInput {
 }
 
 // null
+export interface AcceptOrganizationInvitationInput {
+  guid: string;
+  clientMutationId?: string | null;
+}
+
+// null
 export interface DeleteOrganizationInvitationInput {
   id: string;
   clientMutationId?: string | null;
@@ -5025,6 +5087,7 @@ export interface RegisterUserInput {
   full_name?: string | null;
   password1: string;
   password2: string;
+  redirect_url: string;
   clientMutationId?: string | null;
 }
 

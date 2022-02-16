@@ -153,6 +153,13 @@ export const UPDATE_CONNECTION = gql`mutation update_connection($data: UpdateCon
 }
 `;
 
+export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteConnectionInput!) {
+  delete_connection(input: $data) {
+    id
+  }
+}
+`;
+
 export const GET_ORGANIZATIONS = gql`query get_organizations {
   organizations {
     id
@@ -185,13 +192,6 @@ export const GET_ORGANIZATIONS = gql`query get_organizations {
 }
 `;
 
-export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteConnectionInput!) {
-  delete_connection(input: $data) {
-    id
-  }
-}
-`;
-
 export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationInput!) {
   create_organization(input: $data) {
     id
@@ -216,6 +216,30 @@ export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: Updat
 
 export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesInput!) {
   send_organization_invites(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const GET_ORGANIZATION_INVITATION = gql`query get_organization_invitation($guid: String!) {
+  organization_invitation(guid: $guid) {
+    invitee_identifier
+    organization_name
+    invitee {
+      email
+    }
+  }
+}
+`;
+
+export const ACCEPT_ORGANIZATION_INVITATION = gql`mutation accept_organization_invitation($data: AcceptOrganizationInvitationInput!) {
+  accept_organization_invitation(input: $data) {
+    organization {
+      id
+    }
     errors {
       field
       messages

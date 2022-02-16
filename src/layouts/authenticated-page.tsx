@@ -11,6 +11,7 @@ import Notifier from '@/components/notifier';
 import Footer from '@/components/footer';
 import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
 import ErrorBoundary from '@/components/error-boudaries';
+import AcceptInvitationProvider from '@/components/accept-invitation-modal';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -60,7 +61,11 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
 
   return (
     <NextSessionProvider>
-      <SessionWrapper>{content}</SessionWrapper>
+      <SessionWrapper>
+        <AcceptInvitationProvider>
+          {content}
+        </AcceptInvitationProvider>
+      </SessionWrapper>
     </NextSessionProvider>
   )
 };

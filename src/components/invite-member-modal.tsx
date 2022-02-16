@@ -1,16 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { NotificationType } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
-import SelectField from '@/components/generic/select-field';
-import { APIReference } from '@/context/references-provider';
-import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
-import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
-import { TrackerMutationContext } from '@/context/tracker-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { AppMode } from '@/context/app-mode-provider';
-import { p, removeUrlParam, validationMessage, validityCheck } from '@/lib/helper';
+import { p, validationMessage, validityCheck } from '@/lib/helper';
 import { Organizations } from '@/context/organizations-provider';
 import { OrganizationMutationContext } from '@/context/organization-mutation';
 
@@ -79,7 +73,7 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
 
               <InputField
                 type="email"
-                label="Tracking Number"
+                label="Enter team member email addresses"
                 placeholder="john@mail.com, jane@mail.com, etc."
                 defaultValue=""
                 fieldClass="mt-6"

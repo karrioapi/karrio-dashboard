@@ -1,13 +1,10 @@
 import SectionLayout from "@/layouts/section-layout";
-import { getCookie, p } from "@/lib/helper";
-import { NextPage } from "next";
+import { getCookie, isNone, p } from "@/lib/helper";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useRef } from "react";
 import { useRouter } from "next/dist/client/router";
-import { BASE_PATH } from "@/client/context";
-import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -59,7 +56,17 @@ export default function LoginPage(pageProps: any) {
               <div className="field mt-6">
                 <label className="label" htmlFor="id_email">Email</label>
                 <div className="control">
-                  <input className="input" id="id_email" name="email" type="email" placeholder="Email" required ref={email} />
+                  <input
+                    className="input"
+                    id="id_email"
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    value={"" || router.query.email}
+                    disabled={!isNone(router.query.email)}
+                    ref={email}
+                    required
+                  />
                 </div>
               </div>
               <div className="field mt-5">

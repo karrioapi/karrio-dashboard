@@ -22,7 +22,7 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
   const load = () => result.called ? result.fetchMore({}) : initialLoad({});
   const extractList = (results?: any[]): OrganizationType[] => (results || []).filter(r => r !== null);
   const extractCurrent = (results?: any[]): OrganizationType => {
-    const current = (results || []).find(org => org.id === org_id)
+    const current = (results || []).find(org => org?.id === org_id)
     return current || {}
   };
 
