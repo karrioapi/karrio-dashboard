@@ -26,6 +26,7 @@ export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, ta
   const router = useRouter();
   const { tab } = router.query;
   const [selected, setSelected] = useState<string>(tabs[0]);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const selectTab = (tab: string, disabled?: string[]) => {
     disabled = disabled || disabledTabs || [];
@@ -37,8 +38,9 @@ export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, ta
 
   useEffect(() => { setSelectedToURL && addUrlParam('tab', selected); }, [selected]);
   useEffect(() => {
-    if (setSelectedToURL && !isNoneOrEmpty(tab) && !(disabledTabs || []).includes(tab as string) && tab !== selected) {
+    if (!initialized && setSelectedToURL && !isNoneOrEmpty(tab) && !(disabledTabs || []).includes(tab as string) && tab !== selected) {
       setSelected(tab as string);
+      setInitialized(true);
     }
   }, [tab, disabledTabs])
 

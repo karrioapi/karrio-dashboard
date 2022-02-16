@@ -69,7 +69,6 @@ export default function AccountPage(pageProps: any) {
             <OrganizationMutationProvider>
               <OrganizationManagement />
             </OrganizationMutationProvider>
-
           </div>}
         </Tabs>
       </>
@@ -80,7 +79,7 @@ export default function AccountPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Account Settings - {APP_NAME}</title></Head>
 
-      <TabStateProvider tabs={tabs}>
+      <TabStateProvider tabs={tabs} setSelectedToURL>
         <Component />
       </TabStateProvider>
 
