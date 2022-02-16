@@ -1,11 +1,7 @@
 import { BASE_PATH } from "@/client/context";
 import { AddressType, CommodityType, CustomsType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import moment from "moment";
 import React from "react";
-
-
-const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
-const DATE_TIME_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit', hour: "2-digit", minute: "2-digit" });
-const DATE_TIME_FORMAT_LONG = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit', hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
 
 export function formatRef(s?: string): string {
@@ -13,15 +9,15 @@ export function formatRef(s?: string): string {
 }
 
 export function formatDate(date_string: string): string {
-  return DATE_FORMAT.format(new Date(date_string));
+  return moment(date_string).format('ll');
 }
 
 export function formatDateTime(date_string: string): string {
-  return DATE_TIME_FORMAT.format(new Date(date_string));
+  return moment(date_string).format('lll');
 }
 
 export function formatDateTimeLong(date_string: string): string {
-  return DATE_TIME_FORMAT_LONG.format(new Date(date_string));
+  return moment(date_string).format('llll');
 }
 
 export function formatDayDate(date_string: string): string {

@@ -48,7 +48,6 @@ const OrganizationDropdown: React.FC = () => {
   }, [called, selected, token, load]);
 
   useEffect(() => { setSelected(organization); }, [organization]);
-  useEffect(() => { (called && !loading && load) && load(); }, [called, loading, load]);
   useEffect(() => { checkTokenChange(token?.token?.key) }, [token, checkTokenChange]);
 
   return (

@@ -214,6 +214,23 @@ export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: Updat
 }
 `;
 
+export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesInput!) {
+  send_organization_invites(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const DELETE_ORGANIZATION_INVITES = gql`mutation delete_organization_invitation($data: DeleteOrganizationInvitationInput!) {
+  delete_organization_invitation(input: $data) {
+    id
+  }
+}
+`;
+
 export const GET_LOG = gql`query get_log($id: Int!) {
   log(id: $id) {
     id

@@ -47,13 +47,14 @@ Purplship custom styling
     width: 10%;
   }
   .recipient {
-    min-width: 40%;
+    min-width: 10vw;
   }
   .date {
-    width: 13%;
+    width: 15%;
+    min-width: 130px;
   }
   .action {
-    width: 15%;
+    width: 13%;
     min-width: 160px;
   }
 
@@ -137,7 +138,7 @@ Purplship custom styling
     width: 20%;
   }
   .date {
-    width: 15%;
+    width: 20%;
   }
 }
 

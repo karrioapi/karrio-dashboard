@@ -6,6 +6,7 @@ import Head from "next/head";
 import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import PasswordManagement from "@/components/password-management";
+import OrganizationMutationProvider from "@/context/organization-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -65,8 +66,9 @@ export default function AccountPage(pageProps: any) {
           </div>
 
           {MULTI_ORGANIZATIONS && <div>
-
-            <OrganizationManagement />
+            <OrganizationMutationProvider>
+              <OrganizationManagement />
+            </OrganizationMutationProvider>
 
           </div>}
         </Tabs>

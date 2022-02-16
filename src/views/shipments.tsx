@@ -132,7 +132,7 @@ export default function ShipmentsPage(pageProps: any) {
                   <td className="recipient is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient as AddressType)}</p>
                   </td>
-                  <td className="date is-vcentered">
+                  <td className="date is-vcentered px-1">
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
                   </td>
                   <td className="action is-vcentered px-0">

@@ -70,7 +70,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
       {loading && <Spinner />}
 
-      {(!loading && (user_connections || []).length > 0) && <table className="table is-fullwidth">
+      {(called && (user_connections || []).length > 0) && <table className="table is-fullwidth">
 
         <tbody className="connections-table">
           <tr>

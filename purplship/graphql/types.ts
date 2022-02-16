@@ -374,6 +374,51 @@ export interface update_organizationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: send_organization_invites
+// ====================================================
+
+export interface send_organization_invites_send_organization_invites_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface send_organization_invites_send_organization_invites {
+  errors: (send_organization_invites_send_organization_invites_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface send_organization_invites {
+  send_organization_invites: send_organization_invites_send_organization_invites | null;
+}
+
+export interface send_organization_invitesVariables {
+  data: SendOrganizationInvitesInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: delete_organization_invitation
+// ====================================================
+
+export interface delete_organization_invitation_delete_organization_invitation {
+  id: string | null;
+}
+
+export interface delete_organization_invitation {
+  delete_organization_invitation: delete_organization_invitation_delete_organization_invitation | null;
+}
+
+export interface delete_organization_invitationVariables {
+  data: DeleteOrganizationInvitationInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: get_log
 // ====================================================
 
@@ -4634,6 +4679,20 @@ export interface UpdateOrganizationInput {
   id?: string | null;
   name?: string | null;
   slug?: string | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface SendOrganizationInvitesInput {
+  org_id: string;
+  emails: (string | null)[];
+  redirect_url: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface DeleteOrganizationInvitationInput {
+  id: string;
   clientMutationId?: string | null;
 }
 
