@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { OperationResponse, Shipment } from '@purplship/rest/index';
-import { handleFailure } from '@/lib/helper';
+import { handleFailure, handleGraphQLRequest } from '@/lib/helper';
 import { LabelData } from '@/context/label-data-provider';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
-import { DISCARD_COMMODITY, discard_commodityVariables, DISCARD_CUSTOMS, DISCARD_PARCEL, discard_parcelVariables, PartialShipmentUpdateInput, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from '@purplship/graphql';
+import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from '@purplship/graphql';
 import { ShipmentType } from '@/lib/types';
 
 
@@ -26,10 +26,10 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const { testMode } = useContext(AppMode);
   const state = useContext(LabelData);
 
-  const [updateShipmentMutation] = useMutation<PartialShipmentUpdateInput, partial_shipment_updateVariables>(PARTIAL_UPDATE_SHIPMENT);
-  const [discardCommodityMutation] = useMutation<{ id: string }, discard_commodityVariables>(DISCARD_COMMODITY);
-  const [discardCustomsMutation] = useMutation<{ id: string }, discard_commodityVariables>(DISCARD_CUSTOMS);
-  const [discardParcelMutation] = useMutation<{ id: string }, discard_parcelVariables>(DISCARD_PARCEL);
+  const [updateShipmentMutation] = useMutation<partial_shipment_update, partial_shipment_updateVariables>(PARTIAL_UPDATE_SHIPMENT);
+  const [discardCommodityMutation] = useMutation<discard_commodity, discard_commodityVariables>(DISCARD_COMMODITY);
+  const [discardCustomsMutation] = useMutation<discard_customs, discard_customsVariables>(DISCARD_CUSTOMS);
+  const [discardParcelMutation] = useMutation<discard_parcel, discard_parcelVariables>(DISCARD_PARCEL);
 
   const fetchRates = async (shipment: ShipmentType) => handleFailure((async () => {
     if (shipment.id !== undefined) {
@@ -54,20 +54,20 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
     purplship!.shipments.cancel({ id: shipment.id as string })
   );
 
-  const updateShipment = async (data: PartialShipmentUpdateInput) => (
-    updateShipmentMutation({ variables: { data } })
+  const updateShipment = (data: PartialShipmentUpdateInput) => (
+    handleGraphQLRequest("partial_shipment_update", updateShipmentMutation)({ variables: { data } })
       .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardCommodity = async (id: string) => (
-    discardCommodityMutation({ variables: { data: { id } } })
+    handleGraphQLRequest("discard_commodity", discardCommodityMutation)({ variables: { data: { id } } })
       .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardCustoms = async (id: string) => (
-    discardCustomsMutation({ variables: { data: { id } } })
+    handleGraphQLRequest("discard_customs", discardCustomsMutation)({ variables: { data: { id } } })
       .then(() => state?.loadShipment(state.shipment.id))
   );
   const discardParcel = async (id: string) => (
-    discardParcelMutation({ variables: { data: { id } } })
+    handleGraphQLRequest("discard_parcel", discardParcelMutation)({ variables: { data: { id } } })
       .then(() => state?.loadShipment(state.shipment.id))
   );
 

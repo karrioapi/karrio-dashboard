@@ -42,14 +42,12 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
     e.preventDefault();
     try {
       setLoading(true);
-      const { errors } = await changePassword(data as ChangePasswordInput);
-      setErrors(errors as change_password_change_password_errors[] || []);
-      if ((errors || []).length === 0) {
-        dispatch({ name: 'full', value: DEFAULT_VALUE });
-        notify({ type: NotificationType.success, message: `Password changed successfully.` });
-      }
+      await changePassword(data as ChangePasswordInput);
+
+      dispatch({ name: 'full', value: DEFAULT_VALUE });
+      notify({ type: NotificationType.success, message: `Password changed successfully.` });
     } catch (error: any) {
-      logger.error(error);
+      setErrors(Array.isArray(error) ? error : [error]);
     }
     setLoading(false);
   };

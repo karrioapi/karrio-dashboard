@@ -1,17 +1,21 @@
 import React from 'react';
-import { FetchResult, useMutation } from '@apollo/client';
-import { MutateMetadataInput, MUTATE_METADATA, mutate_metadataVariables } from '@purplship/graphql';
+import { useMutation } from '@apollo/client';
+import { MutateMetadataInput, mutate_metadata, MUTATE_METADATA, mutate_metadataVariables, mutate_metadata_mutate_metadata } from '@purplship/graphql';
+import { handleGraphQLRequest } from '@/lib/helper';
 
 
 type TemplateMutator = {
-  mutateMetadata: (data: MutateMetadataInput) => Promise<FetchResult<MutateMetadataInput, Record<string, any>, Record<string, any>>>;
+  mutateMetadata: (data: MutateMetadataInput) => Promise<mutate_metadata_mutate_metadata | null>;
 };
 
 export const MetadataMutationContext = React.createContext<TemplateMutator>({} as TemplateMutator);
 
 const MetadataMutationProvider: React.FC<{}> = ({ children }) => {
-  const [updateMutation] = useMutation<MutateMetadataInput, mutate_metadataVariables>(MUTATE_METADATA);
-  const mutateMetadata = (data: MutateMetadataInput) => updateMutation({ variables: { data } });
+  const [updateMutation] = useMutation<mutate_metadata, mutate_metadataVariables>(MUTATE_METADATA);
+
+  const mutateMetadata = (data: MutateMetadataInput) => (
+    handleGraphQLRequest("mutate_metadata", updateMutation)({ variables: { data } })
+  );
 
   return (
     <MetadataMutationContext.Provider value={{ mutateMetadata }}>

@@ -3,7 +3,6 @@ import React, { useContext, useRef, useState } from 'react';
 import Notifier, { Notify } from '@/components/notifier';
 import TokenMutation from '@/context/token-mutation';
 import { useLoader } from './loader';
-import { isNoneOrEmpty } from '@/lib/helper';
 import { useUser } from '@/context/user-provider';
 
 interface GenerateAPIModalComponent { }

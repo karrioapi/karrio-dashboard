@@ -50,15 +50,10 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await registerUser({
-        ...user,
-        redirect_url: location.origin + p`/email`,
-      } as RegisterUserInput);
-      setErrors(response.errors as register_user_register_user_errors[]);
-
-      if ((response.errors || []).length === 0) router.push(p`/signup/success`);
+      await registerUser({ ...user, redirect_url: location.origin + p`/email` } as RegisterUserInput);
+      router.push(p`/signup/success`);
     } catch (error: any) {
-      logger.error(error);
+      setErrors(Array.isArray(error) ? error : [error]);
     }
     setLoading(false);
   };
