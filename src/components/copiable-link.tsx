@@ -21,7 +21,7 @@ const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, className, ...pro
       onClick={copyText}
       {...props}>
       <span>{text}</span>
-      <i className="fas fa-clipboard ml-2"></i>
+      <i className="fas fa-clipboard ml-3"></i>
     </a>
   )
 };

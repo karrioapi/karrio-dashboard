@@ -68,11 +68,11 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">Origin</div>
-            <div className="column is-8 py-1">{log.host}</div>
+            <div className="column is-8 py-1">{log.remote_addr}</div>
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">IP Address</div>
-            <div className="column is-8 py-1">{log.remote_addr}</div>
+            <div className="column is-8 py-1">{log.host}</div>
           </div>
         </div>
 

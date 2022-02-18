@@ -6,6 +6,9 @@ import AppLink from '@/components/app-link';
 import { APIReference } from '@/context/references-provider';
 import { p } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 interface ExpandedSidebarComponent { }
 
@@ -111,6 +114,11 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <i className="fas fa-cog pr-2"></i>
           <span className="has-text-weight-semibold">Account Settings</span>
         </AppLink>
+      </div>
+      <div style={{ position: 'absolute', bottom: 10, left: 30, right: 10 }}>
+        <span className="menu-item has-text-grey-light">
+          Version: {publicRuntimeConfig.DASHBOARD_VERSION}
+        </span>
       </div>
     </div>
   );

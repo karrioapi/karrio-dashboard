@@ -5071,6 +5071,7 @@ export interface DiscardParcelInput {
 // null
 export interface TokenMutationInput {
   refresh?: boolean | null;
+  password?: string | null;
   clientMutationId?: string | null;
 }
 
