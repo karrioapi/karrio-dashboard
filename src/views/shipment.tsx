@@ -59,7 +59,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       {!called && loading && <Spinner />}
 
-      {(!loading && shipment) && <>
+      {shipment && <>
 
         {/* Header Section */}
         <div className="columns my-1">
@@ -414,7 +414,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       </>}
 
-      {called && !loading && !shipment && <div className="card my-6">
+      {called && !loading && isNone(shipment) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>

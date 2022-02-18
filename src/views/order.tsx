@@ -42,9 +42,9 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
   return (
     <>
 
-      {loading && <Spinner />}
+      {!called && loading && <Spinner />}
 
-      {!loading && order && <>
+      {order && <>
 
         {/* Header section */}
         <div className="columns my-1">
