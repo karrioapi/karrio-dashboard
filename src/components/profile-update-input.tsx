@@ -17,6 +17,7 @@ const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<P
   const [originalValue, _] = useState<string>(((user || {}) as any)[propertyKey] || "");
   const [propertyValue, setPropertyValue] = useState<string>("");
   const [hasChanged, setHasChanged] = useState<boolean>(false);
+
   const cancel = (e: React.MouseEvent) => {
     e.preventDefault();
     setPropertyValue(originalValue);

@@ -12,6 +12,7 @@ import Footer from '@/components/footer';
 import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
 import ErrorBoundary from '@/components/error-boudaries';
 import AcceptInvitationProvider from '@/components/accept-invitation-modal';
+import CreateOrganizationModalProvider from '@/components/create-organization-modal';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -63,7 +64,11 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
     <NextSessionProvider>
       <SessionWrapper>
         <AcceptInvitationProvider>
-          {content}
+          <CreateOrganizationModalProvider>
+
+            {content}
+
+          </CreateOrganizationModalProvider>
         </AcceptInvitationProvider>
       </SessionWrapper>
     </NextSessionProvider>

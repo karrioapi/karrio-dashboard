@@ -325,13 +325,17 @@ export interface get_organizations {
 // GraphQL mutation operation: create_organization
 // ====================================================
 
+export interface create_organization_create_organization_organization {
+  id: string;
+}
+
 export interface create_organization_create_organization_errors {
   field: string;
   messages: string[];
 }
 
 export interface create_organization_create_organization {
-  id: string | null;
+  organization: create_organization_create_organization_organization | null;
   errors: (create_organization_create_organization_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -351,13 +355,17 @@ export interface create_organizationVariables {
 // GraphQL mutation operation: update_organization
 // ====================================================
 
+export interface update_organization_update_organization_organization {
+  id: string;
+}
+
 export interface update_organization_update_organization_errors {
   field: string;
   messages: string[];
 }
 
 export interface update_organization_update_organization {
-  id: string | null;
+  organization: update_organization_update_organization_organization | null;
   errors: (update_organization_update_organization_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -2517,17 +2525,21 @@ export interface GetUser {
 // GraphQL mutation operation: update_user
 // ====================================================
 
+export interface update_user_update_user_user {
+  email: string;
+  full_name: string;
+  is_staff: boolean;  // Designates whether the user can log into this admin site.
+  last_login: any | null;
+  date_joined: any;
+}
+
 export interface update_user_update_user_errors {
   field: string;
   messages: string[];
 }
 
 export interface update_user_update_user {
-  email: string | null;
-  full_name: string | null;
-  is_staff: boolean | null;                                  // Designates whether the user can log into this admin site.
-  last_login: any | null;
-  date_joined: any | null;
+  user: update_user_update_user_user | null;
   errors: (update_user_update_user_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -4724,17 +4736,14 @@ export interface DeleteConnectionInput {
 
 // null
 export interface CreateOrganizationInput {
-  id?: string | null;
   name: string;
-  slug: string;
   clientMutationId?: string | null;
 }
 
 // null
 export interface UpdateOrganizationInput {
-  id?: string | null;
+  id: string;
   name?: string | null;
-  slug?: string | null;
   clientMutationId?: string | null;
 }
 

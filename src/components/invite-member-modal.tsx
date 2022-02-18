@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { NotificationType } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
@@ -18,6 +18,7 @@ interface InviteMemberInterface {
 export const InviteMemberContext = React.createContext<InviteMemberInterface>({} as InviteMemberInterface);
 
 const InviteMemberProvider: React.FC<{}> = ({ children }) => {
+  const form = useRef<HTMLFormElement>(null);
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const { organization } = useContext(Organizations);
@@ -31,6 +32,7 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
   const sendInvites = (operation?: OperationType) => {
     operation && setOperation(operation);
     setIsActive(true);
+    setKey(`invite-${Date.now()}`);
   };
   const close = ({ updated }: any | { updated?: boolean }) => {
     setIsActive(false);
@@ -55,6 +57,8 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
     setLoading(false);
   };
 
+  useEffect(() => { form.current && setIsValid(form.current!.checkValidity()); }, [emails]);
+
   return (
     <>
       <InviteMemberContext.Provider value={{ sendInvites }}>
@@ -64,36 +68,37 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
       <Notifier>
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
-          {isActive && <form className="modal-card" onChange={e => setIsValid((e.target as any).checkValidity())} onSubmit={handleSubmit}>
-            <section className="modal-card-body modal-form">
-              <div className="form-floating-header p-4">
-                <span className="has-text-weight-bold is-size-6">Invite team members</span>
-              </div>
-              <div className="p-3 my-4"></div>
+          {isActive &&
+            <form className="modal-card" onChange={e => setIsValid((e.target as any).checkValidity())} onSubmit={handleSubmit} ref={form}>
+              <section className="modal-card-body modal-form">
+                <div className="form-floating-header p-4">
+                  <span className="has-text-weight-bold is-size-6">Invite team members</span>
+                </div>
+                <div className="p-3 my-4"></div>
 
-              <InputField
-                type="email"
-                label="Enter team member email addresses"
-                placeholder="john@mail.com, jane@mail.com, etc."
-                defaultValue=""
-                fieldClass="mt-6"
-                onChange={e => setEmails(e.target.value.split(',').map(e => e.trim()))}
-                onInvalid={validityCheck(validationMessage('Please enter a valid email list'))}
-                multiple
-                required
-              />
+                <InputField
+                  type="email"
+                  label="Enter team member email addresses"
+                  placeholder="john@mail.com, jane@mail.com, etc."
+                  defaultValue=""
+                  fieldClass="mt-6"
+                  onChange={e => setEmails(e.target.value.split(',').map(e => e.trim()))}
+                  onInvalid={validityCheck(validationMessage('Please enter a valid email list'))}
+                  multiple
+                  required
+                />
 
-              <div className="p-3 my-5"></div>
-              <ButtonField type="submit"
-                className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
-                fieldClass="form-floating-footer p-3"
-                controlClass="has-text-centered"
-                disabled={!isValid}
-              >
-                <span>Send invites</span>
-              </ButtonField>
-            </section>
-          </form>}
+                <div className="p-3 my-5"></div>
+                <ButtonField type="submit"
+                  className="is-primary m-0"
+                  fieldClass="form-floating-footer p-3"
+                  controlClass="has-text-centered"
+                  disabled={!isValid || loading || emails.length === 0}
+                >
+                  <span>Send invites</span>
+                </ButtonField>
+              </section>
+            </form>}
 
           <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>
         </div>

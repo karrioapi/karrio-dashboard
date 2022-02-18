@@ -1,4 +1,4 @@
-import { FieldError, NotificationType, Notification, RequestError } from '@/lib/types';
+import { FieldError, NotificationType, Notification, RequestError, ErrorType } from '@/lib/types';
 import React, { useState } from 'react';
 
 interface LoadingNotifier {
@@ -39,11 +39,22 @@ const Notifier: React.FC = ({ children }) => {
   )
 };
 
-export function formatMessage(msg: string | Error | RequestError) {
+export function formatMessage(msg: Notification['message']) {
   try {
+    // Process plain text message
     if (typeof msg === 'string') {
       return msg;
-    } else if (msg instanceof RequestError) {
+    }
+
+    // Process GraphQL errors
+    if (Array.isArray(msg) && msg.length > 0 && msg[0] instanceof ErrorType) {
+      return msg.map((error: ErrorType, index) => {
+        return <p key={index}><strong>{error.field}:</strong> {error.messages.join(' | ')}</p>;
+      });
+    }
+
+    // Process API errors
+    if (msg instanceof RequestError) {
       const error = msg.data.error;
       if (error?.message !== undefined) {
         return error.message;
@@ -61,10 +72,14 @@ export function formatMessage(msg: string | Error | RequestError) {
       }
     }
 
-    return msg.message;
+    return (msg as any).message;
   } catch (e) {
     return 'Uh Oh! An uncaught error occured...';
   }
 };
+
+export function useNotifier() {
+  return React.useContext(Notify);
+}
 
 export default Notifier;

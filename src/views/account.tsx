@@ -68,11 +68,9 @@ export default function AccountPage(pageProps: any) {
           </div>
 
           {MULTI_ORGANIZATIONS && <div>
-            <OrganizationMutationProvider>
-              <InviteMemberProvider>
-                <OrganizationManagement />
-              </InviteMemberProvider>
-            </OrganizationMutationProvider>
+            <InviteMemberProvider>
+              <OrganizationManagement />
+            </InviteMemberProvider>
           </div>}
         </Tabs>
       </>

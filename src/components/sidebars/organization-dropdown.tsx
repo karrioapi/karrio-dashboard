@@ -5,13 +5,15 @@ import { Loading } from '@/components/loader';
 import Image from 'next/image';
 import { isNone, isNoneOrEmpty, p } from '@/lib/helper';
 import { useRouter } from 'next/router';
-import { useAcceptInvitation } from '../accept-invitation-modal';
+import { useAcceptInvitation } from '@/components/accept-invitation-modal';
+import { useCreateOrganizationModal } from '@/components/create-organization-modal';
 
 
 const OrganizationDropdown: React.FC = () => {
+  const btn = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { acceptInvitation } = useAcceptInvitation();
-  const btn = useRef<HTMLInputElement>(null);
+  const { createOrganization } = useCreateOrganizationModal();
   const { authenticateOrg, ...token } = useContext(TokenData);
   const { load, organizations, organization, loading, called } = useContext(Organizations);
   const { setLoading } = useContext(Loading);
@@ -45,6 +47,14 @@ const OrganizationDropdown: React.FC = () => {
     setSelected(org);
     authenticateOrg(org.id).then(() => setLoading(false));
     setActive(false);
+  };
+  const create = async () => {
+    createOrganization({
+      onChange: (org_id: string) => {
+        setActive(false);
+        return authenticateOrg(org_id);
+      }
+    });
   };
   const checkTokenChange = useCallback((key?: string) => {
     if (called && !isNone(key) && !token.loading && (selected?.token !== key)) {
@@ -86,12 +96,27 @@ const OrganizationDropdown: React.FC = () => {
 
           <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: '100%' }}>
             <div className="dropdown-content">
+              {/* Organization list */}
               {(organizations || []).map(org => (
-                <a key={org.id} className={`dropdown-item ${(org.id === selected?.id) ? 'is-active' : ''}`} onClick={select(org)}>
+                <a
+                  key={`org-${org?.id}-${new Date()}`}
+                  onClick={select(org)}
+                  className={`dropdown-item ${(org?.id === selected?.id) ? 'is-active' : ''}`}
+                >
                   <i className="fas fa-store"></i>
-                  <span className="px-2">{org.name}</span>
+                  <span className="px-2">{org?.name}</span>
                 </a>
               ))}
+
+              {/* Create organization action */}
+              <a
+                onClick={() => create()}
+                className="dropdown-item"
+              >
+                <i className="fas fa-plus"></i>
+                <span className="px-2">New organization</span>
+              </a>
+
             </div>
           </div>
         </div>}

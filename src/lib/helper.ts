@@ -1,5 +1,6 @@
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { AddressType, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import moment from "moment";
 import React from "react";
 
@@ -305,4 +306,21 @@ export function failsafe(fn: () => any, defaultValue: any = null) {
   } catch (e) {
     return defaultValue;
   }
+}
+
+export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
+  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(
+    async (resolve, reject) => {
+      const { data } = await request({ ...options, onError: reject });
+      if (data && (data[operation] as any).errors) {
+        const errors = (data[operation] as any).errors
+          .map((error: { field: string, messages: string[] }) => (
+            new ErrorType(error.field, error.messages)
+          ));
+
+        reject(errors);
+      }
+
+      resolve((data ? data[operation] : null) as T[typeof operation]);
+    });
 }

@@ -194,7 +194,9 @@ export const GET_ORGANIZATIONS = gql`query get_organizations {
 
 export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationInput!) {
   create_organization(input: $data) {
-    id
+    organization {
+      id
+    }
     errors {
       field
       messages
@@ -205,7 +207,9 @@ export const CREATE_ORGANIZATION = gql`mutation create_organization($data: Creat
 
 export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: UpdateOrganizationInput!) {
   update_organization(input: $data) {
-    id
+    organization {
+      id
+    }
     errors {
       field
       messages
@@ -1659,11 +1663,13 @@ export const GET_USER = gql`query GetUser {
 
 export const UPDATE_USER = gql`mutation update_user($data: UpdateUserInput!) {
   update_user(input: $data) {
-    email
-    full_name
-    is_staff
-    last_login
-    date_joined
+    user {
+      email
+      full_name
+      is_staff
+      last_login
+      date_joined
+    }
     errors {
       field
       messages
