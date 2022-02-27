@@ -218,6 +218,32 @@ export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: Updat
 }
 `;
 
+export const CHANGE_ORGANIZATION_OWNER = gql`mutation change_organization_owner($data: ChangeOrganizationOwnerInput!) {
+  change_organization_owner(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const SET_ORGANIZATION_USER_ROLES = gql`mutation set_organization_user_roles($data: SetOrganizationUserRolesInput!) {
+  set_organization_user_roles(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
 export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesInput!) {
   send_organization_invites(input: $data) {
     errors {
@@ -1664,7 +1690,6 @@ export const GET_USER = gql`query GetUser {
 export const UPDATE_USER = gql`mutation update_user($data: UpdateUserInput!) {
   update_user(input: $data) {
     user {
-      email
       full_name
       is_staff
       last_login
@@ -1706,6 +1731,26 @@ export const REGISTER_USER = gql`mutation register_user($data: RegisterUserInput
 export const CONFIRM_EMAIL = gql`mutation confirm_email($data: ConfirmEmailInput!) {
   confirm_email(input: $data) {
     success
+  }
+}
+`;
+
+export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: RequestEmailChangeInput!) {
+  request_email_change(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: ConfirmEmailChangeInput!) {
+  confirm_email_change(input: $data) {
+    errors {
+      field
+      messages
+    }
   }
 }
 `;

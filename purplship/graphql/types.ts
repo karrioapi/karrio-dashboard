@@ -382,6 +382,66 @@ export interface update_organizationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: change_organization_owner
+// ====================================================
+
+export interface change_organization_owner_change_organization_owner_organization {
+  id: string;
+}
+
+export interface change_organization_owner_change_organization_owner_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface change_organization_owner_change_organization_owner {
+  organization: change_organization_owner_change_organization_owner_organization | null;
+  errors: (change_organization_owner_change_organization_owner_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface change_organization_owner {
+  change_organization_owner: change_organization_owner_change_organization_owner | null;
+}
+
+export interface change_organization_ownerVariables {
+  data: ChangeOrganizationOwnerInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: set_organization_user_roles
+// ====================================================
+
+export interface set_organization_user_roles_set_organization_user_roles_organization {
+  id: string;
+}
+
+export interface set_organization_user_roles_set_organization_user_roles_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface set_organization_user_roles_set_organization_user_roles {
+  organization: set_organization_user_roles_set_organization_user_roles_organization | null;
+  errors: (set_organization_user_roles_set_organization_user_roles_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface set_organization_user_roles {
+  set_organization_user_roles: set_organization_user_roles_set_organization_user_roles | null;
+}
+
+export interface set_organization_user_rolesVariables {
+  data: SetOrganizationUserRolesInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: send_organization_invites
 // ====================================================
 
@@ -2526,7 +2586,6 @@ export interface GetUser {
 // ====================================================
 
 export interface update_user_update_user_user {
-  email: string;
   full_name: string;
   is_staff: boolean;  // Designates whether the user can log into this admin site.
   last_login: any | null;
@@ -2626,6 +2685,56 @@ export interface confirm_email {
 
 export interface confirm_emailVariables {
   data: ConfirmEmailInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: request_email_change
+// ====================================================
+
+export interface request_email_change_request_email_change_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface request_email_change_request_email_change {
+  errors: (request_email_change_request_email_change_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface request_email_change {
+  request_email_change: request_email_change_request_email_change | null;
+}
+
+export interface request_email_changeVariables {
+  data: RequestEmailChangeInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: confirm_email_change
+// ====================================================
+
+export interface confirm_email_change_confirm_email_change_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface confirm_email_change_confirm_email_change {
+  errors: (confirm_email_change_confirm_email_change_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface confirm_email_change {
+  confirm_email_change: confirm_email_change_confirm_email_change | null;
+}
+
+export interface confirm_email_changeVariables {
+  data: ConfirmEmailChangeInput;
 }
 
 
@@ -4748,6 +4857,22 @@ export interface UpdateOrganizationInput {
 }
 
 // null
+export interface ChangeOrganizationOwnerInput {
+  org_id: string;
+  email: string;
+  password: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface SetOrganizationUserRolesInput {
+  org_id: string;
+  user_id: string;
+  roles: string[];
+  clientMutationId?: string | null;
+}
+
+// null
 export interface SendOrganizationInvitesInput {
   org_id: string;
   emails: (string | null)[];
@@ -5077,7 +5202,6 @@ export interface TokenMutationInput {
 
 // null
 export interface UpdateUserInput {
-  email?: string | null;
   full_name?: string | null;
   is_active?: boolean | null;
   clientMutationId?: string | null;
@@ -5103,6 +5227,20 @@ export interface RegisterUserInput {
 
 // null
 export interface ConfirmEmailInput {
+  token: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface RequestEmailChangeInput {
+  email: string;
+  password: string;
+  redirect_url: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ConfirmEmailChangeInput {
   token: string;
   clientMutationId?: string | null;
 }
