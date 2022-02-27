@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import OrderProvider, { Order } from "@/context/order-provider";
-import { formatAddressLocation, formatDateTime, isNone, formatCommodity, formatDateTimeLong } from "@/lib/helper";
+import { formatAddressLocation, formatDateTime, isNone, formatCommodity } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -225,7 +225,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(log.requested_at)}</span>
+                      <span>{formatDateTime(log.requested_at)}</span>
                     </AppLink>
                   </td>
                 </tr>
@@ -255,7 +255,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(event.created_at)}</span>
+                      <span>{formatDateTime(event.created_at)}</span>
                     </AppLink>
                   </td>
                 </tr>

@@ -9,12 +9,12 @@ const DashboardLayout: React.FC = ({ children }) => {
     <>
       <ExpandedSidebar />
 
-      <div className="plex-wrapper pb-6">
-        <div className="wrapper-inner mb-6">
+      <div className="plex-wrapper is-flex pb-6">
+        <div className="wrapper-inner mb-3">
           <Notifier />
           <Navbar />
 
-          <div className="dashboard-content is-relative" style={{ zIndex: 'auto', paddingTop: 0 }}>
+          <div className="dashboard-content is-relative" style={{ zIndex: 'auto', paddingTop: 0, height: '100%' }}>
             {children}
           </div>
 

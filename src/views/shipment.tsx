@@ -7,7 +7,7 @@ import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDateTimeLong, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -373,7 +373,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(log.requested_at)}</span>
+                      <span>{formatDateTime(log.requested_at)}</span>
                     </AppLink>
                   </td>
                 </tr>
@@ -403,7 +403,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(event.created_at)}</span>
+                      <span>{formatDateTime(event.created_at)}</span>
                     </AppLink>
                   </td>
                 </tr>
