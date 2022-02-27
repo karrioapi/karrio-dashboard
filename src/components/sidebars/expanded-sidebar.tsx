@@ -24,9 +24,10 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
     sidebar.current?.classList.remove('is-mobile-active');
   };
   const isActive = (path: string) => {
-    if (path === basePath) return path === router.pathname ? 'is-active' : '';
-    return router.pathname.includes(`${basePath}${path}`.replace('//', '/')) ? 'is-active' : '';
+    if (path === basePath) return path === router.pathname;
+    return router.pathname.includes(`${basePath}${path}`.replace('//', '/'));
   };
+  const activeClass = (path: string) => isActive(path) ? 'is-active' : '';
 
   return (
     <div className="plex-sidebar" ref={sidebar}>
@@ -39,61 +40,67 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         </button>
       </div>
       <div className="sidebar-menu has-slimscroll py-5" style={{ height: "calc(100% - 60px)" }}>
-        <AppLink href="/" className={"menu-item " + isActive(basePath)} shallow={false} prefetch={false}>
+        <AppLink href="/" className={"menu-item " + activeClass(basePath)} shallow={false} prefetch={false}>
+          <i className={`fa fa-truck pr-2 ${isActive(basePath) ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Shipments</span>
         </AppLink>
 
-        <AppLink href="/trackers" className={"menu-item " + isActive("/trackers")} shallow={false} prefetch={false}>
+        <AppLink href="/trackers" className={"menu-item " + activeClass("/trackers")} shallow={false} prefetch={false}>
+          <i className={`fa fa-location-arrow pr-2 ${isActive("/trackers") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Trackers</span>
         </AppLink>
 
         {ORDERS_MANAGEMENT &&
-          <AppLink href="/orders" className={"menu-item " + isActive("/orders")} shallow={false} prefetch={false}>
+          <AppLink href="/orders" className={"menu-item " + activeClass("/orders")} shallow={false} prefetch={false}>
+            <i className={`fa fa-inbox pr-2 ${isActive("/orders") ? "" : 'has-text-grey'}`}></i>
             <span className="has-text-weight-semibold">Orders</span>
           </AppLink>}
 
-        <AppLink href="/connections" className={"menu-item " + isActive("/connections")} shallow={false} prefetch={false}>
+        <AppLink href="/connections" className={"menu-item " + activeClass("/connections")} shallow={false} prefetch={false}>
+          <i className={`fa fa-th-list pr-2 ${isActive("/connections") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Carriers</span>
         </AppLink>
 
         {/* Templates */}
         <a className="menu-item menu-item my-0" onClick={() => setShowTemplateMenus(!showTemplateMenus)}>
+          <i className={`fa fa-folder pr-2 has-text-grey`}></i>
           <span className="has-text-weight-semibold">Templates</span>
         </a>
 
         {(showTemplateMenus || window.location.pathname.includes('/templates')) && <>
-          <AppLink href="/templates/addresses" className={"menu-item ml-5 " + isActive("/templates/addresses")} shallow={false} prefetch={false}>
+          <AppLink href="/templates/addresses" className={"menu-item ml-5 " + activeClass("/templates/addresses")} shallow={false} prefetch={false}>
             <span>Addresses</span>
           </AppLink>
 
-          <AppLink href="/templates/parcels" className={"menu-item ml-5 " + isActive("/templates/parcels")} shallow={false} prefetch={false}>
+          <AppLink href="/templates/parcels" className={"menu-item ml-5 " + activeClass("/templates/parcels")} shallow={false} prefetch={false}>
             <span>Parcels</span>
           </AppLink>
 
-          <AppLink href="/templates/customs-infos" className={"menu-item ml-5 " + isActive("/templates/customs-infos")} shallow={false} prefetch={false}>
+          <AppLink href="/templates/customs-infos" className={"menu-item ml-5 " + activeClass("/templates/customs-infos")} shallow={false} prefetch={false}>
             <span>Customs</span>
           </AppLink>
         </>}
 
         {/* Developers */}
         <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
+          <i className={`fa fa-terminal pr-2 has-text-grey`}></i>
           <span className="has-text-weight-semibold">Developers</span>
         </AppLink>
 
         {window.location.pathname.includes('/developers') && <>
-          <AppLink href="/developers/api" className={"menu-item ml-5 " + isActive("/developers/api")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/api" className={"menu-item ml-5 " + activeClass("/developers/api")} shallow={false} prefetch={false}>
             <span>API</span>
           </AppLink>
 
-          <AppLink href="/developers/webhooks" className={"menu-item ml-5 " + isActive("/developers/webhooks")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/webhooks" className={"menu-item ml-5 " + activeClass("/developers/webhooks")} shallow={false} prefetch={false}>
             <span>Webhooks</span>
           </AppLink>
 
-          <AppLink href="/developers/events" className={"menu-item ml-5 " + isActive("/developers/events")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/events" className={"menu-item ml-5 " + activeClass("/developers/events")} shallow={false} prefetch={false}>
             <span>Events</span>
           </AppLink>
 
-          <AppLink href="/developers/logs" className={"menu-item ml-5 " + isActive("/developers/logs")} shallow={false} prefetch={false}>
+          <AppLink href="/developers/logs" className={"menu-item ml-5 " + activeClass("/developers/logs")} shallow={false} prefetch={false}>
             <span>Logs</span>
           </AppLink>
         </>}
@@ -110,8 +117,8 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           </a>
         }
 
-        <AppLink href="/settings/account" className={"menu-item " + isActive("/settings/account")}>
-          <i className="fas fa-cog pr-2"></i>
+        <AppLink href="/settings/account" className={"menu-item " + activeClass("/settings/account")}>
+          <i className={`fa fa-cog pr-2 ${isActive("/settings/account") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Account Settings</span>
         </AppLink>
       </div>
