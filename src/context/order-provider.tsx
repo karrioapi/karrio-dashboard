@@ -19,7 +19,7 @@ const OrderProvider: React.FC = ({ children }) => {
   });
   const [order, setOrder] = useState<Order>();
 
-  const loadOrder = (id: string) => (result.fetchMore || load)({ variables: { id } });
+  const loadOrder = (id: string) => (result.called ? result.fetchMore : load)({ variables: { id } });
 
   useEffect(() => { setOrder(result.data?.order as Order); }, [result]);
 

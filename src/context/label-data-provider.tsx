@@ -33,7 +33,7 @@ const LabelDataProvider: React.FC = ({ children }) => {
       setShipment(DEFAULT_SHIPMENT_DATA);
       setState({ ...result, loading: false, called: true });
     } else {
-      (fetchMore || load)({ variables: { id } });
+      (result.called ? fetchMore : load)({ variables: { id } });
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {
