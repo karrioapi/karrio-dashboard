@@ -45,9 +45,7 @@ export default function ShipmentsPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchShipments(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
@@ -107,7 +105,7 @@ export default function ShipmentsPage(pageProps: any) {
               </tr>
 
               {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id)}>
+                <tr key={shipment.id} className="items is-clickable" onClick={() => previewShipment(shipment.id)}>
                   <td className="carrier is-vcentered has-text-centered p-1">
                     {isNone(shipment.carrier_name) && <AppBadge />}
                     {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
@@ -156,7 +154,7 @@ export default function ShipmentsPage(pageProps: any) {
 
         </div>}
 
-        {(!loading && (shipments || []).length == 0) && <div className="card my-6">
+        {(called && !loading && (shipments || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No shipment found.</p>

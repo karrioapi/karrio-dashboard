@@ -63,7 +63,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 
@@ -129,6 +129,14 @@ Purplship custom styling
   .date {
     width: 20%;
   }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #fafafa;
+  }
 }
 
 .events-table {
@@ -139,6 +147,14 @@ Purplship custom styling
   }
   .date {
     width: 20%;
+  }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #fafafa;
   }
 }
 
@@ -170,7 +186,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 
@@ -192,6 +208,9 @@ Purplship custom styling
 }
 
 .orders-table {
+  .selector {
+    width: 3%;
+  }
   .order {
     width: 15%;
   }
@@ -214,7 +233,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 

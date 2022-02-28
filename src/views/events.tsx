@@ -53,7 +53,7 @@ export default function EventsPage(pageProps: any) {
 
 
         {(!loading && events.length > 0) && <div className="table-container">
-          <table className="table is-fullwidth is-hoverable is-size-7">
+          <table className="events-table is-size-7 table is-fullwidth">
 
             <tbody className="events-table">
               <tr>
@@ -64,7 +64,7 @@ export default function EventsPage(pageProps: any) {
 
               {events.map((event) => (
 
-                <tr key={event.id} onClick={() => previewEvent(event.id)}>
+                <tr key={event.id} className="items is-clickable" onClick={() => previewEvent(event.id)}>
                   <td className="description">{`${event.type}`}</td>
                   <td className="id has-text-right">
                     <span>{event.id}</span>

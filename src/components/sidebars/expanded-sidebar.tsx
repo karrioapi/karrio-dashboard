@@ -39,31 +39,31 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span></span>
         </button>
       </div>
-      <div className="sidebar-menu has-slimscroll py-5" style={{ height: "calc(100% - 60px)" }}>
+      <div className="sidebar-menu has-slimscroll py-2" style={{ height: "calc(100% - 60px)" }}>
         <AppLink href="/" className={"menu-item " + activeClass(basePath)} shallow={false} prefetch={false}>
-          <i className={`fa fa-truck pr-2 ${isActive(basePath) ? "" : 'has-text-grey'}`}></i>
+          <i className={`fa fa-truck pr-3 ${isActive(basePath) ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Shipments</span>
         </AppLink>
 
         <AppLink href="/trackers" className={"menu-item " + activeClass("/trackers")} shallow={false} prefetch={false}>
-          <i className={`fa fa-location-arrow pr-2 ${isActive("/trackers") ? "" : 'has-text-grey'}`}></i>
+          <i className={`fa fa-location-arrow pr-3 ${isActive("/trackers") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Trackers</span>
         </AppLink>
 
         {ORDERS_MANAGEMENT &&
           <AppLink href="/orders" className={"menu-item " + activeClass("/orders")} shallow={false} prefetch={false}>
-            <i className={`fa fa-inbox pr-2 ${isActive("/orders") ? "" : 'has-text-grey'}`}></i>
+            <i className={`fa fa-inbox pr-3 ${isActive("/orders") ? "" : 'has-text-grey'}`}></i>
             <span className="has-text-weight-semibold">Orders</span>
           </AppLink>}
 
         <AppLink href="/connections" className={"menu-item " + activeClass("/connections")} shallow={false} prefetch={false}>
-          <i className={`fa fa-th-list pr-2 ${isActive("/connections") ? "" : 'has-text-grey'}`}></i>
+          <i className={`fa fa-th-list pr-3 ${isActive("/connections") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Carriers</span>
         </AppLink>
 
         {/* Templates */}
         <a className="menu-item menu-item my-0" onClick={() => setShowTemplateMenus(!showTemplateMenus)}>
-          <i className={`fa fa-folder pr-2 has-text-grey`}></i>
+          <i className={`fa fa-folder pr-3 has-text-grey`}></i>
           <span className="has-text-weight-semibold">Templates</span>
         </a>
 
@@ -83,7 +83,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
 
         {/* Developers */}
         <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
-          <i className={`fa fa-terminal pr-2 has-text-grey`}></i>
+          <i className={`fa fa-terminal pr-3 has-text-grey`}></i>
           <span className="has-text-weight-semibold">Developers</span>
         </AppLink>
 
@@ -105,22 +105,24 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           </AppLink>
         </>}
 
+        <hr className="my-3 mx-5" style={{ height: '1px' }} />
+
+        <AppLink href="/settings/account" className={"menu-item " + activeClass("/settings/account")}>
+          <i className={`fa fa-cog pr-3 ${isActive("/settings/account") ? "" : 'has-text-grey'}`}></i>
+          <span className="has-text-weight-semibold">Settings</span>
+        </AppLink>
+
         {testMode ?
           <a className="menu-item mode-menu-item" onClick={switchMode}>
-            <i className="fas fa-toggle-on pr-2"></i>
+            <i className="fas fa-toggle-on pr-3"></i>
             <span className="mode-menu-item has-text-weight-semibold">Viewing test data</span>
           </a>
           :
           <a className="menu-item has-text-grey" onClick={switchMode}>
-            <i className="fas fa-toggle-off pr-2"></i>
+            <i className="fas fa-toggle-off pr-3"></i>
             <span className="has-text-weight-semibold">View test data</span>
           </a>
         }
-
-        <AppLink href="/settings/account" className={"menu-item " + activeClass("/settings/account")}>
-          <i className={`fa fa-cog pr-2 ${isActive("/settings/account") ? "" : 'has-text-grey'}`}></i>
-          <span className="has-text-weight-semibold">Account Settings</span>
-        </AppLink>
       </div>
       <div style={{ position: 'absolute', bottom: 10, left: 30, right: 10 }}>
         <span className="menu-item has-text-grey-light">

@@ -69,7 +69,7 @@ export default function LogsPage(pageProps: any) {
 
 
         {(!loading && logs.length > 0) && <div className="table-container">
-          <table className="table is-fullwidth is-hoverable is-size-7">
+          <table className="logs-table table is-fullwidth is-size-7">
 
             <tbody className="logs-table">
               <tr>
@@ -80,7 +80,7 @@ export default function LogsPage(pageProps: any) {
 
               {logs.map((log) => (
 
-                <tr key={log.id} onClick={() => previewLog(log.id)}>
+                <tr key={log.id} className="items is-clickable" onClick={() => previewLog(log.id)}>
                   <td className="status"><StatusCode code={log.status_code as number} /></td>
                   <td className="description">{`${log.method} ${log.path}`}</td>
                   <td className="date has-text-right">

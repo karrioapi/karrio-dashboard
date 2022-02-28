@@ -135,7 +135,7 @@ export default function OrdersPage(pageProps: any) {
 
         </div>}
 
-        {(!loading && (orders || []).length == 0) && <div className="card my-6">
+        {(called && !loading && (orders || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No order found.</p>
