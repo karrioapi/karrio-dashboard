@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '@/components/navbar/navbar';
 import Notifier from '@/components/notifier';
 import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
+import Footer from '@/components/footer';
 
 
 const DashboardLayout: React.FC = ({ children }) => {
@@ -21,6 +22,7 @@ const DashboardLayout: React.FC = ({ children }) => {
         </div>
       </div>
 
+      <Footer />
     </>
   )
 };

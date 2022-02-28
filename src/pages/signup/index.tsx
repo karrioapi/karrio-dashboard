@@ -9,7 +9,6 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
-import logger from "@/lib/logger";
 import { Metadata } from "@/lib/types";
 import { isNoneOrEmpty, p } from "@/lib/helper";
 

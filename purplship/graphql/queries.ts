@@ -1747,6 +1747,9 @@ export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: Req
 
 export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: ConfirmEmailChangeInput!) {
   confirm_email_change(input: $data) {
+    user {
+      email
+    }
     errors {
       field
       messages

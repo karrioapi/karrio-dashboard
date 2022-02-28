@@ -6,9 +6,9 @@ import Head from "next/head";
 import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
 import PasswordManagement from "@/components/password-management";
-import OrganizationMutationProvider from "@/context/organization-mutation";
 import InviteMemberProvider from "@/components/invite-member-modal";
 import ConfirmModal from "@/components/confirm-modal";
+import EmailManagement from "@/components/email-management";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -33,7 +33,7 @@ export default function AccountPage(pageProps: any) {
               </div>
 
               <div className="column is-7">
-                <ProfileUpdateInput label="Email Address" propertyKey="email" inputType="email" />
+                <EmailManagement />
                 <ProfileUpdateInput label="Name (Optional)" propertyKey="full_name" inputType="text" />
               </div>
             </div>

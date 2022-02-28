@@ -2720,12 +2720,17 @@ export interface request_email_changeVariables {
 // GraphQL mutation operation: confirm_email_change
 // ====================================================
 
+export interface confirm_email_change_confirm_email_change_user {
+  email: string;
+}
+
 export interface confirm_email_change_confirm_email_change_errors {
   field: string;
   messages: string[];
 }
 
 export interface confirm_email_change_confirm_email_change {
+  user: confirm_email_change_confirm_email_change_user | null;
   errors: (confirm_email_change_confirm_email_change_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
