@@ -12,6 +12,8 @@ const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...pro
     "partial": "is-info is-light",
     "purchased": "is-info is-light",
     "in-transit": "is-info is-light",
+    "in_transit": "is-info is-light",
+    "transit": "is-info is-light",
     "pending": "is-primary is-light",
     "fulfilled": "is-success is-light",
     "delivered": "is-success is-light",
