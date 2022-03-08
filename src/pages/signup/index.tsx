@@ -10,7 +10,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
 import { Metadata } from "@/lib/types";
-import { isNoneOrEmpty, p } from "@/lib/helper";
+import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -68,6 +68,10 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
       <div className="card isolated-card">
         <div className="card-content">
           <p className="subtitle has-text-centered mb-6">Sign up with credentials</p>
+
+          {(errors as any[]).filter(error => isNone(error.field)).map(({ message }, index) => (
+            <p key={index} className="has-text-danger is-size-7">{message}</p>
+          ))}
 
           <form method="post" onSubmit={onSubmit}>
 
