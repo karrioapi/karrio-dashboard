@@ -5,8 +5,8 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
 import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
-import { Collection, CommodityType, CURRENCY_OPTIONS, CustomsType, DutyType, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
-import { UserData } from '@/context/user-provider';
+import { Collection, CommodityType, CURRENCY_OPTIONS, CustomsType, CUSTOMS_CONTENT_TYPES, DutyType, INCOTERMS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
+import { UserData, useUser } from '@/context/user-provider';
 import { APIReference } from '@/context/references-provider';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { Notify } from '@/components/notifier';
@@ -40,11 +40,11 @@ interface CustomsInfoFormComponent {
 
 const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, isTemplate, onSubmit, onChange, onTemplateChange }) => {
   const form = useRef<any>(null);
+  const user = useUser();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const { discardCustoms, discardCommodity } = useContext(ShipmentMutationContext);
   const { default_customs } = useContext(DefaultTemplatesData);
-  const { incoterms, customs_content_type } = useContext(APIReference);
   const [customs, dispatch] = useReducer((state: any, { name, value }: { name: string, value: string | boolean | object }) => {
     switch (name) {
       case 'hasDuty':
@@ -133,6 +133,11 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
       dispatch({ name: "full", value: shipment.customs });
     }
   }, [shipment]);
+  useEffect(() => {
+    if (user && isNone(value?.signer)) {
+      dispatch({ name: "signer", value: user.full_name });
+    }
+  }, [user])
 
   return (
     <>
@@ -159,21 +164,15 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         <div className="columns is-multiline mb-0 mt-4">
 
           <SelectField label="Content type" value={customs?.content_type} onChange={handleChange} name="content_type" className="is-small is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
-            {customs_content_type && Object
-              .entries(customs_content_type as Collection)
-              .map(([code, name]) => (
-                <option key={code} value={code}>{formatRef(name)}</option>
-              ))
-            }
+            {CUSTOMS_CONTENT_TYPES.map((code) => (
+              <option key={code} value={code}>{formatRef(code)}</option>
+            ))}
           </SelectField>
 
           <SelectField label="incoterm" value={customs?.incoterm} onChange={handleChange} name="incoterm" className="is-small is-fullwidth" fieldClass="column mb-0 is-6 px-2 py-1" required >
-            {incoterms && Object
-              .entries(incoterms as Collection)
-              .map(([code, name]) => (
-                <option key={code} value={code}>{`${code} (${name})`}</option>
-              ))
-            }
+            {INCOTERMS.map((code) => (
+              <option key={code} value={code}>{formatRef(code)}</option>
+            ))}
           </SelectField>
 
         </div>
@@ -301,17 +300,13 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
             placeholder="Content type description"
             rows={2} />
 
-          <UserData.Consumer>
-            {({ user }) => (
-              <InputField label="Signed By"
-                value={(customs?.signer || user?.full_name) as string}
-                onChange={handleChange}
-                name="signer"
-                className="is-small"
-                fieldClass="column mb-0 is-12 px-2 py-2"
-                required={!isTemplate} />
-            )}
-          </UserData.Consumer>
+          <InputField label="Signed By"
+            value={(customs?.signer || user?.full_name) as string}
+            onChange={handleChange}
+            name="signer"
+            className="is-small"
+            fieldClass="column mb-0 is-12 px-2 py-2"
+            required={!isTemplate} />
 
           <CheckBoxField defaultChecked={customs?.certify} onChange={handleChange} name="certify" fieldClass="column mb-0 is-12 px-2 pt-2 pb-4">
             <span>I certify this customs declaration.</span>

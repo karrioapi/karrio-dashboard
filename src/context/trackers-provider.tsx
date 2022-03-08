@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_trackers, GET_TRACKERS, get_trackers_trackers_edges, get_trackersVariables } from '@purplship/graphql';
 import { TrackerType } from '@/lib/types';
-import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 
 const PAGE_SIZE = 20;
@@ -23,6 +23,7 @@ export const TrackersContext = React.createContext<TrackersType>({} as TrackersT
 
 const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
+  const { insertUrlParam } = useLocation();
   const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,

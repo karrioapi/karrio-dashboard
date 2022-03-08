@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AddressType, ParcelType, ShipmentType } from '@/lib/types';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_shipment, GET_SHIPMENT, get_shipmentVariables } from '@purplship/graphql';
-import { isNoneOrEmpty } from '@/lib/helper';
+import { debounce, isNoneOrEmpty } from '@/lib/helper';
 
 const DEFAULT_SHIPMENT_DATA = {
   shipper: {} as AddressType,
@@ -17,7 +17,7 @@ type LabelDataContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
   updateShipment: (data: Partial<ShipmentType>) => ShipmentType;
 };
 
-export const LabelData = React.createContext<LabelDataContext>({} as LabelDataContext);
+export const LabelContext = React.createContext<LabelDataContext>({} as LabelDataContext);
 
 const LabelDataProvider: React.FC = ({ children }) => {
   const [load, { fetchMore, ...result }] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT, {
@@ -27,13 +27,16 @@ const LabelDataProvider: React.FC = ({ children }) => {
   const [shipment, setShipment] = useState<ShipmentType>(DEFAULT_SHIPMENT_DATA);
   const [state, setState] = useState<any>({});
 
+  const fetch = debounce((id: string) => {
+    (result.called ? fetchMore : load)({ variables: { id } })
+  });
   const loadShipment = (id: string) => {
     if (isNoneOrEmpty(id)) return;
     if (id === 'new') {
       setShipment(DEFAULT_SHIPMENT_DATA);
       setState({ ...result, loading: false, called: true });
     } else {
-      (result.called ? fetchMore : load)({ variables: { id } });
+      fetch(id);
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {
@@ -50,7 +53,7 @@ const LabelDataProvider: React.FC = ({ children }) => {
   }, [result.data?.shipment]);
 
   return (
-    <LabelData.Provider value={{
+    <LabelContext.Provider value={{
       ...result,
       shipment,
       loadShipment,
@@ -58,8 +61,12 @@ const LabelDataProvider: React.FC = ({ children }) => {
       ...state,
     }}>
       {children}
-    </LabelData.Provider>
+    </LabelContext.Provider>
   );
 };
+
+export function useLabelData() {
+  return React.useContext(LabelContext);
+}
 
 export default LabelDataProvider;

@@ -7,12 +7,11 @@ interface StatusBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> 
 
 const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...props }) => {
   const color = {
-    "created": "is-primary is-light",
+    "draft": "is-primary is-light",
+    "unfulfilled": "is-primary is-light",
     "cancelled": "is-light",
     "partial": "is-info is-light",
     "purchased": "is-info is-light",
-    "in_transit": "is-info is-light",
-    "in-transit": "is-info is-light",
     "in_transit": "is-info is-light",
     "transit": "is-info is-light",
     "pending": "is-primary is-light",
@@ -23,7 +22,9 @@ const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...pro
   }[status || ""] || "is-light";
 
   return (
-    <span className={`tag is-size-7 is-capitalized has-text-weight-semibold ${color} ${className}`} {...props}>{status}</span>
+    <span className={`tag is-size-7 is-capitalized has-text-weight-semibold ${color} ${className}`} {...props}>
+      {(status || "").replaceAll("_", " ")}
+    </span>
   )
 };
 

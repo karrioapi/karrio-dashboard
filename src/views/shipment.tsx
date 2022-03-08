@@ -13,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType, ShipmentStatus } from "@purplship/graphql";
+import { MetadataObjectType, ShipmentStatusEnum } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import { CustomsType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
@@ -82,7 +82,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>
               </button>}
-            {(isNone(shipment.label) && shipment.status === ShipmentStatus.created) &&
+            {(isNone(shipment.label) && shipment.status === ShipmentStatusEnum.draft) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
             {!isNone(shipmentId) &&

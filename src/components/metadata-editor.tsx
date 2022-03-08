@@ -40,7 +40,7 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({ id, metadata, object_ty
               ([uid, { key, value }], index) => <React.Fragment key={index + "-metadata"}>
                 <div className="is-flex columns my-1 mx-0" key={uid}>
                   <div className="column is-3 p-1">
-                    {!isEditing && <span className="has-text-weight-semibold has-text-grey is-size-7">{key}</span>}
+                    {!isEditing && <span className="has-text-weight-semibold has-text-grey is-size-7 p-2">{key}</span>}
                     {isEditing && <InputField
                       placeholder="Key"
                       defaultValue={key}

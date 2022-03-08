@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import AddressForm, { DEFAULT_ADDRESS_CONTENT } from '@/components/form-parts/address-form';
-import { addUrlParam, isNone, removeUrlParam } from '@/lib/helper';
+import { isNone, useLocation } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from './generic/checkbox-field';
 import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types';
@@ -30,6 +30,7 @@ interface AddressEditModalComponent { }
 const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
+  const { addUrlParam, removeUrlParam } = useLocation();
   const { createAddressTemplate, updateAddressTemplate } = useContext(AddressMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);

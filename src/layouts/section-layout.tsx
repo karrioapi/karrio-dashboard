@@ -33,7 +33,7 @@ const SectionLayout: React.FC<SectionLayoutProps> = ({ session, metadata, error,
               <div className="content has-text-centered">
                 <p>
                   <a href={metadata?.APP_WEBSITE || ""} className="button is-white">&copy; {metadata?.APP_NAME}</a>
-                  <a href="https://docs.purplship.com" className="button is-white">Documentation</a>
+                  <a href="https://docs.karrio.io" className="button is-white">Documentation</a>
                 </p>
               </div>
             </div>

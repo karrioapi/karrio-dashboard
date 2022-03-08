@@ -800,7 +800,7 @@ export interface get_shipment_shipment {
   created_at: any;
   updated_at: any;
   created_by: get_shipment_shipment_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_shipment_shipment_recipient;
   shipper: get_shipment_shipment_shipper;
   parcels: get_shipment_shipment_parcels[];
@@ -1014,7 +1014,7 @@ export interface get_shipments_shipments_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_shipments_shipments_edges_node_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_shipments_shipments_edges_node_recipient;
   shipper: get_shipments_shipments_edges_node_shipper;
   parcels: get_shipments_shipments_edges_node_parcels[];
@@ -1251,7 +1251,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   carrier_id: string | null;
   carrier_name: string | null;
   created_by: partial_shipment_update_partial_shipment_update_shipment_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
   shipper: partial_shipment_update_partial_shipment_update_shipment_shipper;
   parcels: partial_shipment_update_partial_shipment_update_shipment_parcels[];
@@ -1326,7 +1326,7 @@ export interface get_tracker_tracker {
   created_at: any;
   updated_at: any;
   created_by: get_tracker_tracker_created_by;
-  status: TrackerStatus;
+  status: TrackerStatusEnum;
   tracking_number: string;
   events: get_tracker_tracker_events[] | null;
   delivered: boolean | null;
@@ -1386,7 +1386,7 @@ export interface get_trackers_trackers_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_trackers_trackers_edges_node_created_by;
-  status: TrackerStatus;
+  status: TrackerStatusEnum;
   tracking_number: string;
   events: get_trackers_trackers_edges_node_events[] | null;
   delivered: boolean | null;
@@ -2414,7 +2414,7 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
   id: string;
   carrier_id: string;           // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  verbose_name: string;         // Carrier display name
+  display_name: string;         // Carrier display name
   custom_carrier_name: string;  // Unique carrier slug, lowercase alphanumeric characters and underscores only
   test: boolean;                // Toggle carrier connection mode
   active: boolean;              // Disable/Hide carrier from clients
@@ -2871,7 +2871,7 @@ export interface get_eventsVariables {
 // GraphQL query operation: get_order
 // ====================================================
 
-export interface get_order_order_shipping_address {
+export interface get_order_order_shipping_to {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -3075,7 +3075,7 @@ export interface get_order_order_shipments {
   created_at: any;
   updated_at: any;
   created_by: get_order_order_shipments_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_order_order_shipments_recipient;
   shipper: get_order_order_shipments_shipper;
   parcels: get_order_order_shipments_parcels[];
@@ -3102,7 +3102,7 @@ export interface get_order_order {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_order_order_shipping_address;
+  shipping_to: get_order_order_shipping_to;
   line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
@@ -3136,7 +3136,7 @@ export interface get_orders_orders_pageInfo {
   endCursor: string | null;    // When paginating forwards, the cursor to continue.
 }
 
-export interface get_orders_orders_edges_node_shipping_address {
+export interface get_orders_orders_edges_node_shipping_to {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -3340,7 +3340,7 @@ export interface get_orders_orders_edges_node_shipments {
   created_at: any;
   updated_at: any;
   created_by: get_orders_orders_edges_node_shipments_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_orders_orders_edges_node_shipments_recipient;
   shipper: get_orders_orders_edges_node_shipments_shipper;
   parcels: get_orders_orders_edges_node_shipments_parcels[];
@@ -3367,7 +3367,7 @@ export interface get_orders_orders_edges_node {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_orders_orders_edges_node_shipping_address;
+  shipping_to: get_orders_orders_edges_node_shipping_to;
   line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;
@@ -3394,8 +3394,8 @@ export interface get_orders {
 export interface get_ordersVariables {
   offset?: number | null;
   first?: number | null;
-  order_id?: string | null;
-  source?: string | null;
+  order_id?: (string | null)[] | null;
+  source?: (string | null)[] | null;
   status?: (string | null)[] | null;
   address?: string | null;
   created_after?: any | null;
@@ -3878,13 +3878,13 @@ export enum LabelTypeEnum {
 }
 
 // An enumeration.
-export enum ShipmentStatus {
+export enum ShipmentStatusEnum {
   cancelled = "cancelled",
-  created = "created",
   delivered = "delivered",
+  draft = "draft",
+  in_transit = "in_transit",
   purchased = "purchased",
   shipped = "shipped",
-  transit = "transit",
 }
 
 // An enumeration.
@@ -4035,7 +4035,7 @@ export enum currency {
 }
 
 // An enumeration.
-export enum TrackerStatus {
+export enum TrackerStatusEnum {
   delivered = "delivered",
   in_transit = "in_transit",
   incident = "incident",
@@ -4210,14 +4210,15 @@ export enum LabelTemplateTemplateType {
 // An enumeration.
 export enum OrderStatus {
   cancelled = "cancelled",
-  created = "created",
   delivered = "delivered",
   fulfilled = "fulfilled",
   partial = "partial",
+  unfulfilled = "unfulfilled",
 }
 
 // An enumeration.
 export enum MetadataObjectType {
+  app = "app",
   carrier = "carrier",
   commodity = "commodity",
   order = "order",
@@ -4254,6 +4255,7 @@ export interface CreateConnectionInput {
 
 // null
 export interface CreateAramexSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -4268,6 +4270,7 @@ export interface CreateAramexSettings {
 
 // null
 export interface CreateAustraliaPostSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4279,6 +4282,7 @@ export interface CreateAustraliaPostSettings {
 
 // null
 export interface CreateCanadaPostSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4291,6 +4295,7 @@ export interface CreateCanadaPostSettings {
 
 // null
 export interface CreateCanparSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4301,6 +4306,7 @@ export interface CreateCanparSettings {
 
 // null
 export interface CreateDHLExpressSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -4313,6 +4319,7 @@ export interface CreateDHLExpressSettings {
 
 // null
 export interface CreateDHLPolandSettings {
+  id?: string | null;
   services?: (ServiceLevel | null)[] | null;
   carrier_id: string;
   test?: boolean | null;
@@ -4344,6 +4351,7 @@ export interface ServiceLevel {
 
 // null
 export interface CreateDHLUniversalSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4354,6 +4362,7 @@ export interface CreateDHLUniversalSettings {
 
 // null
 export interface CreateDicomSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4365,6 +4374,7 @@ export interface CreateDicomSettings {
 
 // null
 export interface CreateEShipperSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4375,6 +4385,7 @@ export interface CreateEShipperSettings {
 
 // null
 export interface CreateFedexSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -4388,6 +4399,7 @@ export interface CreateFedexSettings {
 
 // null
 export interface CreateFreightcomSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4398,6 +4410,7 @@ export interface CreateFreightcomSettings {
 
 // null
 export interface CreateGenericSettings {
+  id?: string | null;
   account_country_code?: string | null;
   services?: (ServiceLevel | null)[] | null;
   label_template?: LabelTemplate | null;
@@ -4405,8 +4418,9 @@ export interface CreateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  verbose_name: string;
+  display_name: string;
   custom_carrier_name: string;
+  account_number?: string | null;
 }
 
 // null
@@ -4421,6 +4435,7 @@ export interface LabelTemplate {
 
 // null
 export interface CreatePurolatorSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4433,6 +4448,7 @@ export interface CreatePurolatorSettings {
 
 // null
 export interface CreateRoyalMailSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4443,6 +4459,7 @@ export interface CreateRoyalMailSettings {
 
 // null
 export interface CreateSendleSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4453,6 +4470,7 @@ export interface CreateSendleSettings {
 
 // null
 export interface CreateSFExpressSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4463,6 +4481,7 @@ export interface CreateSFExpressSettings {
 
 // null
 export interface CreateTNTSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -4475,6 +4494,7 @@ export interface CreateTNTSettings {
 
 // null
 export interface CreateUPSSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -4488,6 +4508,7 @@ export interface CreateUPSSettings {
 
 // null
 export interface CreateUSPSSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4501,6 +4522,7 @@ export interface CreateUSPSSettings {
 
 // null
 export interface CreateUSPSInternationalSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4514,6 +4536,7 @@ export interface CreateUSPSInternationalSettings {
 
 // null
 export interface CreateYanwenSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4524,6 +4547,7 @@ export interface CreateYanwenSettings {
 
 // null
 export interface CreateYunExpressSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4562,6 +4586,7 @@ export interface UpdateConnectionInput {
 
 // null
 export interface UpdateAramexSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4576,6 +4601,7 @@ export interface UpdateAramexSettings {
 
 // null
 export interface UpdateAustraliaPostSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4587,6 +4613,7 @@ export interface UpdateAustraliaPostSettings {
 
 // null
 export interface UpdateCanadaPostSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4599,6 +4626,7 @@ export interface UpdateCanadaPostSettings {
 
 // null
 export interface UpdateCanparSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4609,6 +4637,7 @@ export interface UpdateCanparSettings {
 
 // null
 export interface UpdateDHLExpressSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4621,6 +4650,7 @@ export interface UpdateDHLExpressSettings {
 
 // null
 export interface UpdateDHLPolandSettings {
+  id?: string | null;
   services?: (PartialServiceLevel | null)[] | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4653,6 +4683,7 @@ export interface PartialServiceLevel {
 
 // null
 export interface UpdateDHLUniversalSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4663,6 +4694,7 @@ export interface UpdateDHLUniversalSettings {
 
 // null
 export interface UpdateDicomSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4674,6 +4706,7 @@ export interface UpdateDicomSettings {
 
 // null
 export interface UpdateEShipperSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4684,6 +4717,7 @@ export interface UpdateEShipperSettings {
 
 // null
 export interface UpdateFedexSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4697,6 +4731,7 @@ export interface UpdateFedexSettings {
 
 // null
 export interface UpdateFreightcomSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4707,6 +4742,7 @@ export interface UpdateFreightcomSettings {
 
 // null
 export interface UpdateGenericSettings {
+  id?: string | null;
   account_country_code?: string | null;
   services?: (PartialServiceLevel | null)[] | null;
   label_template?: PartialLabelTemplate | null;
@@ -4714,8 +4750,9 @@ export interface UpdateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  verbose_name?: string | null;
+  display_name?: string | null;
   custom_carrier_name?: string | null;
+  account_number?: string | null;
 }
 
 // null
@@ -4731,6 +4768,7 @@ export interface PartialLabelTemplate {
 
 // null
 export interface UpdatePurolatorSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4743,6 +4781,7 @@ export interface UpdatePurolatorSettings {
 
 // null
 export interface UpdateRoyalMailSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4753,6 +4792,7 @@ export interface UpdateRoyalMailSettings {
 
 // null
 export interface UpdateSendleSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4763,6 +4803,7 @@ export interface UpdateSendleSettings {
 
 // null
 export interface UpdateSFExpressSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4773,6 +4814,7 @@ export interface UpdateSFExpressSettings {
 
 // null
 export interface UpdateTNTSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4785,6 +4827,7 @@ export interface UpdateTNTSettings {
 
 // null
 export interface UpdateUPSSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4798,6 +4841,7 @@ export interface UpdateUPSSettings {
 
 // null
 export interface UpdateUSPSSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4811,6 +4855,7 @@ export interface UpdateUSPSSettings {
 
 // null
 export interface UpdateUSPSInternationalSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4824,6 +4869,7 @@ export interface UpdateUSPSInternationalSettings {
 
 // null
 export interface UpdateYanwenSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4834,6 +4880,7 @@ export interface UpdateYanwenSettings {
 
 // null
 export interface UpdateYunExpressSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;

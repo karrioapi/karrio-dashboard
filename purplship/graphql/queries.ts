@@ -1535,7 +1535,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      verbose_name
+      display_name
       custom_carrier_name
       test
       active
@@ -1818,7 +1818,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
     order_id
     source
     status
-    shipping_address {
+    shipping_to {
       id
       postal_code
       city
@@ -2021,7 +2021,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
 }
 `;
 
-export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
+export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order_id: [String], $source: [String], $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
   orders(offset: $offset, first: $first, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
     pageInfo {
       hasNextPage
@@ -2035,7 +2035,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order
         order_id
         source
         status
-        shipping_address {
+        shipping_to {
           id
           postal_code
           city

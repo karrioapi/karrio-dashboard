@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
-import { CurrencyCodeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatus, TrackerStatus, WeightUnitEnum } from '@purplship/graphql';
-import { CarrierSettingsCarrierNameEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TrackerStatusEnum, WeightUnitEnum } from '@purplship/graphql';
+import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
 import { Session } from 'next-auth';
 
 
@@ -110,7 +110,7 @@ export const EVENT_TYPES: string[] = Array.from(new Set(
 
 export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
   Object
-    .values(ShipmentStatus)
+    .values(ShipmentStatusEnum)
 ));
 
 export const ORDER_STATUSES: string[] = Array.from(new Set(
@@ -120,12 +120,22 @@ export const ORDER_STATUSES: string[] = Array.from(new Set(
 
 export const TRACKER_STATUSES: string[] = Array.from(new Set(
   Object
-    .values(TrackerStatus)
+    .values(TrackerStatusEnum)
 ));
 
 export const CARRIER_NAMES: string[] = Array.from(new Set(
   Object
     .values(CarrierSettingsCarrierNameEnum)
+));
+
+export const INCOTERMS: string[] = Array.from(new Set(
+  Object
+    .values(CustomsIncotermEnum)
+));
+
+export const CUSTOMS_CONTENT_TYPES: string[] = Array.from(new Set(
+  Object
+    .values(CustomsContentTypeEnum)
 ));
 
 export type ErrorMessage = MessageType & {

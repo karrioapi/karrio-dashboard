@@ -46,7 +46,7 @@ export default function ShipmentsPage(pageProps: any) {
     }
 
     useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
-    useEffect(() => { fetchShipments(); }, [router.query]);
+    useEffect(() => { fetchShipments({ status: ['purchased', 'delivered', 'in_transit', 'cancelled'] }); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
       if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
@@ -71,20 +71,20 @@ export default function ShipmentsPage(pageProps: any) {
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
-              <a onClick={() => !isNone(filters?.status) && fetchShipments({ status: null, offset: 0 })}>all</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === ['purchased', 'delivered', 'in_transit', 'cancelled'] && filters?.status?.length === 4 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['purchased', 'delivered', 'in_transit', 'cancelled'], offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('created') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('created') && fetchShipments({ status: ['created'], offset: 0 })}>created</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === ['purchased', 'in_transit'] && filters?.status?.length === 2 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['purchased', 'in_transit'], offset: 0 })}>purchased</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('purchased') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('purchased') && fetchShipments({ status: ['purchased'], offset: 0 })}>purchased</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('delivered') && fetchShipments({ status: ['delivered'], offset: 0 })}>delivered</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('cancelled') && fetchShipments({ status: ['cancelled'], offset: 0 })}>cancelled</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('draft') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('draft') && fetchShipments({ status: ['draft'], offset: 0 })}>draft</a>
             </li>
           </ul>
         </div>

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
-import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
+import { deepEqual, isNone, useLocation } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { NotificationType, ParcelTemplateType } from '@/lib/types';
@@ -31,6 +31,7 @@ interface ParcelEditModalComponent { }
 const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
   const { setLoading, loading } = useContext(Loading);
+  const { addUrlParam, removeUrlParam } = useLocation();
   const { createParcelTemplate, updateParcelTemplate } = useContext(ParcelMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`parcel-${Date.now()}`);
@@ -98,8 +99,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
         <div className="modal-background" onClick={close}></div>
         <div className="modal-card">
 
-          <form
-            className="modal-card-body modal-form"
+          <form className="modal-card-body modal-form"
             onSubmit={handleSubmit}
             onChange={e => setIsValid((e.target as any).checkValidity())}>
             <div className="form-floating-header p-4">

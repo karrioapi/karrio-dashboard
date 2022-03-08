@@ -17,7 +17,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const sidebar = useRef<HTMLDivElement>(null);
   const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT } = useContext(APIReference);
   const { testMode, basePath, switchMode } = useContext(AppMode);
-  const [showTemplateMenus, setShowTemplateMenus] = React.useState(false);
+  const [showSettingsMenus, setShowSettingsMenus] = React.useState(false);
 
   const dismiss = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -61,26 +61,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <span className="has-text-weight-semibold">Carriers</span>
         </AppLink>
 
-        {/* Templates */}
-        <a className="menu-item menu-item my-0" onClick={() => setShowTemplateMenus(!showTemplateMenus)}>
-          <i className={`fa fa-folder pr-3 has-text-grey`}></i>
-          <span className="has-text-weight-semibold">Templates</span>
-        </a>
-
-        {(showTemplateMenus || window.location.pathname.includes('/templates')) && <>
-          <AppLink href="/templates/addresses" className={"menu-item ml-5 " + activeClass("/templates/addresses")} shallow={false} prefetch={false}>
-            <span>Addresses</span>
-          </AppLink>
-
-          <AppLink href="/templates/parcels" className={"menu-item ml-5 " + activeClass("/templates/parcels")} shallow={false} prefetch={false}>
-            <span>Parcels</span>
-          </AppLink>
-
-          <AppLink href="/templates/customs-infos" className={"menu-item ml-5 " + activeClass("/templates/customs-infos")} shallow={false} prefetch={false}>
-            <span>Customs</span>
-          </AppLink>
-        </>}
-
         {/* Developers */}
         <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
           <i className={`fa fa-terminal pr-3 has-text-grey`}></i>
@@ -107,11 +87,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
 
         <hr className="my-3 mx-5" style={{ height: '1px' }} />
 
-        <AppLink href="/settings/account" className={"menu-item " + activeClass("/settings/account")}>
-          <i className={`fa fa-cog pr-3 ${isActive("/settings/account") ? "" : 'has-text-grey'}`}></i>
-          <span className="has-text-weight-semibold">Settings</span>
-        </AppLink>
-
         {testMode ?
           <a className="menu-item mode-menu-item" onClick={switchMode}>
             <i className="fas fa-toggle-on pr-3"></i>
@@ -123,6 +98,30 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
             <span className="has-text-weight-semibold">View test data</span>
           </a>
         }
+
+        {/* Settings */}
+        <a className="menu-item menu-item my-0" onClick={() => setShowSettingsMenus(!showSettingsMenus)}>
+          <i className={`fa fa-cog pr-3 has-text-grey`}></i>
+          <span className="has-text-weight-semibold">Settings</span>
+        </a>
+
+        {(showSettingsMenus || window.location.pathname.includes('/settings')) && <>
+          <AppLink href="/settings/account" className={"menu-item ml-5 " + activeClass("/settings/account")}>
+            <span>Account</span>
+          </AppLink>
+
+          <AppLink href="/settings/addresses" className={"menu-item ml-5 " + activeClass("/settings/addresses")} shallow={false} prefetch={false}>
+            <span>Addresses</span>
+          </AppLink>
+
+          <AppLink href="/settings/parcels" className={"menu-item ml-5 " + activeClass("/settings/parcels")} shallow={false} prefetch={false}>
+            <span>Parcels</span>
+          </AppLink>
+
+          <AppLink href="/settings/customs-infos" className={"menu-item ml-5 " + activeClass("/settings/customs-infos")} shallow={false} prefetch={false}>
+            <span>Customs</span>
+          </AppLink>
+        </>}
       </div>
       <div style={{ position: 'absolute', bottom: 10, left: 30, right: 10 }}>
         <span className="menu-item has-text-grey-light">

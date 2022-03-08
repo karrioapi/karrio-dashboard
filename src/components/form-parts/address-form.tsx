@@ -24,7 +24,7 @@ interface AddressFormComponent {
   value?: AddressType;
   default_value?: AddressType | null;
   shipment?: ShipmentType;
-  name: "shipper" | "recipient" | "template";
+  name?: "shipper" | "recipient" | "template";
   onSubmit: (address: AddressType) => Promise<any>;
   onTemplateChange?: (isUnchanged: boolean) => boolean;
 }
@@ -67,9 +67,9 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      address.id && setLoading(true);
       await onSubmit(address);
-      address.id && notify({ type: NotificationType.success, message: name + ' Address successfully updated!' });
+      address.id && notify({ type: NotificationType.success, message: 'Address successfully updated!' });
     } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
@@ -83,7 +83,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
     }
   }, [default_value, value]);
   useEffect(() => {
-    if (shipment && !deepEqual(shipment[name as "shipper" | "recipient"], address)) {
+    if (shipment && ["shipper", "recipient"].includes(name || '') && !deepEqual(shipment[name as "shipper" | "recipient"], address)) {
       dispatch({ name: "full", value: shipment[name as "shipper" | "recipient"] });
     }
   }, [shipment]);
@@ -94,7 +94,17 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
       {children}
 
       <div className="columns mb-0">
-        <NameInput label="name" onValueChange={(value, refresh) => { dispatch({ name: "partial", value }); refresh && setKey(`address-${Date.now()}`); }} value={address.person_name} disableSuggestion={isNone(shipment)} className="is-small" fieldClass="column mb-0 px-2 py-2" required />
+        <NameInput label="name"
+          className="is-small"
+          value={address.person_name}
+          fieldClass="column mb-0 px-2 py-2"
+          disableSuggestion={isNone(shipment)}
+          onValueChange={(value, refresh) => {
+            dispatch({ name: "partial", value });
+            refresh && setKey(`address-${Date.now()}`);
+          }}
+          required
+        />
       </div>
 
       <div className="columns mb-0">

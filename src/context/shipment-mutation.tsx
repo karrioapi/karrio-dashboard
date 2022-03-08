@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { OperationResponse, Shipment } from '@purplship/rest/index';
+import { OperationResponse, RateResponse, Shipment } from '@purplship/rest/index';
 import { handleFailure, handleGraphQLRequest } from '@/lib/helper';
-import { LabelData } from '@/context/label-data-provider';
+import { LabelContext } from '@/context/label-data-provider';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
@@ -10,7 +10,7 @@ import { ShipmentType } from '@/lib/types';
 
 
 export type ShipmentMutator = {
-  fetchRates: (shipment: ShipmentType) => Promise<Shipment>;
+  fetchRates: (shipment: ShipmentType) => Promise<RateResponse>;
   buyLabel: (shipment: ShipmentType) => Promise<Shipment>;
   voidLabel: (shipment: ShipmentType) => Promise<OperationResponse>;
   updateShipment: (data: PartialShipmentUpdateInput) => Promise<void>;
@@ -24,31 +24,23 @@ export const ShipmentMutationContext = React.createContext<ShipmentMutator>({} a
 const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const purplship = useContext(RestContext);
   const { testMode } = useContext(AppMode);
-  const state = useContext(LabelData);
+  const state = useContext(LabelContext);
 
   const [updateShipmentMutation] = useMutation<partial_shipment_update, partial_shipment_updateVariables>(PARTIAL_UPDATE_SHIPMENT);
   const [discardCommodityMutation] = useMutation<discard_commodity, discard_commodityVariables>(DISCARD_COMMODITY);
   const [discardCustomsMutation] = useMutation<discard_customs, discard_customsVariables>(DISCARD_CUSTOMS);
   const [discardParcelMutation] = useMutation<discard_parcel, discard_parcelVariables>(DISCARD_PARCEL);
 
-  const fetchRates = async (shipment: ShipmentType) => handleFailure((async () => {
-    if (shipment.id !== undefined) {
-      return purplship!.shipments.rates({ id: shipment.id, data: {} });
-    } else {
-      return purplship!.shipments.create({ data: shipment as any, test: testMode });
-    }
-  })()).then(
-    (response) => { state.loadShipment(response.id as string); return response; }
+  const fetchRates = async (shipment: ShipmentType) => handleFailure(
+    purplship!.proxy.fetchRates({ data: (shipment as any), test: testMode }),
   );
   const buyLabel = async (shipment: ShipmentType) => handleFailure(
-    purplship!.shipments.purchase({
-      data: {
-        payment: shipment.payment as any,
-        label_type: shipment.label_type as any,
-        selected_rate_id: shipment.selected_rate_id as string,
-      },
-      id: shipment.id as string
-    })
+    shipment.id !== undefined ?
+      purplship!.shipments.purchase({
+        id: shipment.id as string,
+        data: { selected_rate_id: shipment.selected_rate_id as string },
+      }) :
+      purplship!.shipments.create({ data: shipment as any, test: testMode })
   );
   const voidLabel = async (shipment: ShipmentType) => handleFailure(
     purplship!.shipments.cancel({ id: shipment.id as string })
@@ -85,5 +77,9 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
     </ShipmentMutationContext.Provider>
   )
 };
+
+export function useShipmentMutation() {
+  return useContext(ShipmentMutationContext);
+}
 
 export default ShipmentMutationProvider;

@@ -8,7 +8,7 @@ import { AppMode } from '@/context/app-mode-provider';
 import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { ShipmentStatus } from '@purplship/graphql';
+import { ShipmentStatusEnum } from '@purplship/graphql';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -65,12 +65,12 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
           <span>Print Label</span>
         </a>
       </>}
-      {isNone(shipment.label) && shipment.status === ShipmentStatus.created && <>
+      {isNone(shipment.label) && shipment.status === ShipmentStatusEnum.draft && <>
         <a className="button is-small" onClick={createLabel} style={{ width: '70%' }}>
           <span>Buy Label</span>
         </a>
       </>}
-      {isNone(shipment.label) && shipment.status === ShipmentStatus.cancelled && <>
+      {isNone(shipment.label) && shipment.status === ShipmentStatusEnum.cancelled && <>
         <a className="button is-small" onClick={displayDetails} style={{ width: '70%' }}>
           <span>View Shipment</span>
         </a>
@@ -94,7 +94,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
         <div className="dropdown-menu" id={`shipment-menu-${shipment.id}`} role="menu">
           <div className="dropdown-content">
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
-            {shipment.status !== ShipmentStatus.cancelled &&
+            {shipment.status !== ShipmentStatusEnum.cancelled &&
               <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
             {!isNone((shipment?.meta as any).invoice) &&
               <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}

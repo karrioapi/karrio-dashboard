@@ -8,10 +8,14 @@ import { APIReference } from '@/context/references-provider';
 import { ParcelTemplates } from '@/context/parcel-templates-provider';
 import { DimensionUnitEnum, WeightUnitEnum } from '@purplship/graphql';
 
-type stateValue = string | boolean | Partial<ParcelType>;
+type stateValue = string | number | boolean | Partial<ParcelType>;
 export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
-  packaging_type: "envelope",
+  weight: 1.0,
+  width: 33.7,
+  height: 18.2,
+  length: 10.0,
   is_document: false,
+  packaging_type: "medium_box",
   weight_unit: WeightUnitEnum.KG,
   dimension_unit: DimensionUnitEnum.CM,
 };
@@ -86,7 +90,7 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
       value = preset;
     }
 
-    dispatch({ name, value });
+    dispatch({ name, value: target.type === 'number' ? parseFloat(value as string) : value });
   };
 
   useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);

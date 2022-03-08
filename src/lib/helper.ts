@@ -2,6 +2,7 @@ import { BASE_PATH } from "@/client/context";
 import { AddressType, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React from "react";
 
 
@@ -107,9 +108,9 @@ export function formatDimension(parcel?: Partial<ParcelType> | null): string {
     const { dimension_unit, height, length, width } = parcel;
     let formatted = formatValues(' x ', width, height, length);
 
-    return `Dimensions: ${formatted} ${dimension_unit}`;
+    return `${formatted} ${dimension_unit}`;
   }
-  return 'Dimensions: None specified...';
+  return '';
 }
 
 export function formatWeight(data?: { weight: number, weight_unit: string } | any): string {
@@ -117,9 +118,9 @@ export function formatWeight(data?: { weight: number, weight_unit: string } | an
 
     const { weight, weight_unit } = data;
 
-    return `Weight: ${weight} ${weight_unit}`;
+    return `${weight} ${weight_unit}`;
   }
-  return 'Weight: None specified...';
+  return '';
 }
 
 export function formatCarrierSlug(name?: string) {
@@ -245,13 +246,32 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
     .replaceAll('//', '/');
 }
 
+export function useLocation() {
+  const router = useRouter();
+
+  const updateUrlParam = (param: string, value: string) => {
+    router.push({
+      pathname: location.pathname,
+      query: { ...router.query, [param]: value },
+    }, undefined, { shallow: true })
+  };
+
+  return {
+    ...router,
+    addUrlParam,
+    updateUrlParam,
+    insertUrlParam,
+    removeUrlParam,
+  };
+};
+
 export function getURLSearchParams() {
   const query = new URLSearchParams(location.search);
   return [...query.keys() as any].reduce(
     (acc, key) => ({ ...acc, [key]: query.get(key) }),
     {}
   );
-}
+};
 
 export function insertUrlParam(params: {} | any) {
   if (window.history.pushState) {
@@ -323,4 +343,12 @@ export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (opti
 
       resolve((data ? data[operation] : null) as T[typeof operation]);
     });
+}
+
+export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
+  let timer: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
 }

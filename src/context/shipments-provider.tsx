@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from '@purplship/graphql';
 import { ShipmentType } from '@/lib/types';
-import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 
 const PAGE_SIZE = 20;
@@ -23,6 +23,7 @@ export const ShipmentsContext = React.createContext<ShipmentsType>({} as Shipmen
 
 const ShipmentsProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
+  const { insertUrlParam } = useLocation();
   const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true

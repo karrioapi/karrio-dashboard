@@ -16,6 +16,7 @@ import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
+import CommodityDescription from "@/components/descriptions/commodity-description";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -58,6 +59,12 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
           <div className="column is-6 has-text-right pb-0">
             <CopiableLink text={order.id as string} title="Copy ID" />
             <br />
+            {["unfulfilled", "partial"].includes(order.status) &&
+              <AppLink
+                href={`/orders/fulfillment?shipment_id=new&order_id=${order.order_id}`} target="blank"
+                className="button is-default is-small mx-1">
+                <span>Fulfill order</span>
+              </AppLink>}
             {!isNone(orderId) &&
               <AppLink
                 href={`/orders/${orderId}`} target="blank"
@@ -99,24 +106,24 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ADDRESS</p>
 
-              <p className="is-size-6 my-1">{order.shipping_address.person_name}</p>
-              <p className="is-size-6 my-1">{order.shipping_address.company_name}</p>
-              <p className="is-size-6 my-1 has-text-info">{order.shipping_address.email}</p>
-              <p className="is-size-6 my-1 has-text-info">{order.shipping_address.phone_number}</p>
+              <p className="is-size-6 my-1">{order.shipping_to.person_name}</p>
+              <p className="is-size-6 my-1">{order.shipping_to.company_name}</p>
+              <p className="is-size-6 my-1 has-text-info">{order.shipping_to.email}</p>
+              <p className="is-size-6 my-1 has-text-info">{order.shipping_to.phone_number}</p>
               <p className="is-size-6 my-1">
-                <span>{order.shipping_address.address_line1}</span>
-                {!isNone(order.shipping_address.address_line2) && <span>{order.shipping_address.address_line2}</span>}
+                <span>{order.shipping_to.address_line1}</span>
+                {!isNone(order.shipping_to.address_line2) && <span>{order.shipping_to.address_line2}</span>}
               </p>
-              <p className="is-size-6 my-1">{formatAddressLocation(order.shipping_address)}</p>
+              <p className="is-size-6 my-1">{formatAddressLocation(order.shipping_to)}</p>
             </div>
 
             {/* Line Items section */}
             <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">LINE ITEMS</p>
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">LINE ITEMS ({order.line_items.length})</p>
 
               {order.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <p className="is-size-7 my-1">{formatCommodity(item as any, index)}</p>
+                <CommodityDescription commodity={item} />
               </React.Fragment>)}
             </div>
           </div>

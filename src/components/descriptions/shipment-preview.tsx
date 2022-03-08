@@ -2,7 +2,7 @@ import EventsProvider from '@/context/events-provider';
 import LogsProvider from '@/context/logs-provider';
 import MetadataMutationProvider from '@/context/metadata-mutation';
 import ShipmentProvider from '@/context/shipment-provider';
-import { addUrlParam, removeUrlParam } from '@/lib/helper';
+import { useLocation } from '@/lib/helper';
 import { ShipmentComponent } from '@/views/shipment';
 import React, { useState } from 'react';
 
@@ -15,6 +15,7 @@ interface ShipmentPreviewComponent { }
 export const ShipmentPreviewContext = React.createContext<ShipmentPreviewContextType>({} as ShipmentPreviewContextType);
 
 const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
+  const { addUrlParam, removeUrlParam } = useLocation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`shipment-${Date.now()}`);
   const [shipmentId, setShipmentId] = useState<string>();

@@ -1,4 +1,4 @@
-import { addUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
@@ -25,6 +25,7 @@ export const TabStateContext = React.createContext<TabStateInterface>({} as TabS
 export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, tabs, disabledTabs = [], setSelectedToURL }) => {
   const router = useRouter();
   const { tab } = router.query;
+  const { addUrlParam } = useLocation();
   const [selected, setSelected] = useState<string>(tabs[0]);
   const [initialized, setInitialized] = useState<boolean>(false);
 

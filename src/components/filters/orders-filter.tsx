@@ -28,13 +28,19 @@ const OrdersFilter: React.FC<OrdersFilterComponent> = ({ ...props }) => {
           ? { ...state, status: [...(new Set([...state.status, value]) as any)] }
           : { ...state, status: state.status.filter((item: string) => item !== value) };
 
+      case 'hasSource':
+      case 'hasOrderId':
+        if (checked) return { ...state, [value as string]: [] };
+        return Object.keys(state).reduce((acc, key) => key === value ? acc : { ...acc, [key]: state[key] }, {});
+      case 'source':
+      case 'order_id':
+        return { ...state, [name]: [...(value as string).split(',').map(s => s.trim())] }
+
       case 'hasDate':
         if (checked) return { ...state, created_before: "", created_after: "" };
         return Object.keys(state).reduce((acc, key) => ["created_before", "created_after"].includes(key) ? acc : { ...acc, [key]: state[key] }, {});
 
-      case 'hasSource':
       case 'hasAddress':
-      case 'hasOrderId':
         if (checked) return { ...state, [value as string]: "" };
         return Object.keys(state).reduce((acc, key) => key === value ? acc : { ...acc, [key]: state[key] }, {});
 
@@ -130,7 +136,8 @@ const OrdersFilter: React.FC<OrdersFilterComponent> = ({ ...props }) => {
                 name="order_id"
                 fieldClass="mb-0 py-1"
                 className="is-fullwidth is-small"
-                placeholder="e.g: 11616493"
+                placeholder="11616493, 11616494, ..."
+                multiple
               />
             </div>}
 
@@ -151,7 +158,8 @@ const OrdersFilter: React.FC<OrdersFilterComponent> = ({ ...props }) => {
                 name="source"
                 fieldClass="mb-0 py-1"
                 className="is-fullwidth is-small"
-                placeholder="e.g: shopify"
+                placeholder="shopify, erp, ..."
+                multiple
               />
             </div>}
 

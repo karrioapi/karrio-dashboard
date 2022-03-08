@@ -2,7 +2,7 @@ import EventsProvider from '@/context/events-provider';
 import LogsProvider from '@/context/logs-provider';
 import MetadataMutationProvider from '@/context/metadata-mutation';
 import OrderProvider from '@/context/order-provider';
-import { addUrlParam, removeUrlParam } from '@/lib/helper';
+import { useLocation } from '@/lib/helper';
 import { OrderComponent } from '@/views/order';
 import React, { useState } from 'react';
 
@@ -15,6 +15,7 @@ interface OrderPreviewComponent { }
 export const OrderPreviewContext = React.createContext<OrderPreviewContextType>({} as OrderPreviewContextType);
 
 const OrderPreview: React.FC<OrderPreviewComponent> = ({ children }) => {
+  const { addUrlParam, removeUrlParam } = useLocation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`order-${Date.now()}`);
   const [orderId, setOrderId] = useState<string>();

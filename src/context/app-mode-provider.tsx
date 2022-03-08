@@ -1,5 +1,5 @@
 import { BASE_PATH, TEST_BASE_PATH } from "@/client/context";
-import { insertUrlParam } from "@/lib/helper";
+import { useLocation } from "@/lib/helper";
 import React from "react";
 
 
@@ -17,11 +17,12 @@ export function computeBasePath(pathname?: string) {
   return pathname?.startsWith(TEST_BASE_PATH) ? TEST_BASE_PATH : BASE_PATH;
 };
 
-
 // Init the APP client mode
 export const AppMode = React.createContext<AppModeType>({} as AppModeType);
 
 const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }) => {
+  const { insertUrlParam } = useLocation();
+
   const switchMode = () => {
     insertUrlParam({});
     const currentPathName = `${window.location.pathname}`;
@@ -41,5 +42,9 @@ const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }
     </AppMode.Provider>
   );
 };
+
+export function useAppMode() {
+  return React.useContext(AppMode);
+}
 
 export default AppModeProvider;

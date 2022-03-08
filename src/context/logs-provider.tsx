@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_logs, GET_LOGS, get_logs_logs_edges, get_logsVariables } from '@purplship/graphql';
 import { LogType } from '@/lib/types';
-import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
@@ -21,6 +21,7 @@ type LogsType = LazyQueryResult<get_logs, LogsFilterType> & {
 export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
 const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
+  const { insertUrlParam } = useLocation();
   const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,

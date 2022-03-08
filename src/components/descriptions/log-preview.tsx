@@ -1,5 +1,5 @@
 import LogProvider from '@/context/log-provider';
-import { addUrlParam, removeUrlParam } from '@/lib/helper';
+import { useLocation } from '@/lib/helper';
 import { LogComponent } from '@/views/log';
 import React, { useState } from 'react';
 
@@ -12,6 +12,7 @@ interface LogPreviewComponent { }
 export const LogPreviewContext = React.createContext<LogPreviewContextType>({} as LogPreviewContextType);
 
 const LogPreview: React.FC<LogPreviewComponent> = ({ children }) => {
+  const { addUrlParam, removeUrlParam } = useLocation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`log-${Date.now()}`);
   const [logId, setLogId] = useState<string>();

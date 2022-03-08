@@ -5,7 +5,7 @@ import AddressForm from '@/components/form-parts/address-form';
 import ShipmentOptions from '@/components/form-parts/shipment-options';
 import LiveRates from '@/components/live-rates';
 import Tabs, { TabStateContext, TabStateProvider } from '@/components/generic/tabs';
-import LabelDataProvider, { LabelData, } from '@/context/label-data-provider';
+import LabelDataProvider, { LabelContext, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Notify } from '@/components/notifier';
 import { AppMode } from '@/context/app-mode-provider';
@@ -22,7 +22,7 @@ import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ShipmentMutationProvider, { ShipmentMutationContext } from '@/context/shipment-mutation';
 import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
-import { PartialShipmentUpdateInput, ShipmentStatus } from '@purplship/graphql';
+import { PartialShipmentUpdateInput, ShipmentStatusEnum } from '@purplship/graphql';
 import { isNone } from '@/lib/helper';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 
@@ -40,7 +40,7 @@ export default function LabelPage(pageProps: any) {
     const { notify } = useContext(Notify);
     const { basePath } = useContext(AppMode);
     const mutation = useContext(ShipmentMutationContext);
-    const { shipment, called, loading, loadShipment, updateShipment } = useContext(LabelData);
+    const { shipment, called, loading, loadShipment, updateShipment } = useContext(LabelContext);
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
     const orders = useContext(OrdersContext);
     const tabs = ["shipper", "recipient", "parcels", "customs info", "options"];
@@ -75,7 +75,7 @@ export default function LabelPage(pageProps: any) {
       if (!called && !loading && loadShipment) { loadShipment(id as string); }
     }, []);
     useEffect(() => {
-      if (shipment.status && shipment.status !== ShipmentStatus.created) {
+      if (shipment.status && shipment.status !== ShipmentStatusEnum.draft) {
         notify({ type: NotificationType.info, message: 'Label already purchased! redirecting...' });
         setTimeout(() => router.push(basePath), 2000);
       }
@@ -86,7 +86,7 @@ export default function LabelPage(pageProps: any) {
     useEffect(() => {
       if (!orders.called && !orders.loading && orders.load) orders.load({
         first: 100,
-        status: ['created', 'partial']
+        status: ['unfulfilled', 'partial']
       });
     }, []);
     useEffect(() => {
@@ -103,7 +103,7 @@ export default function LabelPage(pageProps: any) {
           </ul>
         </nav>
 
-        {ready && <div className="columns px-2 pb-6">
+        {ready && <div className="columns pb-6 m-0">
           <div className="column is-7 px-0" style={{ minHeight: '850px' }}>
 
             <div className="card px-3 py-3" style={{ overflow: 'visible' }}>
