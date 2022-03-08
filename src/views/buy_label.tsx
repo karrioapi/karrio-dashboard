@@ -25,6 +25,7 @@ import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
 import { PartialShipmentUpdateInput, ShipmentStatusEnum } from '@purplship/graphql';
 import { isNone } from '@/lib/helper';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
+import LabelMutationProvider from '@/context/label-data-mutation';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -169,21 +170,23 @@ export default function LabelPage(pageProps: any) {
     <DashboardLayout>
       <GoogleGeocodingScript />
       <Head><title>Buy Label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <LabelDataProvider>
-        <TemplatesProvider>
-          <OrdersProvider setVariablesToURL={false}>
-            <ParcelTemplatesProvider>
-              <AddressTemplatesProvider>
+      <TemplatesProvider>
+        <OrdersProvider setVariablesToURL={false}>
+          <ParcelTemplatesProvider>
+            <AddressTemplatesProvider>
+              <LabelDataProvider>
                 <ShipmentMutationProvider>
+                  <LabelMutationProvider>
 
-                  <Component />
+                    <Component />
 
+                  </LabelMutationProvider>
                 </ShipmentMutationProvider>
-              </AddressTemplatesProvider>
-            </ParcelTemplatesProvider>
-          </OrdersProvider>
-        </TemplatesProvider>
-      </LabelDataProvider>
+              </LabelDataProvider>
+            </AddressTemplatesProvider>
+          </ParcelTemplatesProvider>
+        </OrdersProvider>
+      </TemplatesProvider>
     </DashboardLayout>
   ), pageProps);
 }
