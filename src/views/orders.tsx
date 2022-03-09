@@ -30,9 +30,13 @@ export default function OrdersPage(pageProps: any) {
     const [allChecked, setAllChecked] = React.useState(false);
 
     const updatedSelection = (selectedOrders: string[], current: typeof orders) => {
-      const order_ids = current.map(order => order.order_id);
+      const order_ids = (
+        current
+          .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
+          .map(order => order.order_id)
+      );
       const selection = selectedOrders.filter(order_id => order_ids.includes(order_id));
-      const selected = selection.length > 0 && selection.length === (current || []).length;
+      const selected = selection.length > 0 && selection.length === (order_ids || []).length;
       setAllChecked(selected);
       if (selectedOrders.filter(order_id => !order_ids.includes(order_id)).length > 0) {
         setSelection(selection);
@@ -52,7 +56,11 @@ export default function OrdersPage(pageProps: any) {
     const handleSelection = (e: ChangeEvent) => {
       const { checked, name } = e.target as HTMLInputElement;
       if (name === "all") {
-        setSelection(checked ? (orders || []).map(({ order_id }) => order_id) : []);
+        setSelection(
+          !checked ? [] : (orders || [])
+            .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
+            .map(({ order_id }) => order_id)
+        );
       } else {
         setSelection(checked ? [...selection, name] : selection.filter(order_id => order_id !== name));
       }
@@ -124,8 +132,8 @@ export default function OrdersPage(pageProps: any) {
                 </td>}
 
                 {selection.length === 0 && <>
-                  <td className="order is-size-7">#ID</td>
-                  <td className="source"></td>
+                  <td className="order is-size-7">ORDER #</td>
+                  <td className="items is-size-7">ITEMS</td>
                   <td className="status"></td>
                   <td className="customer is-size-7">CUSTOMER</td>
                   <td className="date has-text-right is-size-7">DATE</td>
@@ -135,23 +143,30 @@ export default function OrdersPage(pageProps: any) {
               {orders?.map(order => (
                 <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
                   <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
-                    <label className="checkbox p-2">
+                    <label className="checkbox py-3 px-2">
                       <input
                         type="checkbox"
                         name={order.order_id}
                         onChange={handleSelection}
                         checked={selection.includes(order.order_id)}
+                        disabled={['cancelled', 'fulfilled'].includes(order.status)}
                       />
                     </label>
                   </td>
                   <td className="order is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {order.order_id}
+                    <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
+                      #{order.order_id}
+                    </p>
+                    <p className="is-size-7 has-text-grey is-lowercase">
+                      {order.source}
                     </p>
                   </td>
-                  <td className="source is-vcentered">
+                  <td className="items is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {order.source}
+                      {order.line_items.length} item{order.line_items.length > 1 ? "s" : ""}
+                    </p>
+                    <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
                     </p>
                   </td>
                   <td className="status is-vcentered">
