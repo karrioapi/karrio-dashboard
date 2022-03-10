@@ -46,12 +46,10 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const { errors } = await confirmPasswordReset(data as ConfirmPasswordResetInput);
-
-      setErrors(errors as confirm_password_reset_confirm_password_reset_errors[] || []);
-      if ((errors || []).length === 0) router.push('/password/reset/done');
+      await confirmPasswordReset(data as ConfirmPasswordResetInput);
+      router.push('/password/reset/done');
     } catch (error: any) {
-      logger.error(error);
+      setErrors(Array.isArray(error) ? error : [error]);
     }
     setLoading(false);
   };

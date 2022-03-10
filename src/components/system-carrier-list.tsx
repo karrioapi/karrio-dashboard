@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
-import SystemConnectionMutation from '@/context/system-connection-mutation';
-import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import CarrierBadge from '@/components/carrier-badge';
 import ConnectionDescription from '@/components/descriptions/connection-description';
+import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
+import { useSystemConnectionMutation } from '@/context/system-connection-mutation';
 
-interface SystemConnectionListView { }
 
-const SystemConnectionList: React.FC<SystemConnectionListView> = SystemConnectionMutation<SystemConnectionListView>(({ mutateConnection }) => {
+const SystemConnectionList: React.FC = () => {
   const { notify } = useContext(Notify);
   const { system_connections, refetch } = useContext(SystemConnections);
+  const { updateConnection } = useSystemConnectionMutation();
 
   const onUpdate = async () => refetch && await refetch();
   const toggle = ({ enabled, id }: SystemConnectionType) => async () => {
     try {
-      await mutateConnection({ id, enable: !enabled });
+      await updateConnection({ id, enable: !enabled });
       notify({
         type: NotificationType.success,
         message: `system carrier connection ${!enabled ? 'enabled' : 'disabled'}!`
@@ -40,7 +40,7 @@ const SystemConnectionList: React.FC<SystemConnectionListView> = SystemConnectio
           {(system_connections || []).map((connection) => (
 
             <tr key={`connection-${connection.id}-${Date.now()}`}>
-              <td className="carrier is-vcentered">
+              <td className="carrier is-vcentered pl-0">
                 <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" />
               </td>
               <td className="mode is-vcentered">
@@ -73,6 +73,6 @@ const SystemConnectionList: React.FC<SystemConnectionListView> = SystemConnectio
 
     </>
   );
-});
+};
 
 export default SystemConnectionList;

@@ -4,13 +4,13 @@
 
 [![puprlship-dashboard](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/purplship/purplship-dashboard/actions/workflows/ci.yml)
 
-Purplship Dashboard is a browser-based logistics and shipping orchestration dashboard for [purplship](https://github.com/purplship/purplship).
+Purplship Dashboard is a browser-based logistics and shipping dashboard for [purplship](https://github.com/purplship/purplship).
 
 ## Getting Started
 
 ### Using a Purplship Dashboard Release
 
-If you just want to try Purplship out, check out the our [purplship/dashboard Docker Image](https://hub.docker.com/repository/docker/purplship/dashboard) to give it a whirl.
+If you just want to try Purplship out, check out the [purplship/dashboard Docker Image](https://hub.docker.com/repository/docker/purplship/dashboard) to give it a whirl.
 
 ### Building and Running Purplship Dashboard
 
@@ -46,7 +46,6 @@ Use the following environment variables to configure the dashboard:
 - `PURPLSHIP_HOSTNAME` - URL of a running instance of purplship server. Useful for an internal network request from the node side of the dashboard. *Note: the default value will be `NEXT_PUBLIC_PURPLSHIP_API_URL` when not provided*
 
 - `BASE_PATH` - A base path to use for deploying the dashboard to a domain subpath. e.g. `instance.purplship.com/dashboard`
-
 
 #### Development
 

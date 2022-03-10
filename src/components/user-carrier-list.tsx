@@ -20,7 +20,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
-  const { confirmDeletion } = useContext(ConfirmModalContext);
+  const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
   const { user_connections, loading, called, refetch } = useContext(UserConnections);
@@ -70,7 +70,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
       {loading && <Spinner />}
 
-      {(!loading && (user_connections || []).length > 0) && <table className="table is-fullwidth">
+      {(called && (user_connections || []).length > 0) && <table className="table is-fullwidth">
 
         <tbody className="connections-table">
           <tr>
@@ -81,10 +81,10 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
           {user_connections.map((connection) => (
 
             <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || (testMode !== connection.test && viewOtherMode)) ? 'table-row' : 'none' }}>
-              <td className="carrier">
+              <td className="carrier pl-0">
                 <CarrierBadge
                   carrier={connection.carrier_name}
-                  custom_name={(connection as any).verbose_name}
+                  custom_name={(connection as any).display_name}
                   className="box has-text-weight-bold"
                 />
               </td>
@@ -114,8 +114,8 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   </ul>
                 </div>
               </td>
-              <td className="action is-vcentered">
-                <div className="buttons is-centered">
+              <td className="action is-vcentered pr-0">
+                <div className="buttons is-justify-content-end">
                   <button className="button is-white" onClick={() => editConnection({
                     connection, onConfirm: onUpdate
                   })}>

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_user_connections, GET_USER_CONNECTIONS, get_user_connections_user_connections, GET_USER_CONNECTIONS_WITH_GENERICS } from '@purplship/graphql';
+import { get_user_connections, GET_USER_CONNECTIONS, GET_USER_CONNECTIONS_WITH_GENERICS, get_user_connections_with_generics_user_connections } from '@purplship/graphql';
 import { APIReference } from './references-provider';
 
 
-export type UserConnectionType = get_user_connections_user_connections;
+export type UserConnectionType = get_user_connections_with_generics_user_connections;
 
 type UserConnectionsQueryResult = LazyQueryResult<get_user_connections, any> & {
   user_connections: UserConnectionType[];

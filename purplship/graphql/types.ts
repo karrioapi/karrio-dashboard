@@ -255,39 +255,6 @@ export interface update_connectionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: get_organizations
-// ====================================================
-
-export interface get_organizations_organizations_user {
-  email: string;
-  full_name: string;
-  is_admin: boolean;
-}
-
-export interface get_organizations_organizations_users {
-  email: string;
-  full_name: string;
-  is_admin: boolean;
-}
-
-export interface get_organizations_organizations {
-  id: string;
-  name: string;  // The name of the organization
-  slug: string;  // The name in all lowercase, suitable for URL identification
-  token: string;
-  user: get_organizations_organizations_user;
-  users: get_organizations_organizations_users[];
-}
-
-export interface get_organizations {
-  organizations: (get_organizations_organizations | null)[];
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: delete_connection
 // ====================================================
 
@@ -308,8 +275,59 @@ export interface delete_connectionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: get_organizations
+// ====================================================
+
+export interface get_organizations_organizations_current_user {
+  email: string;
+  full_name: string;
+  is_admin: boolean;
+  is_staff: boolean;  // Designates whether the user can log into this admin site.
+  is_owner: boolean | null;
+  last_login: any | null;
+}
+
+export interface get_organizations_organizations_members_invitation {
+  id: string;
+  guid: any;
+  invitee_identifier: string;  // The contact identifier for the invitee, email, phone number, social media handle, etc.
+  created: any;
+  modified: any;
+}
+
+export interface get_organizations_organizations_members {
+  email: string;
+  full_name: string | null;
+  is_admin: boolean;
+  is_owner: boolean | null;
+  invitation: get_organizations_organizations_members_invitation | null;
+  last_login: any | null;
+}
+
+export interface get_organizations_organizations {
+  id: string;
+  name: string;  // The name of the organization
+  slug: string;  // The name in all lowercase, suitable for URL identification
+  token: string;
+  current_user: get_organizations_organizations_current_user;
+  members: get_organizations_organizations_members[];
+}
+
+export interface get_organizations {
+  organizations: (get_organizations_organizations | null)[];
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: create_organization
 // ====================================================
+
+export interface create_organization_create_organization_organization {
+  id: string;
+}
 
 export interface create_organization_create_organization_errors {
   field: string;
@@ -317,7 +335,7 @@ export interface create_organization_create_organization_errors {
 }
 
 export interface create_organization_create_organization {
-  id: string | null;
+  organization: create_organization_create_organization_organization | null;
   errors: (create_organization_create_organization_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -337,13 +355,17 @@ export interface create_organizationVariables {
 // GraphQL mutation operation: update_organization
 // ====================================================
 
+export interface update_organization_update_organization_organization {
+  id: string;
+}
+
 export interface update_organization_update_organization_errors {
   field: string;
   messages: string[];
 }
 
 export interface update_organization_update_organization {
-  id: string | null;
+  organization: update_organization_update_organization_organization | null;
   errors: (update_organization_update_organization_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -353,6 +375,167 @@ export interface update_organization {
 
 export interface update_organizationVariables {
   data: UpdateOrganizationInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: change_organization_owner
+// ====================================================
+
+export interface change_organization_owner_change_organization_owner_organization {
+  id: string;
+}
+
+export interface change_organization_owner_change_organization_owner_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface change_organization_owner_change_organization_owner {
+  organization: change_organization_owner_change_organization_owner_organization | null;
+  errors: (change_organization_owner_change_organization_owner_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface change_organization_owner {
+  change_organization_owner: change_organization_owner_change_organization_owner | null;
+}
+
+export interface change_organization_ownerVariables {
+  data: ChangeOrganizationOwnerInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: set_organization_user_roles
+// ====================================================
+
+export interface set_organization_user_roles_set_organization_user_roles_organization {
+  id: string;
+}
+
+export interface set_organization_user_roles_set_organization_user_roles_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface set_organization_user_roles_set_organization_user_roles {
+  organization: set_organization_user_roles_set_organization_user_roles_organization | null;
+  errors: (set_organization_user_roles_set_organization_user_roles_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface set_organization_user_roles {
+  set_organization_user_roles: set_organization_user_roles_set_organization_user_roles | null;
+}
+
+export interface set_organization_user_rolesVariables {
+  data: SetOrganizationUserRolesInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: send_organization_invites
+// ====================================================
+
+export interface send_organization_invites_send_organization_invites_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface send_organization_invites_send_organization_invites {
+  errors: (send_organization_invites_send_organization_invites_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface send_organization_invites {
+  send_organization_invites: send_organization_invites_send_organization_invites | null;
+}
+
+export interface send_organization_invitesVariables {
+  data: SendOrganizationInvitesInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_organization_invitation
+// ====================================================
+
+export interface get_organization_invitation_organization_invitation_invitee {
+  email: string;
+}
+
+export interface get_organization_invitation_organization_invitation {
+  invitee_identifier: string;  // The contact identifier for the invitee, email, phone number, social media handle, etc.
+  organization_name: string;
+  invitee: get_organization_invitation_organization_invitation_invitee | null;
+}
+
+export interface get_organization_invitation {
+  organization_invitation: get_organization_invitation_organization_invitation | null;
+}
+
+export interface get_organization_invitationVariables {
+  guid: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: accept_organization_invitation
+// ====================================================
+
+export interface accept_organization_invitation_accept_organization_invitation_organization {
+  id: string;
+}
+
+export interface accept_organization_invitation_accept_organization_invitation_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface accept_organization_invitation_accept_organization_invitation {
+  organization: accept_organization_invitation_accept_organization_invitation_organization | null;
+  errors: (accept_organization_invitation_accept_organization_invitation_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface accept_organization_invitation {
+  accept_organization_invitation: accept_organization_invitation_accept_organization_invitation | null;
+}
+
+export interface accept_organization_invitationVariables {
+  data: AcceptOrganizationInvitationInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: delete_organization_invitation
+// ====================================================
+
+export interface delete_organization_invitation_delete_organization_invitation {
+  id: string | null;
+}
+
+export interface delete_organization_invitation {
+  delete_organization_invitation: delete_organization_invitation_delete_organization_invitation | null;
+}
+
+export interface delete_organization_invitationVariables {
+  data: DeleteOrganizationInvitationInput;
 }
 
 
@@ -617,14 +800,15 @@ export interface get_shipment_shipment {
   created_at: any;
   updated_at: any;
   created_by: get_shipment_shipment_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_shipment_shipment_recipient;
   shipper: get_shipment_shipment_shipper;
   parcels: get_shipment_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -831,14 +1015,15 @@ export interface get_shipments_shipments_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_shipments_shipments_edges_node_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_shipments_shipments_edges_node_recipient;
   shipper: get_shipments_shipments_edges_node_shipper;
   parcels: get_shipments_shipments_edges_node_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -1068,14 +1253,15 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   carrier_id: string | null;
   carrier_name: string | null;
   created_by: partial_shipment_update_partial_shipment_update_shipment_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
   shipper: partial_shipment_update_partial_shipment_update_shipment_shipper;
   parcels: partial_shipment_update_partial_shipment_update_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -1143,7 +1329,7 @@ export interface get_tracker_tracker {
   created_at: any;
   updated_at: any;
   created_by: get_tracker_tracker_created_by;
-  status: TrackerStatus;
+  status: TrackerStatusEnum;
   tracking_number: string;
   events: get_tracker_tracker_events[] | null;
   delivered: boolean | null;
@@ -1203,7 +1389,7 @@ export interface get_trackers_trackers_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_trackers_trackers_edges_node_created_by;
-  status: TrackerStatus;
+  status: TrackerStatusEnum;
   tracking_number: string;
   events: get_trackers_trackers_edges_node_events[] | null;
   delivered: boolean | null;
@@ -1388,10 +1574,10 @@ export interface get_parcel_templatesVariables {
 
 export interface get_system_connections_system_connections {
   id: string;
-  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
-  test: boolean;
-  active: boolean;
-  capabilities: string[];
+  carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  test: boolean;           // Toggle carrier connection mode
+  active: boolean;         // Disable/Hide carrier from clients
+  capabilities: string[];  // Select the capabilities of the carrier that you want to enable
   carrier_name: string;
   enabled: boolean;
 }
@@ -1414,7 +1600,7 @@ export interface get_system_connectionsVariables {
 
 export interface mutate_system_connection_mutate_system_connection_carrier {
   id: string;
-  active: boolean;
+  active: boolean;  // Disable/Hide carrier from clients
 }
 
 export interface mutate_system_connection_mutate_system_connection {
@@ -1742,13 +1928,17 @@ export interface GetTokenVariables {
 // GraphQL query operation: get_user_connections
 // ====================================================
 
+export interface get_user_connections_user_connections_GenericSettings {
+  __typename: "GenericSettings";
+}
+
 export interface get_user_connections_user_connections_AramexSettings {
   __typename: "AramexSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   account_pin: string;
@@ -1762,8 +1952,8 @@ export interface get_user_connections_user_connections_AustraliaPostSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   api_key: string;
   password: string;
   account_number: string;
@@ -1774,8 +1964,8 @@ export interface get_user_connections_user_connections_CanadaPostSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   customer_number: string;
@@ -1787,8 +1977,8 @@ export interface get_user_connections_user_connections_CanparSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
 }
@@ -1798,8 +1988,8 @@ export interface get_user_connections_user_connections_DHLExpressSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   site_id: string;
   password: string;
   account_number: string;
@@ -1830,8 +2020,8 @@ export interface get_user_connections_user_connections_DHLPolandSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   account_number: string;
@@ -1843,8 +2033,8 @@ export interface get_user_connections_user_connections_DHLUniversalSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   consumer_key: string;
   consumer_secret: string;
 }
@@ -1854,8 +2044,8 @@ export interface get_user_connections_user_connections_DicomSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   billing_account: string;
@@ -1866,8 +2056,8 @@ export interface get_user_connections_user_connections_EShipperSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
 }
@@ -1877,8 +2067,8 @@ export interface get_user_connections_user_connections_FedexSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   account_number: string;
   password: string;
   meter_number: string;
@@ -1891,13 +2081,218 @@ export interface get_user_connections_user_connections_FreightcomSettings {
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
 }
 
-export interface get_user_connections_user_connections_GenericSettings_services {
+export interface get_user_connections_user_connections_PurolatorSettings {
+  __typename: "PurolatorSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  account_number: string;
+  user_token: string | null;
+}
+
+export interface get_user_connections_user_connections_RoyalMailSettings {
+  __typename: "RoyalMailSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  client_id: string;
+  client_secret: string;
+}
+
+export interface get_user_connections_user_connections_SendleSettings {
+  __typename: "SendleSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  sendle_id: string;
+  api_key: string;
+}
+
+export interface get_user_connections_user_connections_SFExpressSettings {
+  __typename: "SFExpressSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  partner_id: string;
+  check_word: string;
+}
+
+export interface get_user_connections_user_connections_TNTSettings {
+  __typename: "TNTSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  account_number: string;
+  account_country_code: string;
+}
+
+export interface get_user_connections_user_connections_UPSSettings {
+  __typename: "UPSSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  access_license_number: string;
+  account_number: string;
+  account_country_code: string;
+}
+
+export interface get_user_connections_user_connections_USPSSettings {
+  __typename: "USPSSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  mailer_id: string | null;
+  customer_registration_id: string | null;
+  logistics_manager_mailer_id: string | null;
+}
+
+export interface get_user_connections_user_connections_USPSInternationalSettings {
+  __typename: "USPSInternationalSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  mailer_id: string | null;
+  customer_registration_id: string | null;
+  logistics_manager_mailer_id: string | null;
+}
+
+export interface get_user_connections_user_connections_YanwenSettings {
+  __typename: "YanwenSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  customer_number: string;
+  license_key: string;
+}
+
+export interface get_user_connections_user_connections_YunExpressSettings {
+  __typename: "YunExpressSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  customer_number: string;
+  api_secret: string;
+}
+
+export type get_user_connections_user_connections = get_user_connections_user_connections_GenericSettings | get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
+
+export interface get_user_connections {
+  user_connections: get_user_connections_user_connections[];
+}
+
+export interface get_user_connectionsVariables {
+  test?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_user_connections_with_generics
+// ====================================================
+
+export interface get_user_connections_with_generics_user_connections_AramexSettings {
+  __typename: "AramexSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  account_pin: string;
+  account_entity: string;
+  account_number: string;
+  account_country_code: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_AustraliaPostSettings {
+  __typename: "AustraliaPostSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  api_key: string;
+  password: string;
+  account_number: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_CanadaPostSettings {
+  __typename: "CanadaPostSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  customer_number: string;
+  contract_id: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_CanparSettings {
+  __typename: "CanparSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_DHLExpressSettings {
+  __typename: "DHLExpressSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  site_id: string;
+  password: string;
+  account_number: string;
+  account_country_code: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_DHLPolandSettings_services {
   id: string;  // The ID of the object.
   active: boolean | null;
   service_name: string;
@@ -1916,7 +2311,98 @@ export interface get_user_connections_user_connections_GenericSettings_services 
   international: boolean | null;
 }
 
-export interface get_user_connections_user_connections_GenericSettings_label_template {
+export interface get_user_connections_with_generics_user_connections_DHLPolandSettings {
+  __typename: "DHLPolandSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  account_number: string;
+  services: get_user_connections_with_generics_user_connections_DHLPolandSettings_services[] | null;
+}
+
+export interface get_user_connections_with_generics_user_connections_DHLUniversalSettings {
+  __typename: "DHLUniversalSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  consumer_key: string;
+  consumer_secret: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_DicomSettings {
+  __typename: "DicomSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+  billing_account: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_EShipperSettings {
+  __typename: "EShipperSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_FedexSettings {
+  __typename: "FedexSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  account_number: string;
+  password: string;
+  meter_number: string;
+  user_key: string;
+  account_country_code: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_FreightcomSettings {
+  __typename: "FreightcomSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  username: string;
+  password: string;
+}
+
+export interface get_user_connections_with_generics_user_connections_GenericSettings_services {
+  id: string;  // The ID of the object.
+  active: boolean | null;
+  service_name: string;
+  service_code: string;
+  description: string | null;
+  cost: number | null;
+  currency: ServiceLevelCurrency | null;
+  estimated_transit_days: number | null;
+  max_weight: number | null;
+  max_width: number | null;
+  max_height: number | null;
+  max_length: number | null;
+  weight_unit: ServiceLevelWeightUnit | null;
+  dimension_unit: ServiceLevelDimensionUnit | null;
+  domicile: boolean | null;
+  international: boolean | null;
+}
+
+export interface get_user_connections_with_generics_user_connections_GenericSettings_label_template {
   id: string;  // The ID of the object.
   alias: string;
   template: string;
@@ -1926,87 +2412,87 @@ export interface get_user_connections_user_connections_GenericSettings_label_tem
   description: string | null;
 }
 
-export interface get_user_connections_user_connections_GenericSettings {
+export interface get_user_connections_with_generics_user_connections_GenericSettings {
   __typename: "GenericSettings";
   id: string;
-  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_id: string;           // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  verbose_name: string;
-  custom_carrier_name: string;
-  test: boolean;
-  active: boolean;
+  display_name: string;         // Carrier display name
+  custom_carrier_name: string;  // Unique carrier slug, lowercase alphanumeric characters and underscores only
+  test: boolean;                // Toggle carrier connection mode
+  active: boolean;              // Disable/Hide carrier from clients
   account_country_code: string;
-  services: get_user_connections_user_connections_GenericSettings_services[] | null;
-  label_template: get_user_connections_user_connections_GenericSettings_label_template | null;
+  services: get_user_connections_with_generics_user_connections_GenericSettings_services[] | null;
+  label_template: get_user_connections_with_generics_user_connections_GenericSettings_label_template | null;
   metadata: any | null;
 }
 
-export interface get_user_connections_user_connections_PurolatorSettings {
+export interface get_user_connections_with_generics_user_connections_PurolatorSettings {
   __typename: "PurolatorSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   account_number: string;
   user_token: string | null;
 }
 
-export interface get_user_connections_user_connections_RoyalMailSettings {
+export interface get_user_connections_with_generics_user_connections_RoyalMailSettings {
   __typename: "RoyalMailSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   client_id: string;
   client_secret: string;
 }
 
-export interface get_user_connections_user_connections_SendleSettings {
+export interface get_user_connections_with_generics_user_connections_SendleSettings {
   __typename: "SendleSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   sendle_id: string;
   api_key: string;
 }
 
-export interface get_user_connections_user_connections_SFExpressSettings {
+export interface get_user_connections_with_generics_user_connections_SFExpressSettings {
   __typename: "SFExpressSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   partner_id: string;
   check_word: string;
 }
 
-export interface get_user_connections_user_connections_TNTSettings {
+export interface get_user_connections_with_generics_user_connections_TNTSettings {
   __typename: "TNTSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   account_number: string;
   account_country_code: string;
 }
 
-export interface get_user_connections_user_connections_UPSSettings {
+export interface get_user_connections_with_generics_user_connections_UPSSettings {
   __typename: "UPSSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   access_license_number: string;
@@ -2014,13 +2500,13 @@ export interface get_user_connections_user_connections_UPSSettings {
   account_country_code: string;
 }
 
-export interface get_user_connections_user_connections_USPSSettings {
+export interface get_user_connections_with_generics_user_connections_USPSSettings {
   __typename: "USPSSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   mailer_id: string | null;
@@ -2028,13 +2514,13 @@ export interface get_user_connections_user_connections_USPSSettings {
   logistics_manager_mailer_id: string | null;
 }
 
-export interface get_user_connections_user_connections_USPSInternationalSettings {
+export interface get_user_connections_with_generics_user_connections_USPSInternationalSettings {
   __typename: "USPSInternationalSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   username: string;
   password: string;
   mailer_id: string | null;
@@ -2042,35 +2528,35 @@ export interface get_user_connections_user_connections_USPSInternationalSettings
   logistics_manager_mailer_id: string | null;
 }
 
-export interface get_user_connections_user_connections_YanwenSettings {
+export interface get_user_connections_with_generics_user_connections_YanwenSettings {
   __typename: "YanwenSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   customer_number: string;
   license_key: string;
 }
 
-export interface get_user_connections_user_connections_YunExpressSettings {
+export interface get_user_connections_with_generics_user_connections_YunExpressSettings {
   __typename: "YunExpressSettings";
   id: string;
   carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  test: boolean;
-  active: boolean;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
   customer_number: string;
   api_secret: string;
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_AramexSettings | get_user_connections_user_connections_AustraliaPostSettings | get_user_connections_user_connections_CanadaPostSettings | get_user_connections_user_connections_CanparSettings | get_user_connections_user_connections_DHLExpressSettings | get_user_connections_user_connections_DHLPolandSettings | get_user_connections_user_connections_DHLUniversalSettings | get_user_connections_user_connections_DicomSettings | get_user_connections_user_connections_EShipperSettings | get_user_connections_user_connections_FedexSettings | get_user_connections_user_connections_FreightcomSettings | get_user_connections_user_connections_GenericSettings | get_user_connections_user_connections_PurolatorSettings | get_user_connections_user_connections_RoyalMailSettings | get_user_connections_user_connections_SendleSettings | get_user_connections_user_connections_SFExpressSettings | get_user_connections_user_connections_TNTSettings | get_user_connections_user_connections_UPSSettings | get_user_connections_user_connections_USPSSettings | get_user_connections_user_connections_USPSInternationalSettings | get_user_connections_user_connections_YanwenSettings | get_user_connections_user_connections_YunExpressSettings;
+export type get_user_connections_with_generics_user_connections = get_user_connections_with_generics_user_connections_AramexSettings | get_user_connections_with_generics_user_connections_AustraliaPostSettings | get_user_connections_with_generics_user_connections_CanadaPostSettings | get_user_connections_with_generics_user_connections_CanparSettings | get_user_connections_with_generics_user_connections_DHLExpressSettings | get_user_connections_with_generics_user_connections_DHLPolandSettings | get_user_connections_with_generics_user_connections_DHLUniversalSettings | get_user_connections_with_generics_user_connections_DicomSettings | get_user_connections_with_generics_user_connections_EShipperSettings | get_user_connections_with_generics_user_connections_FedexSettings | get_user_connections_with_generics_user_connections_FreightcomSettings | get_user_connections_with_generics_user_connections_GenericSettings | get_user_connections_with_generics_user_connections_PurolatorSettings | get_user_connections_with_generics_user_connections_RoyalMailSettings | get_user_connections_with_generics_user_connections_SendleSettings | get_user_connections_with_generics_user_connections_SFExpressSettings | get_user_connections_with_generics_user_connections_TNTSettings | get_user_connections_with_generics_user_connections_UPSSettings | get_user_connections_with_generics_user_connections_USPSSettings | get_user_connections_with_generics_user_connections_USPSInternationalSettings | get_user_connections_with_generics_user_connections_YanwenSettings | get_user_connections_with_generics_user_connections_YunExpressSettings;
 
-export interface get_user_connections {
-  user_connections: get_user_connections_user_connections[];
+export interface get_user_connections_with_generics {
+  user_connections: get_user_connections_with_generics_user_connections[];
 }
 
-export interface get_user_connectionsVariables {
+export interface get_user_connections_with_genericsVariables {
   test?: boolean | null;
 }
 
@@ -2102,17 +2588,20 @@ export interface GetUser {
 // GraphQL mutation operation: update_user
 // ====================================================
 
+export interface update_user_update_user_user {
+  full_name: string;
+  is_staff: boolean;  // Designates whether the user can log into this admin site.
+  last_login: any | null;
+  date_joined: any;
+}
+
 export interface update_user_update_user_errors {
   field: string;
   messages: string[];
 }
 
 export interface update_user_update_user {
-  email: string | null;
-  full_name: string | null;
-  is_staff: boolean | null;                                  // Designates whether the user can log into this admin site.
-  last_login: any | null;
-  date_joined: any | null;
+  user: update_user_update_user_user | null;
   errors: (update_user_update_user_errors | null)[] | null;  // May contain more than one error for same field.
 }
 
@@ -2199,6 +2688,61 @@ export interface confirm_email {
 
 export interface confirm_emailVariables {
   data: ConfirmEmailInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: request_email_change
+// ====================================================
+
+export interface request_email_change_request_email_change_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface request_email_change_request_email_change {
+  errors: (request_email_change_request_email_change_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface request_email_change {
+  request_email_change: request_email_change_request_email_change | null;
+}
+
+export interface request_email_changeVariables {
+  data: RequestEmailChangeInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: confirm_email_change
+// ====================================================
+
+export interface confirm_email_change_confirm_email_change_user {
+  email: string;
+}
+
+export interface confirm_email_change_confirm_email_change_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface confirm_email_change_confirm_email_change {
+  user: confirm_email_change_confirm_email_change_user | null;
+  errors: (confirm_email_change_confirm_email_change_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface confirm_email_change {
+  confirm_email_change: confirm_email_change_confirm_email_change | null;
+}
+
+export interface confirm_email_changeVariables {
+  data: ConfirmEmailChangeInput;
 }
 
 
@@ -2330,7 +2874,7 @@ export interface get_eventsVariables {
 // GraphQL query operation: get_order
 // ====================================================
 
-export interface get_order_order_shipping_address {
+export interface get_order_order_shipping_to {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -2534,14 +3078,15 @@ export interface get_order_order_shipments {
   created_at: any;
   updated_at: any;
   created_by: get_order_order_shipments_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_order_order_shipments_recipient;
   shipper: get_order_order_shipments_shipper;
   parcels: get_order_order_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -2561,7 +3106,7 @@ export interface get_order_order {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_order_order_shipping_address;
+  shipping_to: get_order_order_shipping_to;
   line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
@@ -2595,7 +3140,7 @@ export interface get_orders_orders_pageInfo {
   endCursor: string | null;    // When paginating forwards, the cursor to continue.
 }
 
-export interface get_orders_orders_edges_node_shipping_address {
+export interface get_orders_orders_edges_node_shipping_to {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -2799,14 +3344,15 @@ export interface get_orders_orders_edges_node_shipments {
   created_at: any;
   updated_at: any;
   created_by: get_orders_orders_edges_node_shipments_created_by;
-  status: ShipmentStatus;
+  status: ShipmentStatusEnum;
   recipient: get_orders_orders_edges_node_shipments_recipient;
   shipper: get_orders_orders_edges_node_shipments_shipper;
   parcels: get_orders_orders_edges_node_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -2826,7 +3372,7 @@ export interface get_orders_orders_edges_node {
   order_id: string;
   source: string | null;
   status: OrderStatus;
-  shipping_address: get_orders_orders_edges_node_shipping_address;
+  shipping_to: get_orders_orders_edges_node_shipping_to;
   line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;
@@ -2853,8 +3399,8 @@ export interface get_orders {
 export interface get_ordersVariables {
   offset?: number | null;
   first?: number | null;
-  order_id?: string | null;
-  source?: string | null;
+  order_id?: (string | null)[] | null;
+  source?: (string | null)[] | null;
   status?: (string | null)[] | null;
   address?: string | null;
   created_after?: any | null;
@@ -3337,13 +3883,13 @@ export enum LabelTypeEnum {
 }
 
 // An enumeration.
-export enum ShipmentStatus {
+export enum ShipmentStatusEnum {
   cancelled = "cancelled",
-  created = "created",
   delivered = "delivered",
+  draft = "draft",
+  in_transit = "in_transit",
   purchased = "purchased",
   shipped = "shipped",
-  transit = "transit",
 }
 
 // An enumeration.
@@ -3494,7 +4040,7 @@ export enum currency {
 }
 
 // An enumeration.
-export enum TrackerStatus {
+export enum TrackerStatusEnum {
   delivered = "delivered",
   in_transit = "in_transit",
   incident = "incident",
@@ -3669,14 +4215,15 @@ export enum LabelTemplateTemplateType {
 // An enumeration.
 export enum OrderStatus {
   cancelled = "cancelled",
-  created = "created",
   delivered = "delivered",
   fulfilled = "fulfilled",
   partial = "partial",
+  unfulfilled = "unfulfilled",
 }
 
 // An enumeration.
 export enum MetadataObjectType {
+  app = "app",
   carrier = "carrier",
   commodity = "commodity",
   order = "order",
@@ -3713,6 +4260,7 @@ export interface CreateConnectionInput {
 
 // null
 export interface CreateAramexSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -3727,6 +4275,7 @@ export interface CreateAramexSettings {
 
 // null
 export interface CreateAustraliaPostSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3738,6 +4287,7 @@ export interface CreateAustraliaPostSettings {
 
 // null
 export interface CreateCanadaPostSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3750,6 +4300,7 @@ export interface CreateCanadaPostSettings {
 
 // null
 export interface CreateCanparSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3760,6 +4311,7 @@ export interface CreateCanparSettings {
 
 // null
 export interface CreateDHLExpressSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -3772,6 +4324,7 @@ export interface CreateDHLExpressSettings {
 
 // null
 export interface CreateDHLPolandSettings {
+  id?: string | null;
   services?: (ServiceLevel | null)[] | null;
   carrier_id: string;
   test?: boolean | null;
@@ -3803,6 +4356,7 @@ export interface ServiceLevel {
 
 // null
 export interface CreateDHLUniversalSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3813,6 +4367,7 @@ export interface CreateDHLUniversalSettings {
 
 // null
 export interface CreateDicomSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3824,6 +4379,7 @@ export interface CreateDicomSettings {
 
 // null
 export interface CreateEShipperSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3834,6 +4390,7 @@ export interface CreateEShipperSettings {
 
 // null
 export interface CreateFedexSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -3847,6 +4404,7 @@ export interface CreateFedexSettings {
 
 // null
 export interface CreateFreightcomSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3857,6 +4415,7 @@ export interface CreateFreightcomSettings {
 
 // null
 export interface CreateGenericSettings {
+  id?: string | null;
   account_country_code?: string | null;
   services?: (ServiceLevel | null)[] | null;
   label_template?: LabelTemplate | null;
@@ -3864,8 +4423,9 @@ export interface CreateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  verbose_name: string;
+  display_name: string;
   custom_carrier_name: string;
+  account_number?: string | null;
 }
 
 // null
@@ -3880,6 +4440,7 @@ export interface LabelTemplate {
 
 // null
 export interface CreatePurolatorSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3892,6 +4453,7 @@ export interface CreatePurolatorSettings {
 
 // null
 export interface CreateRoyalMailSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3902,6 +4464,7 @@ export interface CreateRoyalMailSettings {
 
 // null
 export interface CreateSendleSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3912,6 +4475,7 @@ export interface CreateSendleSettings {
 
 // null
 export interface CreateSFExpressSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3922,6 +4486,7 @@ export interface CreateSFExpressSettings {
 
 // null
 export interface CreateTNTSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id: string;
   test?: boolean | null;
@@ -3934,6 +4499,7 @@ export interface CreateTNTSettings {
 
 // null
 export interface CreateUPSSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id: string;
   test?: boolean | null;
@@ -3947,6 +4513,7 @@ export interface CreateUPSSettings {
 
 // null
 export interface CreateUSPSSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3960,6 +4527,7 @@ export interface CreateUSPSSettings {
 
 // null
 export interface CreateUSPSInternationalSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3973,6 +4541,7 @@ export interface CreateUSPSInternationalSettings {
 
 // null
 export interface CreateYanwenSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -3983,6 +4552,7 @@ export interface CreateYanwenSettings {
 
 // null
 export interface CreateYunExpressSettings {
+  id?: string | null;
   carrier_id: string;
   test?: boolean | null;
   active?: boolean | null;
@@ -4021,6 +4591,7 @@ export interface UpdateConnectionInput {
 
 // null
 export interface UpdateAramexSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4035,6 +4606,7 @@ export interface UpdateAramexSettings {
 
 // null
 export interface UpdateAustraliaPostSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4046,6 +4618,7 @@ export interface UpdateAustraliaPostSettings {
 
 // null
 export interface UpdateCanadaPostSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4058,6 +4631,7 @@ export interface UpdateCanadaPostSettings {
 
 // null
 export interface UpdateCanparSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4068,6 +4642,7 @@ export interface UpdateCanparSettings {
 
 // null
 export interface UpdateDHLExpressSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4080,6 +4655,7 @@ export interface UpdateDHLExpressSettings {
 
 // null
 export interface UpdateDHLPolandSettings {
+  id?: string | null;
   services?: (PartialServiceLevel | null)[] | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4112,6 +4688,7 @@ export interface PartialServiceLevel {
 
 // null
 export interface UpdateDHLUniversalSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4122,6 +4699,7 @@ export interface UpdateDHLUniversalSettings {
 
 // null
 export interface UpdateDicomSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4133,6 +4711,7 @@ export interface UpdateDicomSettings {
 
 // null
 export interface UpdateEShipperSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4143,6 +4722,7 @@ export interface UpdateEShipperSettings {
 
 // null
 export interface UpdateFedexSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4156,6 +4736,7 @@ export interface UpdateFedexSettings {
 
 // null
 export interface UpdateFreightcomSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4166,6 +4747,7 @@ export interface UpdateFreightcomSettings {
 
 // null
 export interface UpdateGenericSettings {
+  id?: string | null;
   account_country_code?: string | null;
   services?: (PartialServiceLevel | null)[] | null;
   label_template?: PartialLabelTemplate | null;
@@ -4173,8 +4755,9 @@ export interface UpdateGenericSettings {
   test?: boolean | null;
   active?: boolean | null;
   metadata?: any | null;
-  verbose_name?: string | null;
+  display_name?: string | null;
   custom_carrier_name?: string | null;
+  account_number?: string | null;
 }
 
 // null
@@ -4190,6 +4773,7 @@ export interface PartialLabelTemplate {
 
 // null
 export interface UpdatePurolatorSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4202,6 +4786,7 @@ export interface UpdatePurolatorSettings {
 
 // null
 export interface UpdateRoyalMailSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4212,6 +4797,7 @@ export interface UpdateRoyalMailSettings {
 
 // null
 export interface UpdateSendleSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4222,6 +4808,7 @@ export interface UpdateSendleSettings {
 
 // null
 export interface UpdateSFExpressSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4232,6 +4819,7 @@ export interface UpdateSFExpressSettings {
 
 // null
 export interface UpdateTNTSettings {
+  id?: string | null;
   account_country_code: string;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4244,6 +4832,7 @@ export interface UpdateTNTSettings {
 
 // null
 export interface UpdateUPSSettings {
+  id?: string | null;
   account_country_code?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
@@ -4257,6 +4846,7 @@ export interface UpdateUPSSettings {
 
 // null
 export interface UpdateUSPSSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4270,6 +4860,7 @@ export interface UpdateUSPSSettings {
 
 // null
 export interface UpdateUSPSInternationalSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4283,6 +4874,7 @@ export interface UpdateUSPSInternationalSettings {
 
 // null
 export interface UpdateYanwenSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4293,6 +4885,7 @@ export interface UpdateYanwenSettings {
 
 // null
 export interface UpdateYunExpressSettings {
+  id?: string | null;
   carrier_id?: string | null;
   test?: boolean | null;
   active?: boolean | null;
@@ -4309,17 +4902,50 @@ export interface DeleteConnectionInput {
 
 // null
 export interface CreateOrganizationInput {
-  id?: string | null;
   name: string;
-  slug: string;
   clientMutationId?: string | null;
 }
 
 // null
 export interface UpdateOrganizationInput {
-  id?: string | null;
+  id: string;
   name?: string | null;
-  slug?: string | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ChangeOrganizationOwnerInput {
+  org_id: string;
+  email: string;
+  password: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface SetOrganizationUserRolesInput {
+  org_id: string;
+  user_id: string;
+  roles: string[];
+  clientMutationId?: string | null;
+}
+
+// null
+export interface SendOrganizationInvitesInput {
+  org_id: string;
+  emails: (string | null)[];
+  redirect_url: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface AcceptOrganizationInvitationInput {
+  guid: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface DeleteOrganizationInvitationInput {
+  id: string;
   clientMutationId?: string | null;
 }
 
@@ -4627,12 +5253,12 @@ export interface DiscardParcelInput {
 // null
 export interface TokenMutationInput {
   refresh?: boolean | null;
+  password?: string | null;
   clientMutationId?: string | null;
 }
 
 // null
 export interface UpdateUserInput {
-  email?: string | null;
   full_name?: string | null;
   is_active?: boolean | null;
   clientMutationId?: string | null;
@@ -4652,11 +5278,26 @@ export interface RegisterUserInput {
   full_name?: string | null;
   password1: string;
   password2: string;
+  redirect_url: string;
   clientMutationId?: string | null;
 }
 
 // null
 export interface ConfirmEmailInput {
+  token: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface RequestEmailChangeInput {
+  email: string;
+  password: string;
+  redirect_url: string;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface ConfirmEmailChangeInput {
   token: string;
   clientMutationId?: string | null;
 }

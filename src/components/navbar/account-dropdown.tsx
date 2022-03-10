@@ -1,8 +1,8 @@
 import React, { useState, useRef, useContext } from 'react';
 import { UserData } from '@/context/user-provider';
-import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { APIReference } from '@/context/references-provider';
+import AppLink from '@/components/app-link';
 
 
 interface AccountDropdownComponent { }
@@ -44,15 +44,13 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
           <h6 className="is-size-7 mt-2 px-4 has-text-weight-semibold">{user?.email}</h6>
 
           <div className="options-items">
-            <Link href="/settings/account">
-              <a className="options-item">
-                <i className="fas fa-cog"></i>
-                <div className="option-content">
-                  <span>My Account</span>
-                  <span>Manage your account</span>
-                </div>
-              </a>
-            </Link>
+            <AppLink href="/settings/account" className="options-item">
+              <i className="fas fa-cog"></i>
+              <div className="option-content">
+                <span>My Account</span>
+                <span>Manage your account</span>
+              </div>
+            </AppLink>
 
             {(user?.is_staff === true) && <a href={ADMIN} target="_blank" rel="noreferrer" className="options-item">
               <i className="fas fa-tools"></i>

@@ -1,3 +1,4 @@
+import { PURPLSHIP_API } from '@/client/context';
 import { ShipmentType } from '@/lib/types';
 import { ShipmentLabelTypeEnum } from '@purplship/rest/index';
 import React, { useState } from 'react';
@@ -24,15 +25,6 @@ const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
     setIsActive(false);
     setShipment(undefined);
   };
-  const conputeSource = (shipment: ShipmentType) => {
-    const label_type = shipment?.label_type || ShipmentLabelTypeEnum.Pdf;
-    const format = {
-      [ShipmentLabelTypeEnum.Pdf]: 'application/pdf',
-      [ShipmentLabelTypeEnum.Zpl]: 'application/zpl'
-    }[label_type];
-
-    return `data:${format};base64, ${encodeURI(shipment.label as string)}`;
-  };
 
   return (
     <>
@@ -44,7 +36,12 @@ const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
         <div className="modal-background" onClick={close}></div>
         <div className="label-container">
 
-          {isActive && <iframe src={conputeSource(shipment as ShipmentType)} height="100%" width="100%"></iframe>}
+          {isActive && <iframe
+            width="100%"
+            height="100%"
+            src={`${PURPLSHIP_API}${shipment?.label_url}`}
+          >
+          </iframe>}
 
         </div>
 

@@ -23,4 +23,8 @@ const LoadingProvider: React.FC = ({ children }) => {
   )
 };
 
+export function useLoader() {
+  return React.useContext(Loading);
+}
+
 export default LoadingProvider;

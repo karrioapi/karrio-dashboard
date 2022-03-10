@@ -8,7 +8,7 @@ type OperationType = {
   onConfirm: () => Promise<any>;
 };
 type ConfirmModalContextType = {
-  confirmDeletion: (operation: OperationType) => void,
+  confirm: (operation: OperationType) => void,
 };
 
 export const ConfirmModalContext = React.createContext<ConfirmModalContextType>({} as ConfirmModalContextType);
@@ -37,14 +37,14 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
         type: NotificationType.success, message: `${operation?.label} deteled successfully!...`
       });
       close();
-    } catch (message) {
+    } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };
 
   return (
     <>
-      <ConfirmModalContext.Provider value={{ confirmDeletion }}>
+      <ConfirmModalContext.Provider value={{ confirm: confirmDeletion }}>
         {children}
       </ConfirmModalContext.Provider>
 
@@ -52,7 +52,12 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
         <div className="modal-background" onClick={close}></div>
         <form className="modal-card" onSubmit={handleSubmit}>
           <section className="modal-card-body">
-            <h3 className="subtitle is-3">Delete {operation?.label} <span className="is-size-7">({operation?.identifier})</span></h3>
+            <div className="form-floating-header p-4">
+              <span className="has-text-weight-bold is-size-6">
+                Delete {operation?.label} <span className="is-size-7">({operation?.identifier})</span>
+              </span>
+            </div>
+            <div className="p-3 my-4"></div>
 
             <div className="buttons my=2">
               <button className="button is-info is-light" onClick={close}>Cancel</button>
@@ -65,5 +70,9 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
     </>
   )
 };
+
+export function useConfirmModal() {
+  return useContext(ConfirmModalContext);
+}
 
 export default ConfirmModal;

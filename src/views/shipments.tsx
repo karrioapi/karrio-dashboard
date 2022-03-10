@@ -10,7 +10,7 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -45,10 +45,8 @@ export default function ShipmentsPage(pageProps: any) {
       (!loading) && (called ? loadMore : load)(query);
     }
 
-    useEffect(() => {
-      window.setTimeout(() => setLoading(loading), 1000);
-    });
-    useEffect(() => { fetchShipments(); }, [router.query]);
+    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
+    useEffect(() => { fetchShipments({ status: ['purchased', 'delivered', 'in_transit', 'cancelled'] }); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
     useEffect(() => {
       if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
@@ -61,7 +59,7 @@ export default function ShipmentsPage(pageProps: any) {
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
+        <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Shipments</span>
           <div>
             <ShipmentsFilter />
@@ -73,20 +71,20 @@ export default function ShipmentsPage(pageProps: any) {
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
-              <a onClick={() => !isNone(filters?.status) && fetchShipments({ status: null, offset: 0 })}>all</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['purchased', 'delivered', 'in_transit', 'cancelled']) ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['purchased', 'delivered', 'in_transit', 'cancelled'], offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('created') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('created') && fetchShipments({ status: ['created'], offset: 0 })}>created</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['purchased', 'in_transit']) ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['purchased', 'in_transit'], offset: 0 })}>purchased</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('purchased') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('purchased') && fetchShipments({ status: ['purchased'], offset: 0 })}>purchased</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('delivered') && fetchShipments({ status: ['delivered'], offset: 0 })}>delivered</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => fetchShipments({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('cancelled') && fetchShipments({ status: ['cancelled'], offset: 0 })}>cancelled</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('draft') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('draft') && fetchShipments({ status: ['draft'], offset: 0 })}>draft</a>
             </li>
           </ul>
         </div>
@@ -107,7 +105,7 @@ export default function ShipmentsPage(pageProps: any) {
               </tr>
 
               {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items" onClick={() => previewShipment(shipment.id)}>
+                <tr key={shipment.id} className="items is-clickable" onClick={() => previewShipment(shipment.id)}>
                   <td className="carrier is-vcentered has-text-centered p-1">
                     {isNone(shipment.carrier_name) && <AppBadge />}
                     {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
@@ -115,8 +113,7 @@ export default function ShipmentsPage(pageProps: any) {
                     </div>}
                     {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
                       <CarrierBadge
-                        className="has-background-primary has-text-weight-bold has-text-white-bis"
-                        style={{ margin: '1px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                        className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
                         custom_name={shipment.carrier_id as string}
                         short
                       />}
@@ -133,7 +130,7 @@ export default function ShipmentsPage(pageProps: any) {
                   <td className="recipient is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient as AddressType)}</p>
                   </td>
-                  <td className="date is-vcentered">
+                  <td className="date is-vcentered px-1">
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
                   </td>
                   <td className="action is-vcentered px-0">
@@ -157,7 +154,7 @@ export default function ShipmentsPage(pageProps: any) {
 
         </div>}
 
-        {(!loading && (shipments || []).length == 0) && <div className="card my-6">
+        {(called && !loading && (shipments || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No shipment found.</p>

@@ -3,15 +3,22 @@ import { TokenData } from '@/context/token-provider';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Loading } from '@/components/loader';
 import Image from 'next/image';
-import { isNone, p } from '@/lib/helper';
+import { isNone, isNoneOrEmpty, p } from '@/lib/helper';
+import { useRouter } from 'next/router';
+import { useAcceptInvitation } from '@/components/accept-invitation-modal';
+import { useCreateOrganizationModal } from '@/components/create-organization-modal';
 
 
 const OrganizationDropdown: React.FC = () => {
   const btn = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const { acceptInvitation } = useAcceptInvitation();
+  const { createOrganization } = useCreateOrganizationModal();
   const { authenticateOrg, ...token } = useContext(TokenData);
   const { load, organizations, organization, loading, called } = useContext(Organizations);
   const { setLoading } = useContext(Loading);
   const [active, setActive] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
   const [selected, setSelected] = useState<OrganizationType>();
 
   const handleOnClick = (e: React.MouseEvent) => {
@@ -41,6 +48,14 @@ const OrganizationDropdown: React.FC = () => {
     authenticateOrg(org.id).then(() => setLoading(false));
     setActive(false);
   };
+  const create = async () => {
+    createOrganization({
+      onChange: (org_id: string) => {
+        setActive(false);
+        return authenticateOrg(org_id);
+      }
+    });
+  };
   const checkTokenChange = useCallback((key?: string) => {
     if (called && !isNone(key) && !token.loading && (selected?.token !== key)) {
       load();
@@ -48,8 +63,16 @@ const OrganizationDropdown: React.FC = () => {
   }, [called, selected, token, load]);
 
   useEffect(() => { setSelected(organization); }, [organization]);
-  useEffect(() => { (called && !loading && load) && load(); }, [called, loading, load]);
   useEffect(() => { checkTokenChange(token?.token?.key) }, [token, checkTokenChange]);
+  useEffect(() => {
+    if (!initialized && !isNoneOrEmpty(router.query.accept_invitation)) {
+      acceptInvitation({ onChange: org_id => authenticateOrg(org_id) });
+      setInitialized(true);
+    }
+    if (router.query && isNoneOrEmpty(router.query.accept_invitation)) {
+      setInitialized(true);
+    }
+  }, [initialized, setInitialized, router.query, acceptInvitation, load]);
 
   return (
     <>
@@ -59,7 +82,7 @@ const OrganizationDropdown: React.FC = () => {
             <div className="select is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={btn}>
               <input
                 type="text"
-                className="input is-clickable"
+                className="input is-clickable is-lowercase has-text-grey has-text-weight-semibold"
                 value={selected?.name || "All Organizations"}
                 onChange={() => { }}
                 readOnly
@@ -73,12 +96,27 @@ const OrganizationDropdown: React.FC = () => {
 
           <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: '100%' }}>
             <div className="dropdown-content">
+              {/* Organization list */}
               {(organizations || []).map(org => (
-                <a key={org.id} className={`dropdown-item ${(org.id === selected?.id) ? 'is-active' : ''}`} onClick={select(org)}>
+                <a
+                  key={`org-${org?.id}-${new Date()}`}
+                  onClick={select(org)}
+                  className={`dropdown-item ${(org?.id === selected?.id) ? 'is-active' : ''}`}
+                >
                   <i className="fas fa-store"></i>
-                  <span className="px-2">{org.name}</span>
+                  <span className="px-2">{org?.name}</span>
                 </a>
               ))}
+
+              {/* Create organization action */}
+              <a
+                onClick={() => create()}
+                className="dropdown-item"
+              >
+                <i className="fas fa-plus"></i>
+                <span className="px-2">New organization</span>
+              </a>
+
             </div>
           </div>
         </div>}

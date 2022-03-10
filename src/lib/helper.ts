@@ -1,11 +1,9 @@
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { AddressType, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import moment from "moment";
+import { useRouter } from "next/router";
 import React from "react";
-
-
-const DATE_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit' });
-const DATE_TIME_FORMAT = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit', hour: "2-digit", minute: "2-digit" });
-const DATE_TIME_FORMAT_LONG = new Intl.DateTimeFormat("default", { month: 'short', day: '2-digit', hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
 
 export function formatRef(s?: string): string {
@@ -13,15 +11,15 @@ export function formatRef(s?: string): string {
 }
 
 export function formatDate(date_string: string): string {
-  return DATE_FORMAT.format(new Date(date_string));
+  return moment(date_string).format('ll');
 }
 
 export function formatDateTime(date_string: string): string {
-  return DATE_TIME_FORMAT.format(new Date(date_string));
+  return moment(date_string).format('lll');
 }
 
 export function formatDateTimeLong(date_string: string): string {
-  return DATE_TIME_FORMAT_LONG.format(new Date(date_string));
+  return moment(date_string).format('llll');
 }
 
 export function formatDayDate(date_string: string): string {
@@ -110,9 +108,9 @@ export function formatDimension(parcel?: Partial<ParcelType> | null): string {
     const { dimension_unit, height, length, width } = parcel;
     let formatted = formatValues(' x ', width, height, length);
 
-    return `Dimensions: ${formatted} ${dimension_unit}`;
+    return `${formatted} ${dimension_unit}`;
   }
-  return 'Dimensions: None specified...';
+  return '';
 }
 
 export function formatWeight(data?: { weight: number, weight_unit: string } | any): string {
@@ -120,9 +118,9 @@ export function formatWeight(data?: { weight: number, weight_unit: string } | an
 
     const { weight, weight_unit } = data;
 
-    return `Weight: ${weight} ${weight_unit}`;
+    return `${weight} ${weight_unit}`;
   }
-  return 'Weight: None specified...';
+  return '';
 }
 
 export function formatCarrierSlug(name?: string) {
@@ -248,13 +246,32 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
     .replaceAll('//', '/');
 }
 
+export function useLocation() {
+  const router = useRouter();
+
+  const updateUrlParam = (param: string, value: string) => {
+    router.push({
+      pathname: location.pathname,
+      query: { ...router.query, [param]: value },
+    }, undefined, { shallow: true })
+  };
+
+  return {
+    ...router,
+    addUrlParam,
+    updateUrlParam,
+    insertUrlParam,
+    removeUrlParam,
+  };
+};
+
 export function getURLSearchParams() {
   const query = new URLSearchParams(location.search);
   return [...query.keys() as any].reduce(
     (acc, key) => ({ ...acc, [key]: query.get(key) }),
     {}
   );
-}
+};
 
 export function insertUrlParam(params: {} | any) {
   if (window.history.pushState) {
@@ -301,4 +318,41 @@ export function validityCheck(nested?: (e: React.FormEvent | any) => void) {
 
     return nested && nested(e);
   }
+}
+
+export function failsafe(fn: () => any, defaultValue: any = null) {
+  try {
+    return fn();
+  } catch (e) {
+    return defaultValue;
+  }
+}
+
+export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
+  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(
+    async (resolve, reject) => {
+      const { data } = await request({ ...options, onError: errors => reject(errors.graphQLErrors || errors) });
+      if (data && (data[operation] as any).errors) {
+        const errors = (data[operation] as any).errors
+          .map((error: { field: string, messages: string[] }) => (
+            new ErrorType(error.field, error.messages)
+          ));
+
+        reject(errors);
+      }
+
+      resolve((data ? data[operation] : null) as T[typeof operation]);
+    });
+}
+
+export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
+  let timer: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(null, args); }, timeout);
+  };
+};
+
+export function isListEqual<T>(list1: T[], list2: T[]) {
+  return list1.length === list2.length && list1.every((item, index) => item === list2[index]);
 }

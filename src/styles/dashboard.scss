@@ -47,13 +47,14 @@ Purplship custom styling
     width: 10%;
   }
   .recipient {
-    min-width: 40%;
+    min-width: 10vw;
   }
   .date {
-    width: 13%;
+    width: 15%;
+    min-width: 130px;
   }
   .action {
-    width: 15%;
+    width: 13%;
     min-width: 160px;
   }
 
@@ -62,7 +63,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 
@@ -128,6 +129,14 @@ Purplship custom styling
   .date {
     width: 20%;
   }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #fafafa;
+  }
 }
 
 .events-table {
@@ -137,7 +146,15 @@ Purplship custom styling
     width: 20%;
   }
   .date {
-    width: 15%;
+    width: 20%;
+  }
+
+  tbody > tr.items {
+    cursor: pointer;
+  }
+
+  tbody > tr.items:hover {
+    background-color: #fafafa;
   }
 }
 
@@ -157,6 +174,7 @@ Purplship custom styling
   }
   .date {
     width: 15%;
+    min-width: 130px;
   }
   .action {
     width: 5%;
@@ -168,7 +186,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 
@@ -181,6 +199,7 @@ Purplship custom styling
   }
   .last-event {
     width: 15%;
+    min-width: 130px;
   }
   .action {
     width: 20%;
@@ -189,20 +208,24 @@ Purplship custom styling
 }
 
 .orders-table {
+  .selector {
+    width: 3%;
+  }
   .order {
     width: 15%;
   }
-  .source {
-    width: 8%;
+  .items {
+    width: 20%;
   }
   .status {
     width: 10%;
   }
   .customer {
-    min-width: 40%;
+    min-width: 30%;
   }
   .date {
-    width: 17%;
+    width: 15%;
+    min-width: 130px;
   }
 
   tbody > tr.items {
@@ -210,7 +233,7 @@ Purplship custom styling
   }
 
   tbody > tr.items:hover {
-    background-color: #eeeeee;
+    background-color: #fafafa;
   }
 }
 
@@ -226,6 +249,23 @@ Purplship custom styling
   }
   .date {
     width: 15%;
+    min-width: 130px;
+  }
+}
+
+.members-table {
+  .member {
+    width: 40%;
+  }
+  .role {
+    width: 30%;
+  }
+  .last-login {
+    width: 20%;
+    min-width: 130px;
+  }
+  .action {
+    width: 10%;
   }
 }
 

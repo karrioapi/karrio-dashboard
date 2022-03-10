@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { addUrlParam, formatDayDate, isNone, p, removeUrlParam } from '@/lib/helper';
+import { formatDayDate, isNone, p, useLocation } from '@/lib/helper';
 import { ListStatusEnum } from '@purplship/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { TrackerType, TrackingEventType } from '@/lib/types';
@@ -15,6 +15,7 @@ export const TrackingPreviewContext = React.createContext<TrackingPreviewContext
 
 const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
   const link = useRef<HTMLAnchorElement>(null);
+  const { addUrlParam, removeUrlParam } = useLocation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [sharingLink, setSharingLink] = useState<string>('');
   const [key, setKey] = useState<string>(`tracker-${Date.now()}`);

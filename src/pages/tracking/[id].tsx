@@ -56,10 +56,10 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
                 {(tracker?.status === 'delivered') &&
                   <p className="card-footer-item has-background-success has-text-white is-size-4">Delivered</p>}
 
-                {(tracker?.status === 'in-transit') &&
+                {(tracker?.status === 'in_transit') &&
                   <p className="card-footer-item has-background-info has-text-white is-size-4">In-Transit</p>}
 
-                {(tracker?.status !== 'delivered' && tracker?.status !== 'in-transit') &&
+                {(tracker?.status !== 'delivered' && tracker?.status !== 'in_transit') &&
                   <p className="card-footer-item has-background-grey-dark has-text-white is-size-4">Pending</p>}
 
               </footer>

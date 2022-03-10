@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '@/components/navbar/navbar';
 import Notifier from '@/components/notifier';
 import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
+import Footer from '@/components/footer';
 
 
 const DashboardLayout: React.FC = ({ children }) => {
@@ -9,18 +10,19 @@ const DashboardLayout: React.FC = ({ children }) => {
     <>
       <ExpandedSidebar />
 
-      <div className="plex-wrapper pb-6">
-        <div className="wrapper-inner mb-6">
+      <div className="plex-wrapper is-flex pb-6">
+        <div className="wrapper-inner mb-3">
           <Notifier />
           <Navbar />
 
-          <div className="dashboard-content is-relative" style={{ zIndex: 'auto', paddingTop: 0 }}>
+          <div className="dashboard-content is-relative" style={{ zIndex: 'auto', paddingTop: 0, height: '100%' }}>
             {children}
           </div>
 
         </div>
       </div>
 
+      <Footer />
     </>
   )
 };

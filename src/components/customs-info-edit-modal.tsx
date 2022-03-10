@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { addUrlParam, isNone, removeUrlParam } from '@/lib/helper';
+import { isNone, useLocation } from '@/lib/helper';
 import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import InputField from '@/components/generic/input-field';
 import { CustomsTemplateType, CustomsType, NotificationType, TemplateType } from '@/lib/types';
@@ -31,6 +31,7 @@ interface CustomsInfoEditModalComponent { }
 const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
+  const { addUrlParam, removeUrlParam } = useLocation();
   const { createCustomsTemplate, updateCustomsTemplate } = useContext(CustomsMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`customs-info-${Date.now()}`);

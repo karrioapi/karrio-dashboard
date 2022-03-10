@@ -8,6 +8,7 @@ import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/components/commodity-list-editor';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
+import ParcelDescription from './descriptions/parcel-description';
 
 type ParcelCollection = Record<string, ParcelType>;
 type ParcelItemCollection = Record<string, CommodityType[]>;
@@ -129,9 +130,15 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
           <article className="panel is-white is-shadowless my-2 px-1 is-relative">
             {index > 0 && <hr className="my-1" style={{ height: '1px' }} />}
 
-            {!isExpanded[uid] && <a>
-              <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setIsExpanded({ ...isExpanded, [uid]: true })}>
-                <span className="is-size-6 my-1 has-text-weight-semibold has-text-grey">{formatDimension(parcel)}</span>
+            {!isExpanded[uid] && <div className="is-clickable">
+              <div className="is-flex is-justify-content-space-between mb-4"
+                onClick={() => setIsExpanded({ ...isExpanded, [uid]: true })}>
+                <div>
+                  <ParcelDescription
+                    parcel={parcel}
+                    suffix={<span className="tag ml-1 has-text-weight-bold">{index + 1}</span>}
+                  />
+                </div>
                 {hasErrors[uid] && <span className="has-text-danger is-size-7" style={{ position: 'absolute', zIndex: 1, left: 4, bottom: -1 }}>
                   Please correct parcel details errors
                 </span>}
@@ -147,8 +154,8 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
                     <i className="fas fa-chevron-down is-size-6"></i>
                   </span>
                 </span>
-              </p>
-            </a>}
+              </div>
+            </div>}
 
             <div style={(isExpanded[uid] ? {} : { position: 'absolute', top: 0, bottom: 10, zIndex: -1 })}
               onChange={(e: any) => {

@@ -43,7 +43,7 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
         code: ServerErrorCode.API_CONNECTION_ERROR,
         message: `
           Server (${PURPLSHIP_API}) unreachable.
-          Please make sure that NEXT_PUBLIC_PURPLSHIP_API_URL is set to a running API instance
+          Please make sure taht the API is running and reachable.
         `
       })
       reject({ error });
@@ -92,15 +92,27 @@ function dataQuery(org_id?: string) {
     name
     slug
     token
-    user {
+    current_user {
       email
       full_name
       is_admin
+      is_staff
+      is_owner
+      last_login
     }
-    users {
+    members {
       email
       full_name
       is_admin
+      is_owner
+      invitation {
+        id
+        guid
+        invitee_identifier
+        created
+        modified
+      }
+      last_login
     }
   }
   `;

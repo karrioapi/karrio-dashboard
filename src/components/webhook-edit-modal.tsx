@@ -7,7 +7,7 @@ import { Notify } from '@/components/notifier';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
-import { addUrlParam, deepEqual, isNone, removeUrlParam } from '@/lib/helper';
+import { deepEqual, isNone, useLocation } from '@/lib/helper';
 import { Loading } from '@/components/loader';
 
 type OperationType = {
@@ -38,6 +38,7 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
   ({ children, addWebhook, updateWebhook }) => {
     const { notify } = useContext(Notify);
     const { setLoading, loading } = useContext(Loading);
+    const { addUrlParam, removeUrlParam } = useLocation();
     const [isActive, setIsActive] = useState<boolean>(false);
     const [key, setKey] = useState<string>(`webhook-${Date.now()}`);
     const [isNew, setIsNew] = useState<boolean>(true);

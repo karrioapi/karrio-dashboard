@@ -21,14 +21,14 @@ const Navbar: React.FC<NavbarComponent> = () => {
         </div>
 
         <div className="field">
-          <div className="control has-icon">
-            <input type="text" className="input search-field" placeholder="Search for shipments..." />
-            <div className="form-icon">
+          <p className="control has-icons-left has-icons-right">
+            <input className="input is-small" type="email" placeholder="Search for shipments..." />
+            <span className="icon is-small is-left">
               <i className="fas fa-search"></i>
-            </div>
-            <div className="search-results has-slimscroll"></div>
-          </div>
+            </span>
+          </p>
         </div>
+
       </div>
       <div className="nav-end">
 

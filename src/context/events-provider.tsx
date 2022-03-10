@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_events, GET_EVENTS, get_events_events_edges, get_eventsVariables } from '@purplship/graphql';
 import { EventType } from '@/lib/types';
-import { insertUrlParam, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
@@ -21,6 +21,7 @@ type EventsType = LazyQueryResult<get_events, any> & {
 export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
 const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
+  const { insertUrlParam } = useLocation();
   const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,

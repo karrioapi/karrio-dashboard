@@ -8,9 +8,10 @@ import AppModeProvider from '@/context/app-mode-provider';
 import LoadingProvider from '@/components/loader';
 import TokenProvider from '@/context/token-provider';
 import Notifier from '@/components/notifier';
-import Footer from '@/components/footer';
 import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
 import ErrorBoundary from '@/components/error-boudaries';
+import AcceptInvitationProvider from '@/components/accept-invitation-modal';
+import CreateOrganizationModalProvider from '@/components/create-organization-modal';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -50,7 +51,6 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
           <ContextProviders {...(pageProps || {})}>
             <ErrorBoundary>
               {session && children}
-              <Footer />
             </ErrorBoundary>
           </ContextProviders>
         </ClientsProvider>
@@ -60,7 +60,15 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
 
   return (
     <NextSessionProvider>
-      <SessionWrapper>{content}</SessionWrapper>
+      <SessionWrapper>
+        <AcceptInvitationProvider>
+          <CreateOrganizationModalProvider>
+
+            {content}
+
+          </CreateOrganizationModalProvider>
+        </AcceptInvitationProvider>
+      </SessionWrapper>
     </NextSessionProvider>
   )
 };

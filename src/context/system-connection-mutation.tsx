@@ -1,30 +1,30 @@
 import React from 'react';
-import { FetchResult, MutationFunctionOptions, MutationResult, useMutation } from '@apollo/client';
-import { MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, SystemCarrierMutationInput } from '@purplship/graphql';
+import { useMutation } from '@apollo/client';
+import { mutate_system_connection, MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, mutate_system_connection_mutate_system_connection, SystemCarrierMutationInput } from '@purplship/graphql';
+import { handleGraphQLRequest } from '@/lib/helper';
 
-export type ConnectionMutator<T> = T & {
-  mutateConnection: (data: SystemCarrierMutationInput) => Promise<FetchResult<SystemCarrierMutationInput, Record<string, any>, Record<string, any>>>;
+type ConnectionMutator = {
+  updateConnection: (data: SystemCarrierMutationInput) => Promise<mutate_system_connection_mutate_system_connection | null>
+};
+
+export const SystemConnectionMutationContext = React.createContext<ConnectionMutator>({} as ConnectionMutator);
+
+const SystemConnectionsMutationProvider: React.FC<{}> = ({ children }) => {
+  const [mutateConnection] = useMutation<mutate_system_connection, mutate_system_connectionVariables>(MUTATE_SYSTEM_CONNECTION);
+
+  const updateConnection = (data: SystemCarrierMutationInput) => (
+    handleGraphQLRequest("mutate_system_connection", mutateConnection)({ variables: { data } })
+  );
+
+  return (
+    <SystemConnectionMutationContext.Provider value={{ updateConnection }}>
+      {children}
+    </SystemConnectionMutationContext.Provider>
+  )
+};
+
+export function useSystemConnectionMutation() {
+  return React.useContext(SystemConnectionMutationContext);
 }
 
-export type ConnectionMutationType = (options?: MutationFunctionOptions<mutate_system_connectionVariables, {
-  data: Partial<SystemCarrierMutationInput>;
-}> | undefined) => Promise<FetchResult<SystemCarrierMutationInput, Record<string, any>, Record<string, any>>>;
-export type ConnectionMutationResultType = MutationResult<SystemCarrierMutationInput>;
-
-const SystemConnectionMutation = <T extends {}>(Component: React.FC<ConnectionMutator<T>>) => {
-  return ({ children, ...props }: any) => {
-    const [mutattion] = useMutation<SystemCarrierMutationInput, mutate_system_connectionVariables>(MUTATE_SYSTEM_CONNECTION);
-
-    const mutateConnection = (data: SystemCarrierMutationInput) => mutattion({ variables: { data } });
-
-    return (
-      <Component {...props}
-        mutateConnection={mutateConnection}
-      >
-        {children}
-      </Component>
-    );
-  };
-}
-
-export default SystemConnectionMutation;
+export default SystemConnectionsMutationProvider;

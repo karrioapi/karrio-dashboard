@@ -74,7 +74,7 @@ const auth = NextAuth({
           expiration: parseJwt(access).exp
         };
       } catch (error) {
-        logger.log(error);
+        logger.debug(error);
 
         return {
           error: "RefreshAccessTokenError",

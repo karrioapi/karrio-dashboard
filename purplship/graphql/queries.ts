@@ -153,26 +153,6 @@ export const UPDATE_CONNECTION = gql`mutation update_connection($data: UpdateCon
 }
 `;
 
-export const GET_ORGANIZATIONS = gql`query get_organizations {
-  organizations {
-    id
-    name
-    slug
-    token
-    user {
-      email
-      full_name
-      is_admin
-    }
-    users {
-      email
-      full_name
-      is_admin
-    }
-  }
-}
-`;
-
 export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteConnectionInput!) {
   delete_connection(input: $data) {
     id
@@ -180,9 +160,43 @@ export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteCon
 }
 `;
 
+export const GET_ORGANIZATIONS = gql`query get_organizations {
+  organizations {
+    id
+    name
+    slug
+    token
+    current_user {
+      email
+      full_name
+      is_admin
+      is_staff
+      is_owner
+      last_login
+    }
+    members {
+      email
+      full_name
+      is_admin
+      is_owner
+      invitation {
+        id
+        guid
+        invitee_identifier
+        created
+        modified
+      }
+      last_login
+    }
+  }
+}
+`;
+
 export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationInput!) {
   create_organization(input: $data) {
-    id
+    organization {
+      id
+    }
     errors {
       field
       messages
@@ -193,11 +207,80 @@ export const CREATE_ORGANIZATION = gql`mutation create_organization($data: Creat
 
 export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: UpdateOrganizationInput!) {
   update_organization(input: $data) {
-    id
+    organization {
+      id
+    }
     errors {
       field
       messages
     }
+  }
+}
+`;
+
+export const CHANGE_ORGANIZATION_OWNER = gql`mutation change_organization_owner($data: ChangeOrganizationOwnerInput!) {
+  change_organization_owner(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const SET_ORGANIZATION_USER_ROLES = gql`mutation set_organization_user_roles($data: SetOrganizationUserRolesInput!) {
+  set_organization_user_roles(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesInput!) {
+  send_organization_invites(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const GET_ORGANIZATION_INVITATION = gql`query get_organization_invitation($guid: String!) {
+  organization_invitation(guid: $guid) {
+    invitee_identifier
+    organization_name
+    invitee {
+      email
+    }
+  }
+}
+`;
+
+export const ACCEPT_ORGANIZATION_INVITATION = gql`mutation accept_organization_invitation($data: AcceptOrganizationInvitationInput!) {
+  accept_organization_invitation(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const DELETE_ORGANIZATION_INVITES = gql`mutation delete_organization_invitation($data: DeleteOrganizationInvitationInput!) {
+  delete_organization_invitation(input: $data) {
+    id
   }
 }
 `;
@@ -320,7 +403,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
     label_type
     tracking_number
     shipment_identifier
-    label
+    label_url
+    invoice_url
     tracking_url
     test_mode
     service
@@ -494,7 +578,8 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
         label_type
         tracking_number
         shipment_identifier
-        label
+        label_url
+        invoice_url
         tracking_url
         test_mode
         service
@@ -661,7 +746,8 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
       label_type
       tracking_number
       shipment_identifier
-      label
+      label_url
+      invoice_url
       tracking_url
       test_mode
       service
@@ -1314,7 +1400,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
 }
 `;
 
-export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections($test: Boolean) {
+export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics($test: Boolean) {
   user_connections(test: $test) {
     __typename
     ... on AramexSettings {
@@ -1452,7 +1538,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      verbose_name
+      display_name
       custom_carrier_name
       test
       active
@@ -1606,11 +1692,12 @@ export const GET_USER = gql`query GetUser {
 
 export const UPDATE_USER = gql`mutation update_user($data: UpdateUserInput!) {
   update_user(input: $data) {
-    email
-    full_name
-    is_staff
-    last_login
-    date_joined
+    user {
+      full_name
+      is_staff
+      last_login
+      date_joined
+    }
     errors {
       field
       messages
@@ -1647,6 +1734,29 @@ export const REGISTER_USER = gql`mutation register_user($data: RegisterUserInput
 export const CONFIRM_EMAIL = gql`mutation confirm_email($data: ConfirmEmailInput!) {
   confirm_email(input: $data) {
     success
+  }
+}
+`;
+
+export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: RequestEmailChangeInput!) {
+  request_email_change(input: $data) {
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: ConfirmEmailChangeInput!) {
+  confirm_email_change(input: $data) {
+    user {
+      email
+    }
+    errors {
+      field
+      messages
+    }
   }
 }
 `;
@@ -1711,7 +1821,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
     order_id
     source
     status
-    shipping_address {
+    shipping_to {
       id
       postal_code
       city
@@ -1820,7 +1930,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       label_type
       tracking_number
       shipment_identifier
-      label
+      label_url
+      invoice_url
       tracking_url
       test_mode
       service
@@ -1914,7 +2025,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
 }
 `;
 
-export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order_id: String, $source: String, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
+export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order_id: [String], $source: [String], $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
   orders(offset: $offset, first: $first, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
     pageInfo {
       hasNextPage
@@ -1928,7 +2039,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order
         order_id
         source
         status
-        shipping_address {
+        shipping_to {
           id
           postal_code
           city
@@ -2037,7 +2148,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order
           label_type
           tracking_number
           shipment_identifier
-          label
+          label_url
+          invoice_url
           tracking_url
           test_mode
           service

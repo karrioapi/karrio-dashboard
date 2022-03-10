@@ -1,6 +1,7 @@
-const path = require('path')
+const path = require('path');
 
 module.exports = {
+  swcMinify: false,
   basePath: process.env.BASE_PATH || '',
   reactStrictMode: true,
   sassOptions: {
@@ -12,6 +13,7 @@ module.exports = {
   },
   publicRuntimeConfig: {
     BASE_PATH: process.env.BASE_PATH || '',
-    PURPLSHIP_API_URL: process.env.NEXT_PUBLIC_PURPLSHIP_API_URL
+    DASHBOARD_VERSION: process.env.DASHBOARD_VERSION,
+    PURPLSHIP_API_URL: process.env.NEXT_PUBLIC_PURPLSHIP_API_URL,
   }
 }

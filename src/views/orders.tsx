@@ -6,13 +6,14 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import OrdersProvider from "@/context/orders-provider";
 import { OrdersContext } from "@/context/orders-provider";
-import { formatAddress, formatDateTime, getURLSearchParams, isNone, isNoneOrEmpty } from "@/lib/helper";
+import { formatAddress, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import React, { useContext, useEffect } from "react";
+import React, { ChangeEvent, useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
 import { AddressType } from "@/lib/types";
 import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
+import AppLink from "@/components/app-link";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -25,7 +26,22 @@ export default function OrdersPage(pageProps: any) {
     const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
     const [initialized, setInitialized] = React.useState(false);
+    const [selection, setSelection] = React.useState<string[]>([]);
+    const [allChecked, setAllChecked] = React.useState(false);
 
+    const updatedSelection = (selectedOrders: string[], current: typeof orders) => {
+      const order_ids = (
+        current
+          .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
+          .map(order => order.order_id)
+      );
+      const selection = selectedOrders.filter(order_id => order_ids.includes(order_id));
+      const selected = selection.length > 0 && selection.length === (order_ids || []).length;
+      setAllChecked(selected);
+      if (selectedOrders.filter(order_id => !order_ids.includes(order_id)).length > 0) {
+        setSelection(selection);
+      }
+    };
     const fetchOrders = (extra: Partial<typeof variables> = {}) => {
       const query = {
         ...filters,
@@ -35,11 +51,25 @@ export default function OrdersPage(pageProps: any) {
 
       setFilters(query);
       (!loading) && (called ? loadMore : load)(query);
-    }
+    };
+    const preventPropagation = (e: React.MouseEvent) => e.stopPropagation();
+    const handleSelection = (e: ChangeEvent) => {
+      const { checked, name } = e.target as HTMLInputElement;
+      if (name === "all") {
+        setSelection(
+          !checked ? [] : (orders || [])
+            .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
+            .map(({ order_id }) => order_id)
+        );
+      } else {
+        setSelection(checked ? [...selection, name] : selection.filter(order_id => order_id !== name));
+      }
+    };
 
     useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
     useEffect(() => { fetchOrders(); }, [router.query]);
     useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => { updatedSelection(selection, orders || []); }, [selection, orders]);
     useEffect(() => {
       if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
         previewOrder(router.query.modal as string);
@@ -51,7 +81,7 @@ export default function OrdersPage(pageProps: any) {
       <>
         <ModeIndicator />
 
-        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
+        <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Orders</span>
           <div>
             <OrdersFilter />
@@ -63,16 +93,13 @@ export default function OrdersPage(pageProps: any) {
             <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
               <a onClick={() => !isNone(filters?.status) && fetchOrders({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('created') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('created') && fetchOrders({ status: ['created'], offset: 0 })}>created</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['unfulfilled', 'partial']) ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('unfulfilled') && fetchOrders({ status: ['unfulfilled', 'partial'], offset: 0 })}>unfulfilled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('partial') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('partial') && fetchOrders({ status: ['partial'], offset: 0 })}>processing</a>
-            </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('fulfilled') ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['fulfilled', 'delivered']) ? 'is-active' : ''}`}>
               <a onClick={() => !filters?.status?.includes('fulfilled') && fetchOrders({ status: ['fulfilled', 'delivered'], offset: 0 })}>fulfilled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
               <a onClick={() => !filters?.status?.includes('cancelled') && fetchOrders({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
           </ul>
@@ -85,31 +112,69 @@ export default function OrdersPage(pageProps: any) {
             <tbody>
 
               <tr>
-                <td className="order is-size-7">#ID</td>
-                <td className="source"></td>
-                <td className="status"></td>
-                <td className="customer is-size-7">CUSTOMER</td>
-                <td className="date has-text-right is-size-7">DATE</td>
+                <td className="selector has-text-centered p-0" onClick={preventPropagation}>
+                  <label className="checkbox p-2">
+                    <input
+                      name="all"
+                      type="checkbox"
+                      onChange={handleSelection}
+                      checked={allChecked}
+                    />
+                  </label>
+                </td>
+
+                {selection.length > 0 && <td className="p-1" colSpan={5}>
+                  <AppLink className="button is-small is-default px-3" href={`/orders/fulfillment?shipment_id=new&order_id=${selection.join(',')}`}>
+                    <span className="has-text-weight-semibold">
+                      Fulfill order{selection.length > 1 ? `s (${selection.length})` : ""}
+                    </span>
+                  </AppLink>
+                </td>}
+
+                {selection.length === 0 && <>
+                  <td className="order is-size-7">ORDER #</td>
+                  <td className="items is-size-7">ITEMS</td>
+                  <td className="status"></td>
+                  <td className="customer is-size-7">CUSTOMER</td>
+                  <td className="date has-text-right is-size-7">DATE</td>
+                </>}
               </tr>
 
               {orders?.map(order => (
                 <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
-                  <td className="carrier is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {order.order_id}
+                  <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
+                    <label className="checkbox py-3 px-2">
+                      <input
+                        type="checkbox"
+                        name={order.order_id}
+                        onChange={handleSelection}
+                        checked={selection.includes(order.order_id)}
+                        disabled={['cancelled', 'fulfilled'].includes(order.status)}
+                      />
+                    </label>
+                  </td>
+                  <td className="order is-vcentered">
+                    <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
+                      #{order.order_id}
+                    </p>
+                    <p className="is-size-7 has-text-grey is-lowercase">
+                      {order.source}
                     </p>
                   </td>
-                  <td className="carrier is-vcentered">
+                  <td className="items is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {order.source}
+                      {order.line_items.length} item{order.line_items.length > 1 ? "s" : ""}
+                    </p>
+                    <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
                     </p>
                   </td>
                   <td className="status is-vcentered">
                     <StatusBadge status={order.status as string} style={{ width: '100%' }} />
                   </td>
-                  <td className="recipient is-vcentered">
+                  <td className="customer is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {formatAddress(order.shipping_address as AddressType)}
+                      {formatAddress(order.shipping_to as AddressType)}
                     </p>
                   </td>
                   <td className="date is-vcentered has-text-right">
@@ -135,7 +200,7 @@ export default function OrdersPage(pageProps: any) {
 
         </div>}
 
-        {(!loading && (orders || []).length == 0) && <div className="card my-6">
+        {(called && !loading && (orders || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No order found.</p>

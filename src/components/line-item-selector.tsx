@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrdersContext } from '@/context/orders-provider';
 import ButtonField from '@/components/generic/button-field';
-import { CommodityType } from '@/lib/types';
-import { formatOrderLineItem, isNone } from '@/lib/helper';
+import { CommodityType, OrderType, ShipmentType } from '@/lib/types';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 
 interface LineItemSelectorComponent {
+  title?: string;
+  shipment?: ShipmentType;
   onChange?: (value: Partial<CommodityType>[]) => void;
 }
 
-const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...props }) => {
-  const { orders, loading, called } = useContext(OrdersContext);
+const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment, onChange }) => {
+  const { loading, called, ...context } = useContext(OrdersContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [selection, setSelection] = useState<string[]>([]);
   const [lineItems, setLineItems] = useState<CommodityType[]>([]);
@@ -23,29 +25,56 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
     setIsActive(false);
     setSelection([]);
   };
+  const getUnpackedItems = ({ id: parent_id, quantity }: CommodityType) => {
+    return (shipment?.parcels || [])
+      .map(({ items }) => items).flat()
+      .reduce(
+        (acc, item) => parent_id === item.parent_id ? acc - (item.quantity as number) : 0,
+        quantity || 0
+      );
+  };
+  const hasUnpackedItems = (order: OrderType) => {
+    const packed_quantities = order.line_items.map(getUnpackedItems);
+
+    return packed_quantities.filter(q => q > 0).length > 0;
+  };
 
   const onSearch = (e: React.ChangeEvent<any>) => {
     setSearch(e.target.value as string);
   };
-  const handleChange = (key: string) => (_: React.ChangeEvent) => {
-    const selected = selection.includes(key);
-    setSelection(selected ? selection.filter(item => item !== key) : [...selection, key]);
+  const handleChange = (keys: string[]) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelection([...(new Set([...selection, ...keys]) as any)]);
+    } else {
+      setSelection(selection.filter(item => !keys.includes(item)));
+    }
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const commodities = lineItems
       .filter(item => selection.includes(item.id))
-      .map(({ id, ...item }) => ({ ...item, parent_id: id }));
+      .map((item) => {
+        const { id, ...content } = item;
+        return {
+          ...content,
+          parent_id: id,
+          quantity: getUnpackedItems(item)
+        }
+      });
     onChange && onChange(commodities);
     close();
   };
 
   useEffect(() => {
-    if (called && !isNone(orders)) {
-      const allItems = orders.map(order => order.line_items).flat();
-      setLineItems(allItems);
+    if (called && !isNone(context.orders)) {
+      setLineItems(
+        context.orders
+          .filter(order => hasUnpackedItems(order))
+          .map(order => order.line_items)
+          .flat()
+      );
     }
-  }, [called, orders]);
+  }, [called, context.orders, isActive]);
 
   return (
     <>
@@ -53,7 +82,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
         <span className="icon is-small">
           <i className="fas fa-tasks"></i>
         </span>
-        <span>Add line items</span>
+        <span>{title || "Add line items"}</span>
       </button>
 
       <div className={`modal ${isActive ? "is-active" : ""}`}>
@@ -62,36 +91,57 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ onChange, ...pr
 
           <section className="modal-card-body modal-form p-2">
             <div className="form-floating-header p-4">
-              <span className="has-text-weight-bold is-size-6">Select line items</span>
+              <span className="has-text-weight-bold is-size-6">{title || "Select line items"}</span>
             </div>
             <div className="p-3 my-4"></div>
 
             <div className="panel-block px-1 pt-0 pb-3">
               <p className="control has-icons-left">
-                <input type="text" className={"input"} defaultValue={search || ''} onInput={onSearch} />
+                <input type="text" className={"input is-small"} defaultValue={search || ''} onInput={onSearch} />
                 <span className="icon is-left">
                   <i className="fas fa-search" aria-hidden="true"></i>
                 </span>
               </p>
             </div>
 
+            {(lineItems || []).length === 0 && <div className="notification is-warning is-light px-3 py-2 my-2">
+              All items are packed.
+            </div>}
+
             <nav className="panel is-shadowless" style={{ minHeight: '30vh', maxHeight: '60vh', overflowY: 'auto' }}>
-              {orders
-                ?.map((order) => order.line_items.map(
-                  (item, index) => [item.id, formatOrderLineItem(order, item as any, index)] as [string, string]
-                ))
-                .flat()
-                .filter(([_, val]) => search === "" || val.toLowerCase().includes(search.toLowerCase()))
-                .map(([id, summary]) => (
-                  <label className="panel-block" key={`line-${id}`}>
-                    <input
-                      type="checkbox"
-                      name={id}
-                      checked={selection.includes(id)}
-                      onChange={handleChange(id)}
-                    />
-                    {summary}
-                  </label>
+              {(context.orders || [])
+                .filter(order => hasUnpackedItems(order))
+                .map(order => (
+                  <React.Fragment key={`order-${order.id}`}>
+                    <label className="panel-block has-background-grey-lighter is-size-7" key={`order-${order.id}`}>
+                      <input type="checkbox"
+                        name={order.id}
+                        checked={(order.line_items.filter(({ id }) => selection.includes(id)).length === order.line_items.length)}
+                        onChange={handleChange(order.line_items.map(({ id }) => id))}
+                      />
+                      {order.order_id}
+                    </label>
+
+                    {order.line_items.map((item, item_index) => (
+                      <label className="panel-block ml-4" key={`line-${item.id}`}>
+                        <input type="checkbox"
+                          name={item.id}
+                          checked={selection.includes(item.id)}
+                          onChange={handleChange([item.id])}
+                        />
+                        <div>
+                          <p className="is-size-7 my-1 has-text-weight-semibold">
+                            {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
+                            <span className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
+                              {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
+                              {!isNoneOrEmpty(item.metadata?.ship_qty) && ` | SHIP QTY: ${item.metadata?.ship_qty}`}
+                              {` | UNPACKED QTY: ${getUnpackedItems(item)}`}
+                            </span>
+                          </p>
+                        </div>
+                      </label>
+                    ))}
+                  </React.Fragment>
                 ))}
             </nav>
 

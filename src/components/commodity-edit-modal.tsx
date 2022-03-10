@@ -11,7 +11,6 @@ import TextAreaField from '@/components/generic/textarea-field';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { APIReference } from '@/context/references-provider';
 import LineItemInput from './generic/line-item-input';
-import OrdersProvider from '@/context/orders-provider';
 
 export const DEFAULT_COMMODITY_CONTENT: Partial<CommodityType> = {
   weight: 0,

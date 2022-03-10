@@ -20,7 +20,7 @@ export default function ParcelsPage(pageProps: any) {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { editParcel } = useContext(ParcelEditContext);
-    const { confirmDeletion } = useContext(ConfirmModalContext);
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { deleteTemplate } = useContext(ParcelMutationContext);
     const { loading, templates, previous, next, called, load, loadMore, refetch } = useContext(ParcelTemplates);
     const [initialized, setInitialized] = React.useState(false);
@@ -47,7 +47,7 @@ export default function ParcelsPage(pageProps: any) {
     return (
       <>
 
-        <header className="px-2 pt-1 pb-4">
+        <header className="px-0 py-4">
           <span className="title is-4">Parcels</span>
           <button className="button is-primary is-small is-pulled-right" onClick={() => editParcel({ onConfirm: update })}>
             <span>Create parcel</span>
@@ -75,8 +75,8 @@ export default function ParcelsPage(pageProps: any) {
                       <span className="icon has-text-success"><i className="fas fa-check"></i></span> Default shipping parcel
                     </span>}
                   </td>
-                  <td className="action is-vcentered">
-                    <div className="buttons is-centered">
+                  <td className="action is-vcentered pr-0">
+                    <div className="buttons is-justify-content-end">
                       <button className="button is-white" onClick={() => editParcel({
                         parcelTemplate: template,
                         onConfirm: update,

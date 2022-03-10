@@ -1,5 +1,5 @@
 import EventProvider from '@/context/event-provider';
-import { addUrlParam, removeUrlParam } from '@/lib/helper';
+import { useLocation } from '@/lib/helper';
 import { EventComponent } from '@/views/event';
 import React, { useState } from 'react';
 
@@ -12,6 +12,7 @@ interface EventPreviewComponent { }
 export const EventPreviewContext = React.createContext<EventPreviewContextType>({} as EventPreviewContextType);
 
 const EventPreview: React.FC<EventPreviewComponent> = ({ children }) => {
+  const { addUrlParam, removeUrlParam } = useLocation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`event-${Date.now()}`);
   const [eventId, setEventId] = useState<string>();

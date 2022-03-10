@@ -7,13 +7,13 @@ import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDateTimeLong, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType, ShipmentStatus } from "@purplship/graphql";
+import { MetadataObjectType, ShipmentStatusEnum } from "@purplship/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import { CustomsType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
@@ -59,7 +59,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       {!called && loading && <Spinner />}
 
-      {(!loading && shipment) && <>
+      {shipment && <>
 
         {/* Header Section */}
         <div className="columns my-1">
@@ -73,16 +73,16 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           <div className="column is-6 has-text-right pb-0">
             <CopiableLink text={shipment.id as string} title="Copy ID" />
             <br />
-            {!isNone(shipment.label) && <button className="button is-default is-small ml-1" onClick={() => printLabel(shipment)}>
+            {!isNone(shipment.label_url) && <button className="button is-default is-small ml-1" onClick={() => printLabel(shipment)}>
               <i className="fas fa-print"></i>
               <span className="ml-1">Print Label</span>
             </button>}
-            {!isNone((shipment?.meta as any).invoice) &&
+            {!isNone(shipment.invoice_url) &&
               <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>
               </button>}
-            {(isNone(shipment.label) && shipment.status === ShipmentStatus.created) &&
+            {(isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
             {!isNone(shipmentId) &&
@@ -114,8 +114,8 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </div>}
               {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
                 <CarrierBadge
-                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered"
-                  style={{ margin: '1px', width: '100px', borderRadius: '1px', fontSize: '90%', borderTop: '2px solid white', borderBottom: '2px solid white' }}
+                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered is-size-7 my-1"
+                  style={{ width: '100px' }}
                   custom_name={shipment.carrier_id as string}
                   short
                 />}
@@ -373,7 +373,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(log.requested_at)}</span>
+                      <span>{formatDateTime(log.requested_at)}</span>
                     </AppLink>
                   </td>
                 </tr>
@@ -403,7 +403,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   </td>
                   <td className="date is-vcentered p-0">
                     <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTimeLong(event.created_at)}</span>
+                      <span>{formatDateTime(event.created_at)}</span>
                     </AppLink>
                   </td>
                 </tr>
@@ -414,7 +414,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       </>}
 
-      {called && !loading && !shipment && <div className="card my-6">
+      {called && !loading && isNone(shipment) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>

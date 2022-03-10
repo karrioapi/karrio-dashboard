@@ -10,7 +10,7 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { UserConnectionType } from '@/context/user-connections-provider';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { addUrlParam, deepEqual, isNone, removeUrlParam, validationMessage, validityCheck } from '@/lib/helper';
+import { deepEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
@@ -36,6 +36,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
+  const { addUrlParam, removeUrlParam } = useLocation();
   const { updateConnection, createConnection } = useContext(ConnectionMutationContext);
   const DEFAULT_STATE = (): Partial<UserConnectionType> => ({ carrier_name: 'none', test: testMode });
   const [key, setKey] = useState<string>(`connection-${Date.now()}`);
@@ -141,9 +142,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
               <>
                 <hr />
 
-                {has("verbose_name") &&
-                  <InputField label="Display Name" defaultValue={payload.verbose_name}
-                    onChange={handleOnChange("verbose_name")}
+                {has("display_name") &&
+                  <InputField label="Display Name" defaultValue={payload.display_name}
+                    onChange={handleOnChange("display_name")}
                     className="is-small"
                     required
                   />}
@@ -157,7 +158,11 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                     required
                   />}
 
-                <InputField label="Carrier Id" defaultValue={payload.carrier_id} onChange={handleOnChange("carrier_id")} className="is-small" required />
+                <InputField label="Carrier Id" defaultValue={payload.carrier_id}
+                  onChange={handleOnChange("carrier_id")}
+                  className="is-small"
+                  required
+                />
 
                 {/* Carrier specific fields BEGING */}
 
@@ -295,7 +300,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Generic]: ["verbose_name", "custom_carrier_name", "carrier_id", "test", "account_country_code", "label_template", "services", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Generic]: ["display_name", "custom_carrier_name", "carrier_id", "test", "account_number", "account_country_code", "label_template", "services", "metadata"],
     [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test", "username", "password", "account_number", "user_token"],
     [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test", "client_id", "client_secret"],

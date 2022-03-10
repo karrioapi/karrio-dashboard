@@ -8,9 +8,9 @@ import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useContext, useReducer, useState } from "react";
-import logger from "@/lib/logger";
+import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
 import { Metadata } from "@/lib/types";
+import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -34,6 +34,7 @@ function reducer(state: Partial<RegisterUserInput>, { name, value }: { name: str
 
 const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
   const router = useRouter();
+  const { email } = router.query;
   const { loading, setLoading } = useContext(Loading);
   const [user, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
   const [errors, setErrors] = useState<register_user_register_user_errors[]>([]);
@@ -48,15 +49,19 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await registerUser(user as RegisterUserInput);
-      setErrors(response.errors as register_user_register_user_errors[]);
-
-      if ((response.errors || []).length === 0) router.push('/signup/success');
+      await registerUser({ ...user, redirect_url: location.origin + p`/email` } as RegisterUserInput);
+      router.push(p`/signup/success`);
     } catch (error: any) {
-      logger.error(error);
+      setErrors(Array.isArray(error) ? error : [error]);
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (!isNoneOrEmpty(email)) {
+      dispatch({ name: 'email', value: email as string });
+    }
+  }, [email]);
 
   return (
     <>
@@ -64,12 +69,22 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
         <div className="card-content">
           <p className="subtitle has-text-centered mb-6">Sign up with credentials</p>
 
+          {(errors as any[]).filter(error => isNone(error.field)).map(({ message }, index) => (
+            <p key={index} className="has-text-danger is-size-7">{message}</p>
+          ))}
+
           <form method="post" onSubmit={onSubmit}>
 
             <InputField
-              label="Email" name="email"
-              placeholder="Email" fieldClass="mt-3"
-              onChange={handleChange} value={user.email} required>
+              label="Email"
+              name="email"
+              placeholder="Email"
+              fieldClass="mt-3"
+              onChange={handleChange}
+              value={user.email}
+              disabled={!isNoneOrEmpty(email)}
+              required
+            >
               {errors.filter(error => error.field === 'email').map(({ messages }) => (
                 messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
               ))}

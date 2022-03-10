@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from '@purplship/graphql';
 import { APIReference } from './references-provider';
+import OrganizationMutationProvider from './organization-mutation';
 
 
 export type OrganizationType = get_organizations_organizations;
@@ -22,7 +23,7 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
   const load = () => result.called ? result.fetchMore({}) : initialLoad({});
   const extractList = (results?: any[]): OrganizationType[] => (results || []).filter(r => r !== null);
   const extractCurrent = (results?: any[]): OrganizationType => {
-    const current = (results || []).find(org => org.id === org_id)
+    const current = (results || []).find(org => org?.id === org_id)
     return current || {}
   };
 
@@ -39,7 +40,9 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
       organizations: state,
       ...result
     }}>
-      {children}
+      <OrganizationMutationProvider>
+        {children}
+      </OrganizationMutationProvider>
     </Organizations.Provider>
   );
 };

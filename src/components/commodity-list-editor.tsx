@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { CommodityType } from '@/lib/types';
 import CommodityDescription from '@/components/descriptions/commodity-description';
-import { deepEqual } from '@/lib/helper';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 import LineItemSelector from '@/components/line-item-selector';
 import { Loading } from './loader';

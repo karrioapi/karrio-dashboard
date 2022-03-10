@@ -1,20 +1,18 @@
 import { formatRef, isNone } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
-import { APIError, CustomsType, NotificationType, PaymentType, RequestError, ShipmentType } from '@/lib/types';
+import { CustomsType, PaymentType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import OptionsDescription from '@/components/descriptions/options-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import ButtonField from '@/components/generic/button-field';
-import InputField from '@/components/generic/input-field';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { Notify } from '@/components/notifier';
+import InputField from '@/components/generic/input-field'
 import { Loading } from '@/components/loader';
-import { AppMode } from '@/context/app-mode-provider';
 import RateDescription from '@/components/descriptions/rate-description';
 import MessagesDescription from '@/components/descriptions/messages-description';
 import { LabelTypeEnum, PaidByEnum } from '@purplship/graphql';
+import { useLabelMutation } from '@/context/label-data-mutation';
 
 interface LiveRatesComponent {
   shipment: ShipmentType;
@@ -24,15 +22,14 @@ const DEFAULT_PAYMENT: Partial<PaymentType> = { paid_by: PaidByEnum.sender };
 
 const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
   const router = useRouter();
-  const { notify } = useContext(Notify);
-  const { basePath } = useContext(AppMode);
-  const { loading, setLoading } = useContext(Loading);
-  const { fetchRates, buyLabel } = useContext(ShipmentMutationContext);
-  const [selected_rate_id, setSelectedRate] = useState<string | undefined>(shipment?.selected_rate_id || undefined);
-  const [label_type, setLabelType] = useState<LabelTypeEnum>(shipment?.label_type as LabelTypeEnum || LabelTypeEnum.PDF);
+  const { loading } = useContext(Loading);
+  const mutation = useLabelMutation();
   const [payment, setPayment] = useState<Partial<PaymentType>>(DEFAULT_PAYMENT);
   const [showMessage, setShowMessage] = useState(false);
   const [key, setKey] = useState<string>(`details-${Date.now()}`);
+  const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
+    shipment?.selected_rate_id ? { id: shipment?.selected_rate_id } as any : undefined
+  );
 
   const computeDisabled = (shipment: ShipmentType) => {
     return (
@@ -43,50 +40,13 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
     );
   };
 
-  const updateRates = async () => {
-    if (computeDisabled(shipment)) return;
-    try {
-      setLoading(true);
-      const { id } = shipment;
-      const response = await fetchRates(shipment);
-      if (id === undefined) router.push('' + response.id);
-      if ((response.messages || []).length > 0) {
-        const error: APIError = {
-          error: {
-            code: "notes",
-            details: { messages: response.messages } as APIError['error']['details']
-          }
-        };
-        const message = new RequestError(error);
-
-        notify({ type: NotificationType.warning, message });
-      }
-    } catch (message: any) {
-      notify({ type: NotificationType.error, message });
-    } finally {
-      setLoading(false);
-    }
-  };
-  const buyShipment = async () => {
-    try {
-      setLoading(true);
-      let { currency } = (shipment.options || {} as any);
-      await buyLabel({
-        ...shipment,
-        label_type,
-        selected_rate_id,
-        payment: { ...payment, currency }
-      } as ShipmentType);
-      notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
-      router.push(basePath);
-    } catch (message: any) {
-      notify({ type: NotificationType.error, message });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => { setKey(`details-${Date.now()}`); }, [shipment]);
+  useEffect(() => {
+    setKey(`details-${Date.now()}`);
+    if (router.query.id === 'new' && isNone(shipment.rates) && !computeDisabled(shipment)) {
+      mutation.fetchRates();
+    }
+  }, [shipment]);
 
   return (
     <div key={key}>
@@ -95,7 +55,8 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
         <div className="column is-12 pb-2">
           <span className="title is-5">Shipment Details</span>
 
-          <button className={`button is-small is-outlined is-info is-pulled-right ${loading ? 'is-loading' : ''}`} onClick={updateRates} disabled={computeDisabled(shipment)}>
+          <button className={`button is-small is-outlined is-info is-pulled-right ${loading ? 'is-loading' : ''}`}
+            onClick={mutation.fetchRates} disabled={computeDisabled(shipment)}>
             <span>Fetch Rates</span>
           </button>
         </div>
@@ -142,11 +103,11 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
           <div className="menu-list py-2 rates-list-box">
             {(shipment.rates || []).map(rate => (
               <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                className={`columns m-0 p-1 ${rate.id === selected_rate_id ? 'has-text-grey-dark' : 'has-text-grey'}`}
-                onClick={() => setSelectedRate(rate.id)}>
+                className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                onClick={() => setSelectedRate(rate)}>
 
-                <span className={`icon is-medium ${rate.id === selected_rate_id ? 'has-text-success' : ''}`}>
-                  {(rate.id === selected_rate_id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
+                <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
+                  {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
                 </span>
 
                 <RateDescription rate={rate} />
@@ -160,19 +121,18 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
 
         </div>
 
-        {(shipment.messages || []).length > 0 &&
-          <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
-            <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
-              <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
-              <span className="icon is-small is-pulled-right pt-2">
-                <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-              </span>
-            </p>
+        {(shipment.messages || []).length > 0 && <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
+          <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
+            <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
+            <span className="icon is-small is-pulled-right pt-2">
+              <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+            </span>
+          </p>
 
-            {showMessage && <div className="notification is-warning is-size-7">
-              <MessagesDescription messages={shipment.messages} />
-            </div>}
-          </article>}
+          {showMessage && <div className="notification is-warning is-size-7">
+            <MessagesDescription messages={shipment.messages} />
+          </div>}
+        </article>}
 
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
@@ -183,8 +143,8 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
                 className="mr-1"
                 type="radio"
                 name="label_type"
-                defaultChecked={label_type === LabelTypeEnum.PDF}
-                onChange={() => setLabelType(LabelTypeEnum.PDF)}
+                defaultChecked={shipment.label_type === LabelTypeEnum.PDF}
+                onChange={() => mutation.updateShipment({ label_type: LabelTypeEnum.PDF })}
               />
               <span className="is-size-7 has-text-weight-bold">{LabelTypeEnum.PDF}</span>
             </label>
@@ -193,8 +153,8 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
                 className="mr-1"
                 type="radio"
                 name="label_type"
-                defaultChecked={label_type === LabelTypeEnum.ZPL}
-                onChange={() => setLabelType(LabelTypeEnum.ZPL)}
+                defaultChecked={shipment.label_type === LabelTypeEnum.ZPL}
+                onChange={() => mutation.updateShipment({ label_type: LabelTypeEnum.ZPL })}
               />
               <span className="is-size-7 has-text-weight-bold">{LabelTypeEnum.ZPL}</span>
             </label>
@@ -253,13 +213,15 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
 
       </div>
 
+      <hr className='my-1' style={{ height: '1px' }} />
+
       <ButtonField
-        onClick={buyShipment}
-        fieldClass="has-text-centered mt-3"
-        className={`is-success ${loading ? 'is-loading' : ''}`}
-        style={(shipment.rates || []).length === 0 ? { display: 'none' } : {}}
-        disabled={(shipment.rates || []).filter(r => r.id === selected_rate_id).length === 0}>
-        <span className="px-6">Buy</span>
+        className={`is-success`}
+        fieldClass="has-text-centered mt-3 p-3"
+        onClick={() => mutation.buyLabel(selected_rate as any)}
+        disabled={((shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0) || loading}
+      >
+        <span className="px-6">Buy shipping label</span>
       </ButtonField>
 
     </div>

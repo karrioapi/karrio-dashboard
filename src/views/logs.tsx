@@ -46,8 +46,7 @@ export default function LogsPage(pageProps: any) {
 
     return (
       <>
-
-        <header className="px-2 pt-1 pb-4 is-flex is-justify-content-space-between">
+        <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Logs</span>
           <LogsFilter />
         </header>
@@ -70,7 +69,7 @@ export default function LogsPage(pageProps: any) {
 
 
         {(!loading && logs.length > 0) && <div className="table-container">
-          <table className="table is-fullwidth is-hoverable is-size-7">
+          <table className="logs-table table is-fullwidth is-size-7">
 
             <tbody className="logs-table">
               <tr>
@@ -81,7 +80,7 @@ export default function LogsPage(pageProps: any) {
 
               {logs.map((log) => (
 
-                <tr key={log.id} onClick={() => previewLog(log.id)}>
+                <tr key={log.id} className="items is-clickable" onClick={() => previewLog(log.id)}>
                   <td className="status"><StatusCode code={log.status_code as number} /></td>
                   <td className="description">{`${log.method} ${log.path}`}</td>
                   <td className="date has-text-right">

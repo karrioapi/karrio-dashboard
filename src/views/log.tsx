@@ -2,7 +2,7 @@ import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
-import { formatDateTimeLong, isNone, jsonify, notEmptyJSON, p } from "@/lib/helper";
+import { failsafe, formatDateTimeLong, isNone, jsonify, notEmptyJSON, p } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/dist/client/router";
@@ -29,9 +29,9 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
   useEffect(() => { (!isNone(loadLog) && !loading) && loadLog((id || logId) as string); }, [id || logId]);
   useEffect(() => {
     if (log !== undefined) {
-      setQueryParams(jsonify(log.query_params || '{}'));
-      setResponse(jsonify(log.response || '{}'));
-      setData(jsonify(log.data || '{}'));
+      setQueryParams(failsafe(() => jsonify(log.query_params), '{}'));
+      setResponse(failsafe(() => jsonify(log.response), '{}'));
+      setData(failsafe(() => jsonify(log.data), '{}'));
     }
   });
 
@@ -40,12 +40,12 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
       {log !== undefined && <>
 
         <div className="columns my-1">
-          <div className="column is-8">
+          <div className="column is-10">
             <span className="subtitle is-size-7 has-text-weight-semibold">LOG</span>
             <br />
             <span className="title is-5 mr-2">{log.method} {log.path} <StatusCode code={log.status_code as number} /></span>
           </div>
-          {!isNone(logId) && <div className="column is-4 is-flex is-justify-content-end">
+          {!isNone(logId) && <div className="column is-2 is-flex is-justify-content-end">
             <AppLink href={`/developers/logs/${logId}`} target="blank"
               className="button is-default has-text-info is-small mx-1">
               <span className="icon">
@@ -68,11 +68,11 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">Origin</div>
-            <div className="column is-8 py-1">{log.host}</div>
+            <div className="column is-8 py-1">{log.remote_addr}</div>
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">IP Address</div>
-            <div className="column is-8 py-1">{log.remote_addr}</div>
+            <div className="column is-8 py-1">{log.host}</div>
           </div>
         </div>
 
