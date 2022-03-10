@@ -9,7 +9,7 @@ type ConnectionMutator = {
 
 export const SystemConnectionMutationContext = React.createContext<ConnectionMutator>({} as ConnectionMutator);
 
-const SystemConnectionsProvider: React.FC<{}> = ({ children }) => {
+const SystemConnectionsMutationProvider: React.FC<{}> = ({ children }) => {
   const [mutateConnection] = useMutation<mutate_system_connection, mutate_system_connectionVariables>(MUTATE_SYSTEM_CONNECTION);
 
   const updateConnection = (data: SystemCarrierMutationInput) => (
@@ -27,4 +27,4 @@ export function useSystemConnectionMutation() {
   return React.useContext(SystemConnectionMutationContext);
 }
 
-export default SystemConnectionsProvider;
+export default SystemConnectionsMutationProvider;

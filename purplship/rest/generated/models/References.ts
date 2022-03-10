@@ -57,6 +57,12 @@ export interface References {
     apps_management: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof References
+     */
+    allow_signup: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof References
      */
@@ -187,6 +193,7 @@ export function ReferencesFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'multi_organizations': json['MULTI_ORGANIZATIONS'],
         'orders_management': json['ORDERS_MANAGEMENT'],
         'apps_management': json['APPS_MANAGEMENT'],
+        'allow_signup': json['ALLOW_SIGNUP'],
         'admin': json['ADMIN'],
         'openapi': json['OPENAPI'],
         'graphql': json['GRAPHQL'],
@@ -224,6 +231,7 @@ export function ReferencesToJSON(value?: References | null): any {
         'MULTI_ORGANIZATIONS': value.multi_organizations,
         'ORDERS_MANAGEMENT': value.orders_management,
         'APPS_MANAGEMENT': value.apps_management,
+        'ALLOW_SIGNUP': value.allow_signup,
         'ADMIN': value.admin,
         'OPENAPI': value.openapi,
         'GRAPHQL': value.graphql,

@@ -39,15 +39,15 @@ import {
     RateResponse,
     RateResponseFromJSON,
     RateResponseToJSON,
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentToJSON,
     ShipmentCancelRequest,
     ShipmentCancelRequestFromJSON,
     ShipmentCancelRequestToJSON,
     ShippingRequest,
     ShippingRequestFromJSON,
     ShippingRequestToJSON,
+    ShippingResponse,
+    ShippingResponseFromJSON,
+    ShippingResponseToJSON,
     TrackingResponse,
     TrackingResponseFromJSON,
     TrackingResponseToJSON,
@@ -101,7 +101,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Once the shipping rates are retrieved, provide the required info to submit the shipment by specifying your preferred rate.
      * Buy a shipment label
      */
-    async buyLabelRaw(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Shipment>> {
+    async buyLabelRaw(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<ShippingResponse>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling buyLabel.');
         }
@@ -124,14 +124,14 @@ export class ProxyApi extends runtime.BaseAPI {
             body: ShippingRequestToJSON(requestParameters.data),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShipmentFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShippingResponseFromJSON(jsonValue));
     }
 
     /**
      * Once the shipping rates are retrieved, provide the required info to submit the shipment by specifying your preferred rate.
      * Buy a shipment label
      */
-    async buyLabel(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<Shipment> {
+    async buyLabel(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<ShippingResponse> {
         const response = await this.buyLabelRaw(requestParameters, initOverrides);
         return await response.value();
     }

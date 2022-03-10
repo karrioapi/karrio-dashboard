@@ -403,7 +403,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
     label_type
     tracking_number
     shipment_identifier
-    label
+    label_url
+    invoice_url
     tracking_url
     test_mode
     service
@@ -577,7 +578,8 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
         label_type
         tracking_number
         shipment_identifier
-        label
+        label_url
+        invoice_url
         tracking_url
         test_mode
         service
@@ -744,7 +746,8 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
       label_type
       tracking_number
       shipment_identifier
-      label
+      label_url
+      invoice_url
       tracking_url
       test_mode
       service
@@ -1927,7 +1930,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       label_type
       tracking_number
       shipment_identifier
-      label
+      label_url
+      invoice_url
       tracking_url
       test_mode
       service
@@ -2144,7 +2148,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $order
           label_type
           tracking_number
           shipment_identifier
-          label
+          label_url
+          invoice_url
           tracking_url
           test_mode
           service

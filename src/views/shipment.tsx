@@ -73,16 +73,16 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           <div className="column is-6 has-text-right pb-0">
             <CopiableLink text={shipment.id as string} title="Copy ID" />
             <br />
-            {!isNone(shipment.label) && <button className="button is-default is-small ml-1" onClick={() => printLabel(shipment)}>
+            {!isNone(shipment.label_url) && <button className="button is-default is-small ml-1" onClick={() => printLabel(shipment)}>
               <i className="fas fa-print"></i>
               <span className="ml-1">Print Label</span>
             </button>}
-            {!isNone((shipment?.meta as any).invoice) &&
+            {!isNone(shipment.invoice_url) &&
               <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>
               </button>}
-            {(isNone(shipment.label) && shipment.status === ShipmentStatusEnum.draft) &&
+            {(isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
             {!isNone(shipmentId) &&

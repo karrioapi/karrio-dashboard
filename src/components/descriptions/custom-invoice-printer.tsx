@@ -1,3 +1,4 @@
+import { PURPLSHIP_API } from '@/client/context';
 import { ShipmentType } from '@/lib/types';
 import React, { useState } from 'react';
 
@@ -23,9 +24,6 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
     setIsActive(false);
     setShipment(undefined);
   };
-  const conputeSource = (shipment: ShipmentType) => {
-    return `data:application/pdf;base64, ${encodeURI((shipment?.meta as any).invoice as string)}`;
-  };
 
   return (
     <>
@@ -37,7 +35,12 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
         <div className="modal-background" onClick={close}></div>
         <div className="label-container">
 
-          {isActive && <iframe src={conputeSource(shipment as ShipmentType)} height="100%" width="100%"></iframe>}
+          {isActive && <iframe
+            width="100%"
+            height="100%"
+            src={`${PURPLSHIP_API}${shipment?.invoice_url}`}
+          >
+          </iframe>}
 
         </div>
 

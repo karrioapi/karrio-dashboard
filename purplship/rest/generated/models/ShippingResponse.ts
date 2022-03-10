@@ -26,6 +26,12 @@ import {
     CustomsToJSON,
 } from './Customs';
 import {
+    Documents,
+    DocumentsFromJSON,
+    DocumentsFromJSONTyped,
+    DocumentsToJSON,
+} from './Documents';
+import {
     Message,
     MessageFromJSON,
     MessageFromJSONTyped,
@@ -51,45 +57,45 @@ import {
 } from './Rate';
 
 /**
- * The shipments associated with the order.
+ * 
  * @export
- * @interface Shipment
+ * @interface ShippingResponse
  */
-export interface Shipment {
+export interface ShippingResponse {
     /**
      * A unique identifier
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     id?: string;
     /**
      * Specifies the object type
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     object_type?: string;
     /**
      * The shipment tracking url
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     tracking_url?: string | null;
     /**
      * 
      * @type {Address}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     shipper: Address;
     /**
      * 
      * @type {Address}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     recipient: Address;
     /**
      * The shipment's parcels
      * @type {Array<Parcel>}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     parcels: Array<Parcel>;
     /**
@@ -99,7 +105,7 @@ export interface Shipment {
      * Please consult the reference for specific carriers services.<br/>
      * Note that this is a list because on a Multi-carrier rate request you could specify a service per carrier.
      * @type {Array<string>}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     services?: Array<string> | null;
     /**
@@ -124,52 +130,52 @@ export interface Shipment {
      * Please check the docs for carrier specific options.
      * </details>
      * @type {object}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     options?: object | null;
     /**
      * 
      * @type {Payment}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     payment?: Payment;
     /**
      * 
      * @type {Customs}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     customs?: Customs;
     /**
      * The list for shipment rates fetched previously
      * @type {Array<Rate>}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     rates?: Array<Rate>;
     /**
      * The shipment reference
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     reference?: string | null;
     /**
      * The shipment label file type.
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
-    label_type?: ShipmentLabelTypeEnum;
+    label_type?: ShippingResponseLabelTypeEnum;
     /**
      * 
      * The list of configured carriers you wish to get rates from.
      * 
      * *Note that the request will be sent to all carriers in nothing is specified*
      * @type {Array<string>}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     carrier_ids?: Array<string> | null;
     /**
      * The attached tracker id
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     tracker_id?: string | null;
     /**
@@ -178,107 +184,101 @@ export interface Shipment {
      * 
      * Date Format: `YYYY-MM-DD HH:MM:SS.mmmmmmz`
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     created_at: string;
     /**
      * User metadata for the shipment
      * @type {object}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     metadata?: object;
     /**
      * The list of note or warning messages
      * @type {Array<Message>}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     messages?: Array<Message>;
     /**
      * The current Shipment status
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
-    status?: ShipmentStatusEnum;
+    status?: ShippingResponseStatusEnum;
     /**
      * The shipment carrier
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     carrier_name?: string | null;
     /**
      * The shipment carrier configured identifier
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     carrier_id?: string | null;
     /**
      * The shipment tracking number
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     tracking_number?: string | null;
     /**
      * The shipment carrier system identifier
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     shipment_identifier?: string | null;
     /**
      * 
      * @type {Rate}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     selected_rate?: Rate;
     /**
+     * 
+     * @type {Documents}
+     * @memberof ShippingResponse
+     */
+    docs?: Documents | null;
+    /**
      * provider specific metadata
      * @type {object}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     meta?: object | null;
     /**
      * The selected service
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     service?: string | null;
     /**
      * The shipment selected rate.
      * @type {string}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     selected_rate_id?: string | null;
     /**
      * Specified whether it was created with a carrier in test mode
      * @type {boolean}
-     * @memberof Shipment
+     * @memberof ShippingResponse
      */
     test_mode: boolean;
-    /**
-     * The shipment label URL
-     * @type {string}
-     * @memberof Shipment
-     */
-    label_url?: string | null;
-    /**
-     * The shipment invoice URL
-     * @type {string}
-     * @memberof Shipment
-     */
-    invoice_url?: string | null;
 }
 
 /**
 * @export
 * @enum {string}
 */
-export enum ShipmentLabelTypeEnum {
+export enum ShippingResponseLabelTypeEnum {
     Pdf = 'PDF',
     Zpl = 'ZPL'
 }/**
 * @export
 * @enum {string}
 */
-export enum ShipmentStatusEnum {
+export enum ShippingResponseStatusEnum {
     Draft = 'draft',
     Purchased = 'purchased',
     Cancelled = 'cancelled',
@@ -287,11 +287,11 @@ export enum ShipmentStatusEnum {
     Delivered = 'delivered'
 }
 
-export function ShipmentFromJSON(json: any): Shipment {
-    return ShipmentFromJSONTyped(json, false);
+export function ShippingResponseFromJSON(json: any): ShippingResponse {
+    return ShippingResponseFromJSONTyped(json, false);
 }
 
-export function ShipmentFromJSONTyped(json: any, ignoreDiscriminator: boolean): Shipment {
+export function ShippingResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShippingResponse {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -321,16 +321,15 @@ export function ShipmentFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'tracking_number': !exists(json, 'tracking_number') ? undefined : json['tracking_number'],
         'shipment_identifier': !exists(json, 'shipment_identifier') ? undefined : json['shipment_identifier'],
         'selected_rate': !exists(json, 'selected_rate') ? undefined : RateFromJSON(json['selected_rate']),
+        'docs': !exists(json, 'docs') ? undefined : DocumentsFromJSON(json['docs']),
         'meta': !exists(json, 'meta') ? undefined : json['meta'],
         'service': !exists(json, 'service') ? undefined : json['service'],
         'selected_rate_id': !exists(json, 'selected_rate_id') ? undefined : json['selected_rate_id'],
         'test_mode': json['test_mode'],
-        'label_url': !exists(json, 'label_url') ? undefined : json['label_url'],
-        'invoice_url': !exists(json, 'invoice_url') ? undefined : json['invoice_url'],
     };
 }
 
-export function ShipmentToJSON(value?: Shipment | null): any {
+export function ShippingResponseToJSON(value?: ShippingResponse | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -363,12 +362,11 @@ export function ShipmentToJSON(value?: Shipment | null): any {
         'tracking_number': value.tracking_number,
         'shipment_identifier': value.shipment_identifier,
         'selected_rate': RateToJSON(value.selected_rate),
+        'docs': DocumentsToJSON(value.docs),
         'meta': value.meta,
         'service': value.service,
         'selected_rate_id': value.selected_rate_id,
         'test_mode': value.test_mode,
-        'label_url': value.label_url,
-        'invoice_url': value.invoice_url,
     };
 }
 

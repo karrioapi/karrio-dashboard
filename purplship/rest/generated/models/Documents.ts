@@ -14,97 +14,41 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * 
+ * The shipment documents
  * @export
- * @interface Metadata
+ * @interface Documents
  */
-export interface Metadata {
+export interface Documents {
     /**
-     * 
+     * The shipment label in base64 string
      * @type {string}
-     * @memberof Metadata
+     * @memberof Documents
      */
-    app_name: string;
+    label?: string | null;
     /**
-     * 
+     * The shipment invoice in base64 string
      * @type {string}
-     * @memberof Metadata
+     * @memberof Documents
      */
-    app_version: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metadata
-     */
-    app_website?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Metadata
-     */
-    multi_organizations: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Metadata
-     */
-    orders_management: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Metadata
-     */
-    apps_management: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Metadata
-     */
-    allow_signup: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metadata
-     */
-    admin: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metadata
-     */
-    openapi: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metadata
-     */
-    graphql: string;
+    invoice?: string | null;
 }
 
-export function MetadataFromJSON(json: any): Metadata {
-    return MetadataFromJSONTyped(json, false);
+export function DocumentsFromJSON(json: any): Documents {
+    return DocumentsFromJSONTyped(json, false);
 }
 
-export function MetadataFromJSONTyped(json: any, ignoreDiscriminator: boolean): Metadata {
+export function DocumentsFromJSONTyped(json: any, ignoreDiscriminator: boolean): Documents {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'app_name': json['APP_NAME'],
-        'app_version': json['APP_VERSION'],
-        'app_website': !exists(json, 'APP_WEBSITE') ? undefined : json['APP_WEBSITE'],
-        'multi_organizations': json['MULTI_ORGANIZATIONS'],
-        'orders_management': json['ORDERS_MANAGEMENT'],
-        'apps_management': json['APPS_MANAGEMENT'],
-        'allow_signup': json['ALLOW_SIGNUP'],
-        'admin': json['ADMIN'],
-        'openapi': json['OPENAPI'],
-        'graphql': json['GRAPHQL'],
+        'label': !exists(json, 'label') ? undefined : json['label'],
+        'invoice': !exists(json, 'invoice') ? undefined : json['invoice'],
     };
 }
 
-export function MetadataToJSON(value?: Metadata | null): any {
+export function DocumentsToJSON(value?: Documents | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -113,16 +57,8 @@ export function MetadataToJSON(value?: Metadata | null): any {
     }
     return {
         
-        'APP_NAME': value.app_name,
-        'APP_VERSION': value.app_version,
-        'APP_WEBSITE': value.app_website,
-        'MULTI_ORGANIZATIONS': value.multi_organizations,
-        'ORDERS_MANAGEMENT': value.orders_management,
-        'APPS_MANAGEMENT': value.apps_management,
-        'ALLOW_SIGNUP': value.allow_signup,
-        'ADMIN': value.admin,
-        'OPENAPI': value.openapi,
-        'GRAPHQL': value.graphql,
+        'label': value.label,
+        'invoice': value.invoice,
     };
 }
 

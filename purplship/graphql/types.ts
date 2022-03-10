@@ -807,7 +807,8 @@ export interface get_shipment_shipment {
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -1021,7 +1022,8 @@ export interface get_shipments_shipments_edges_node {
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -1258,7 +1260,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -3082,7 +3085,8 @@ export interface get_order_order_shipments {
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
@@ -3347,7 +3351,8 @@ export interface get_orders_orders_edges_node_shipments {
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
   shipment_identifier: string | null;
-  label: string | null;
+  label_url: string | null;
+  invoice_url: string | null;
   tracking_url: string | null;
   test_mode: boolean;
   service: string | null;
