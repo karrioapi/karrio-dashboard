@@ -351,4 +351,8 @@ export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
     clearTimeout(timer);
     timer = setTimeout(() => { func.apply(null, args); }, timeout);
   };
+};
+
+export function isListEqual<T>(list1: T[], list2: T[]) {
+  return list1.length === list2.length && list1.every((item, index) => item === list2[index]);
 }

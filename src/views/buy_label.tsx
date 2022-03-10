@@ -91,7 +91,8 @@ export default function LabelPage(pageProps: any) {
       });
     }, []);
     useEffect(() => {
-      if (!ready && called && template.called && orders.called) setTimeout(() => setReady(true), 500);
+      const orders_called = (pageProps.metadata.ORDER_MANAGEMENTS && orders.called) || true;
+      if (!ready && called && template.called && orders_called) setTimeout(() => setReady(true), 500);
     }, [template.called, orders.called, called]);
 
     return (

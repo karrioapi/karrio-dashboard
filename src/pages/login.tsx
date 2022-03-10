@@ -30,7 +30,7 @@ export default function LoginPage(pageProps: any) {
     });
 
     if (response.ok) {
-      setTimeout(() => router.push(p`${(new URLSearchParams(location.search)).get('next') || '/'}`), 500);
+      setTimeout(() => window.location.replace(p`${(new URLSearchParams(location.search)).get('next') || '/'}`), 500);
     } else {
       setShowError(true);
       setTimeout(() => setIsLoading(false), 1000);

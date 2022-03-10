@@ -10,7 +10,7 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -71,10 +71,10 @@ export default function ShipmentsPage(pageProps: any) {
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === ['purchased', 'delivered', 'in_transit', 'cancelled'] && filters?.status?.length === 4 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['purchased', 'delivered', 'in_transit', 'cancelled']) ? 'is-active' : ''}`}>
               <a onClick={() => fetchShipments({ status: ['purchased', 'delivered', 'in_transit', 'cancelled'], offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status === ['purchased', 'in_transit'] && filters?.status?.length === 2 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['purchased', 'in_transit']) ? 'is-active' : ''}`}>
               <a onClick={() => fetchShipments({ status: ['purchased', 'in_transit'], offset: 0 })}>purchased</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') && filters?.status?.length === 1 ? 'is-active' : ''}`}>

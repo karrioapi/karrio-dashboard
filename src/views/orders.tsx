@@ -6,7 +6,7 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import OrdersProvider from "@/context/orders-provider";
 import { OrdersContext } from "@/context/orders-provider";
-import { formatAddress, formatDateTime, getURLSearchParams, isNone, isNoneOrEmpty } from "@/lib/helper";
+import { formatAddress, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { ChangeEvent, useContext, useEffect } from "react";
@@ -93,10 +93,10 @@ export default function OrdersPage(pageProps: any) {
             <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
               <a onClick={() => !isNone(filters?.status) && fetchOrders({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('unfulfilled') && filters?.status?.length === 2 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['unfulfilled', 'partial']) ? 'is-active' : ''}`}>
               <a onClick={() => !filters?.status?.includes('unfulfilled') && fetchOrders({ status: ['unfulfilled', 'partial'], offset: 0 })}>unfulfilled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('fulfilled') && filters?.status?.length === 2 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['fulfilled', 'delivered']) ? 'is-active' : ''}`}>
               <a onClick={() => !filters?.status?.includes('fulfilled') && fetchOrders({ status: ['fulfilled', 'delivered'], offset: 0 })}>fulfilled</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') && filters?.status?.length === 1 ? 'is-active' : ''}`}>

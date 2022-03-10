@@ -128,10 +128,13 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const fetchRates = async () => {
     try {
       loader.setLoading(true);
-      const { rates } = await mutation.fetchRates(shipment);
+      const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates: rates as ShipmentType['rates'] });
-    } catch (e) {
-      console.error(e);
+      if (messages && messages.length > 0) {
+        notifier.notify({ type: NotificationType.error, message: messages as any });
+      }
+    } catch (message: any) {
+      notifier.notify({ type: NotificationType.error, message });
     }
     loader.setLoading(false);
   };

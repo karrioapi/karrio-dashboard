@@ -31,7 +31,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
 
   return (
     <div className="plex-sidebar" ref={sidebar}>
-      <div className="sidebar-header pl-5">
+      <div className="sidebar-header pl-5 mb-4">
         {MULTI_ORGANIZATIONS
           ? <OrganizationDropdown />
           : <Image src={p`/icon.svg`} className="mt-2" width="50" height="100%" alt="logo" />}
