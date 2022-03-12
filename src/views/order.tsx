@@ -61,7 +61,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
             <br />
             {["unfulfilled", "partial"].includes(order.status) &&
               <AppLink
-                href={`/orders/fulfillment?shipment_id=new&order_id=${order.order_id}`} target="blank"
+                href={`/orders/fulfillment?shipment_id=new&order_id=${order.id}`}
                 className="button is-default is-small mx-1">
                 <span>Fulfill order</span>
               </AppLink>}
