@@ -14,6 +14,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
   const { loading, called, ...context } = useContext(OrdersContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [selection, setSelection] = useState<string[]>([]);
+  const [orders, setOrders] = useState<OrderType[]>([]);
   const [lineItems, setLineItems] = useState<CommodityType[]>([]);
   const [search, setSearch] = useState<string>("");
 
@@ -25,18 +26,11 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
     setIsActive(false);
     setSelection([]);
   };
-  const getUnpackedItems = ({ id: parent_id, quantity }: CommodityType) => {
+  const getUsedQuantity = (id: string) => {
     return (shipment?.parcels || [])
-      .map(({ items }) => items).flat()
-      .reduce(
-        (acc, item) => parent_id === item.parent_id ? acc - (item.quantity as number) : 0,
-        quantity || 0
-      );
-  };
-  const hasUnpackedItems = (order: OrderType) => {
-    const packed_quantities = order.line_items.map(getUnpackedItems);
-
-    return packed_quantities.filter(q => q > 0).length > 0;
+      .map(({ items }) => items || []).flat()
+      .filter(({ parent_id }) => parent_id === id)
+      .reduce((acc, item) => acc + (item.quantity as number), 0);
   };
 
   const onSearch = (e: React.ChangeEvent<any>) => {
@@ -54,12 +48,8 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
     const commodities = lineItems
       .filter(item => selection.includes(item.id))
       .map((item) => {
-        const { id, ...content } = item;
-        return {
-          ...content,
-          parent_id: id,
-          quantity: getUnpackedItems(item)
-        }
+        const { id: parent_id, ...content } = item;
+        return { ...content, parent_id };
       });
     onChange && onChange(commodities);
     close();
@@ -67,12 +57,17 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
 
   useEffect(() => {
     if (called && !isNone(context.orders)) {
-      setLineItems(
-        context.orders
-          .filter(order => hasUnpackedItems(order))
-          .map(order => order.line_items)
-          .flat()
-      );
+      const filteredOrders = context.orders
+        .map(order => ({
+          ...order,
+          line_items: order.line_items
+            .map(item => ({ ...item, quantity: (item.quantity as number) - getUsedQuantity(item.id) }))
+            .filter(item => item.quantity > 0)
+        }))
+        .filter(order => order.line_items.length > 0);
+
+      setOrders(filteredOrders);
+      setLineItems(filteredOrders.map(order => order.line_items).flat());
     }
   }, [called, context.orders, isActive]);
 
@@ -104,13 +99,12 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
               </p>
             </div>
 
-            {(lineItems || []).length === 0 && <div className="notification is-warning is-light px-3 py-2 my-2">
+            {lineItems.length === 0 && <div className="notification is-warning is-light px-3 py-2 my-2">
               All items are packed.
             </div>}
 
             <nav className="panel is-shadowless" style={{ minHeight: '30vh', maxHeight: '60vh', overflowY: 'auto' }}>
-              {(context.orders || [])
-                .filter(order => hasUnpackedItems(order))
+              {orders
                 .map(order => (
                   <React.Fragment key={`order-${order.id}`}>
                     <label className="panel-block has-background-grey-lighter is-size-7" key={`order-${order.id}`}>
@@ -119,7 +113,8 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                         checked={(order.line_items.filter(({ id }) => selection.includes(id)).length === order.line_items.length)}
                         onChange={handleChange(order.line_items.map(({ id }) => id))}
                       />
-                      {order.order_id}
+                      <span>{order.order_id}</span>
+                      <span className="has-text-grey is-size-7">{` - ORDER ID`}</span>
                     </label>
 
                     {order.line_items.map((item, item_index) => (
@@ -135,7 +130,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                             <span className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                               {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
                               {!isNoneOrEmpty(item.metadata?.ship_qty) && ` | SHIP QTY: ${item.metadata?.ship_qty}`}
-                              {` | UNPACKED QTY: ${getUnpackedItems(item)}`}
+                              {` | UNPACKED QTY: ${item.quantity}`}
                             </span>
                           </p>
                         </div>

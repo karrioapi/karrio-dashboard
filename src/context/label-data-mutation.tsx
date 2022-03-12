@@ -50,7 +50,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
       await mutation.updateShipment(update);
     }
-    await fetchRates();
   };
   const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
     if (isDraft(shipment.id)) {
@@ -129,11 +128,12 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     try {
       loader.setLoading(true);
       const { rates, messages } = await mutation.fetchRates(shipment);
-      updateShipment({ rates: rates as ShipmentType['rates'] });
+      updateShipment({ rates, messages } as Partial<ShipmentType>);
       if (messages && messages.length > 0) {
         notifier.notify({ type: NotificationType.error, message: messages as any });
       }
     } catch (message: any) {
+      updateShipment({ rates: [], messages: message } as Partial<ShipmentType>);
       notifier.notify({ type: NotificationType.error, message });
     }
     loader.setLoading(false);

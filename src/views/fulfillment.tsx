@@ -9,8 +9,6 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
-import AddressTemplatesProvider from '@/context/address-templates-provider';
 import { LabelTypeEnum, MetadataObjectType } from '@purplship/graphql';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
@@ -32,8 +30,6 @@ import CustomsInfoDescription from '@/components/descriptions/customs-info-descr
 export { getServerSideProps } from "@/lib/middleware";
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
-  AddressTemplatesProvider,
-  ParcelTemplatesProvider,
   TemplatesProvider,
   LabelMutationProvider,
   ShipmentMutationProvider,
@@ -95,8 +91,8 @@ export default function FulfillmentPage(pageProps: any) {
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
       const parent_quantity = getParent(item.parent_id)?.quantity || 0;
       const packed_quantity = shipment.parcels
-        .map(({ items }) => items).flat()
-        .filter(({ id }, index) => id !== item.id && index !== item_index)
+        .map(({ items }) => items || []).flat()
+        .filter((_, index) => index !== item_index)
         .reduce((acc, { parent_id, quantity }) => {
           return (parent_id === item.parent_id) ? acc + (quantity as number) : 0;
         }, 0);
@@ -110,14 +106,15 @@ export default function FulfillmentPage(pageProps: any) {
         .map(({ line_items }) => line_items).flat()
         .map(({ id: parent_id, ...item }) => ({ ...item, parent_id }));
       const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
+      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
         ...(recipient ? { recipient: (recipient as typeof shipment['recipient']) } : {}),
-        ...(default_parcel ? { parcels: ([parcel] as typeof shipment['parcels']) } : {}),
-        reference: `Order #${order_id}`,
+        ...(parcel ? { parcels: ([parcel] as typeof shipment['parcels']) } : {}),
+        reference: `Order #${order_ids}`,
         label_type: LabelTypeEnum.PDF,
-        metadata: { order_ids: order_id, }
+        metadata: { order_ids },
       });
     };
     const onChange = async (changes: Partial<ShipmentType>) => {
@@ -136,7 +133,7 @@ export default function FulfillmentPage(pageProps: any) {
       if (!orders.called && !orders.loading && orders.load) orders.load({
         first: 20,
         status: ['unfulfilled', 'partial'],
-        ...(order_id ? { order_id: order_id.split(',').map(s => s.trim()) } : {})
+        ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
       });
     }, []);
     useEffect(() => {
@@ -161,7 +158,9 @@ export default function FulfillmentPage(pageProps: any) {
         <ModeIndicator />
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
-          <span className="title is-4">Fulfill order{order_id.split(',').map(s => s.trim()).length > 1 ? `s` : ""}</span>
+          <span className="title is-4">
+            Fulfill order{(orders.orders || []).length > 1 ? `s` : ""}
+          </span>
         </header>
 
         {!ready && <Spinner />}
@@ -174,7 +173,7 @@ export default function FulfillmentPage(pageProps: any) {
 
               <div className="p-3">
                 <span className="has-text-weight-bold is-size-6">
-                  {order_id.split(',').map(s => s.trim()).length > 1 ? `Multiple Orders` : `Order #${order_id}`}
+                  {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
                 </span>
               </div>
 
@@ -204,7 +203,7 @@ export default function FulfillmentPage(pageProps: any) {
 
             </div>
 
-            {/* Parcels section */}
+            {/* Parcel & Items section */}
             <div className="card px-0 py-3 mt-4">
 
               <header className="px-3 is-flex is-justify-content-space-between">
@@ -212,6 +211,7 @@ export default function FulfillmentPage(pageProps: any) {
                 <div className="is-vcentered">
                   <ParcelModalEditor
                     header='Add package'
+                    shipment={shipment}
                     onSubmit={mutation.addParcel}
                     trigger={
                       <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
@@ -241,6 +241,7 @@ export default function FulfillmentPage(pageProps: any) {
                         <ParcelModalEditor header='Edit package'
                           onSubmit={mutation.updateParcel(pkg_index, pkg.id)}
                           parcel={pkg}
+                          shipment={shipment}
                           trigger={
                             <button type="button" className="button is-small is-white" disabled={loading}>
                               <span className="icon is-small"><i className="fas fa-pen"></i></span>
@@ -255,7 +256,7 @@ export default function FulfillmentPage(pageProps: any) {
                       </div>
                     </div>
 
-                    {/* Parcel items section */}
+                    {/* Items section */}
                     <span className="is-size-7 has-text-weight-semibold">ITEMS</span>
 
                     {(pkg.items || []).map((item, item_index) => (
@@ -461,6 +462,11 @@ export default function FulfillmentPage(pageProps: any) {
                   </header>
 
                   <AddressDescription address={shipment.shipper} />
+
+                  {Object.values(shipment.shipper || {}).length === 0 &&
+                    <div className="notification is-warning is-light my-2 py-2 px-4">
+                      Please specify the origin address.
+                    </div>}
 
                 </div>
 

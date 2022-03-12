@@ -33,12 +33,12 @@ export default function OrdersPage(pageProps: any) {
       const order_ids = (
         current
           .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
-          .map(order => order.order_id)
+          .map(order => order.id)
       );
-      const selection = selectedOrders.filter(order_id => order_ids.includes(order_id));
+      const selection = selectedOrders.filter(id => order_ids.includes(id));
       const selected = selection.length > 0 && selection.length === (order_ids || []).length;
       setAllChecked(selected);
-      if (selectedOrders.filter(order_id => !order_ids.includes(order_id)).length > 0) {
+      if (selectedOrders.filter(id => !order_ids.includes(id)).length > 0) {
         setSelection(selection);
       }
     };
@@ -59,10 +59,10 @@ export default function OrdersPage(pageProps: any) {
         setSelection(
           !checked ? [] : (orders || [])
             .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
-            .map(({ order_id }) => order_id)
+            .map(({ id }) => id)
         );
       } else {
-        setSelection(checked ? [...selection, name] : selection.filter(order_id => order_id !== name));
+        setSelection(checked ? [...selection, name] : selection.filter(id => id !== name));
       }
     };
 
@@ -146,9 +146,9 @@ export default function OrdersPage(pageProps: any) {
                     <label className="checkbox py-3 px-2">
                       <input
                         type="checkbox"
-                        name={order.order_id}
+                        name={order.id}
                         onChange={handleSelection}
-                        checked={selection.includes(order.order_id)}
+                        checked={selection.includes(order.id)}
                         disabled={['cancelled', 'fulfilled'].includes(order.status)}
                       />
                     </label>

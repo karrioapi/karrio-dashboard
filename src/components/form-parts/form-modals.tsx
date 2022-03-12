@@ -8,6 +8,9 @@ import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { deepEqual } from '@/lib/helper';
 import CustomsInfoForm from './customs-info-form';
+import AddressTemplatesProvider from '@/context/address-templates-provider';
+import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
+import CustomInfoTemplatesProvider from '@/context/customs-templates-provider';
 
 
 type AddressModalEditorProps = {
@@ -31,12 +34,14 @@ export const AddressModalEditor: React.FC<ModalFormProps<AddressModalEditorProps
         </div>
         <div className="p-3 my-4"></div>
 
-        <AddressForm
-          name="template"
-          value={address}
-          shipment={shipment}
-          onSubmit={async (data) => { await onSubmit(data); close(); }}
-        />
+        <AddressTemplatesProvider>
+          <AddressForm
+            name="template"
+            value={address}
+            shipment={shipment}
+            onSubmit={async (data) => { await onSubmit(data); close(); }}
+          />
+        </AddressTemplatesProvider>
       </section>
     )
   };
@@ -49,6 +54,7 @@ export const AddressModalEditor: React.FC<ModalFormProps<AddressModalEditorProps
 type ParcelModalEditorProps = {
   header?: string;
   parcel?: ParcelType;
+  shipment?: ShipmentType;
   onSubmit: (parcel: ParcelType) => Promise<any>;
 };
 
@@ -56,7 +62,7 @@ export const ParcelModalEditor: React.FC<ModalFormProps<ParcelModalEditorProps>>
   const modal = useModal();
 
   const FormComponent: React.FC<ParcelModalEditorProps> = props => {
-    const { parcel: value, header, onSubmit } = props;
+    const { parcel: value, header, shipment, onSubmit } = props;
     const { close } = useModal();
     const notifier = useNotifier();
     const loader = useLoader();
@@ -89,19 +95,25 @@ export const ParcelModalEditor: React.FC<ModalFormProps<ParcelModalEditorProps>>
         </div>
         <div className="p-3 my-4"></div>
 
-        <form onSubmit={handleSubmit}>
-          <ParcelForm value={parcel as ParcelType} onChange={(parcel) => setParcel(parcel)}>
-            <div className="p-3 my-5"></div>
-            <ButtonField type="submit"
-              className="is-primary m-0"
-              fieldClass="form-floating-footer p-3"
-              controlClass="has-text-centered"
-              disabled={deepEqual(value, parcel)}
+        <ParcelTemplatesProvider>
+          <form onSubmit={handleSubmit}>
+            <ParcelForm
+              shipment={shipment}
+              value={parcel as ParcelType}
+              onChange={(parcel) => setParcel(parcel)}
             >
-              <span>Save</span>
-            </ButtonField>
-          </ParcelForm>
-        </form>
+              <div className="p-3 my-5"></div>
+              <ButtonField type="submit"
+                className="is-primary m-0"
+                fieldClass="form-floating-footer p-3"
+                controlClass="has-text-centered"
+                disabled={deepEqual(value, parcel)}
+              >
+                <span>Save</span>
+              </ButtonField>
+            </ParcelForm>
+          </form>
+        </ParcelTemplatesProvider>
       </section>
     )
   };
@@ -132,11 +144,13 @@ export const CustomsModalEditor: React.FC<ModalFormProps<CustomsModalEditorProps
         </div>
         <div className="p-3 my-4"></div>
 
-        <CustomsInfoForm
-          value={customs}
-          shipment={shipment}
-          onSubmit={async (data) => { await onSubmit(data); close(); }}
-        />
+        <CustomInfoTemplatesProvider>
+          <CustomsInfoForm
+            value={customs}
+            shipment={shipment}
+            onSubmit={async (data) => { await onSubmit(data); close(); }}
+          />
+        </CustomInfoTemplatesProvider>
       </section>
     )
   };
