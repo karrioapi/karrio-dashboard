@@ -2256,3 +2256,70 @@ export const MUTATE_METADATA = gql`mutation mutate_metadata($data: MutateMetadat
   }
 }
 `;
+
+export const GET_DOCUMENT_TEMPLATE = gql`query get_document_template($id: String!) {
+  document_template(id: $id) {
+    id
+    slug
+    name
+    template
+    description
+    related_objects
+  }
+}
+`;
+
+export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int) {
+  document_templates(offset: $offset, first: $first) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        slug
+        name
+        template
+        description
+        related_objects
+      }
+    }
+  }
+}
+`;
+
+export const CREATE_DOCUMENT_TEMPLATE = gql`mutation create_document_template($data:  CreateDocumentTemplateInput!) {
+  create_document_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const UPDATE_DOCUMENT_TEMPLATE = gql`mutation update_document_template($data:  UpdateDocumentTemplateInput!) {
+  update_document_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($data: DeleteDocumentTemplateInput!) {
+  delete_document_template(input: $data) {
+    id
+  }
+}
+`;

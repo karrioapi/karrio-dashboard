@@ -3399,6 +3399,7 @@ export interface get_orders {
 export interface get_ordersVariables {
   offset?: number | null;
   first?: number | null;
+  id?: (string | null)[] | null;
   order_id?: (string | null)[] | null;
   source?: (string | null)[] | null;
   status?: (string | null)[] | null;
@@ -3436,6 +3437,153 @@ export interface mutate_metadata {
 
 export interface mutate_metadataVariables {
   data: MutateMetadataInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_document_template
+// ====================================================
+
+export interface get_document_template_document_template {
+  id: string;  // The ID of the object.
+  slug: string;
+  name: string;
+  template: string;
+  description: string | null;
+  related_objects: (TemplateRelatedObject | null)[] | null;
+}
+
+export interface get_document_template {
+  document_template: get_document_template_document_template | null;
+}
+
+export interface get_document_templateVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: get_document_templates
+// ====================================================
+
+export interface get_document_templates_document_templates_pageInfo {
+  hasNextPage: boolean;        // When paginating forwards, are there more items?
+  hasPreviousPage: boolean;    // When paginating backwards, are there more items?
+  startCursor: string | null;  // When paginating backwards, the cursor to continue.
+  endCursor: string | null;    // When paginating forwards, the cursor to continue.
+}
+
+export interface get_document_templates_document_templates_edges_node {
+  id: string;  // The ID of the object.
+  slug: string;
+  name: string;
+  template: string;
+  description: string | null;
+  related_objects: (TemplateRelatedObject | null)[] | null;
+}
+
+export interface get_document_templates_document_templates_edges {
+  node: get_document_templates_document_templates_edges_node | null;  // The item at the end of the edge
+}
+
+export interface get_document_templates_document_templates {
+  pageInfo: get_document_templates_document_templates_pageInfo;       // Pagination data for this connection.
+  edges: (get_document_templates_document_templates_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface get_document_templates {
+  document_templates: get_document_templates_document_templates;
+}
+
+export interface get_document_templatesVariables {
+  offset?: number | null;
+  first?: number | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: create_document_template
+// ====================================================
+
+export interface create_document_template_create_document_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface create_document_template_create_document_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface create_document_template_create_document_template {
+  template: create_document_template_create_document_template_template | null;
+  errors: (create_document_template_create_document_template_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface create_document_template {
+  create_document_template: create_document_template_create_document_template | null;
+}
+
+export interface create_document_templateVariables {
+  data: CreateDocumentTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: update_document_template
+// ====================================================
+
+export interface update_document_template_update_document_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface update_document_template_update_document_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface update_document_template_update_document_template {
+  template: update_document_template_update_document_template_template | null;
+  errors: (update_document_template_update_document_template_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface update_document_template {
+  update_document_template: update_document_template_update_document_template | null;
+}
+
+export interface update_document_templateVariables {
+  data: UpdateDocumentTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: delete_document_template
+// ====================================================
+
+export interface delete_document_template_delete_document_template {
+  id: string | null;
+}
+
+export interface delete_document_template {
+  delete_document_template: delete_document_template_delete_document_template | null;
+}
+
+export interface delete_document_templateVariables {
+  data: DeleteDocumentTemplateInput;
 }
 
 /* tslint:disable */
@@ -4229,6 +4377,11 @@ export enum MetadataObjectType {
   order = "order",
   shipment = "shipment",
   tracker = "tracker",
+}
+
+export enum TemplateRelatedObject {
+  order = "order",
+  shipment = "shipment",
 }
 
 // null
@@ -5324,6 +5477,33 @@ export interface MutateMetadataInput {
   object_type: MetadataObjectType;
   added_values?: any | null;
   discarded_keys?: (string | null)[] | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface CreateDocumentTemplateInput {
+  slug: string;
+  name: string;
+  template: string;
+  description?: string | null;
+  related_objects: (TemplateRelatedObject | null)[];
+  clientMutationId?: string | null;
+}
+
+// null
+export interface UpdateDocumentTemplateInput {
+  id: string;
+  slug?: string | null;
+  name?: string | null;
+  template?: string | null;
+  description?: string | null;
+  related_objects?: (TemplateRelatedObject | null)[] | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface DeleteDocumentTemplateInput {
+  id: string;
   clientMutationId?: string | null;
 }
 
