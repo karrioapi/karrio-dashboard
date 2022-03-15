@@ -140,13 +140,17 @@ export default function FulfillmentPage(pageProps: any) {
       setLoading(label.loading || loader.loading);
     }, [label.loading, loader.loading]);
     useEffect(() => {
-      if (!ready && called && template.called && orders.called) setTimeout(() => setReady(true), 500);
-    }, [template.called, orders.called, called]);
-    useEffect(() => {
-      if (ready && shipment_id === 'new' && orders.orders.length > 0) {
+      if (
+        !ready && called &&
+        template.called &&
+        orders.called &&
+        shipment_id === 'new' &&
+        orders.orders.length > 0
+      ) {
         setInitialData();
+        setReady(true);
       }
-    }, [ready, orders.orders, default_address, default_parcel]);
+    }, [orders.orders, template.called, orders.called, called]);
     useEffect(() => {
       if (router.query.shipment_id === 'new' && isNone(shipment.rates) && !requireInfoForRating(shipment)) {
         mutation.fetchRates();
