@@ -3504,6 +3504,7 @@ export interface get_document_templates {
 export interface get_document_templatesVariables {
   offset?: number | null;
   first?: number | null;
+  related_objects?: (string | null)[] | null;
 }
 
 

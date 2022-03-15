@@ -2269,8 +2269,8 @@ export const GET_DOCUMENT_TEMPLATE = gql`query get_document_template($id: String
 }
 `;
 
-export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int) {
-  document_templates(offset: $offset, first: $first) {
+export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int, $related_objects: [String]) {
+  document_templates(offset: $offset, first: $first, related_objects: $related_objects) {
     pageInfo {
       hasNextPage
       hasPreviousPage

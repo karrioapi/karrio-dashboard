@@ -75,7 +75,7 @@ export default function DocumentTemplatePage(pageProps: any) {
       try {
         if (isNew) {
           const response = await mutation.createDocumentTemplate(template);
-          router.addUrlParam('id', response?.template?.id as string);
+          router.updateUrlParam('id', response?.template?.id as string);
         } else {
           await mutation.updateDocumentTemplate(template);
         }
@@ -150,7 +150,7 @@ export default function DocumentTemplatePage(pageProps: any) {
               value={template.slug as string}
               onInvalid={validityCheck(validationMessage('Please enter a valid slug'))}
               onChange={validityCheck(handleChange)}
-              placeholder="packing-slip"
+              placeholder="packing_slip"
               className="is-small"
               pattern="^[a-z0-9_]+$"
               required

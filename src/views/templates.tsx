@@ -2,11 +2,10 @@ import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import TemplateDescription from "@/components/descriptions/template-description";
-import { Loading } from "@/components/loader";
 import DocumentTemplatesProvider, { DocumentTemplates } from "@/context/document-templates-provider";
 import { isNone, p } from "@/lib/helper";
 import Head from "next/head";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import React from "react";
 import DocumentTemplateMutationProvider, { useDocumentTemplateMutation } from "@/context/document-template-mutation";
 
@@ -15,19 +14,15 @@ export { getServerSideProps } from "@/lib/middleware";
 
 export default function TemplatesPage(pageProps: any) {
   const Component: React.FC<any> = () => {
-    const { setLoading } = useContext(Loading);
     const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { deleteTemplate } = useDocumentTemplateMutation();
-    const { loading, templates, previous, next, load, loadMore, refetch } = useContext(DocumentTemplates);
+    const { loading, templates, previous, next, loadMore, refetch } = useContext(DocumentTemplates);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
       await deleteTemplate(id);
       update();
     };
-
-    useEffect(() => { !loading && load() }, []);
-    useEffect(() => { setLoading(loading); });
 
     return (
       <>
