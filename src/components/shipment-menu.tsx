@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react';
 import { LabelPrinterContext } from '@/components/label/label-printer';
-import { NotificationType, ShipmentType } from '@/lib/types';
+import { DocumentTemplateType, NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 import { ShipmentsContext } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
@@ -9,14 +9,16 @@ import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-in
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { ShipmentStatusEnum } from '@purplship/graphql';
+import { PURPLSHIP_API } from '@/client/context';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
   shipment: ShipmentType;
+  templates?: DocumentTemplateType[];
 }
 
 
-const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, style, onClick }) => {
+const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, className, style, onClick }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
@@ -98,6 +100,12 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, className, st
               <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
             {!isNone(shipment.invoice_url) &&
               <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
+            {(templates || []).map(template =>
+              <a href={`${PURPLSHIP_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}&download`}
+                className="dropdown-item" key={template.id}>
+                Download {template.name}
+              </a>
+            )}
           </div>
         </div>
       </div>

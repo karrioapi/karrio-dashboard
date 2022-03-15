@@ -3,11 +3,12 @@ import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import TemplateDescription from "@/components/descriptions/template-description";
 import DocumentTemplatesProvider, { DocumentTemplates } from "@/context/document-templates-provider";
-import { isNone, p } from "@/lib/helper";
+import { isNone } from "@/lib/helper";
 import Head from "next/head";
 import { useContext } from "react";
 import React from "react";
 import DocumentTemplateMutationProvider, { useDocumentTemplateMutation } from "@/context/document-template-mutation";
+import AppLink from "@/components/app-link";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -29,9 +30,9 @@ export default function TemplatesPage(pageProps: any) {
 
         <header className="px-0 py-4">
           <span className="title is-4">Templates</span>
-          <a className="button is-primary is-small is-pulled-right" href={p`/settings/template?id=new`}>
+          <AppLink className="button is-primary is-small is-pulled-right" href="/settings/template?id=new">
             <span>Create template</span>
-          </a>
+          </AppLink>
         </header>
 
         {(templates?.length > 0) && <div className="table-container">
@@ -51,11 +52,11 @@ export default function TemplatesPage(pageProps: any) {
                   </td>
                   <td className="action is-vcentered pr-0">
                     <div className="buttons is-justify-content-end">
-                      <a className="button is-white" href={p`/settings/template?id=${template.id}`}>
+                      <AppLink className="button is-white" href={`/settings/template?id=${template.id}`}>
                         <span className="icon is-small">
                           <i className="fas fa-pen"></i>
                         </span>
-                      </a>
+                      </AppLink>
                       <button className="button is-white" onClick={() => confirmDeletion({
                         label: "Template template",
                         identifier: template.id,

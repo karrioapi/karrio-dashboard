@@ -14,13 +14,15 @@ import { deepEqual, isNoneOrEmpty, p, useLocation, validationMessage, validityCh
 import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
 import { bundleContexts } from '@/context/utils';
 import { PURPLSHIP_API } from '@/client/context';
+import { useAppMode } from '@/context/app-mode-provider';
+import AppLink from '@/components/app-link';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 type stateValue = string | boolean | string[] | Partial<TemplateType>;
 const DEFAULT_STATE = {
   template: `<div>
-  <h1>Order {{ order.order_id }}</h1>
+  <h1>Document</h1>
 </div>
 <style type="text/css">
   @page { size: A4; margin: 1cm };
@@ -45,6 +47,7 @@ export default function DocumentTemplatePage(pageProps: any) {
     const loader = useLoader();
     const router = useLocation();
     const notifier = useNotifier();
+    const { basePath } = useAppMode();
     const query = useDocumentTemplate();
     const mutation = useDocumentTemplateMutation();
     const [isNew, setIsNew] = useState<boolean>();
@@ -53,10 +56,6 @@ export default function DocumentTemplatePage(pageProps: any) {
     const computeParams = (template: DocumentTemplateType) => {
       if ((template.related_objects || []).length === 0) { return ''; }
       return `?${(template.related_objects || []).map(k => `${k}s=sample`).join('&')}`;
-    };
-    const navigateBack = (e?: any) => {
-      e && e.preventDefault();
-      router.push(p`/settings/templates`);
     };
     const handleChange = (event: React.ChangeEvent<any>) => {
       const target = event.target;
@@ -75,7 +74,7 @@ export default function DocumentTemplatePage(pageProps: any) {
       try {
         if (isNew) {
           const response = await mutation.createDocumentTemplate(template);
-          router.updateUrlParam('id', response?.template?.id as string);
+          router.addUrlParam('id', response?.template?.id as string);
         } else {
           await mutation.updateDocumentTemplate(template);
         }
@@ -107,11 +106,11 @@ export default function DocumentTemplatePage(pageProps: any) {
 
         <div className="py-4 is-flex is-justify-content-space-between has-background-white">
           <div className="is-vcentered">
-            <button className="button is-small is-white" onClick={navigateBack}>
+            <AppLink className="button is-small is-white" href="/settings/templates">
               <span className="icon is-small">
                 <i className="fas fa-times"></i>
               </span>
-            </button>
+            </AppLink>
             <span className="title is-6 has-text-weight-semibold p-3">Edit document template</span>
           </div>
           <div>

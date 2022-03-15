@@ -21,6 +21,7 @@ import { AddressType } from "@/lib/types";
 import ShipmentPreview, { ShipmentPreviewContext } from "@/components/descriptions/shipment-preview";
 import AppBadge from "@/components/app-badge";
 import CarrierBadge from "@/components/carrier-badge";
+import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -29,6 +30,7 @@ export default function ShipmentsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
+    const { templates } = useDocumentTemplates();
     const { previewShipment } = useContext(ShipmentPreviewContext);
     const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
@@ -134,7 +136,13 @@ export default function ShipmentsPage(pageProps: any) {
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
                   </td>
                   <td className="action is-vcentered px-0">
-                    <ShipmentMenu shipment={shipment} onClick={e => e.stopPropagation()} className="is-pulled-right" style={{ width: '150px' }} />
+                    <ShipmentMenu
+                      shipment={shipment}
+                      templates={templates}
+                      onClick={e => e.stopPropagation()}
+                      className="is-pulled-right"
+                      style={{ width: '150px' }}
+                    />
                   </td>
                 </tr>
               ))}
@@ -170,17 +178,19 @@ export default function ShipmentsPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
-        <LabelPrinter>
-          <CustomInvoicePrinter>
-            <ShipmentsProvider>
-              <ShipmentPreview>
+        <DocumentTemplatesProvider filter={{ related_objects: ["shipment"] }}>
+          <LabelPrinter>
+            <CustomInvoicePrinter>
+              <ShipmentsProvider>
+                <ShipmentPreview>
 
-                <Component />
+                  <Component />
 
-              </ShipmentPreview>
-            </ShipmentsProvider>
-          </CustomInvoicePrinter>
-        </LabelPrinter>
+                </ShipmentPreview>
+              </ShipmentsProvider>
+            </CustomInvoicePrinter>
+          </LabelPrinter>
+        </DocumentTemplatesProvider>
       </ShipmentMutationProvider>
     </DashboardLayout>
   ), pageProps)
