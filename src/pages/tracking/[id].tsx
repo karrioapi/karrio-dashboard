@@ -1,4 +1,4 @@
-import { TrackingEvent, TrackingStatus } from "@purplship/rest";
+import { TrackingEvent, TrackingStatus } from "karrio/rest";
 import { NextPage } from "next";
 import Image from 'next/image';
 import Head from "next/head";

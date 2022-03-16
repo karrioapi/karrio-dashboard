@@ -1,4 +1,4 @@
-import { Operation, OperationConfirmation, Webhook, WebhookData } from '@purplship/rest/index';
+import { Operation, OperationConfirmation, Webhook, WebhookData } from 'karrio/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';
@@ -13,19 +13,19 @@ export type WebhookMutator<T> = T & {
 
 const WebhookMutation = <T extends {}>(Component: React.FC<WebhookMutator<T>>) => (
   function WebhookMutationWrapper({ children, ...props }: any) {
-    const purplship = useContext(RestContext);
+    const karrio = useContext(RestContext);
 
     const addWebhook = async (data: WebhookData) => handleFailure(
-      purplship!.webhooks.create({ data })
+      karrio!.webhooks.create({ data })
     );
     const updateWebhook = async ({ id, ...data }: Partial<Webhook>) => handleFailure(
-      purplship!.webhooks.update({ id: id as string, data: data as any })
+      karrio!.webhooks.update({ id: id as string, data: data as any })
     );
     const testWebhook = async (id: string, payload: object) => handleFailure(
-      purplship!.webhooks.test({ id, data: { payload } })
+      karrio!.webhooks.test({ id, data: { payload } })
     );
     const removeWebhook = async (id: string) => handleFailure(
-      purplship!.webhooks.remove({ id })
+      karrio!.webhooks.remove({ id })
     );
 
     return (

@@ -1,6 +1,6 @@
 import SectionLayout from "@/layouts/section-layout";
 import Spinner from "@/components/spinner";
-import { get_organization_invitation, GET_ORGANIZATION_INVITATION, get_organization_invitationVariables } from "@purplship/graphql";
+import { get_organization_invitation, GET_ORGANIZATION_INVITATION, get_organization_invitationVariables } from "karrio/graphql";
 import { isNone } from "@/lib/helper";
 import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";

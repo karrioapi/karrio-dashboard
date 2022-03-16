@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { ACCEPT_ORGANIZATION_INVITATION, accept_organization_invitation, accept_organization_invitationVariables, GET_ORGANIZATION_INVITATION, get_organization_invitation, get_organization_invitationVariables, get_organization_invitation_organization_invitation } from "@purplship/graphql";
+import { ACCEPT_ORGANIZATION_INVITATION, accept_organization_invitation, accept_organization_invitationVariables, GET_ORGANIZATION_INVITATION, get_organization_invitation, get_organization_invitationVariables, get_organization_invitation_organization_invitation } from "karrio/graphql";
 import { useEffect, useState } from "react";
 
 

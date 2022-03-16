@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { NotificationType } from '@/lib/types';
 import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
-import { Webhook } from '@purplship/rest/index';
+import { Webhook } from 'karrio/rest/index';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import SelectField from '@/components/generic/select-field';

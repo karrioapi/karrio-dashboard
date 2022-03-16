@@ -15,7 +15,7 @@ interface ExpandedSidebarComponent { }
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
   const sidebar = useRef<HTMLDivElement>(null);
-  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT } = useContext(APIReference);
+  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT, DOCUMENTS_MANAGEMENT } = useContext(APIReference);
   const { testMode, basePath, switchMode } = useContext(AppMode);
   const [showSettingsMenus, setShowSettingsMenus] = React.useState(false);
 
@@ -109,6 +109,12 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <AppLink href="/settings/account" className={"menu-item ml-5 " + activeClass("/settings/account")}>
             <span>Account</span>
           </AppLink>
+
+          {DOCUMENTS_MANAGEMENT && <>
+            <AppLink href="/settings/templates" className={"menu-item ml-5 " + activeClass("/settings/templates")} shallow={false} prefetch={false}>
+              <span>Templates</span>
+            </AppLink>
+          </>}
 
           <AppLink href="/settings/addresses" className={"menu-item ml-5 " + activeClass("/settings/addresses")} shallow={false} prefetch={false}>
             <span>Addresses</span>

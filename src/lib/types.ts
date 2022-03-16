@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TrackerStatusEnum, WeightUnitEnum } from '@purplship/graphql';
-import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from '@purplship/rest/index';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum } from 'karrio/graphql';
+import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from 'karrio/rest/index';
 import { Session } from 'next-auth';
 
 
@@ -51,6 +51,8 @@ export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_nod
 export type TemplateType = AddressTemplateType & ParcelTemplateType & CustomsTemplateType;
 
 export type ServiceLevelType = PartialServiceLevel;
+
+export type DocumentTemplateType = get_document_template_document_template;
 
 export interface View {
   path: string
@@ -138,6 +140,11 @@ export const CUSTOMS_CONTENT_TYPES: string[] = Array.from(new Set(
     .values(CustomsContentTypeEnum)
 ));
 
+export const DOCUMENT_RELATED_OBJECTS: string[] = Array.from(new Set(
+  Object
+    .values(TemplateRelatedObject)
+));
+
 export type ErrorMessage = MessageType & {
   carrier_id?: string;
   carrier_name?: string;
@@ -205,6 +212,9 @@ export interface Metadata {
   APP_WEBSITE?: string;
   MULTI_ORGANIZATIONS: boolean;
   ORDERS_MANAGEMENT: boolean;
+  APPS_MANAGEMENT: boolean;
+  DOCUMENTS_MANAGEMENT: boolean;
+  ALLOW_SIGNUP: boolean;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;
@@ -216,6 +226,9 @@ export interface References {
   APP_WEBSITE: string;
   MULTI_ORGANIZATIONS: boolean;
   ORDERS_MANAGEMENT: boolean;
+  APPS_MANAGEMENT: boolean;
+  DOCUMENTS_MANAGEMENT: boolean;
+  ALLOW_SIGNUP: boolean;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;

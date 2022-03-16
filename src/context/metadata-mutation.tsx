@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { MutateMetadataInput, mutate_metadata, MUTATE_METADATA, mutate_metadataVariables, mutate_metadata_mutate_metadata } from '@purplship/graphql';
+import { MutateMetadataInput, mutate_metadata, MUTATE_METADATA, mutate_metadataVariables, mutate_metadata_mutate_metadata } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 

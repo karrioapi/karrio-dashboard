@@ -1,4 +1,4 @@
-import { ShipmentStatusEnum } from '@purplship/rest/index';
+import { ShipmentStatusEnum } from 'karrio/rest/index';
 import React from 'react';
 
 interface StatusBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> {

@@ -7,7 +7,7 @@ import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types'
 import { AddressMutationContext } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from '@purplship/graphql';
+import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',

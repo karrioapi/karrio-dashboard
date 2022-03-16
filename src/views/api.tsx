@@ -6,7 +6,7 @@ import { TokenData } from "@/context/token-provider";
 import Head from "next/head";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Metadata } from "@/lib/types";
-import { PURPLSHIP_API } from "@/client/context";
+import { KARRIO_API } from "@/client/context";
 import CopiableLink from "@/components/copiable-link";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -45,7 +45,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
           <div className="columns my-0">
             <div className="column is-3 py-1">API URL</div>
             <div className="column is-8 py-1">
-              <CopiableLink className="button is-white py-2 px-1" text={PURPLSHIP_API} />
+              <CopiableLink className="button is-white py-2 px-1" text={KARRIO_API} />
             </div>
           </div>
         </div>

@@ -22,14 +22,14 @@
       "@/*": [
         "./src/*"
       ],
-      "@purplship/*": [
-        "./purplship/*"
+      "@karrio/*": [
+        "karrio/*"
       ],
     }
   },
   "include": [
     "next-env.d.ts",
-    "./purplship/**/*.ts",
+    "karrio/**/*.ts",
     "./src/**/*.ts",
     "./src/**/*.tsx"
   ],

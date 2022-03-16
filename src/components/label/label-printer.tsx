@@ -1,6 +1,6 @@
-import { PURPLSHIP_API } from '@/client/context';
+import { KARRIO_API } from '@/client/context';
 import { ShipmentType } from '@/lib/types';
-import { ShipmentLabelTypeEnum } from '@purplship/rest/index';
+import { ShipmentLabelTypeEnum } from 'karrio/rest/index';
 import React, { useState } from 'react';
 
 
@@ -39,7 +39,7 @@ const LabelPrinter: React.FC<LabelPrinterComponent> = ({ children }) => {
           {isActive && <iframe
             width="100%"
             height="100%"
-            src={`${PURPLSHIP_API}${shipment?.label_url}`}
+            src={`${KARRIO_API}${shipment?.label_url}`}
           >
           </iframe>}
 

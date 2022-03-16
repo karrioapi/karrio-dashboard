@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_events, GET_EVENTS, get_events_events_edges, get_eventsVariables } from '@purplship/graphql';
+import { get_events, GET_EVENTS, get_events_events_edges, get_eventsVariables } from 'karrio/graphql';
 import { EventType } from '@/lib/types';
 import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 

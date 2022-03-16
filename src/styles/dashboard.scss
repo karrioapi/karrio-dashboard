@@ -1,5 +1,5 @@
 /* ==========================================================================
-Purplship custom styling
+Karrio custom styling
 ========================================================================== */
 
 @import "./plex/main.scss";
@@ -15,7 +15,7 @@ Purplship custom styling
   color: #a9abac;
 }
 
-.purplship-loader {
+.karrio-loader {
   top: 0;
   left: 0;
   animation-duration: 3s !important;
@@ -25,7 +25,7 @@ Purplship custom styling
   height: 0.1rem !important;
 }
 
-.purplship-notification-loader {
+.karrio-notification-loader {
   top: 0;
   left: 0;
   animation-duration: 10s !important;
@@ -298,7 +298,7 @@ hr {
   color: rgb(196, 76, 52) !important;
 }
 
-.purplship-notifier {
+.karrio-notifier {
   position: fixed;
   top: 0;
   left: 0;

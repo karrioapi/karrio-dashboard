@@ -1,4 +1,4 @@
-import { CarrierSettingsCarrierNameEnum } from '@purplship/rest/index';
+import { CarrierSettingsCarrierNameEnum } from 'karrio/rest/index';
 import React, { useContext, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
@@ -15,7 +15,7 @@ import { AppMode } from '@/context/app-mode-provider';
 import CountryInput from '@/components/generic/country-input';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import { MetadataObjectType } from '@purplship/graphql';
+import { MetadataObjectType } from 'karrio/graphql';
 
 type OperationType = {
   connection?: UserConnectionType;

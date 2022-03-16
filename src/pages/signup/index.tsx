@@ -3,7 +3,7 @@ import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import UserMutation from "@/context/user-mutation";
-import { RegisterUserInput, register_user_register_user_errors } from "@purplship/graphql";
+import { RegisterUserInput, register_user_register_user_errors } from "karrio/graphql";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";

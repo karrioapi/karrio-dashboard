@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
           <a className="button is-white footer-docs-link"
             target="_blank"
             rel="noreferrer"
-            href="https://docs.purplship.com">
+            href="https://docs.karrio.io">
             <span>Docs</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>

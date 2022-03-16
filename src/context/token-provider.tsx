@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GetToken, GetToken_token, GET_TOKEN } from '@purplship/graphql';
+import { GetToken, GetToken_token, GET_TOKEN } from 'karrio/graphql';
 import { useLocation } from '@/lib/helper';
 
 export type TokenType = GetToken_token;

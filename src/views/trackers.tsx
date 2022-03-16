@@ -1,4 +1,4 @@
-import { TrackingEvent } from "@purplship/rest";
+import { TrackingEvent } from "karrio/rest";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";

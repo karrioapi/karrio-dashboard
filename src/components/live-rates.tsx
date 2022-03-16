@@ -11,7 +11,7 @@ import InputField from '@/components/generic/input-field'
 import { Loading } from '@/components/loader';
 import RateDescription from '@/components/descriptions/rate-description';
 import MessagesDescription from '@/components/descriptions/messages-description';
-import { LabelTypeEnum, PaidByEnum } from '@purplship/graphql';
+import { LabelTypeEnum, PaidByEnum } from 'karrio/graphql';
 import { useLabelMutation } from '@/context/label-data-mutation';
 
 interface LiveRatesComponent {

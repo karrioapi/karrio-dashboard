@@ -1,5 +1,5 @@
 import React from 'react';
-import { ServiceLevelCurrency } from '@purplship/graphql';
+import { ServiceLevelCurrency } from 'karrio/graphql';
 import SelectField from './generic/select-field';
 import { CURRENCY_OPTIONS, ServiceLevelType } from '@/lib/types';
 

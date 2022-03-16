@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetadataObjectType } from '@purplship/graphql';
+import { MetadataObjectType } from 'karrio/graphql';
 import MetadataStateProvider, { MetadataStateContext } from '@/context/metadata-state';
 import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';

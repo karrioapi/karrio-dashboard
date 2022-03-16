@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { InputFieldComponent } from '@/components/generic/input-field';
-import { Address } from '@purplship/rest/index';
+import { Address } from 'karrio/rest/index';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { Subject } from 'rxjs/internal/Subject';
 import { APIReference } from '@/context/references-provider';

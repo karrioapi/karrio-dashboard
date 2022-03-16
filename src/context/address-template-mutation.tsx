@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { CreateAddressTemplateInput, CREATE_ADDRESS_TEMPLATE, create_address_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_ADDRESS_TEMPLATE, UpdateAddressTemplateInput, update_address_templateVariables, create_address_template, update_address_template, delete_template, delete_template_delete_template, update_address_template_update_address_template, create_address_template_create_address_template } from '@purplship/graphql';
+import { CreateAddressTemplateInput, CREATE_ADDRESS_TEMPLATE, create_address_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_ADDRESS_TEMPLATE, UpdateAddressTemplateInput, update_address_templateVariables, create_address_template, update_address_template, delete_template, delete_template_delete_template, update_address_template_update_address_template, create_address_template_create_address_template } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 

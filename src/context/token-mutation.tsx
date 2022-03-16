@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { GetToken, mutate_token, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from '@purplship/graphql';
+import { GetToken, mutate_token, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from 'karrio/graphql';
 import { TokenData } from '@/context/token-provider';
 import { handleGraphQLRequest } from '@/lib/helper';
 

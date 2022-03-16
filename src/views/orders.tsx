@@ -14,6 +14,8 @@ import OrdersFilter from "@/components/filters/orders-filter";
 import { AddressType } from "@/lib/types";
 import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
 import AppLink from "@/components/app-link";
+import { KARRIO_API } from "@/client/context";
+import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -23,6 +25,7 @@ export default function OrdersPage(pageProps: any) {
     const router = useRouter();
     const { setLoading } = useContext(Loading);
     const { previewOrder } = useContext(OrderPreviewContext);
+    const { templates } = useDocumentTemplates();
     const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
     const [filters, setFilters] = React.useState<typeof variables>(variables);
     const [initialized, setInitialized] = React.useState(false);
@@ -30,11 +33,7 @@ export default function OrdersPage(pageProps: any) {
     const [allChecked, setAllChecked] = React.useState(false);
 
     const updatedSelection = (selectedOrders: string[], current: typeof orders) => {
-      const order_ids = (
-        current
-          .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
-          .map(order => order.id)
-      );
+      const order_ids = current.map(order => order.id);
       const selection = selectedOrders.filter(id => order_ids.includes(id));
       const selected = selection.length > 0 && selection.length === (order_ids || []).length;
       setAllChecked(selected);
@@ -56,14 +55,16 @@ export default function OrdersPage(pageProps: any) {
     const handleSelection = (e: ChangeEvent) => {
       const { checked, name } = e.target as HTMLInputElement;
       if (name === "all") {
-        setSelection(
-          !checked ? [] : (orders || [])
-            .filter(({ status }) => !['cancelled', 'fulfilled'].includes(status))
-            .map(({ id }) => id)
-        );
+        setSelection(!checked ? [] : (orders || []).map(({ id }) => id));
       } else {
         setSelection(checked ? [...selection, name] : selection.filter(id => id !== name));
       }
+    };
+    const unfulfilledSelection = (selection: string[]) => {
+      return orders.filter(order => (
+        selection.includes(order.id) &&
+        !["cancelled", "fulfilled"].includes(order.status)
+      )).length === selection.length;
     };
 
     useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
@@ -124,11 +125,23 @@ export default function OrdersPage(pageProps: any) {
                 </td>
 
                 {selection.length > 0 && <td className="p-1" colSpan={5}>
-                  <AppLink className="button is-small is-default px-3" href={`/orders/fulfillment?shipment_id=new&order_id=${selection.join(',')}`}>
+                  <AppLink
+                    href={`/orders/fulfillment?shipment_id=new&order_id=${selection.join(',')}`}
+                    className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
                     <span className="has-text-weight-semibold">
                       Fulfill order{selection.length > 1 ? `s (${selection.length})` : ""}
                     </span>
                   </AppLink>
+                  {(templates || []).map(template =>
+                    <a
+                      key={template.id}
+                      href={`${KARRIO_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
+                      className="button is-small is-default px-3 mx-2"
+                      target="_blank"
+                      rel="noreferrer">
+                      <span className="has-text-weight-semibold">Print {template.name}</span>
+                    </a>
+                  )}
                 </td>}
 
                 {selection.length === 0 && <>
@@ -149,7 +162,6 @@ export default function OrdersPage(pageProps: any) {
                         name={order.id}
                         onChange={handleSelection}
                         checked={selection.includes(order.id)}
-                        disabled={['cancelled', 'fulfilled'].includes(order.status)}
                       />
                     </label>
                   </td>
@@ -217,9 +229,11 @@ export default function OrdersPage(pageProps: any) {
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrdersProvider>
         <OrderPreview>
+          <DocumentTemplatesProvider filter={{ related_objects: ["order"] }}>
 
-          <Component />
+            <Component />
 
+          </DocumentTemplatesProvider>
         </OrderPreview>
       </OrdersProvider>
     </DashboardLayout>

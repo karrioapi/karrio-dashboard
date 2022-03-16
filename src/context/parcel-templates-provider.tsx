@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from '@purplship/graphql';
+import { get_parcel_templates, GET_PARCEL_TEMPLATES, get_parcel_templates_parcel_templates_edges } from 'karrio/graphql';
 import { ParcelTemplateType } from '@/lib/types';
 
 const PAGE_SIZE = 20;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
-import { PurplshipClient, TokenPair } from "@purplship/rest/index";
+import { KarrioClient, TokenPair } from "karrio/rest/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject } from "rxjs";
@@ -11,17 +11,17 @@ import logger from "@/lib/logger";
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 export const BASE_PATH = (publicRuntimeConfig.BASE_PATH || '/').replaceAll('//', '/');
 export const TEST_BASE_PATH = (publicRuntimeConfig.BASE_PATH + '/test').replaceAll('//', '/');
-export const PURPLSHIP_API = (
+export const KARRIO_API = (
   typeof window === 'undefined'
-    ? serverRuntimeConfig?.PURPLSHIP_HOSTNAME
-    : publicRuntimeConfig?.PURPLSHIP_API_URL
+    ? serverRuntimeConfig?.KARRIO_HOSTNAME
+    : publicRuntimeConfig?.KARRIO_API_URL
 );
 
-logger.debug("API clients initialized for Server: " + PURPLSHIP_API);
+logger.debug("API clients initialized for Server: " + KARRIO_API);
 
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
-export const restClient = new BehaviorSubject<PurplshipClient>(createRestContext());
-export const RestContext = React.createContext<PurplshipClient | undefined>(restClient.getValue());
+export const restClient = new BehaviorSubject<KarrioClient>(createRestContext());
+export const RestContext = React.createContext<KarrioClient | undefined>(restClient.getValue());
 export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
 const AuthToken = new BehaviorSubject<string | undefined>(undefined);
 
@@ -29,7 +29,7 @@ const AuthToken = new BehaviorSubject<string | undefined>(undefined);
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
   const { data: session } = useSession();
   const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>();
-  const [restCli, setRestCli] = React.useState<PurplshipClient | undefined>();
+  const [restCli, setRestCli] = React.useState<KarrioClient | undefined>();
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
@@ -52,9 +52,9 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
 };
 
 
-function createRestContext(accessToken?: string): PurplshipClient {
-  return new PurplshipClient({
-    basePath: PURPLSHIP_API || '',
+function createRestContext(accessToken?: string): KarrioClient {
+  return new KarrioClient({
+    basePath: KARRIO_API || '',
     apiKey: accessToken ? `Bearer ${accessToken}` : "",
     ...(typeof window !== 'undefined' ? {} : { fetchApi: require('node-fetch') }),
   });
@@ -62,7 +62,7 @@ function createRestContext(accessToken?: string): PurplshipClient {
 
 function createGrapQLContext(accessToken?: string): ApolloClient<any> {
   const httpLink = createHttpLink({
-    uri: `${PURPLSHIP_API || ''}/graphql`,
+    uri: `${KARRIO_API || ''}/graphql`,
   });
 
   const authLink = setContext((_, { headers }) => {

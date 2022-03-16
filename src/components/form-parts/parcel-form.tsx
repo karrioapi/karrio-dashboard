@@ -6,7 +6,7 @@ import { deepEqual, findPreset, formatDimension, formatRef, isNone, validationMe
 import { DIMENSION_UNITS, ParcelType, PresetCollection, ShipmentType, WEIGHT_UNITS } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { ParcelTemplates } from '@/context/parcel-templates-provider';
-import { DimensionUnitEnum, WeightUnitEnum } from '@purplship/graphql';
+import { DimensionUnitEnum, WeightUnitEnum } from 'karrio/graphql';
 
 type stateValue = string | number | boolean | Partial<ParcelType>;
 export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {

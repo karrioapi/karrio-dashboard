@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from '@purplship/graphql';
+import { GET_ORGANIZATIONS, get_organizations, get_organizations_organizations } from 'karrio/graphql';
 import { APIReference } from './references-provider';
 import OrganizationMutationProvider from './organization-mutation';
 

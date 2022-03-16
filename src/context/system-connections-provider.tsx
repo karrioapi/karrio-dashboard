@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_system_connections, GET_SYSTEM_CONNECTIONS, get_system_connections_system_connections } from '@purplship/graphql';
+import { get_system_connections, GET_SYSTEM_CONNECTIONS, get_system_connections_system_connections } from 'karrio/graphql';
 
 
 export type SystemConnectionType = get_system_connections_system_connections;

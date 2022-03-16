@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ShipmentType } from '@/lib/types';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_shipment, GET_SHIPMENT, get_shipmentVariables } from '@purplship/graphql';
+import { get_shipment, GET_SHIPMENT, get_shipmentVariables } from 'karrio/graphql';
 
 type ShipmentContextContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
   shipment?: ShipmentType;

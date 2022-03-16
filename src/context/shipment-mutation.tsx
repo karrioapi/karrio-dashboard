@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { OperationResponse, RateResponse, Shipment } from '@purplship/rest/index';
+import { OperationResponse, RateResponse, Shipment } from 'karrio/rest/index';
 import { handleFailure, handleGraphQLRequest } from '@/lib/helper';
 import { LabelContext } from '@/context/label-data-provider';
 import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
-import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from '@purplship/graphql';
+import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from 'karrio/graphql';
 import { ShipmentType } from '@/lib/types';
 
 
@@ -22,7 +22,7 @@ export type ShipmentMutator = {
 export const ShipmentMutationContext = React.createContext<ShipmentMutator>({} as ShipmentMutator);
 
 const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
-  const purplship = useContext(RestContext);
+  const karrio = useContext(RestContext);
   const { testMode } = useContext(AppMode);
   const state = useContext(LabelContext);
 
@@ -32,18 +32,18 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const [discardParcelMutation] = useMutation<discard_parcel, discard_parcelVariables>(DISCARD_PARCEL);
 
   const fetchRates = async (shipment: ShipmentType) => handleFailure(
-    purplship!.proxy.fetchRates({ data: (shipment as any), test: testMode }),
+    karrio!.proxy.fetchRates({ data: (shipment as any), test: testMode }),
   );
   const buyLabel = async (shipment: ShipmentType) => handleFailure(
     shipment.id !== undefined ?
-      purplship!.shipments.purchase({
+      karrio!.shipments.purchase({
         id: shipment.id as string,
         data: { selected_rate_id: shipment.selected_rate_id as string },
       }) :
-      purplship!.shipments.create({ data: shipment as any, test: testMode })
+      karrio!.shipments.create({ data: shipment as any, test: testMode })
   );
   const voidLabel = async (shipment: ShipmentType) => handleFailure(
-    purplship!.shipments.cancel({ id: shipment.id as string })
+    karrio!.shipments.cancel({ id: shipment.id as string })
   );
 
   const updateShipment = (data: PartialShipmentUpdateInput) => (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_default_templates, GET_DEFAULT_TEMPLATES, get_default_templates_default_templates, get_default_templates_default_templates_default_address_address, get_default_templates_default_templates_default_customs_customs, get_default_templates_default_templates_default_parcel_parcel } from '@purplship/graphql';
+import { get_default_templates, GET_DEFAULT_TEMPLATES, get_default_templates_default_templates, get_default_templates_default_templates_default_address_address, get_default_templates_default_templates_default_customs_customs, get_default_templates_default_templates_default_parcel_parcel } from 'karrio/graphql';
 
 
 export type DefaultTemplatesType = LazyQueryResult<get_default_templates, any> & {

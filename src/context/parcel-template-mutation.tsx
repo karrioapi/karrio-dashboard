@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { CreateParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_PARCEL_TEMPLATE, UpdateParcelTemplateInput, update_parcel_templateVariables } from '@purplship/graphql';
+import { CreateParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_PARCEL_TEMPLATE, UpdateParcelTemplateInput, update_parcel_templateVariables } from 'karrio/graphql';
 import { ParcelType } from '@/lib/types';
 
 export type ParcelTemplateInput = (CreateParcelTemplateInput | UpdateParcelTemplateInput) & {

@@ -22,7 +22,7 @@ import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ShipmentMutationProvider, { ShipmentMutationContext } from '@/context/shipment-mutation';
 import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
-import { PartialShipmentUpdateInput, ShipmentStatusEnum } from '@purplship/graphql';
+import { PartialShipmentUpdateInput, ShipmentStatusEnum } from 'karrio/graphql';
 import { isNone } from '@/lib/helper';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import LabelMutationProvider from '@/context/label-data-mutation';
