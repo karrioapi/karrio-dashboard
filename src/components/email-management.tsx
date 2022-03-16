@@ -4,7 +4,7 @@ import Notifier, { Notify } from '@/components/notifier';
 import { useLoader } from './loader';
 import { useUser } from '@/context/user-provider';
 import UserMutation from '@/context/user-mutation';
-import { request_email_change_request_email_change_errors } from '@purplship/graphql';
+import { request_email_change_request_email_change_errors } from 'karrio/graphql';
 
 interface EmailManagementComponent { }
 

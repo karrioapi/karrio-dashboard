@@ -1,4 +1,4 @@
-import { PURPLSHIP_API } from "@/client/context";
+import { KARRIO_API } from "@/client/context";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
@@ -28,21 +28,21 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 export async function checkAPI(): Promise<{ metadata?: Metadata }> {
-  // Attempt connection to the purplship API to retrieve the API metadata
+  // Attempt connection to the karrio API to retrieve the API metadata
   return new Promise(async (resolve, reject) => {
     try {
-      const { data: metadata } = await axios.get<Metadata>(PURPLSHIP_API);
+      const { data: metadata } = await axios.get<Metadata>(KARRIO_API);
 
       // TODO:: implement version compatibility check here.
       resolve({ metadata });
     } catch (e: any | Response) {
-      logger.error(`Failed to fetch API metadata from (${PURPLSHIP_API})`);
+      logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
       logger.error(e);
 
       const error = createServerError({
         code: ServerErrorCode.API_CONNECTION_ERROR,
         message: `
-          Server (${PURPLSHIP_API}) unreachable.
+          Server (${KARRIO_API}) unreachable.
           Please make sure taht the API is running and reachable.
         `
       })
@@ -56,11 +56,11 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
   const headers = { Authorization: `Bearer ${accessToken}` };
   const getReferences = () => axios
     .get<References>(
-      publicRuntimeConfig.PURPLSHIP_API_URL + '/v1/references', { headers }
+      publicRuntimeConfig.KARRIO_API_URL + '/v1/references', { headers }
     )
     .then(({ data }) => data);
   const getUserData = () => axios
-    .get<ContextDataType>(PURPLSHIP_API + '/graphql', {
+    .get<ContextDataType>(KARRIO_API + '/graphql', {
       headers,
       data: { query: dataQuery(org_id), variables: { org_id } }
     })

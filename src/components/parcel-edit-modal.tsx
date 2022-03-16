@@ -8,7 +8,7 @@ import { ParcelMutationContext } from '@/context/parcel-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import ButtonField from './generic/button-field';
-import { CreateParcelTemplateInput, UpdateParcelTemplateInput } from '@purplship/graphql';
+import { CreateParcelTemplateInput, UpdateParcelTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',

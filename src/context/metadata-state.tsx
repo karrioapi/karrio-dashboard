@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MetadataMutationContext } from '@/context/metadata-mutation';
-import { MetadataObjectType } from '@purplship/graphql';
+import { MetadataObjectType } from 'karrio/graphql';
 import { isNone, isNoneOrEmpty } from '@/lib/helper';
 
 type MetaPair = { key?: string; value?: string };

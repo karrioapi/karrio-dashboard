@@ -8,8 +8,8 @@ import { AppMode } from '@/context/app-mode-provider';
 import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { ShipmentStatusEnum } from '@purplship/graphql';
-import { PURPLSHIP_API } from '@/client/context';
+import { ShipmentStatusEnum } from 'karrio/graphql';
+import { KARRIO_API } from '@/client/context';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -101,7 +101,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
             {!isNone(shipment.invoice_url) &&
               <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
             {(templates || []).map(template =>
-              <a href={`${PURPLSHIP_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}&download`}
+              <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}&download`}
                 className="dropdown-item" key={template.id}>
                 Download {template.name}
               </a>

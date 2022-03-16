@@ -1,8 +1,8 @@
-import { Operation, TrackingStatus } from '@purplship/rest/index';
+import { Operation, TrackingStatus } from 'karrio/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';
-import { CreateCarrierNameEnum } from '@purplship/rest/generated/apis/TrackersApi';
+import { CreateCarrierNameEnum } from 'karrio/rest/generated/apis/TrackersApi';
 
 
 type TrackerMutator = {
@@ -13,13 +13,13 @@ type TrackerMutator = {
 export const TrackerMutationContext = React.createContext<TrackerMutator>({} as TrackerMutator);
 
 const TrackerMutationProvider: React.FC = ({ children }) => {
-  const purplship = useContext(RestContext);
+  const karrio = useContext(RestContext);
 
   const createTracker = async (tracking_number: string, carrier_name: string, test: boolean) => handleFailure(
-    purplship!.trackers.create({ carrierName: carrier_name as CreateCarrierNameEnum, trackingNumber: tracking_number, test })
+    karrio!.trackers.create({ carrierName: carrier_name as CreateCarrierNameEnum, trackingNumber: tracking_number, test })
   );
   const removeTracker = async (idOrTrackingNumber: string) => handleFailure(
-    purplship!.trackers.remove({ idOrTrackingNumber })
+    karrio!.trackers.remove({ idOrTrackingNumber })
   );
 
   return (

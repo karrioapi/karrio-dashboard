@@ -13,7 +13,7 @@ import { Notify } from '@/components/notifier';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Loading } from '@/components/loader';
 import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '../commodity-list-editor';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from '@purplship/graphql';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {

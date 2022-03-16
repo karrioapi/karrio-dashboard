@@ -1,4 +1,4 @@
-import { PURPLSHIP_API } from '@/client/context';
+import { KARRIO_API } from '@/client/context';
 import { ShipmentType } from '@/lib/types';
 import React, { useState } from 'react';
 
@@ -38,7 +38,7 @@ const CustomInvoicePrinter: React.FC<CustomInvoicePrinterComponent> = ({ childre
           {isActive && <iframe
             width="100%"
             height="100%"
-            src={`${PURPLSHIP_API}${shipment?.invoice_url}`}
+            src={`${KARRIO_API}${shipment?.invoice_url}`}
           >
           </iframe>}
 

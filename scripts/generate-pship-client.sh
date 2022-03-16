@@ -2,14 +2,14 @@
 branch="${1:=main}"
 
 docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
-  -i "https://raw.githubusercontent.com/purplship/purplship/${branch}/server/schemas/openapi.json" \
+  -i "https://raw.githubusercontent.com/karrioapi/karrio/${branch}/server/schemas/openapi.json" \
   -g typescript-fetch \
-  -o /local/purplship/rest/generated \
+  -o /local/karrio/rest/generated \
   --additional-properties=typescriptThreePlus=true \
   --additional-properties=modelPropertyNaming=snake_case \
   --additional-properties=useSingleRequestParameter=True
 
-rm -rf purplship/rest/generated/index.ts \
-  purplship/rest/generated/apis/index.ts \
-  purplship/rest/generated/.openapi-generator-ignore \
-  purplship/rest/generated/.openapi-generator/
+rm -rf karrio/rest/generated/index.ts \
+  karrio/rest/generated/apis/index.ts \
+  karrio/rest/generated/.openapi-generator-ignore \
+  karrio/rest/generated/.openapi-generator/

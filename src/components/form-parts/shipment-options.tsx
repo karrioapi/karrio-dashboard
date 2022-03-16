@@ -8,7 +8,7 @@ import { CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import MetadataEditor, { MetadataEditorContext } from '../metadata-editor';
-import { MetadataObjectType } from '@purplship/graphql';
+import { MetadataObjectType } from 'karrio/graphql';
 
 interface ShipmentOptionsComponent {
   shipment: ShipmentType;

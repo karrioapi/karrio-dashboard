@@ -17,7 +17,7 @@ const LoadingProvider: React.FC = ({ children }) => {
 
   return (
     <Loading.Provider value={{ loading, setLoading }}>
-      {loading && <progress className="progress is-primary purplship-loader" max="100">50%</progress>}
+      {loading && <progress className="progress is-primary karrio-loader" max="100">50%</progress>}
       {children}
     </Loading.Provider>
   )

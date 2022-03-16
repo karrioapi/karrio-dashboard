@@ -13,7 +13,7 @@ import { useLoader } from '@/components/loader';
 import { deepEqual, isNoneOrEmpty, p, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
 import { bundleContexts } from '@/context/utils';
-import { PURPLSHIP_API } from '@/client/context';
+import { KARRIO_API } from '@/client/context';
 import { useAppMode } from '@/context/app-mode-provider';
 import AppLink from '@/components/app-link';
 
@@ -115,7 +115,7 @@ export default function DocumentTemplatePage(pageProps: any) {
           </div>
           <div>
             <a className={`button is-small is-primary mx-1 ${isNoneOrEmpty(template.id) ? 'is-static' : ''}`}
-              href={`${PURPLSHIP_API}/documents/${template.id}.${template.slug}${computeParams(template)}`}
+              href={`${KARRIO_API}/documents/${template.id}.${template.slug}${computeParams(template)}`}
               target="_blank" rel="noreferrer">
               Preview Template
             </a>

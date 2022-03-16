@@ -21,7 +21,7 @@ WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_PURPLSHIP_API_URL https://api.karrio.io
+ENV NEXT_PUBLIC_KARRIO_API_URL https://api.karrio.io
 ENV JWT_SECRET "n*s-ex6@ex_r1i%bk=3jd)p+lsick5bi*90!mbk7rc3iy_op1r"
 ENV DASHBOARD_VERSION ${VERSION}
 

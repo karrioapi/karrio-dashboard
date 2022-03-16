@@ -14,7 +14,7 @@ import OrdersFilter from "@/components/filters/orders-filter";
 import { AddressType } from "@/lib/types";
 import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
 import AppLink from "@/components/app-link";
-import { PURPLSHIP_API } from "@/client/context";
+import { KARRIO_API } from "@/client/context";
 import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -135,7 +135,7 @@ export default function OrdersPage(pageProps: any) {
                   {(templates || []).map(template =>
                     <a
                       key={template.id}
-                      href={`${PURPLSHIP_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
+                      href={`${KARRIO_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
                       className="button is-small is-default px-3 mx-2"
                       target="_blank"
                       rel="noreferrer">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { CreateDocumentTemplateInput, create_document_template, CREATE_DOCUMENT_TEMPLATE, create_document_templateVariables, create_document_template_create_document_template, DELETE_DOCUMENT_TEMPLATE, delete_document_template, delete_document_templateVariables, delete_document_template_delete_document_template, UpdateDocumentTemplateInput, update_document_template, UPDATE_DOCUMENT_TEMPLATE, update_document_templateVariables, update_document_template_update_document_template } from '@purplship/graphql';
+import { CreateDocumentTemplateInput, create_document_template, CREATE_DOCUMENT_TEMPLATE, create_document_templateVariables, create_document_template_create_document_template, DELETE_DOCUMENT_TEMPLATE, delete_document_template, delete_document_templateVariables, delete_document_template_delete_document_template, UpdateDocumentTemplateInput, update_document_template, UPDATE_DOCUMENT_TEMPLATE, update_document_templateVariables, update_document_template_update_document_template } from 'karrio/graphql';
 import { DocumentTemplateType } from '@/lib/types';
 import { handleGraphQLRequest } from '@/lib/helper';
 

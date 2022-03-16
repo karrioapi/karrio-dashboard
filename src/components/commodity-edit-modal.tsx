@@ -1,7 +1,7 @@
 import React, { useContext, useReducer, useState } from 'react';
 import { deepEqual, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import { CommodityType, CURRENCY_OPTIONS, WEIGHT_UNITS } from '@/lib/types';
-import { CurrencyCodeEnum, MetadataObjectType, WeightUnitEnum } from '@purplship/graphql';
+import { CurrencyCodeEnum, MetadataObjectType, WeightUnitEnum } from 'karrio/graphql';
 import Notifier from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import ButtonField from '@/components/generic/button-field';

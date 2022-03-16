@@ -26,9 +26,9 @@ const Notifier: React.FC = ({ children }) => {
   return (
     <Notify.Provider value={{ notify }}>
       {notification !== undefined &&
-        <div className={`notification ${notification?.type || NotificationType.info} purplship-notifier`}>
+        <div className={`notification ${notification?.type || NotificationType.info} karrio-notifier`}>
           <progress
-            className={`progress purplship-notification-loader ${notification?.type || NotificationType.info}`}
+            className={`progress karrio-notification-loader ${notification?.type || NotificationType.info}`}
             max="100">50%</progress>
           <button className="delete" onClick={dismiss}></button>
           {formatMessage(notification?.message || '')}

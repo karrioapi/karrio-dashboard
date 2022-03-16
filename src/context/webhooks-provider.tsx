@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { WebhookList } from '@purplship/rest/index';
+import { WebhookList } from 'karrio/rest/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination } from '@/lib/helper';
@@ -19,7 +19,7 @@ type ResultType = WebhookList & {
 export const Webhooks = React.createContext<ResultType>({} as ResultType);
 
 const WebhooksProvider: React.FC = ({ children }) => {
-  const purplship = useContext(RestContext);
+  const karrio = useContext(RestContext);
   const { testMode } = useContext(AppMode);
   const [result, setValue] = useState<WebhookList>(DEFAULT_PAGINATED_RESULT);
   const [error, setError] = useState<RequestError>();
@@ -31,7 +31,7 @@ const WebhooksProvider: React.FC = ({ children }) => {
     setCursor(cursor || '');
     setLoading(true);
 
-    return (purplship as any)
+    return (karrio as any)
       .webhooks
       .list({ ...getCursorPagination(cursor), testMode: testMode })
       .then(setValue)

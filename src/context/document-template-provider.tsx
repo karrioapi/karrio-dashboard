@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_document_template, GET_DOCUMENT_TEMPLATE, get_document_templateVariables, get_document_template_document_template } from '@purplship/graphql';
+import { get_document_template, GET_DOCUMENT_TEMPLATE, get_document_templateVariables, get_document_template_document_template } from 'karrio/graphql';
 import { DocumentTemplateType } from '@/lib/types';
 
 

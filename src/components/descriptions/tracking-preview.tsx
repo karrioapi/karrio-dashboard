@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { formatDayDate, isNone, p, useLocation } from '@/lib/helper';
-import { ListStatusEnum } from '@purplship/rest/generated/apis/TrackersApi';
+import { ListStatusEnum } from 'karrio/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { TrackerType, TrackingEventType } from '@/lib/types';
 

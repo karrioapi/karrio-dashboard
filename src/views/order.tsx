@@ -9,7 +9,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType } from "@purplship/graphql";
+import { MetadataObjectType } from "karrio/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";

@@ -13,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType, ShipmentStatusEnum } from "@purplship/graphql";
+import { MetadataObjectType, ShipmentStatusEnum } from "karrio/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
 import { CustomsType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";

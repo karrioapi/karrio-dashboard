@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { CreateConnectionInput, create_connection, CREATE_CONNECTION, create_connectionVariables, create_connection_create_connection, delete_connection, DELETE_CONNECTION, delete_connectionVariables, delete_connection_delete_connection, UpdateConnectionInput, update_connection, UPDATE_CONNECTION, update_connectionVariables, update_connection_update_connection } from '@purplship/graphql';
+import { CreateConnectionInput, create_connection, CREATE_CONNECTION, create_connectionVariables, create_connection_create_connection, delete_connection, DELETE_CONNECTION, delete_connectionVariables, delete_connection_delete_connection, UpdateConnectionInput, update_connection, UPDATE_CONNECTION, update_connectionVariables, update_connection_update_connection } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 export type ConnectionMutator = {

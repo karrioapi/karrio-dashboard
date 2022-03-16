@@ -6,7 +6,7 @@ import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
 import { NotificationType } from '@/lib/types';
 import { useOrganizationMutation } from '@/context/organization-mutation';
-import { CreateOrganizationInput } from '@purplship/graphql';
+import { CreateOrganizationInput } from 'karrio/graphql';
 
 type OperationType = {
   onChange: (org_id: string) => Promise<any>;

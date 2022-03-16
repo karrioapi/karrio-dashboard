@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { mutate_system_connection, MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, mutate_system_connection_mutate_system_connection, SystemCarrierMutationInput } from '@purplship/graphql';
+import { mutate_system_connection, MUTATE_SYSTEM_CONNECTION, mutate_system_connectionVariables, mutate_system_connection_mutate_system_connection, SystemCarrierMutationInput } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 type ConnectionMutator = {

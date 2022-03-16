@@ -1,4 +1,4 @@
-import { TokenPair } from '@purplship/rest';
+import { TokenPair } from 'karrio/rest';
 import { OrgToken } from '@/client/context';
 import { isNone, parseJwt } from '@/lib/helper';
 import getConfig from 'next/config';

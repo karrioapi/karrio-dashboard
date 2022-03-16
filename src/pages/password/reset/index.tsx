@@ -3,7 +3,7 @@ import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import UserMutation from "@/context/user-mutation";
-import { ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset_errors } from "@purplship/graphql";
+import { ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";

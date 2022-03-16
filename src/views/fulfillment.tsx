@@ -9,7 +9,7 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType } from '@purplship/graphql';
+import { LabelTypeEnum, MetadataObjectType } from 'karrio/graphql';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';

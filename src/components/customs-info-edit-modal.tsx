@@ -7,7 +7,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { CustomsMutationContext } from '@/context/customs-template-mutation';
-import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from '@purplship/graphql';
+import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',

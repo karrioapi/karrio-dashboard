@@ -1,7 +1,7 @@
 import React from 'react';
 import { CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
-import { PartialShipmentUpdateInput } from '@purplship/graphql';
+import { PartialShipmentUpdateInput } from 'karrio/graphql';
 import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';

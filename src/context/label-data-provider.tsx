@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AddressType, ParcelType, ShipmentType } from '@/lib/types';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_shipment, GET_SHIPMENT, get_shipmentVariables, LabelTypeEnum } from '@purplship/graphql';
+import { get_shipment, GET_SHIPMENT, get_shipmentVariables, LabelTypeEnum } from 'karrio/graphql';
 import { debounce, isNoneOrEmpty } from '@/lib/helper';
 
 const DEFAULT_SHIPMENT_DATA = {
