@@ -47,7 +47,6 @@ export default function DocumentTemplatePage(pageProps: any) {
     const loader = useLoader();
     const router = useLocation();
     const notifier = useNotifier();
-    const { basePath } = useAppMode();
     const query = useDocumentTemplate();
     const mutation = useDocumentTemplateMutation();
     const [isNew, setIsNew] = useState<boolean>();
@@ -74,19 +73,27 @@ export default function DocumentTemplatePage(pageProps: any) {
       try {
         if (isNew) {
           const response = await mutation.createDocumentTemplate(template);
-          router.addUrlParam('id', response?.template?.id as string);
+          setTimeout(() => {
+            router.updateUrlParam('id', response?.template?.id as string);
+          }, 1000);
+          notifier.notify({
+            type: NotificationType.success,
+            message: `Document template created successfully`
+          });
+          loader.setLoading(false);
         } else {
           await mutation.updateDocumentTemplate(template);
+          query.refetch();
+          notifier.notify({
+            type: NotificationType.success,
+            message: `Document template updated successfully`
+          });
+          loader.setLoading(false);
         }
-        query.refetch();
-        notifier.notify({
-          type: NotificationType.success,
-          message: `Document template ${isNew ? 'added' : 'updated'} successfully`
-        });
       } catch (message: any) {
         notifier.notify({ type: NotificationType.error, message });
+        loader.setLoading(false);
       }
-      loader.setLoading(false);
     };
 
     useEffect(() => {
