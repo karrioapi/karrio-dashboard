@@ -202,7 +202,8 @@ export async function handleFailure<T>(request: Promise<T>): Promise<T> {
 }
 
 export enum ServerErrorCode {
-  API_CONNECTION_ERROR
+  API_CONNECTION_ERROR,
+  API_AUTH_ERROR,
 }
 
 export type ServerError = { code?: ServerErrorCode; message?: string; };

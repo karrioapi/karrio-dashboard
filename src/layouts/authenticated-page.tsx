@@ -12,6 +12,8 @@ import NextSessionProvider, { NextSession } from '@/context/next-session-provide
 import ErrorBoundary from '@/components/error-boudaries';
 import AcceptInvitationProvider from '@/components/accept-invitation-modal';
 import CreateOrganizationModalProvider from '@/components/create-organization-modal';
+import { ServerError, ServerErrorCode } from '@/lib/helper';
+import { signOut } from 'next-auth/react';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -35,7 +37,7 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
 };
 
 const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
-  const SessionWrapper: React.FC = ({ children }) => {
+  const SessionWrapper: React.FC<{ error?: ServerError }> = ({ children, error }) => {
     const router = useRouter();
     const session = useContext(NextSession);
 
@@ -43,7 +45,10 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
       if (session === null || session?.error === "RefreshAccessTokenError") {
         router.push('/login?next=' + window.location.pathname + window.location.search);
       }
-    }, [session]);
+      if (error?.code === ServerErrorCode.API_AUTH_ERROR) {
+        signOut({ callbackUrl: '/login' });
+      }
+    }, [session, error]);
 
     return (
       <>
@@ -60,7 +65,7 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
 
   return (
     <NextSessionProvider>
-      <SessionWrapper>
+      <SessionWrapper {...(pageProps || {})}>
         <AcceptInvitationProvider>
           <CreateOrganizationModalProvider>
 

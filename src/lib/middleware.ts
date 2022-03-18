@@ -38,14 +38,16 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
       logger.error(e);
+      const code = e.response?.status === 401 ?
+        ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
       const error = createServerError({
-        code: ServerErrorCode.API_CONNECTION_ERROR,
+        code,
         message: `
           Server (${KARRIO_API}) unreachable.
           Please make sure taht the API is running and reachable.
         `
-      })
+      });
       reject({ error });
     }
   });
@@ -70,11 +72,15 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
     const [references, { data }] = await Promise.all([getReferences(), getUserData()]);
 
     return { metadata, references, ...data };
-  } catch (e) {
-    logger.error(e);
-    const error = createServerError({ message: 'Failed to load intial data...' });
+  } catch (e: any | Response) {
+    const code = e.response?.status === 401 ?
+      ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
-    return { ...metadata, error };
+    const error = createServerError({
+      code,
+      message: 'Failed to load intial data...'
+    });
+    return { metadata, error };
   }
 }
 
