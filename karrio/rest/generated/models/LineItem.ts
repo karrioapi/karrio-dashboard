@@ -14,63 +14,69 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * The parcel content items
+ * The order line items.
  * @export
- * @interface CommodityData
+ * @interface LineItem
  */
-export interface CommodityData {
+export interface LineItem {
+    /**
+     * A unique identifier
+     * @type {string}
+     * @memberof LineItem
+     */
+    id?: string;
     /**
      * The commodity's weight
      * @type {number}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     weight: number;
     /**
      * The commodity's weight unit
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
-    weight_unit: CommodityDataWeightUnitEnum;
+    weight_unit: LineItemWeightUnitEnum;
     /**
      * A description of the commodity
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     description?: string | null;
     /**
      * The commodity's quantity (number or item)
      * @type {number}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     quantity?: number;
     /**
      * The commodity's sku number
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     sku?: string | null;
     /**
      * The monetary value of the commodity
      * @type {number}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     value_amount?: number | null;
     /**
      * The currency of the commodity value amount
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     value_currency?: string | null;
     /**
      * The origin or manufacture country
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     origin_country?: string | null;
     /**
      * The id of the related order line item.
      * @type {string}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     parent_id?: string | null;
     /**
@@ -90,30 +96,43 @@ export interface CommodityData {
      * ```
      * </details>
      * @type {object}
-     * @memberof CommodityData
+     * @memberof LineItem
      */
     metadata?: object | null;
+    /**
+     * Specifies the object type
+     * @type {string}
+     * @memberof LineItem
+     */
+    object_type?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof LineItem
+     */
+    unfulfilled_quantity?: number;
 }
 
 /**
 * @export
 * @enum {string}
 */
-export enum CommodityDataWeightUnitEnum {
+export enum LineItemWeightUnitEnum {
     Kg = 'KG',
     Lb = 'LB'
 }
 
-export function CommodityDataFromJSON(json: any): CommodityData {
-    return CommodityDataFromJSONTyped(json, false);
+export function LineItemFromJSON(json: any): LineItem {
+    return LineItemFromJSONTyped(json, false);
 }
 
-export function CommodityDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): CommodityData {
+export function LineItemFromJSONTyped(json: any, ignoreDiscriminator: boolean): LineItem {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'weight': json['weight'],
         'weight_unit': json['weight_unit'],
         'description': !exists(json, 'description') ? undefined : json['description'],
@@ -124,10 +143,12 @@ export function CommodityDataFromJSONTyped(json: any, ignoreDiscriminator: boole
         'origin_country': !exists(json, 'origin_country') ? undefined : json['origin_country'],
         'parent_id': !exists(json, 'parent_id') ? undefined : json['parent_id'],
         'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
+        'object_type': !exists(json, 'object_type') ? undefined : json['object_type'],
+        'unfulfilled_quantity': !exists(json, 'unfulfilled_quantity') ? undefined : json['unfulfilled_quantity'],
     };
 }
 
-export function CommodityDataToJSON(value?: CommodityData | null): any {
+export function LineItemToJSON(value?: LineItem | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -136,6 +157,7 @@ export function CommodityDataToJSON(value?: CommodityData | null): any {
     }
     return {
         
+        'id': value.id,
         'weight': value.weight,
         'weight_unit': value.weight_unit,
         'description': value.description,
@@ -146,6 +168,8 @@ export function CommodityDataToJSON(value?: CommodityData | null): any {
         'origin_country': value.origin_country,
         'parent_id': value.parent_id,
         'metadata': value.metadata,
+        'object_type': value.object_type,
+        'unfulfilled_quantity': value.unfulfilled_quantity,
     };
 }
 

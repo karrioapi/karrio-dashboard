@@ -2896,6 +2896,7 @@ export interface get_order_order_line_items {
   weight: number | null;
   description: string | null;
   quantity: number | null;
+  unfulfilled_quantity: number | null;
   sku: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
@@ -3162,6 +3163,7 @@ export interface get_orders_orders_edges_node_line_items {
   weight: number | null;
   description: string | null;
   quantity: number | null;
+  unfulfilled_quantity: number | null;
   sku: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
@@ -3453,7 +3455,7 @@ export interface get_document_template_document_template {
   name: string;
   template: string;
   description: string | null;
-  related_objects: (TemplateRelatedObject | null)[] | null;
+  related_object: TemplateRelatedObject | null;
 }
 
 export interface get_document_template {
@@ -3485,7 +3487,7 @@ export interface get_document_templates_document_templates_edges_node {
   name: string;
   template: string;
   description: string | null;
-  related_objects: (TemplateRelatedObject | null)[] | null;
+  related_object: TemplateRelatedObject | null;
 }
 
 export interface get_document_templates_document_templates_edges {
@@ -3504,7 +3506,7 @@ export interface get_document_templates {
 export interface get_document_templatesVariables {
   offset?: number | null;
   first?: number | null;
-  related_objects?: (string | null)[] | null;
+  related_object?: string | null;
 }
 
 
@@ -5487,7 +5489,7 @@ export interface CreateDocumentTemplateInput {
   name: string;
   template: string;
   description?: string | null;
-  related_objects: (TemplateRelatedObject | null)[];
+  related_object: TemplateRelatedObject;
   clientMutationId?: string | null;
 }
 
@@ -5498,7 +5500,7 @@ export interface UpdateDocumentTemplateInput {
   name?: string | null;
   template?: string | null;
   description?: string | null;
-  related_objects?: (TemplateRelatedObject | null)[] | null;
+  related_object?: TemplateRelatedObject | null;
   clientMutationId?: string | null;
 }
 

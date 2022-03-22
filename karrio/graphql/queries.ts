@@ -1842,6 +1842,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       weight
       description
       quantity
+      unfulfilled_quantity
       sku
       value_amount
       weight_unit
@@ -2060,6 +2061,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           weight
           description
           quantity
+          unfulfilled_quantity
           sku
           value_amount
           weight_unit
@@ -2264,13 +2266,13 @@ export const GET_DOCUMENT_TEMPLATE = gql`query get_document_template($id: String
     name
     template
     description
-    related_objects
+    related_object
   }
 }
 `;
 
-export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int, $related_objects: [String]) {
-  document_templates(offset: $offset, first: $first, related_objects: $related_objects) {
+export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int, $related_object: String) {
+  document_templates(offset: $offset, first: $first, related_object: $related_object) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -2284,7 +2286,7 @@ export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: 
         name
         template
         description
-        related_objects
+        related_object
       }
     }
   }
