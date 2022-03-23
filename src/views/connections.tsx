@@ -19,11 +19,11 @@ export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ConnectionsPage(pageProps: any) {
-  const tabs = ['Your Accounts', `${(pageProps as any).metadata?.APP_NAME || ''} Accounts`];
+  const tabs = ['Your Accounts', 'System Accounts'];
 
   const Component: React.FC = () => {
     const router = useRouter();
-    const { modal, tab } = router.query;
+    const { modal } = router.query;
     const { setLoading } = useContext(Loading);
     const { selectTab } = useContext(TabStateContext);
     const { editConnection } = useContext(ConnectProviderModalContext);

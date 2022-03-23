@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { isNone, useLocation } from '@/lib/helper';
 import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import InputField from '@/components/generic/input-field';
-import { CustomsTemplateType, CustomsType, NotificationType, TemplateType } from '@/lib/types';
+import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';

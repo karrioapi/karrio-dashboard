@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
 import { PartialShipmentUpdateInput } from 'karrio/graphql';

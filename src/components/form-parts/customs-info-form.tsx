@@ -60,7 +60,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
       default:
         return { ...state, [name]: value };
     }
-  }, value, () => value);
+  }, value);
   const [commodities, setCommodities] = useState<CommodityType[]>([]);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
@@ -137,7 +137,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     if (user && isNone(value?.signer)) {
       dispatch({ name: "signer", value: user.full_name });
     }
-  }, [user])
+  }, [user]);
 
   return (
     <>

@@ -194,7 +194,7 @@ export default function LabelPage(pageProps: any) {
 
 function filterDisabled(tabs: string[], shipment: ShipmentType) {
   return tabs.reduce((disabled: string[], value: string) => {
-    const is_local = shipment?.shipper?.country_code === shipment?.recipient.country_code;
+    const is_local = shipment?.shipper?.country_code === shipment?.recipient?.country_code;
 
     // Disable tab if >>>
     if (

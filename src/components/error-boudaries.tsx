@@ -27,9 +27,7 @@ export default class ErrorBoundary extends React.Component<{}, { hasError: boole
         <section className="hero is-fullheight">
           <div className="container">
             <div className="has-text-centered mt-4 mb-5">
-              <a href={p`/`}>
-                <Image src={p`/logo.svg`} width="130" height="100" alt="" />
-              </a>
+              <span className="has-text-primary has-text-weight-bold is-size-4">Uh Oh!</span>
             </div>
 
             <div className="card isolated-card my-6">

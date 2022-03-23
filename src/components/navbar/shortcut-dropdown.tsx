@@ -12,7 +12,7 @@ const ShortcutDropdown: React.FC<ShortcutDropdownComponent> = ({ ...props }) => 
     <Dropdown>
 
       {/* Dropdown trigger  */}
-      <button className="button is-primary is-outlined is-rounded is-small mx-1">
+      <button className="button is-primary is-outlined is-small mx-1">
         <span className="is-size-7 has-text-weight-semibold">Create</span>
         <span className="icon">
           <i className="is-size-6 fas fa-angle-down"></i>

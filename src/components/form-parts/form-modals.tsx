@@ -134,7 +134,7 @@ export const CustomsModalEditor: React.FC<ModalFormProps<CustomsModalEditorProps
   const modal = useModal();
 
   const FormComponent: React.FC<CustomsModalEditorProps> = props => {
-    const { customs, shipment, header, onSubmit } = props;
+    const { customs, header, onSubmit } = props;
     const { close } = useModal();
 
     return (
@@ -147,7 +147,6 @@ export const CustomsModalEditor: React.FC<ModalFormProps<CustomsModalEditorProps
         <CustomInfoTemplatesProvider>
           <CustomsInfoForm
             value={customs}
-            shipment={shipment}
             onSubmit={async (data) => { await onSubmit(data); close(); }}
           />
         </CustomInfoTemplatesProvider>
