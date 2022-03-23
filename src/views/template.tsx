@@ -10,23 +10,23 @@ import TextAreaField from '@/components/generic/textarea-field';
 import { DocumentTemplateType, DOCUMENT_RELATED_OBJECTS, NotificationType, TemplateType } from '@/lib/types';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { deepEqual, isNoneOrEmpty, p, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { deepEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
 import { bundleContexts } from '@/context/utils';
 import { KARRIO_API } from '@/client/context';
-import { useAppMode } from '@/context/app-mode-provider';
 import AppLink from '@/components/app-link';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 type stateValue = string | boolean | string[] | Partial<TemplateType>;
 const DEFAULT_STATE = {
+  related_object: 'order',
   template: `<div>
   <h1>Document</h1>
 </div>
 <style type="text/css">
   @page { size: A4; margin: 1cm };
-</style>`,
+  </style>`,
 };
 const ContextProviders: React.FC = bundleContexts([
   DocumentTemplateProvider,
@@ -53,8 +53,8 @@ export default function DocumentTemplatePage(pageProps: any) {
     const [template, dispatch] = useReducer(reducer, DEFAULT_STATE, () => DEFAULT_STATE);
 
     const computeParams = (template: DocumentTemplateType) => {
-      if ((template.related_objects || []).length === 0) { return ''; }
-      return `?${(template.related_objects || []).map(k => `${k}s=sample`).join('&')}`;
+      if (isNoneOrEmpty(template.related_object)) { return ''; }
+      return `?${template.related_object}s=sample`;
     };
     const handleChange = (event: React.ChangeEvent<any>) => {
       const target = event.target;
@@ -109,7 +109,7 @@ export default function DocumentTemplatePage(pageProps: any) {
     }, [query.template]);
 
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="p-4">
 
         <div className="py-4 is-flex is-justify-content-space-between has-background-white">
           <div className="is-vcentered">
@@ -171,8 +171,8 @@ export default function DocumentTemplatePage(pageProps: any) {
               </label>
 
               <div className="control">
-                <div className="select is-multiple is-small is-fullwidth">
-                  <select name="related_objects" onChange={handleChange} value={template?.related_objects} size={3} multiple required>
+                <div className="select is-small is-fullwidth">
+                  <select name="related_object" onChange={handleChange} value={template?.related_object} required>
                     {DOCUMENT_RELATED_OBJECTS.map(obj => <option key={obj} value={obj}>{obj}</option>)}
                   </select>
                 </div>
@@ -191,10 +191,10 @@ export default function DocumentTemplatePage(pageProps: any) {
 
           <div className="p-2"></div>
 
-          <div className="column px-0 is-8">
-            <div className="card">
+          <div className="column px-0 is-9">
+            <div className="card" style={{ borderRadius: 0 }}>
               <CodeMirror
-                height="60vh"
+                height="80vh"
                 extensions={[html({})]}
                 value={template.template as string}
                 onChange={value => dispatch({ name: 'template', value })}
@@ -209,7 +209,7 @@ export default function DocumentTemplatePage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <>
       <Head><title>Template - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <ContextProviders>
@@ -217,6 +217,6 @@ export default function DocumentTemplatePage(pageProps: any) {
         <Component />
 
       </ContextProviders>
-    </DashboardLayout>
+    </>
   ), pageProps);
 }
