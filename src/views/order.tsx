@@ -63,7 +63,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
               <AppLink
                 href={`/orders/fulfillment?shipment_id=new&order_id=${order.id}`}
                 className="button is-default is-small mx-1">
-                <span>Fulfill order</span>
+                <span>Create shipment</span>
               </AppLink>}
             {!isNone(orderId) &&
               <AppLink

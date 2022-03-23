@@ -26,6 +26,7 @@ import ShipmentMutationProvider from '@/context/shipment-mutation';
 import { useLoader } from '@/components/loader';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
+import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -79,9 +80,12 @@ export default function FulfillmentPage(pageProps: any) {
         shipment.recipient.country_code !== shipment.shipper.country_code
       );
     };
-    const getParent = (id: string | null) => {
+    const getItems = () => {
       return orders.orders
-        .map(({ line_items }) => line_items).flat()
+        .map(({ line_items }) => line_items).flat();
+    }
+    const getParent = (id: string | null) => {
+      return getItems()
         .find((item) => item.id === id);
     };
     const getOrder = (item_id?: string | null) => {
@@ -89,7 +93,7 @@ export default function FulfillmentPage(pageProps: any) {
         .find((order) => order.line_items.find((item) => item.id === item_id));
     };
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
-      const parent_quantity = getParent(item.parent_id)?.quantity || 0;
+      const parent_quantity = getParent(item.parent_id)?.unfulfilled_quantity || 0;
       const packed_quantity = shipment.parcels
         .map(({ items }) => items || []).flat()
         .filter((_, index) => index !== item_index)
@@ -102,9 +106,9 @@ export default function FulfillmentPage(pageProps: any) {
     const setInitialData = () => {
       const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
-      const items = orders.orders
-        .map(({ line_items }) => line_items).flat()
-        .map(({ id: parent_id, ...item }) => ({ ...item, parent_id }));
+      const items = getItems().map(
+        ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
+      );
       const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
       const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
 
@@ -186,7 +190,7 @@ export default function FulfillmentPage(pageProps: any) {
               <div className="p-3">
 
                 <header className="is-flex is-justify-content-space-between">
-                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING ADDRESS</span>
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP TO</span>
                   <div className="is-vcentered">
                     <AddressModalEditor
                       shipment={shipment}
@@ -194,7 +198,7 @@ export default function FulfillmentPage(pageProps: any) {
                       onSubmit={(address) => onChange({ recipient: address })}
                       trigger={
                         <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                          Edit shipping address
+                          Edit ship to address
                         </button>
                       }
                     />
@@ -300,7 +304,7 @@ export default function FulfillmentPage(pageProps: any) {
                                 </p>
                                 <p className="control">
                                   <a className="button is-static is-small">
-                                    of {getParent(item.parent_id)?.quantity}
+                                    of {getParent(item.parent_id)?.unfulfilled_quantity}
                                   </a>
                                 </p>
                               </div>
@@ -315,8 +319,8 @@ export default function FulfillmentPage(pageProps: any) {
                       </React.Fragment>
                     ))}
 
-                    {(pkg.items || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
-                      You must add at least one item to this package.
+                    {(pkg.items || []).length === 0 && <div className="notification is-light my-2 py-2 px-4 is-size-7">
+                      You can specify content items.
                     </div>}
 
                     <div className="mt-4">
@@ -345,7 +349,7 @@ export default function FulfillmentPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs}
+                    customs={shipment?.customs || { ...DEFAULT_CUSTOMS_CONTENT, commodities: getItems() }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
                       <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
@@ -391,11 +395,13 @@ export default function FulfillmentPage(pageProps: any) {
 
               <div className="p-3">
 
-                {(shipment.rates || []).length === 0 && <div className="notification is-default">
+                {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+
+                {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
                   Provide all shipping details to retrieve shipping rates.
                 </div>}
 
-                {(shipment.rates || []).length > 0 && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
                   {(shipment.rates || []).map(rate => (
                     <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
                       className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
@@ -450,7 +456,7 @@ export default function FulfillmentPage(pageProps: any) {
                 <div className="p-3">
 
                   <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING FROM</span>
+                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
                     <div className="is-vcentered">
                       <AddressModalEditor
                         shipment={shipment}
@@ -486,7 +492,7 @@ export default function FulfillmentPage(pageProps: any) {
                     name="shipment_date"
                     type="date"
                     className="is-small"
-                    fieldClass="column mb-0 is-5 p-0"
+                    fieldClass="column mb-0 is-6 p-0"
                     defaultValue={shipment.options?.shipment_date}
                     onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
                   />

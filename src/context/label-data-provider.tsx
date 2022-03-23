@@ -15,7 +15,7 @@ const DEFAULT_SHIPMENT_DATA = {
 type LabelDataContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
   shipment: ShipmentType;
   loadShipment: (id: string) => void;
-  updateShipment: (data: Partial<ShipmentType>) => ShipmentType;
+  updateShipment: (data: Partial<ShipmentType>) => Promise<ShipmentType>;
 };
 
 export const LabelContext = React.createContext<LabelDataContext>({} as LabelDataContext);
@@ -41,12 +41,17 @@ const LabelDataProvider: React.FC = ({ children }) => {
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {
-    const newState = { ...shipment, ...data } as ShipmentType;
-    Object.entries(data).forEach(([key, val]) => {
-      if (val === undefined) delete newState[key as keyof ShipmentType];
+    return new Promise<ShipmentType>(resolve => {
+      setTimeout(() => {
+        const newState = { ...shipment, ...data } as ShipmentType;
+        Object.entries(data).forEach(([key, val]) => {
+          if (val === undefined) delete newState[key as keyof ShipmentType];
+        });
+        setShipment(newState);
+
+        resolve(newState);
+      })
     });
-    setShipment(newState);
-    return newState;
   };
 
   useEffect(() => {

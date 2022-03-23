@@ -30,12 +30,13 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const mutation = useShipmentMutation();
   const { shipment, ...label } = useLabelData();
   const { addUrlParam, ...router } = useLocation();
+  const [updateRate, setUpdateRate] = React.useState<boolean>(false);
 
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
 
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
     if (isDraft(id)) {
-      label.updateShipment(changes);
+      await label.updateShipment(changes);
     } else {
       await mutation.updateShipment(
         { id: shipment.id, ...changes } as PartialShipmentUpdateInput
@@ -45,11 +46,12 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const addParcel = async (data: ParcelType) => {
     if (isDraft(shipment.id)) {
       const update = { ...shipment, parcels: [...shipment.parcels, data] };
-      updateShipment(update);
+      await updateShipment(update);
     } else {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
       await mutation.updateShipment(update);
     }
+    setUpdateRate(true);
   };
   const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
     if (isDraft(shipment.id)) {
@@ -62,6 +64,9 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } else {
       const update = { id: shipment.id, parcels: [{ id: parcel_id || id, ...data }] };
       await mutation.updateShipment(update);
+    }
+    if (Object.keys(data).includes('weight')) {
+      setUpdateRate(true);
     }
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
@@ -100,6 +105,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } else {
       await mutation.discardParcel(parcel_id as string);
     }
+    setUpdateRate(true);
   };
   const removeItem = (parcel_index: number, item_index: number, item_id?: string) => async () => {
     if (isDraft(shipment.id)) {
@@ -157,6 +163,13 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       loader.setLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    if (updateRate) {
+      setUpdateRate(false);
+      fetchRates();
+    }
+  }, [shipment]);
 
   return (
     <LabelMutationContext.Provider value={{

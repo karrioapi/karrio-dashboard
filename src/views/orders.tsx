@@ -128,9 +128,7 @@ export default function OrdersPage(pageProps: any) {
                   <AppLink
                     href={`/orders/fulfillment?shipment_id=new&order_id=${selection.join(',')}`}
                     className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
-                    <span className="has-text-weight-semibold">
-                      Fulfill order{selection.length > 1 ? `s (${selection.length})` : ""}
-                    </span>
+                    <span className="has-text-weight-semibold">Create shipment</span>
                   </AppLink>
                   {(templates || []).map(template =>
                     <a
@@ -148,7 +146,7 @@ export default function OrdersPage(pageProps: any) {
                   <td className="order is-size-7">ORDER #</td>
                   <td className="items is-size-7">ITEMS</td>
                   <td className="status"></td>
-                  <td className="customer is-size-7">CUSTOMER</td>
+                  <td className="customer is-size-7">SHIP TO</td>
                   <td className="date has-text-right is-size-7">DATE</td>
                 </>}
               </tr>
@@ -229,7 +227,7 @@ export default function OrdersPage(pageProps: any) {
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrdersProvider>
         <OrderPreview>
-          <DocumentTemplatesProvider filter={{ related_objects: ["order"] }}>
+          <DocumentTemplatesProvider filter={{ related_object: "order" }}>
 
             <Component />
 

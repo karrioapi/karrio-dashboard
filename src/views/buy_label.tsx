@@ -54,7 +54,7 @@ export default function LabelPage(pageProps: any) {
       let isDraft = id === 'new';
 
       if (isDraft) {
-        const update = updateShipment(changes);
+        const update = await updateShipment(changes);
         const disabledTabs = filterDisabled(tabs, update);
         const currentIndex = tabs.indexOf(tab || "");
         const nextTab = tabs.reduce((next, curr, index) => {

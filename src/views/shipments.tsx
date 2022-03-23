@@ -178,7 +178,7 @@ export default function ShipmentsPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
-        <DocumentTemplatesProvider filter={{ related_objects: ["shipment"] }}>
+        <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
           <LabelPrinter>
             <CustomInvoicePrinter>
               <ShipmentsProvider>
