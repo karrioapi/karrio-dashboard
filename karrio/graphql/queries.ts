@@ -1563,12 +1563,12 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       }
       label_template {
         id
-        alias
+        slug
         template
         template_type
+        shipment_sample
         width
         height
-        description
       }
       metadata
     }

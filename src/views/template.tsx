@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import Head from 'next/head';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import DocumentTemplateMutationProvider, { useDocumentTemplateMutation } from '@/context/document-template-mutation';
-import DashboardLayout from '@/layouts/dashboard-layout';
 import CodeMirror from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
 import InputField from '@/components/generic/input-field';
@@ -10,23 +9,19 @@ import TextAreaField from '@/components/generic/textarea-field';
 import { DocumentTemplateType, DOCUMENT_RELATED_OBJECTS, NotificationType, TemplateType } from '@/lib/types';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { deepEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { isEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
 import { bundleContexts } from '@/context/utils';
 import { KARRIO_API } from '@/client/context';
 import AppLink from '@/components/app-link';
+import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 type stateValue = string | boolean | string[] | Partial<TemplateType>;
 const DEFAULT_STATE = {
   related_object: 'order',
-  template: `<div>
-  <h1>Document</h1>
-</div>
-<style type="text/css">
-  @page { size: A4; margin: 1cm };
-  </style>`,
+  template: DEFAULT_DOCUMENT_TEMPLATE,
 };
 const ContextProviders: React.FC = bundleContexts([
   DocumentTemplateProvider,
@@ -129,7 +124,7 @@ export default function DocumentTemplatePage(pageProps: any) {
             <button
               type="submit"
               className="button is-small is-success"
-              disabled={deepEqual(template, query.template || DEFAULT_STATE)}
+              disabled={loader.loading || isEqual(template, query.template || DEFAULT_STATE)}
             >
               Save Template
             </button>

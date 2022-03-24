@@ -58,6 +58,12 @@ $footer-background-color: $white;
   height: 90vh;
 }
 
+.is-large-modal {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+}
+
 @media screen and (min-width: 768px) {
   .isolated-card {
     min-width: 448px;
@@ -74,6 +80,7 @@ $footer-background-color: $white;
   .modal-card {
     height: 100vh;
   }
+  .is-large-modal,
   .is-medium-modal {
     width: 100vw;
     height: 100vh;

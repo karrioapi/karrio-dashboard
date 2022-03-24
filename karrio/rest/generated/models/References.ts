@@ -42,6 +42,12 @@ export interface References {
      * @type {boolean}
      * @memberof References
      */
+    custom_carrier_definition: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof References
+     */
     multi_organizations: boolean;
     /**
      * 
@@ -190,6 +196,7 @@ export function ReferencesFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'app_name': json['APP_NAME'],
         'app_version': json['APP_VERSION'],
         'app_website': json['APP_WEBSITE'],
+        'custom_carrier_definition': json['CUSTOM_CARRIER_DEFINITION'],
         'multi_organizations': json['MULTI_ORGANIZATIONS'],
         'orders_management': json['ORDERS_MANAGEMENT'],
         'apps_management': json['APPS_MANAGEMENT'],
@@ -228,6 +235,7 @@ export function ReferencesToJSON(value?: References | null): any {
         'APP_NAME': value.app_name,
         'APP_VERSION': value.app_version,
         'APP_WEBSITE': value.app_website,
+        'CUSTOM_CARRIER_DEFINITION': value.custom_carrier_definition,
         'MULTI_ORGANIZATIONS': value.multi_organizations,
         'ORDERS_MANAGEMENT': value.orders_management,
         'APPS_MANAGEMENT': value.apps_management,

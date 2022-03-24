@@ -2404,12 +2404,12 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
 
 export interface get_user_connections_with_generics_user_connections_GenericSettings_label_template {
   id: string;  // The ID of the object.
-  alias: string;
+  slug: string;
   template: string;
-  template_type: LabelTemplateTemplateType;
+  template_type: LabelTemplateTypeEnum | null;
+  shipment_sample: any | null;
   width: number | null;
   height: number | null;
-  description: string | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_GenericSettings {
@@ -4028,8 +4028,8 @@ export enum WeightUnitEnum {
 }
 
 // An enumeration.
-export enum LabelTypeEnum {
-  PDF = "PDF",
+export enum LabelTemplateTypeEnum {
+  SVG = "SVG",
   ZPL = "ZPL",
 }
 
@@ -4041,6 +4041,12 @@ export enum ShipmentStatusEnum {
   in_transit = "in_transit",
   purchased = "purchased",
   shipped = "shipped",
+}
+
+// An enumeration.
+export enum LabelTypeEnum {
+  PDF = "PDF",
+  ZPL = "ZPL",
 }
 
 // An enumeration.
@@ -4358,12 +4364,6 @@ export enum ServiceLevelDimensionUnit {
 }
 
 // An enumeration.
-export enum LabelTemplateTemplateType {
-  SVG = "SVG",
-  ZPL = "ZPL",
-}
-
-// An enumeration.
 export enum OrderStatus {
   cancelled = "cancelled",
   delivered = "delivered",
@@ -4586,12 +4586,12 @@ export interface CreateGenericSettings {
 
 // null
 export interface LabelTemplate {
-  template_type?: LabelTypeEnum | null;
-  alias: string;
+  template_type?: LabelTemplateTypeEnum | null;
+  slug: string;
   template: string;
-  description?: string | null;
   width?: number | null;
   height?: number | null;
+  shipment_sample?: any | null;
 }
 
 // null
@@ -4919,12 +4919,12 @@ export interface UpdateGenericSettings {
 // null
 export interface PartialLabelTemplate {
   id?: string | null;
-  template_type?: LabelTypeEnum | null;
-  alias?: string | null;
+  template_type?: LabelTemplateTypeEnum | null;
+  slug?: string | null;
   template?: string | null;
-  description?: string | null;
   width?: number | null;
   height?: number | null;
+  shipment_sample?: any | null;
 }
 
 // null

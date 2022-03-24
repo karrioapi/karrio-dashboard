@@ -14,6 +14,7 @@ import UserConnectionList from "@/components/user-carrier-list";
 import ConnectionMutationProvider from "@/context/connection-mutation";
 import { useRouter } from "next/dist/client/router";
 import SystemConnectionsMutationProvider from "@/context/system-connection-mutation";
+import LabelTemplateEditModalProvider from "@/components/label-template-edit-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -81,11 +82,13 @@ export default function ConnectionsPage(pageProps: any) {
             <ConnectProviderModal>
               <SystemConnectionsProvider>
                 <UserConnectionsProvider>
+                  <LabelTemplateEditModalProvider>
 
-                  <TabStateProvider tabs={tabs} setSelectedToURL={true}>
-                    <Component />
-                  </TabStateProvider>
+                    <TabStateProvider tabs={tabs} setSelectedToURL={true}>
+                      <Component />
+                    </TabStateProvider>
 
+                  </LabelTemplateEditModalProvider>
                 </UserConnectionsProvider>
               </SystemConnectionsProvider>
             </ConnectProviderModal>
