@@ -82,9 +82,9 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
     operation?.onChange && await operation?.onChange(commodity as CommodityType);
     setTimeout(() => { setLoading(false); close(); }, 600);
   };
-  const loadLineItem = (item?: CommodityType) => {
-    const { id, ...content } = item || { id: null };
-    dispatch({ name: 'partial', value: { ...content, parent_id: id } });
+  const loadLineItem = (item?: CommodityType | any) => {
+    const { id: parent_id, unfulfilled_quantity: quantity, ...content } = item || { id: null };
+    dispatch({ name: 'partial', value: { ...content, parent_id, quantity } });
   };
 
   return (
