@@ -1,11 +1,9 @@
 import React, { useState, useRef, useContext } from 'react';
-import { LabelPrinterContext } from '@/components/label/label-printer';
 import { DocumentTemplateType, NotificationType, ShipmentType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 import { ShipmentsContext } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
-import { CustomInvoicePrinterContext } from '@/components/descriptions/custom-invoice-printer';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { ShipmentStatusEnum } from 'karrio/graphql';
@@ -22,9 +20,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
-  const { printLabel } = useContext(LabelPrinterContext);
   const { voidLabel } = useContext(ShipmentMutationContext);
-  const { printInvoice } = useContext(CustomInvoicePrinterContext);
   const shipments = useContext(ShipmentsContext);
   const btn = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -63,7 +59,8 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
     <div className={`buttons has-addons ${className}`} style={style} onClick={onClick}>
 
       {!isNone(shipment.label_url) && <>
-        <a className="button is-small" onClick={() => printLabel(shipment)} style={{ width: '70%' }}>
+        <a className="button is-small" href={`${KARRIO_API}${shipment?.label_url}`}
+          target="_blank" rel="noreferrer" style={{ width: '70%' }}>
           <span>Print Label</span>
         </a>
       </>}
@@ -99,10 +96,11 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
             {shipment.status !== ShipmentStatusEnum.cancelled &&
               <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
             {!isNone(shipment.invoice_url) &&
-              <a className="dropdown-item" onClick={() => printInvoice(shipment)}>Print Invoice</a>}
+              <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}
+                target="_blank" rel="noreferrer">Print Invoice</a>}
             {(templates || []).map(template =>
-              <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}&download`}
-                className="dropdown-item" key={template.id}>
+              <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
+                className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
                 Download {template.name}
               </a>
             )}
