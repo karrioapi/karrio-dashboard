@@ -109,7 +109,7 @@ export default function FulfillmentPage(pageProps: any) {
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
       const items = getItems().map(
         ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
-      );
+      ).filter(({ quantity }) => quantity || 0 > 0);
       const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
       const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
 

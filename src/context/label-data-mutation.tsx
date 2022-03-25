@@ -6,7 +6,7 @@ import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 
 type LabelMutationContext = {
   addParcel: (data: ParcelType) => Promise<void>;
@@ -33,8 +33,25 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const [updateRate, setUpdateRate] = React.useState<boolean>(false);
 
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
+  const hasChanged = (changes: ShipmentType) => {
+    const currentWeight = shipment.parcels.reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
+    const newWeight = (changes.parcels || []).reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
+
+    return (
+      (!isNone(changes.parcels) && currentWeight !== newWeight) ||
+
+      (!isNone(changes.shipper) && shipment.shipper.address_line1 !== changes.shipper.address_line1) ||
+      (!isNone(changes.shipper) && shipment.shipper.country_code !== changes.shipper.country_code) ||
+      (!isNone(changes.shipper) && shipment.shipper.city !== changes.shipper.city) ||
+
+      (!isNone(changes.recipient) && shipment.recipient.address_line1 !== changes.recipient.address_line1) ||
+      (!isNone(changes.recipient) && shipment.recipient.country_code !== changes.recipient.country_code) ||
+      (!isNone(changes.recipient) && shipment.recipient.city !== changes.recipient.city)
+    );
+  };
 
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
+    if (hasChanged(changes as any)) { setUpdateRate(true); }
     if (isDraft(id)) {
       await label.updateShipment(changes);
     } else {
@@ -51,7 +68,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
       await mutation.updateShipment(update);
     }
-    setUpdateRate(true);
   };
   const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
     if (isDraft(shipment.id)) {
@@ -64,9 +80,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } else {
       const update = { id: shipment.id, parcels: [{ id: parcel_id || id, ...data }] };
       await mutation.updateShipment(update);
-    }
-    if (Object.keys(data).includes('weight')) {
-      setUpdateRate(true);
     }
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
