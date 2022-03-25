@@ -22,19 +22,16 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
   const { basePath } = useContext(AppMode);
   const { voidLabel } = useContext(ShipmentMutationContext);
   const shipments = useContext(ShipmentsContext);
-  const btn = useRef<HTMLButtonElement>(null);
+  const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
 
   const handleOnClick = (e: React.MouseEvent) => {
-    if (!isActive) {
-      setIsActive(true);
-      document.addEventListener('click', onBodyClick);
-    }
-    e.preventDefault();
-    e.stopPropagation();
+    setIsActive(!isActive);
+    if (!isActive) { document.addEventListener('click', onBodyClick); }
+    else { document.removeEventListener('click', onBodyClick); }
   };
   const onBodyClick = (e: MouseEvent) => {
-    if (e.target !== btn.current) {
+    if (!trigger.current?.contains(e.target as Node)) {
       setIsActive(false);
       document.removeEventListener('click', onBodyClick);
     }
@@ -56,40 +53,30 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
   };
 
   return (
-    <div className={`buttons has-addons ${className}`} style={style} onClick={onClick}>
+    <div className="field has-addons">
+      <p className="control is-expanded">
+        {!isNone(shipment.label_url) &&
+          <a className="button is-small is-fullwidth" href={`${KARRIO_API}${shipment?.label_url}`}
+            target="_blank" rel="noreferrer">
+            <span>Print Label</span>
+          </a>}
+        {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft &&
+          <a className="button is-small is-fullwidth" onClick={createLabel}>
+            <span>Buy Label</span>
+          </a>}
+        {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.cancelled &&
+          <a className="button is-small is-fullwidth" onClick={displayDetails}>
+            <span>View Shipment</span>
+          </a>}
+      </p>
 
-      {!isNone(shipment.label_url) && <>
-        <a className="button is-small" href={`${KARRIO_API}${shipment?.label_url}`}
-          target="_blank" rel="noreferrer" style={{ width: '70%' }}>
-          <span>Print Label</span>
+      <p className="control" onClick={handleOnClick} ref={trigger}>
+        <a className="button is-default is-small p-3">
+          <i className="fas fa-angle-down" aria-hidden="true"></i>
         </a>
-      </>}
-      {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft && <>
-        <a className="button is-small" onClick={createLabel} style={{ width: '70%' }}>
-          <span>Buy Label</span>
-        </a>
-      </>}
-      {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.cancelled && <>
-        <a className="button is-small" onClick={displayDetails} style={{ width: '70%' }}>
-          <span>View Shipment</span>
-        </a>
-      </>}
+      </p>
 
       <div className={`dropdown is-right ${isActive ? 'is-active' : ''}`} key={`menu-${shipment.id}`}>
-        <div className="dropdown-trigger">
-          <button
-            id={shipment.id}
-            className="button is-small"
-            aria-haspopup="true"
-            aria-controls={`shipment-menu-${shipment.id}`}
-            onClick={handleOnClick}
-            ref={btn}>
-            <span className="icon is-small">
-              <i className="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-          </button>
-        </div>
-
         <div className="dropdown-menu" id={`shipment-menu-${shipment.id}`} role="menu">
           <div className="dropdown-content">
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
@@ -107,6 +94,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
           </div>
         </div>
       </div>
+
     </div>
   );
 };

@@ -18,7 +18,7 @@ type LabelMutationContext = {
   updateCustoms: (customs_id?: string | undefined) => (data: CustomsType | null) => Promise<void>;
   fetchRates: () => Promise<void>;
   buyLabel: (rate: ShipmentType['rates'][0]) => Promise<void>;
-  updateShipment: (changes: Partial<ShipmentType>) => Promise<void>;
+  updateShipment: ({ id, ...changes }: Partial<ShipmentType>) => Promise<void | ShipmentType>;
 };
 
 export const LabelMutationContext = React.createContext<LabelMutationContext>({} as LabelMutationContext);
@@ -33,7 +33,14 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const [updateRate, setUpdateRate] = React.useState<boolean>(false);
 
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
-  const hasChanged = (changes: ShipmentType) => {
+  const hasRateRequirements = (shipment: ShipmentType) => {
+    return (
+      !isNoneOrEmpty(shipment.recipient.address_line1) &&
+      !isNoneOrEmpty(shipment.shipper.address_line1) &&
+      shipment.parcels.length > 0
+    );
+  };
+  const shouldFetchRates = (changes: ShipmentType) => {
     const currentWeight = shipment.parcels.reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
     const newWeight = (changes.parcels || []).reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
 
@@ -51,11 +58,11 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
 
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
-    if (hasChanged(changes as any)) { setUpdateRate(true); }
+    if (shouldFetchRates(changes as any)) { setUpdateRate(true); }
     if (isDraft(id)) {
-      await label.updateShipment(changes);
+      return await label.updateShipment(changes);
     } else {
-      await mutation.updateShipment(
+      return await mutation.updateShipment(
         { id: shipment.id, ...changes } as PartialShipmentUpdateInput
       );
     }
@@ -175,7 +182,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
 
   React.useEffect(() => {
-    if (updateRate) {
+    if (updateRate && hasRateRequirements(shipment)) {
+      console.log('fetching rates');
       setUpdateRate(false);
       fetchRates();
     }

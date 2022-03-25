@@ -22,6 +22,7 @@ import EventsProvider, { EventsContext } from "@/context/events-provider";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
 import CarrierBadge from "@/components/carrier-badge";
+import ParcelDescription from "@/components/descriptions/parcel-description";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -225,9 +226,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
               {shipment.parcels.map((parcel: ParcelType, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <p className="is-size-7 my-1">{formatParcelLabel(parcel)}</p>
-                <p className="is-size-7 my-1 has-text-grey">{formatDimension(parcel)}</p>
-                <p className="is-size-7 my-1 has-text-grey">{formatWeight(parcel)}</p>
+                <ParcelDescription parcel={parcel} />
               </React.Fragment>)}
             </div>
           </div>

@@ -25,7 +25,7 @@ import ShipmentParcelsEditor from '@/components/shipment-parcels-editor';
 import { PartialShipmentUpdateInput, ShipmentStatusEnum } from 'karrio/graphql';
 import { isNone } from '@/lib/helper';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
-import LabelMutationProvider from '@/context/label-data-mutation';
+import LabelMutationProvider, { useLabelMutation } from '@/context/label-data-mutation';
 import MessagesDescription from '@/components/descriptions/messages-description';
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -42,7 +42,8 @@ export default function LabelPage(pageProps: any) {
     const { notify } = useContext(Notify);
     const { basePath } = useContext(AppMode);
     const mutation = useContext(ShipmentMutationContext);
-    const { shipment, called, loading, loadShipment, updateShipment } = useContext(LabelContext);
+    const { updateShipment } = useLabelMutation();
+    const { shipment, called, loading, loadShipment } = useContext(LabelContext);
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
     const orders = useContext(OrdersContext);
     const tabs = ["shipper", "recipient", "parcels", "customs info", "options"];
@@ -55,7 +56,7 @@ export default function LabelPage(pageProps: any) {
       let isDraft = id === 'new';
 
       if (isDraft) {
-        const update = await updateShipment(changes);
+        const update = await updateShipment(changes) as ShipmentType;
         const disabledTabs = filterDisabled(tabs, update);
         const currentIndex = tabs.indexOf(tab || "");
         const nextTab = tabs.reduce((next, curr, index) => {

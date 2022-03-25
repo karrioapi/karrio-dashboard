@@ -69,8 +69,8 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
           {isExpanded && <CommodityStateContext.Consumer>{({ editCommodity }) => (<>
 
             {Object.entries(commodities).map(([uid, commodity]) => (
-              <div key={uid} className="panel-block is-justify-content-space-between">
-                <CommodityDescription commodity={commodity} />
+              <div key={uid} className="panel-block columns m-0 p-0">
+                <CommodityDescription commodity={commodity} className="column px-2" />
                 <div className="buttons">
                   <button type="button" className="button is-small is-white" disabled={loading}
                     onClick={e => {
