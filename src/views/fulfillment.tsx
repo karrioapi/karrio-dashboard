@@ -27,6 +27,7 @@ import { useLoader } from '@/components/loader';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import MessagesDescription from '@/components/descriptions/messages-description';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -167,9 +168,13 @@ export default function FulfillmentPage(pageProps: any) {
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
           <span className="title is-4">
-            Fulfill order{(orders.orders || []).length > 1 ? `s` : ""}
+            Create shipment
           </span>
         </header>
+
+        {(shipment.messages || []).length > 0 && <div className="notification is-warning is-size-7 my-2">
+          <MessagesDescription messages={shipment.messages} />
+        </div>}
 
         {!ready && <Spinner />}
 

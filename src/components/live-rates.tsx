@@ -121,19 +121,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
 
         </div>
 
-        {(shipment.messages || []).length > 0 && <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
-          <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
-            <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
-            <span className="icon is-small is-pulled-right pt-2">
-              <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-            </span>
-          </p>
-
-          {showMessage && <div className="notification is-warning is-size-7">
-            <MessagesDescription messages={shipment.messages} />
-          </div>}
-        </article>}
-
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 
           <h6 className="is-title is-size-6 mt-1 mb-2 has-text-weight-semibold">Select your label type</h6>

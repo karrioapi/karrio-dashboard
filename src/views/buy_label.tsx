@@ -26,6 +26,7 @@ import { PartialShipmentUpdateInput, ShipmentStatusEnum } from 'karrio/graphql';
 import { isNone } from '@/lib/helper';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import LabelMutationProvider from '@/context/label-data-mutation';
+import MessagesDescription from '@/components/descriptions/messages-description';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -104,6 +105,10 @@ export default function LabelPage(pageProps: any) {
             <li className="is-active"><a href="#" aria-current="page">Create Label</a></li>
           </ul>
         </nav>
+
+        {(shipment.messages || []).length > 0 && <div className="notification is-warning is-size-7">
+          <MessagesDescription messages={shipment.messages} />
+        </div>}
 
         {ready && <div className="columns pb-6 m-0">
           <div className="column is-7 px-0" style={{ minHeight: '850px' }}>

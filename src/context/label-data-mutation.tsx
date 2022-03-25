@@ -135,9 +135,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       loader.setLoading(true);
       const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
-      if (messages && messages.length > 0) {
-        notifier.notify({ type: NotificationType.error, message: messages as any });
-      }
     } catch (message: any) {
       updateShipment({ rates: [], messages: message } as Partial<ShipmentType>);
       notifier.notify({ type: NotificationType.error, message });
