@@ -157,7 +157,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (message: any) {
       updateShipment({ rates: [], messages: [message] } as Partial<ShipmentType>);
-      // notifier.notify({ type: NotificationType.error, message });
     }
     loader.setLoading(false);
   };
