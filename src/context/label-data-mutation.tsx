@@ -156,8 +156,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (message: any) {
-      updateShipment({ rates: [], messages: message } as Partial<ShipmentType>);
-      notifier.notify({ type: NotificationType.error, message });
+      updateShipment({ rates: [], messages: [message] } as Partial<ShipmentType>);
+      // notifier.notify({ type: NotificationType.error, message });
     }
     loader.setLoading(false);
   };
@@ -183,7 +183,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     if (updateRate && hasRateRequirements(shipment)) {
-      console.log('fetching rates');
       setUpdateRate(false);
       fetchRates();
     }

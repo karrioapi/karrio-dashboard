@@ -73,7 +73,7 @@ export enum NotificationType {
 
 export interface Notification {
   type?: NotificationType;
-  message: string | Error | RequestError | ApolloError | ErrorType[];
+  message: string | Error | RequestError | ApolloError | ErrorType[] | RequestError[];
 }
 
 export interface LabelData {

@@ -156,11 +156,6 @@ export default function FulfillmentPage(pageProps: any) {
         setReady(true);
       }
     }, [orders.orders, template.called, orders.called, called]);
-    useEffect(() => {
-      if (router.query.shipment_id === 'new' && isNone(shipment.rates) && !requireInfoForRating(shipment)) {
-        mutation.fetchRates();
-      }
-    }, [shipment]);
 
     return (
       <>
@@ -172,7 +167,7 @@ export default function FulfillmentPage(pageProps: any) {
           </span>
         </header>
 
-        {(shipment.messages || []).length > 0 && <div className="notification is-warning is-size-7 my-2">
+        {(shipment.messages || []).length > 0 && <div className="notification is-danger is-light is-size-7 my-2 p-2">
           <MessagesDescription messages={shipment.messages} />
         </div>}
 
@@ -217,7 +212,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>
 
             {/* Parcel & Items section */}
-            <div className="card px-0 py-3 mt-4">
+            <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">PACKAGES AND ITEMS</span>
@@ -346,7 +341,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>
 
             {/* Customs section */}
-            {isInternational(shipment) && <div className="card px-0 py-3 mt-4">
+            {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">CUSTOMS DECLARATION</span>
@@ -383,7 +378,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>}
 
             {/* Live rates section */}
-            <div className="card px-0 py-3 mt-4">
+            <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
