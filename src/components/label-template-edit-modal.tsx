@@ -102,8 +102,10 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
 
             <div className="pb-4 pt-0 is-flex is-justify-content-space-between has-background-white">
               <div className="is-vcentered">
-                <button className="button is-small is-white" aria-label="close" onClick={close}>
-                  <span className="icon is-small"><i className="fas fa-times"></i></span>
+                <button className="button is-white is-small" aria-label="close" onClick={close}>
+                  <span className="icon is-large">
+                    <i className="fas fa-lg fa-times"></i>
+                  </span>
                 </button>
                 <span className="title is-6 has-text-weight-semibold p-3">Edit document template</span>
               </div>
@@ -158,9 +160,22 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
                   required
                 />
 
+                <div className="box mt-5">
+                  <div className="content" style={{ fontSize: '90%' }}>
+                    <p className='is-size-6'><strong>Editing your template</strong></p>
+                    <p>
+                      To edit your label template, use HTML, CSS, and
+                      {' '} <a href="https://jinja.palletsprojects.com/en/3.0.x/templates/" target="_blank" rel="noreferrer">
+                        <span>Jinja variables</span>
+                        <i className="fas fa-external-link-alt pl-2 is-size-7"></i>
+                      </a>{' '}.
+                    </p>
+                  </div>
+                </div>
+
               </div>
 
-              <div className="p-2"></div>
+              <div className="p-3"></div>
 
               <div className="column p-0 is-9">
 

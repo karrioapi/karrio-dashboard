@@ -109,8 +109,8 @@ export default function DocumentTemplatePage(pageProps: any) {
         <div className="py-4 is-flex is-justify-content-space-between has-background-white">
           <div className="is-vcentered">
             <AppLink className="button is-small is-white" href="/settings/templates">
-              <span className="icon is-small">
-                <i className="fas fa-times"></i>
+              <span className="icon is-large">
+                <i className="fas fa-lg fa-times"></i>
               </span>
             </AppLink>
             <span className="title is-6 has-text-weight-semibold p-3">Edit document template</span>
@@ -182,9 +182,29 @@ export default function DocumentTemplatePage(pageProps: any) {
               className="is-small"
             />
 
+            <div className="box mt-5">
+              <div className="content" style={{ fontSize: '90%' }}>
+                <p className='is-size-6'><strong>Editing your template</strong></p>
+                <p>
+                  To edit your template, use HTML, CSS, and
+                  {' '} <a href="https://jinja.palletsprojects.com/en/3.0.x/templates/" target="_blank" rel="noreferrer">
+                    <span>Jinja variables</span>
+                    <i className="fas fa-external-link-alt pl-2 is-size-7"></i>
+                  </a>{' '} for documents.
+                </p>
+                <p className="mt-2">
+                  The template can be styled with
+                  {' '} <a href="https://bulma.io/documentation/helpers/" target="_blank" rel="noreferrer">
+                    <span>bulma css framework</span>
+                    <i className="fas fa-external-link-alt pl-2 is-size-7"></i>
+                  </a>{' '}.
+                </p>
+              </div>
+            </div>
+
           </div>
 
-          <div className="p-2"></div>
+          <div className="p-3"></div>
 
           <div className="column px-0 is-9">
             <div className="card" style={{ borderRadius: 0 }}>
