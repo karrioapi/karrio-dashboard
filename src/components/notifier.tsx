@@ -26,7 +26,7 @@ const Notifier: React.FC = ({ children }) => {
   return (
     <Notify.Provider value={{ notify }}>
       {notification !== undefined &&
-        <div className={`notification p-2 ${notification?.type || NotificationType.info} karrio-notifier is-size-6`}>
+        <div className={`notification px-2 py-4 ${notification?.type || NotificationType.info} karrio-notifier is-size-6`}>
           <progress
             className={`progress karrio-notification-loader ${notification?.type || NotificationType.info}`}
             max="100">50%</progress>

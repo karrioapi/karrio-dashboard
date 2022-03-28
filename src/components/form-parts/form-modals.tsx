@@ -7,7 +7,7 @@ import { AddressType, CustomsType, NotificationType, ParcelType, ShipmentType } 
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { deepEqual } from '@/lib/helper';
-import CustomsInfoForm from './customs-info-form';
+import CustomsInfoForm from '@/components/form-parts/customs-info-form';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import CustomInfoTemplatesProvider from '@/context/customs-templates-provider';

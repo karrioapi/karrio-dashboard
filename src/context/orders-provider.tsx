@@ -22,7 +22,7 @@ type OrdersType = LazyQueryResult<get_orders, OrdersFilterType> & {
 
 export const OrdersContext = React.createContext<OrdersType>({} as OrdersType);
 
-const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
+const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = false }) => {
   const { insertUrlParam } = useLocation();
   const { testMode } = useContext(AppMode);
   const { ORDERS_MANAGEMENT } = useContext(APIReference);

@@ -64,7 +64,6 @@ const CreateOrganizationModalProvider: React.FC = ({ children }) => {
     setLoading(true);
     try {
       const response = await mutation.createOrganization(organization as CreateOrganizationInput);
-      console.log(response, ">>>>>>>>");
       notify({ type: NotificationType.success, message: 'Organization created successfully!' });
       operation?.onChange && operation?.onChange(response?.organization?.id as string);
       setTimeout(() => { setLoading(false); close(); }, 600);

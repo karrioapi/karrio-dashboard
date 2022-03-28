@@ -1,4 +1,4 @@
-import { CommodityType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -9,7 +9,7 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType } from 'karrio/graphql';
+import { LabelTypeEnum, MetadataObjectType, ShipmentStatusEnum } from 'karrio/graphql';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
@@ -28,37 +28,38 @@ import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-edi
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import MessagesDescription from '@/components/descriptions/messages-description';
+import { useNotifier } from '@/components/notifier';
+import { useAppMode } from '@/context/app-mode-provider';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import SelectField from '@/components/generic/select-field';
+import { bundleContexts } from '@/context/utils';
+import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 
 export { getServerSideProps } from "@/lib/middleware";
 
-const CONTEXT_PROVIDERS: React.FC<any>[] = [
+const ContextProviders = bundleContexts([
+  CommodityEditModalProvider,
+  OrdersProvider,
   TemplatesProvider,
   LabelMutationProvider,
   ShipmentMutationProvider,
   LabelDataProvider,
   ModalProvider,
-];
-
-
-const ContextProviders: React.FC = ({ children, ...props }) => {
-  const NestedContexts = CONTEXT_PROVIDERS.reduce((_, Ctx) => <Ctx {...props}>{_}</Ctx>, children);
-
-  return (
-    <>
-      <OrdersProvider setVariablesToURL={false}>{NestedContexts}</OrdersProvider>
-    </>
-  );
-};
+]);
 
 export default function FulfillmentPage(pageProps: any) {
+  const { ORDERS_MANAGEMENT } = pageProps.metadata;
+
   const Component: React.FC = () => {
+    const loader = useLoader();
+    const notifier = useNotifier();
+    const { basePath } = useAppMode();
     const mutation = useLabelMutation();
     const orders = useContext(OrdersContext);
-    const loader = useLoader();
     const { addUrlParam, ...router } = useLocation();
     const { shipment, called, ...label } = useLabelData();
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
-    const { shipment_id = 'new', order_id = "" } = router.query as { shipment_id: string, order_id: string };
+    const { shipment_id = 'new' } = router.query as { shipment_id: string };
     const [ready, setReady] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [key, setKey] = useState<string>(`${shipment_id}-${Date.now()}`);
@@ -105,22 +106,16 @@ export default function FulfillmentPage(pageProps: any) {
       return parent_quantity - packed_quantity;
     };
     const setInitialData = () => {
-      const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
-      const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
-      const items = getItems().map(
-        ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
-      ).filter(({ quantity }) => quantity || 0 > 0);
-      const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
-      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
+      const shipper = default_address || {};
+      const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT) };
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
-        ...(recipient ? { recipient: (recipient as typeof shipment['recipient']) } : {}),
         ...(parcel ? { parcels: ([parcel] as typeof shipment['parcels']) } : {}),
-        reference: `Order #${order_ids}`,
         label_type: LabelTypeEnum.PDF,
-        metadata: { order_ids },
       });
+
+      setReady(true);
     };
     const onChange = async (changes: Partial<ShipmentType>) => {
       if (changes === undefined) { return; }
@@ -134,28 +129,31 @@ export default function FulfillmentPage(pageProps: any) {
     useEffect(() => {
       if (!template.called && !template.loading && template.load) template.load();
     }, []);
+    useEffect(() => { setLoading(label.loading || loader.loading); }, [label.loading, loader.loading]);
+    useEffect(() => {
+      if (shipment.status && shipment.status !== ShipmentStatusEnum.draft) {
+        notifier.notify({ type: NotificationType.info, message: 'Label already purchased! redirecting...' });
+        setTimeout(() => router.push(basePath), 2000);
+      }
+    }, [shipment]);
     useEffect(() => {
       if (!orders.called && !orders.loading && orders.load) orders.load({
-        first: 20,
-        status: ['unfulfilled', 'partial'],
-        ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
+        first: 100,
+        status: ['unfulfilled', 'partial']
       });
     }, []);
     useEffect(() => {
-      setLoading(label.loading || loader.loading);
-    }, [label.loading, loader.loading]);
-    useEffect(() => {
+      const orders_called = (ORDERS_MANAGEMENT && orders.called) || true;
       if (
         !ready && called &&
-        template.called &&
-        orders.called &&
+        template.data &&
         shipment_id === 'new' &&
-        orders.orders.length > 0
+        orders_called
       ) {
-        setInitialData();
-        setReady(true);
+        setTimeout(() => setInitialData(), 1000);
       }
-    }, [orders.orders, template.called, orders.called, called]);
+    }, [template.data, orders.called, called]);
+
 
     return (
       <>
@@ -163,7 +161,7 @@ export default function FulfillmentPage(pageProps: any) {
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
           <span className="title is-4">
-            Create shipment
+            Create label
           </span>
         </header>
 
@@ -173,24 +171,16 @@ export default function FulfillmentPage(pageProps: any) {
 
         {!ready && <Spinner />}
 
-        {(ready && Object.keys(shipment.recipient).length > 0) && <div className="columns pb-6 m-0">
+        {ready && <div className="columns pb-6 m-0">
           <div className="column px-0" style={{ minHeight: '850px' }}>
 
-            {/* Header section */}
-            <div className="card px-0 py-3">
-
-              <div className="p-3">
-                <span className="has-text-weight-bold is-size-6">
-                  {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
-                </span>
-              </div>
-
-              <hr className='my-1' style={{ height: '1px' }} />
+            {/* Address section */}
+            <div className="card p-0">
 
               <div className="p-3">
 
                 <header className="is-flex is-justify-content-space-between">
-                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP TO</span>
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">RECIPIENT</span>
                   <div className="is-vcentered">
                     <AddressModalEditor
                       shipment={shipment}
@@ -198,7 +188,7 @@ export default function FulfillmentPage(pageProps: any) {
                       onSubmit={(address) => onChange({ recipient: address })}
                       trigger={
                         <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                          Edit ship to address
+                          Edit recipient address
                         </button>
                       }
                     />
@@ -206,6 +196,40 @@ export default function FulfillmentPage(pageProps: any) {
                 </header>
 
                 <AddressDescription address={shipment.recipient} />
+
+                {Object.values(shipment.recipient || {}).length === 0 &&
+                  <div className="notification is-warning is-light my-2 py-2 px-4">
+                    Please add a recipient address.
+                  </div>}
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+
+                <header className="is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPER</span>
+                  <div className="is-vcentered">
+                    <AddressModalEditor
+                      shipment={shipment}
+                      address={shipment.shipper}
+                      onSubmit={(address) => onChange({ shipper: address })}
+                      trigger={
+                        <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                          Edit shipper address
+                        </button>
+                      }
+                    />
+                  </div>
+                </header>
+
+                <AddressDescription address={shipment.shipper} />
+
+                {Object.values(shipment.shipper || {}).length === 0 &&
+                  <div className="notification is-warning is-light my-2 py-2 px-4">
+                    Please specify the shipper address.
+                  </div>}
 
               </div>
 
@@ -215,7 +239,7 @@ export default function FulfillmentPage(pageProps: any) {
             <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
-                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">PACKAGES AND ITEMS</span>
+                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">PACKAGES</span>
                 <div className="is-vcentered">
                   <ParcelModalEditor
                     header='Add package'
@@ -276,9 +300,10 @@ export default function FulfillmentPage(pageProps: any) {
                               {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
                             </p>
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                              <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>
-                              {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
-                              {isNoneOrEmpty(item.quantity) && ` | ORDER QTY: ${item.quantity}`}
+                              {isNoneOrEmpty(item.sku) ? 'SKU: 0000000' : `SKU: ${item.sku}`}
+                              {getOrder(item.parent_id) && <span className='has-text-info'>
+                                {` | ORDER: ${getOrder(item.parent_id)?.order_id}`}
+                              </span>}
                             </p>
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                             </p>
@@ -292,7 +317,6 @@ export default function FulfillmentPage(pageProps: any) {
                                     min={1}
                                     type="number"
                                     defaultValue={item.quantity as number}
-                                    max={getAvailableQuantity(shipment, item, item_index)}
                                     onChange={e => {
                                       mutation.updateItem(pkg_index, item_index, pkg.id, item.id)({
                                         quantity: parseInt(e.target.value)
@@ -300,18 +324,20 @@ export default function FulfillmentPage(pageProps: any) {
                                     }}
                                     className="input is-small"
                                     style={{ width: '60px', textAlign: 'center' }}
+                                    {...(getParent(item.parent_id) ? {
+                                      max: getAvailableQuantity(shipment, item, item_index)
+                                    } : {})}
                                   />
                                 </p>
                                 <p className="control">
                                   <a className="button is-static is-small">
-                                    of {getParent(item.parent_id)?.unfulfilled_quantity}
+                                    of {getParent(item.parent_id)?.unfulfilled_quantity || item.quantity}
                                   </a>
                                 </p>
                               </div>
                             </div>
                             <button type="button" className="button is-small is-white"
-                              onClick={mutation.removeItem(pkg_index, item_index, item.id)}
-                              disabled={pkg.items.length === 1}>
+                              onClick={mutation.removeItem(pkg_index, item_index, item.id)}>
                               <span className="icon is-small"><i className="fas fa-times"></i></span>
                             </button>
                           </div>
@@ -323,12 +349,24 @@ export default function FulfillmentPage(pageProps: any) {
                       You can specify content items.
                     </div>}
 
-                    <div className="mt-4">
-                      <LineItemSelector
-                        title='Edit items'
+                    <div className="is-flex is-justify-content-space-between mt-4">
+                      <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                        <button type="button" className="button is-small is-info is-inverted p-2"
+                          disabled={loading}
+                          onClick={() => editCommodity({
+                            onSubmit: _ => mutation.addItems(pkg_index, pkg.id)([_] as any)
+                          })}>
+                          <span className="icon is-small">
+                            <i className="fas fa-plus"></i>
+                          </span>
+                          <span>Add item</span>
+                        </button>
+                      )}</CommodityStateContext.Consumer>
+                      {ORDERS_MANAGEMENT && <LineItemSelector
+                        title='Add order items'
                         shipment={shipment}
                         onChange={_ => mutation.addItems(pkg_index, pkg.id)(_ as any)}
-                      />
+                      />}
                     </div>
                   </div>
                 </React.Fragment>
@@ -337,6 +375,171 @@ export default function FulfillmentPage(pageProps: any) {
               {(shipment.parcels || []).length === 0 && <div className="m-4 notification is-default">
                 Add one or more packages to create a shipment.
               </div>}
+
+            </div>
+
+            {/* Shipping options section */}
+            <div className="card px-0 py-3 mt-5">
+
+              <header className="px-3 is-flex is-justify-content-space-between">
+                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">OPTIONS</span>
+              </header>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3 pb-0">
+
+                {/* shipment date */}
+                <InputField name="shipment_date"
+                  label="shipment date"
+                  type="date"
+                  className="is-small"
+                  fieldClass="column mb-0 is-4 p-0 mb-2"
+                  defaultValue={shipment.options?.shipment_date}
+                  onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
+                />
+
+
+                {/* currency */}
+                <SelectField name="currency"
+                  label="shipment currency"
+                  className="is-small is-fullwidth"
+                  fieldClass="column is-4 mb-0 px-0 py-2"
+                  value={shipment.options?.currency}
+                  required={!isNone(shipment.options?.insurance) || !isNone(shipment.options?.cash_on_delivery) || !isNone(shipment.options?.declared_value)}
+                  onChange={e => onChange({ options: { ...shipment.options, currency: e.target.value } })}
+                >
+                  <option value="">Select a currency</option>
+                  {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
+                </SelectField>
+
+
+                {/* signature confirmation */}
+                <CheckBoxField name="signature_confirmation"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={shipment.options?.signature_confirmation}
+                  onChange={e => onChange({ options: { ...shipment.options, signature_confirmation: e.target.checked } })}
+                >
+                  <span>Add signature confirmation</span>
+                </CheckBoxField>
+
+
+                {/* insurance */}
+                <CheckBoxField name="addInsurance"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.insurance)}
+                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Add insurance</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.insurance) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="insurance"
+                    label="Coverage value"
+                    type="number"
+                    min={0}
+                    step="any"
+                    className="is-small"
+                    fieldClass="column mb-0 is-4 px-1 py-0"
+                    controlClass="has-icons-left has-icons-right"
+                    defaultValue={shipment.options?.insurance}
+                    required={!isNone(shipment.options?.insurance)}
+                    onChange={e => onChange({ options: { ...shipment.options, insurance: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+
+                {/* Cash on delivery */}
+                <CheckBoxField name="addCOD"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
+                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Collect on delivery</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.cash_on_delivery) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="cash_on_delivery"
+                    label="Amount to collect"
+                    type="number" min={0} step="any"
+                    className="is-small"
+                    controlClass="has-icons-left has-icons-right"
+                    fieldClass="column mb-0 is-4 px-1 py-2"
+                    defaultValue={shipment.options?.cash_on_delivery}
+                    required={!isNone(shipment.options?.cash_on_delivery)}
+                    onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+
+                {/* Declared value */}
+                <CheckBoxField name="addCOD"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.declared_value)}
+                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Add package value</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.declared_value) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="declared_value"
+                    label="Package value"
+                    type="number" min={0} step="any"
+                    className="is-small"
+                    controlClass="has-icons-left has-icons-right"
+                    fieldClass="column mb-0 is-4 px-1 py-2"
+                    defaultValue={shipment.options?.declared_value}
+                    required={!isNone(shipment.options?.declared_value)}
+                    onChange={e => onChange({ options: { ...shipment.options, declared_value: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+
+                <InputField label="Reference"
+                  name="reference"
+                  defaultValue={shipment.reference as string}
+                  onChange={e => label.updateShipment({ reference: e.target.value })}
+                  placeholder="shipment reference"
+                  className="is-small"
+                  autoComplete="off"
+                />
+
+              </div>
 
             </div>
 
@@ -377,133 +580,62 @@ export default function FulfillmentPage(pageProps: any) {
 
             </div>}
 
-            {/* Live rates section */}
-            <div className="card px-0 py-3 mt-5">
-
-              <header className="px-3 is-flex is-justify-content-space-between">
-                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
-                <div className="is-vcentered">
-                  <button className="button is-small is-info is-text is-inverted p-1"
-                    onClick={() => mutation.fetchRates()}
-                    disabled={requireInfoForRating(shipment)}>
-                    Refresh rates
-                  </button>
-                </div>
-              </header>
-
-              <hr className='my-1' style={{ height: '1px' }} />
-
-              <div className="p-3">
-
-                {loading && <Spinner className="my-1 p-1 has-text-centered" />}
-
-                {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
-                  Provide all shipping details to retrieve shipping rates.
-                </div>}
-
-                {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
-                  {(shipment.rates || []).map(rate => (
-                    <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                      className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
-                      onClick={() => setSelectedRate(rate)}>
-
-                      <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
-                        {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
-                      </span>
-
-                      <RateDescription rate={rate} />
-
-                      {rate.test_mode && <div className="has-text-warning p-1">
-                        <i className="fas fa-exclamation-circle"></i>
-                      </div>}
-                    </a>
-                  ))}
-                </div>}
-
-              </div>
-
-            </div>
-
           </div>
 
           <div className="p-2"></div>
 
           <div className="column is-5 px-0 pb-6 is-relative">
+
             <div style={{ position: 'sticky', top: '8.5%', right: 0, left: 0 }}>
 
-              {/* Metadata section */}
               <div className="card px-0">
 
-                <header className="p-3">
-                  <span className="has-text-weight-bold is-size-6">Shipping</span>
+                <header className="px-3 py-2 is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
+                  <div className="is-vcentered">
+                    <button className="button is-small is-info is-text is-inverted p-1"
+                      onClick={() => mutation.fetchRates()}
+                      disabled={requireInfoForRating(shipment)}>
+                      Refresh rates
+                    </button>
+                  </div>
                 </header>
 
+                <hr className='my-1' style={{ height: '1px' }} />
+
+                {/* Live rates section */}
                 <div className="p-3">
 
-                  <InputField label="Reference"
-                    name="reference"
-                    defaultValue={shipment.reference as string}
-                    onChange={e => label.updateShipment({ reference: e.target.value })}
-                    placeholder="shipment reference"
-                    className="is-small"
-                    autoComplete="off"
-                  />
+                  {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default p-2 is-size-7">
+                    Provide all shipping details to retrieve shipping rates.
+                  </div>}
+
+                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                    {(shipment.rates || []).map(rate => (
+                      <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                        className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        onClick={() => setSelectedRate(rate)}>
+
+                        <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
+                          {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
+                        </span>
+
+                        <RateDescription rate={rate} />
+
+                        {rate.test_mode && <div className="has-text-warning p-1">
+                          <i className="fas fa-exclamation-circle"></i>
+                        </div>}
+                      </a>
+                    ))}
+                  </div>}
 
                 </div>
 
                 <hr className='my-1' style={{ height: '1px' }} />
 
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
-                    <div className="is-vcentered">
-                      <AddressModalEditor
-                        shipment={shipment}
-                        address={shipment.shipper}
-                        onSubmit={(address) => onChange({ shipper: address })}
-                        trigger={
-                          <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                            Edit origin address
-                          </button>
-                        }
-                      />
-                    </div>
-                  </header>
-
-                  <AddressDescription address={shipment.shipper} />
-
-                  {Object.values(shipment.shipper || {}).length === 0 &&
-                    <div className="notification is-warning is-light my-2 py-2 px-4">
-                      Please specify the origin address.
-                    </div>}
-
-                </div>
-
-                <hr className='my-1' style={{ height: '1px' }} />
-
-                <div className="p-3 pb-0">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING DATE</span>
-                  </header>
-
-                  <InputField
-                    name="shipment_date"
-                    type="date"
-                    className="is-small"
-                    fieldClass="column mb-0 is-6 p-0"
-                    defaultValue={shipment.options?.shipment_date}
-                    onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
-                  />
-
-                </div>
-
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">LABEL TYPE</span>
-                  </header>
+                <div className="p-3 has-text-centered">
 
                   <div className="control">
                     <label className="radio">
@@ -530,11 +662,9 @@ export default function FulfillmentPage(pageProps: any) {
 
                 </div>
 
-                <hr className='my-1' style={{ height: '1px' }} />
-
                 <ButtonField
                   onClick={() => mutation.buyLabel(selected_rate as any)}
-                  fieldClass="has-text-centered mt-3 p-3"
+                  fieldClass="has-text-centered p-3"
                   className={`is-success`}
                   disabled={(shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0 || loading}>
                   <span className="px-6">Buy shipping label</span>
@@ -543,7 +673,7 @@ export default function FulfillmentPage(pageProps: any) {
               </div>
 
               {/* Metadata section */}
-              <div className="card px-0 mt-4">
+              <div className="card px-0 mt-5">
 
                 <div className="p-1 pb-4">
                   <MetadataEditor
@@ -583,7 +713,7 @@ export default function FulfillmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
-      <Head><title>Fulfillment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>Create label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <ContextProviders>
 

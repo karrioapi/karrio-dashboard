@@ -74,7 +74,7 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({ id, metadata, object_ty
               </React.Fragment>
             )}
 
-            {!isEditing && Object.keys(context.state || {}).length == 0 && <div>No metadata</div>}
+            {!isEditing && Object.keys(context.state || {}).length == 0 && <div className="p-2 is-size-7">No metadata</div>}
 
             {isEditing && <>
               <hr className="mt-1 mb-2" style={{ height: '1px' }} />

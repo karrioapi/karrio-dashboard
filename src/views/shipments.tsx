@@ -65,7 +65,7 @@ export default function ShipmentsPage(pageProps: any) {
           <span className="title is-4">Shipments</span>
           <div>
             <ShipmentsFilter />
-            <AppLink href="/buy_label/new" className="button is-primary is-small is-pulled-right ml-1">
+            <AppLink href="/create_label?shipment_id=new" className="button is-primary is-small is-pulled-right ml-1">
               <span>Create Label</span>
             </AppLink>
           </div>

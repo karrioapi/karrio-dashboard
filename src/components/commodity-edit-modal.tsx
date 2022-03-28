@@ -10,17 +10,17 @@ import CountryInput from '@/components/generic/country-input';
 import TextAreaField from '@/components/generic/textarea-field';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { APIReference } from '@/context/references-provider';
-import LineItemInput from './generic/line-item-input';
+import LineItemInput from '@/components/generic/line-item-input';
 
 export const DEFAULT_COMMODITY_CONTENT: Partial<CommodityType> = {
-  weight: 0,
+  weight: 1,
   quantity: 1,
   weight_unit: WeightUnitEnum.KG,
 };
 
 type OperationType = {
   commodity?: CommodityType;
-  onChange: (commodity: CommodityType) => Promise<any>;
+  onSubmit: (commodity: CommodityType) => Promise<any>;
 };
 type CommodityStateContextType = {
   editCommodity: (operation: OperationType) => void,
@@ -52,6 +52,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   const [commodity, dispatch] = useReducer(reducer, undefined, () => DEFAULT_COMMODITY_CONTENT);
   const [operation, setOperation] = useState<OperationType | undefined>();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
+  const [maxQty, setMaxQty] = useState<number>();
 
   const editCommodity = (operation: OperationType) => {
     const commodity = (operation.commodity || DEFAULT_COMMODITY_CONTENT as CommodityType);
@@ -78,12 +79,13 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    operation?.onChange && await operation?.onChange(commodity as CommodityType);
-    setTimeout(() => { setLoading(false); close(); }, 600);
+    commodity.id && setLoading(true);
+    operation?.onSubmit && await operation?.onSubmit(commodity as CommodityType);
+    setTimeout(() => { commodity.id && setLoading(false); close(); }, 500);
   };
   const loadLineItem = (item?: CommodityType | any) => {
     const { id: parent_id, unfulfilled_quantity: quantity, ...content } = item || { id: null };
+    setMaxQty(quantity);
     dispatch({ name: 'partial', value: { ...content, parent_id, quantity } });
   };
 
@@ -127,7 +129,10 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                       className="button is-white is-small"
                       disabled={isNone(commodity?.parent_id)}
                       title="unlink order line item"
-                      onClick={() => dispatch({ name: 'parent_id', value: null })}
+                      onClick={() => {
+                        dispatch({ name: 'parent_id', value: null });
+                        setMaxQty(undefined);
+                      }}
                     >
                       <span className="icon is-small">
                         <i className="fas fa-unlink"></i>
@@ -175,6 +180,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     onChange={handleChange}
                     value={commodity?.quantity}
                     onInvalid={validityCheck(validationMessage('Please enter a valid quantity'))}
+                    {...(maxQty ? { max: maxQty } : {})}
                     required
                   />
 

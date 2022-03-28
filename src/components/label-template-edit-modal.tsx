@@ -42,7 +42,6 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
       return isNone(value) ? undefined : { ...(state || {}), ...(value as LabelTemplate) };
     case 'shipment_sample':
       const content = failsafe(() => JSON.parse(value as string), state.shipment_sample);
-      console.log('shipment_sample', typeof value, value, content);
       return { ...state, shipment_sample: content };
     default:
       return { ...state, [name]: value }

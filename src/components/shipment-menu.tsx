@@ -37,7 +37,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
     }
   };
   const createLabel = (_: React.MouseEvent) => {
-    router.push(basePath + '/buy_label/' + shipment.id);
+    router.push(basePath + '/create_label?shipment_id=' + shipment.id);
   };
   const displayDetails = (_: React.MouseEvent) => {
     router.push(basePath + '/shipments/' + shipment.id);

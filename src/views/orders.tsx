@@ -126,7 +126,7 @@ export default function OrdersPage(pageProps: any) {
 
                 {selection.length > 0 && <td className="p-1" colSpan={5}>
                   <AppLink
-                    href={`/orders/fulfillment?shipment_id=new&order_id=${selection.join(',')}`}
+                    href={`/orders/create_shipment?shipment_id=new&order_id=${selection.join(',')}`}
                     className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
                     <span className="has-text-weight-semibold">Create shipment</span>
                   </AppLink>
@@ -225,7 +225,7 @@ export default function OrdersPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <OrdersProvider>
+      <OrdersProvider setVariablesToURL>
         <OrderPreview>
           <DocumentTemplatesProvider filter={{ related_object: "order" }}>
 
