@@ -1,6 +1,3 @@
-import { p } from "@/lib/helper";
-import Image from 'next/image';
-import logger from "@/lib/logger";
 import React from "react";
 
 
@@ -17,7 +14,8 @@ export default class ErrorBoundary extends React.Component<{}, { hasError: boole
 
   componentDidCatch(error: any, errorInfo: any) {
     // You can also log the error to an error reporting service
-    logger.error(error, errorInfo);
+    console.error(error);
+    console.error(errorInfo);
   }
 
   render() {

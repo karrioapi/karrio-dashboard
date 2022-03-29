@@ -3,7 +3,6 @@ import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import logger from "@/lib/logger";
 import { Response } from "node-fetch";
 import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
 import axios from "axios";
@@ -36,8 +35,8 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
       // TODO:: implement version compatibility check here.
       resolve({ metadata });
     } catch (e: any | Response) {
-      logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
-      logger.error(e);
+      console.error(`Failed to fetch API metadata from (${KARRIO_API})`);
+      console.error(e);
       const code = e.response?.status === 401 ?
         ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
