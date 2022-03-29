@@ -7,6 +7,7 @@ import { Response } from "node-fetch";
 import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
 import axios from "axios";
 import getConfig from "next/config";
+import logger from "./logger";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -35,9 +36,9 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
       // TODO:: implement version compatibility check here.
       resolve({ metadata });
     } catch (e: any | Response) {
-      console.error(`Failed to fetch API metadata from (${KARRIO_API})`);
-      console.error(e);
-      const code = e.response?.status === 401 ?
+      logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
+      logger.error(e.response);
+      const code = (e.response?.status + '').startsWith('4') ?
         ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
       const error = createServerError({
@@ -72,7 +73,9 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
 
     return { metadata, references, ...data };
   } catch (e: any | Response) {
-    const code = e.response?.status === 401 ?
+    logger.error(`Failed to fetch API data from (${KARRIO_API})`);
+    logger.error(e.response);
+    const code = (e.response?.status + '').startsWith('4') ?
       ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
     const error = createServerError({
