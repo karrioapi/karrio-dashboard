@@ -152,6 +152,14 @@ export default function FulfillmentPage(pageProps: any) {
       ) {
         setTimeout(() => setInitialData(), 1000);
       }
+      if (
+        !ready && called &&
+        !isNoneOrEmpty(shipment_id) &&
+        shipment_id !== 'new' &&
+        orders_called
+      ) {
+        setReady(true);
+      }
     }, [template.data, orders.called, called]);
 
 
