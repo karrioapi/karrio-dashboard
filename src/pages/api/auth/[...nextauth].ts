@@ -7,6 +7,7 @@ import { JWT } from 'next-auth/jwt';
 import CredentialProvider from "next-auth/providers/credentials";
 import logger from '@/lib/logger';
 import { authenticate, refreshToken } from '@/lib/auth';
+import { withSentry } from '@sentry/nextjs';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
@@ -92,4 +93,4 @@ const auth = NextAuth({
   }
 });
 
-export default auth;
+export default withSentry(auth);

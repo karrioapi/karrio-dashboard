@@ -17,6 +17,7 @@
     "@codemirror/lang-json": "^0.19.2",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@reactivex/rxjs": "^6.6.7",
+    "@sentry/nextjs": "^6.19.3",
     "@types/node-fetch": "^2.5.12",
     "@uiw/react-codemirror": "^4.5.1",
     "axios": "^0.25.0",
