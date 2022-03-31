@@ -6,6 +6,8 @@
 !/src/
 !/package.json
 !/package-lock.json
+!/sentry.client.config.js
+!/sentry.server.config.js
 !/tsconfig.json
 !/.eslintrc
 !/next.config.js
