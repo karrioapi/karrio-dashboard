@@ -560,7 +560,10 @@ export default function FulfillmentPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs || { ...DEFAULT_CUSTOMS_CONTENT, commodities: getItems() }}
+                    customs={shipment?.customs || {
+                      ...DEFAULT_CUSTOMS_CONTENT,
+                      commodities: shipment.parcels.map(({ items }) => items || []).flat()
+                    }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
                       <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
