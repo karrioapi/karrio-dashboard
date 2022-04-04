@@ -2,9 +2,9 @@
 
 <picture><img alt="Karrio Dashboard" src="./screenshots/dashboard.png" /></picture>
 
-[![puprlship-dashboard](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml)
+[![karrio-dashboard](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml)
 
-Karrio Dashboard is a browser-based logistics and shipping dashboard for [karrio](https://github.com/karrioapi/karrio).
+Karrio Dashboard is a browser-based logistics and shipping app for [karrio](https://github.com/karrioapi/karrio).
 
 ## Getting Started
 
