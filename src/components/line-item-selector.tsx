@@ -61,12 +61,15 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
         .map(order => ({
           ...order,
           line_items: order.line_items
-            .map(item => ({ ...item, quantity: (item.quantity as number) - getUsedQuantity(item.id) }))
+            .map(({ unfulfilled_quantity: quantity, ...item }) => ({
+              ...item,
+              quantity: (quantity || 0) - getUsedQuantity(item.id)
+            }))
             .filter(item => item.quantity > 0)
         }))
         .filter(order => order.line_items.length > 0);
 
-      setOrders(filteredOrders);
+      setOrders(filteredOrders as any);
       setLineItems(filteredOrders.map(order => order.line_items).flat());
     }
   }, [called, context.orders, isActive]);

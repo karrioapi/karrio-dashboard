@@ -22,6 +22,8 @@ import EventsProvider, { EventsContext } from "@/context/events-provider";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
 import CarrierBadge from "@/components/carrier-badge";
+import ParcelDescription from "@/components/descriptions/parcel-description";
+import { KARRIO_API } from "@/client/context";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -38,7 +40,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const { id } = router.query;
 
   const buyLabel = (_: React.MouseEvent) => {
-    router.push(basePath + '/buy_label/' + shipment?.id);
+    router.push(basePath + '/create_label?shipment_id=' + shipment?.id);
   };
 
   useEffect(() => { setLoading(loading); });
@@ -73,15 +75,19 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           <div className="column is-6 has-text-right pb-0">
             <CopiableLink text={shipment.id as string} title="Copy ID" />
             <br />
-            {!isNone(shipment.label_url) && <button className="button is-default is-small ml-1" onClick={() => printLabel(shipment)}>
+            {!isNone(shipment.label_url) && <a className="button is-default is-small ml-1"
+              href={`${KARRIO_API}${shipment?.label_url}`}
+              target="_blank" rel="noreferrer">
               <i className="fas fa-print"></i>
               <span className="ml-1">Print Label</span>
-            </button>}
+            </a>}
             {!isNone(shipment.invoice_url) &&
-              <button className="button is-default is-small ml-1" onClick={() => printInvoice(shipment)}>
+              <a className="button is-default is-small ml-1"
+                href={`${KARRIO_API}${shipment.invoice_url}`}
+                target="_blank" rel="noreferrer">
                 <i className="fas fa-print"></i>
                 <span className="ml-1">Print Invoice</span>
-              </button>}
+              </a>}
             {(isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft) &&
               <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
 
@@ -225,9 +231,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
               {shipment.parcels.map((parcel: ParcelType, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <p className="is-size-7 my-1">{formatParcelLabel(parcel)}</p>
-                <p className="is-size-7 my-1 has-text-grey">{formatDimension(parcel)}</p>
-                <p className="is-size-7 my-1 has-text-grey">{formatWeight(parcel)}</p>
+                <ParcelDescription parcel={parcel} />
               </React.Fragment>)}
             </div>
           </div>

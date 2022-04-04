@@ -69,13 +69,13 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
           {isExpanded && <CommodityStateContext.Consumer>{({ editCommodity }) => (<>
 
             {Object.entries(commodities).map(([uid, commodity]) => (
-              <div key={uid} className="panel-block is-justify-content-space-between">
-                <CommodityDescription commodity={commodity} />
+              <div key={uid} className="panel-block columns m-0 p-0">
+                <CommodityDescription commodity={commodity} className="column px-2" />
                 <div className="buttons">
                   <button type="button" className="button is-small is-white" disabled={loading}
                     onClick={e => {
                       e.preventDefault();
-                      editCommodity({ commodity, onChange: async changes => updateCommodity(uid, changes) });
+                      editCommodity({ commodity, onSubmit: async changes => updateCommodity(uid, changes) });
                       return false;
                     }}>
                     <span className="icon is-small"><i className="fas fa-pen"></i></span>
@@ -93,7 +93,7 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
                 type="button"
                 className="button is-white is-small has-text-primary"
                 onClick={() => editCommodity({
-                  onChange: async data => updateCommodity(`commodity-${Date.now()}`, data)
+                  onSubmit: async data => updateCommodity(`commodity-${Date.now()}`, data)
                 })}>
                 <span className="icon is-small">
                   <i className="fas fa-plus"></i>

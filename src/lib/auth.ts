@@ -6,17 +6,25 @@ import { isNone } from "@/lib/helper";
 
 
 export async function authenticate(data: TokenObtainPair) {
-  return axios
-    .post(KARRIO_API + '/api/token', data)
+  return axios({
+    url: KARRIO_API + '/api/token',
+    method: 'POST',
+    headers: { 'Cache-Control': 'no-store' },
+    data
+  })
     .then(({ data }) => data);
 }
 
 export async function refreshToken(refresh: string, org_id?: string) {
-  return axios
-    .post(KARRIO_API + '/api/token/refresh', {
+  return axios({
+    url: KARRIO_API + '/api/token/refresh',
+    method: 'POST',
+    headers: { 'Cache-Control': 'no-store' },
+    data: {
       refresh,
       ...(isNone(org_id) ? {} : { org_id })
-    })
+    }
+  })
     .then(({ data: { refresh, access } }) => {
       return { access, refresh };
     });

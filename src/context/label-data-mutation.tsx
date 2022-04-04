@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
 import { PartialShipmentUpdateInput } from 'karrio/graphql';
@@ -6,7 +6,7 @@ import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 
 type LabelMutationContext = {
   addParcel: (data: ParcelType) => Promise<void>;
@@ -18,7 +18,7 @@ type LabelMutationContext = {
   updateCustoms: (customs_id?: string | undefined) => (data: CustomsType | null) => Promise<void>;
   fetchRates: () => Promise<void>;
   buyLabel: (rate: ShipmentType['rates'][0]) => Promise<void>;
-  updateShipment: (changes: Partial<ShipmentType>) => Promise<void>;
+  updateShipment: ({ id, ...changes }: Partial<ShipmentType>) => Promise<void | ShipmentType>;
 };
 
 export const LabelMutationContext = React.createContext<LabelMutationContext>({} as LabelMutationContext);
@@ -30,14 +30,39 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const mutation = useShipmentMutation();
   const { shipment, ...label } = useLabelData();
   const { addUrlParam, ...router } = useLocation();
+  const [updateRate, setUpdateRate] = React.useState<boolean>(false);
 
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
+  const hasRateRequirements = (shipment: ShipmentType) => {
+    return (
+      !isNoneOrEmpty(shipment.recipient.address_line1) &&
+      !isNoneOrEmpty(shipment.shipper.address_line1) &&
+      shipment.parcels.length > 0
+    );
+  };
+  const shouldFetchRates = (changes: ShipmentType) => {
+    const currentWeight = shipment.parcels.reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
+    const newWeight = (changes.parcels || []).reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
+
+    return (
+      (!isNone(changes.parcels) && currentWeight !== newWeight) ||
+
+      (!isNone(changes.shipper) && shipment.shipper.address_line1 !== changes.shipper.address_line1) ||
+      (!isNone(changes.shipper) && shipment.shipper.country_code !== changes.shipper.country_code) ||
+      (!isNone(changes.shipper) && shipment.shipper.city !== changes.shipper.city) ||
+
+      (!isNone(changes.recipient) && shipment.recipient.address_line1 !== changes.recipient.address_line1) ||
+      (!isNone(changes.recipient) && shipment.recipient.country_code !== changes.recipient.country_code) ||
+      (!isNone(changes.recipient) && shipment.recipient.city !== changes.recipient.city)
+    );
+  };
 
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
+    if (shouldFetchRates(changes as any)) { setUpdateRate(true); }
     if (isDraft(id)) {
-      label.updateShipment(changes);
+      return await label.updateShipment(changes);
     } else {
-      await mutation.updateShipment(
+      return await mutation.updateShipment(
         { id: shipment.id, ...changes } as PartialShipmentUpdateInput
       );
     }
@@ -45,7 +70,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const addParcel = async (data: ParcelType) => {
     if (isDraft(shipment.id)) {
       const update = { ...shipment, parcels: [...shipment.parcels, data] };
-      updateShipment(update);
+      await updateShipment(update);
     } else {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
       await mutation.updateShipment(update);
@@ -100,6 +125,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } else {
       await mutation.discardParcel(parcel_id as string);
     }
+    setUpdateRate(true);
   };
   const removeItem = (parcel_index: number, item_index: number, item_id?: string) => async () => {
     if (isDraft(shipment.id)) {
@@ -129,12 +155,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       loader.setLoading(true);
       const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
-      if (messages && messages.length > 0) {
-        notifier.notify({ type: NotificationType.error, message: messages as any });
-      }
     } catch (message: any) {
-      updateShipment({ rates: [], messages: message } as Partial<ShipmentType>);
-      notifier.notify({ type: NotificationType.error, message });
+      updateShipment({ rates: [], messages: [message] } as Partial<ShipmentType>);
     }
     loader.setLoading(false);
   };
@@ -152,11 +174,18 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       });
       router.push(basePath);
     } catch (message: any) {
-      notifier.notify({ type: NotificationType.error, message });
+      updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {
       loader.setLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    if (updateRate && hasRateRequirements(shipment)) {
+      setUpdateRate(false);
+      fetchRates();
+    }
+  }, [shipment]);
 
   return (
     <LabelMutationContext.Provider value={{

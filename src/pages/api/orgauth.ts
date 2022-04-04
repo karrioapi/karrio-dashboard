@@ -4,12 +4,13 @@ import { OrgToken } from '@/client/context';
 import { getToken } from 'next-auth/jwt';
 import { getSession } from "next-auth/react";
 import { refreshToken } from '@/lib/auth';
+import { withSentry } from '@sentry/nextjs';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
-export default async function OrgAPI(req: NextApiRequest, res: NextApiResponse) {
+async function OrgAPI(req: NextApiRequest, res: NextApiResponse) {
   try {
     const orgId = req.query.org_id as string;
     const current = await getToken({ req, secret });
@@ -24,3 +25,5 @@ export default async function OrgAPI(req: NextApiRequest, res: NextApiResponse) 
     res.status(500).json({ error: JSON.stringify(err) });
   }
 }
+
+export default withSentry(OrgAPI);

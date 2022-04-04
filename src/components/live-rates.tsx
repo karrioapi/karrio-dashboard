@@ -10,7 +10,6 @@ import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field'
 import { Loading } from '@/components/loader';
 import RateDescription from '@/components/descriptions/rate-description';
-import MessagesDescription from '@/components/descriptions/messages-description';
 import { LabelTypeEnum, PaidByEnum } from 'karrio/graphql';
 import { useLabelMutation } from '@/context/label-data-mutation';
 
@@ -25,7 +24,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
   const { loading } = useContext(Loading);
   const mutation = useLabelMutation();
   const [payment, setPayment] = useState<Partial<PaymentType>>(DEFAULT_PAYMENT);
-  const [showMessage, setShowMessage] = useState(false);
   const [key, setKey] = useState<string>(`details-${Date.now()}`);
   const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
     shipment?.selected_rate_id ? { id: shipment?.selected_rate_id } as any : undefined
@@ -41,12 +39,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
   };
 
   useEffect(() => { setKey(`details-${Date.now()}`); }, [shipment]);
-  useEffect(() => {
-    setKey(`details-${Date.now()}`);
-    if (router.query.id === 'new' && isNone(shipment.rates) && !computeDisabled(shipment)) {
-      mutation.fetchRates();
-    }
-  }, [shipment]);
 
   return (
     <div key={key}>
@@ -120,19 +112,6 @@ const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
           </div>
 
         </div>
-
-        {(shipment.messages || []).length > 0 && <article className="column is-12 py-1 mb-1 panel is-white is-shadowless">
-          <p className="panel-heading is-fullwidth px-0 pt-3" onClick={() => setShowMessage(!showMessage)}>
-            <span className="is-title is-size-6 my-2 has-text-weight-semibold">Messages</span>
-            <span className="icon is-small is-pulled-right pt-2">
-              <i className={`fas ${showMessage ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-            </span>
-          </p>
-
-          {showMessage && <div className="notification is-warning is-size-7">
-            <MessagesDescription messages={shipment.messages} />
-          </div>}
-        </article>}
 
         <div className="column is-12 py-2" style={{ display: `${(shipment.rates || []).length === 0 ? 'none' : 'block'}` }}>
 

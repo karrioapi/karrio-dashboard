@@ -34,7 +34,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
       <div className="sidebar-header pl-5 mb-4">
         {MULTI_ORGANIZATIONS
           ? <OrganizationDropdown />
-          : <Image src={p`/icon.svg`} className="mt-2" width="50" height="100%" alt="logo" />}
+          : <Image src={p`/icon.svg`} className="mt-1" width="30" height="100%" alt="logo" />}
         <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
           <span></span>
         </button>
@@ -60,44 +60,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <i className={`fa fa-th-list pr-3 ${isActive("/connections") ? "" : 'has-text-grey'}`}></i>
           <span className="has-text-weight-semibold">Carriers</span>
         </AppLink>
-
-        {/* Developers */}
-        <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
-          <i className={`fa fa-terminal pr-3 has-text-grey`}></i>
-          <span className="has-text-weight-semibold">Developers</span>
-        </AppLink>
-
-        {window.location.pathname.includes('/developers') && <>
-          <AppLink href="/developers/api" className={"menu-item ml-5 " + activeClass("/developers/api")} shallow={false} prefetch={false}>
-            <span>API</span>
-          </AppLink>
-
-          <AppLink href="/developers/webhooks" className={"menu-item ml-5 " + activeClass("/developers/webhooks")} shallow={false} prefetch={false}>
-            <span>Webhooks</span>
-          </AppLink>
-
-          <AppLink href="/developers/events" className={"menu-item ml-5 " + activeClass("/developers/events")} shallow={false} prefetch={false}>
-            <span>Events</span>
-          </AppLink>
-
-          <AppLink href="/developers/logs" className={"menu-item ml-5 " + activeClass("/developers/logs")} shallow={false} prefetch={false}>
-            <span>Logs</span>
-          </AppLink>
-        </>}
-
-        <hr className="my-3 mx-5" style={{ height: '1px' }} />
-
-        {testMode ?
-          <a className="menu-item mode-menu-item" onClick={switchMode}>
-            <i className="fas fa-toggle-on pr-3"></i>
-            <span className="mode-menu-item has-text-weight-semibold">Viewing test data</span>
-          </a>
-          :
-          <a className="menu-item has-text-grey" onClick={switchMode}>
-            <i className="fas fa-toggle-off pr-3"></i>
-            <span className="has-text-weight-semibold">View test data</span>
-          </a>
-        }
 
         {/* Settings */}
         <a className="menu-item menu-item my-0" onClick={() => setShowSettingsMenus(!showSettingsMenus)}>
@@ -126,6 +88,44 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
 
           <AppLink href="/settings/customs-infos" className={"menu-item ml-5 " + activeClass("/settings/customs-infos")} shallow={false} prefetch={false}>
             <span>Customs</span>
+          </AppLink>
+        </>}
+
+        <hr className="my-3 mx-5" style={{ height: '1px' }} />
+
+        {testMode ?
+          <a className="menu-item mode-menu-item" onClick={switchMode}>
+            <i className="fas fa-toggle-on pr-3"></i>
+            <span className="mode-menu-item has-text-weight-semibold">Viewing test data</span>
+          </a>
+          :
+          <a className="menu-item has-text-grey" onClick={switchMode}>
+            <i className="fas fa-toggle-off pr-3"></i>
+            <span className="has-text-weight-semibold">View test data</span>
+          </a>
+        }
+
+        {/* Developers */}
+        <AppLink href="/developers/api" className="menu-item menu-item my-0" shallow={false} prefetch={false}>
+          <i className={`fa fa-terminal pr-3 has-text-grey`}></i>
+          <span className="has-text-weight-semibold">Developers</span>
+        </AppLink>
+
+        {window.location.pathname.includes('/developers') && <>
+          <AppLink href="/developers/api" className={"menu-item ml-5 " + activeClass("/developers/api")} shallow={false} prefetch={false}>
+            <span>API</span>
+          </AppLink>
+
+          <AppLink href="/developers/webhooks" className={"menu-item ml-5 " + activeClass("/developers/webhooks")} shallow={false} prefetch={false}>
+            <span>Webhooks</span>
+          </AppLink>
+
+          <AppLink href="/developers/events" className={"menu-item ml-5 " + activeClass("/developers/events")} shallow={false} prefetch={false}>
+            <span>Events</span>
+          </AppLink>
+
+          <AppLink href="/developers/logs" className={"menu-item ml-5 " + activeClass("/developers/logs")} shallow={false} prefetch={false}>
+            <span>Logs</span>
           </AppLink>
         </>}
       </div>

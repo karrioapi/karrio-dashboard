@@ -7,7 +7,7 @@ import { AddressType, CustomsType, NotificationType, ParcelType, ShipmentType } 
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { deepEqual } from '@/lib/helper';
-import CustomsInfoForm from './customs-info-form';
+import CustomsInfoForm from '@/components/form-parts/customs-info-form';
 import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import CustomInfoTemplatesProvider from '@/context/customs-templates-provider';
@@ -134,7 +134,7 @@ export const CustomsModalEditor: React.FC<ModalFormProps<CustomsModalEditorProps
   const modal = useModal();
 
   const FormComponent: React.FC<CustomsModalEditorProps> = props => {
-    const { customs, shipment, header, onSubmit } = props;
+    const { customs, header, onSubmit } = props;
     const { close } = useModal();
 
     return (
@@ -147,7 +147,6 @@ export const CustomsModalEditor: React.FC<ModalFormProps<CustomsModalEditorProps
         <CustomInfoTemplatesProvider>
           <CustomsInfoForm
             value={customs}
-            shipment={shipment}
             onSubmit={async (data) => { await onSubmit(data); close(); }}
           />
         </CustomInfoTemplatesProvider>

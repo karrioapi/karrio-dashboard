@@ -14,16 +14,17 @@ import UserConnectionList from "@/components/user-carrier-list";
 import ConnectionMutationProvider from "@/context/connection-mutation";
 import { useRouter } from "next/dist/client/router";
 import SystemConnectionsMutationProvider from "@/context/system-connection-mutation";
+import LabelTemplateEditModalProvider from "@/components/label-template-edit-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function ConnectionsPage(pageProps: any) {
-  const tabs = ['Your Accounts', `${(pageProps as any).metadata?.APP_NAME || ''} Accounts`];
+  const tabs = ['Your Accounts', 'System Accounts'];
 
   const Component: React.FC = () => {
     const router = useRouter();
-    const { modal, tab } = router.query;
+    const { modal } = router.query;
     const { setLoading } = useContext(Loading);
     const { selectTab } = useContext(TabStateContext);
     const { editConnection } = useContext(ConnectProviderModalContext);
@@ -81,11 +82,13 @@ export default function ConnectionsPage(pageProps: any) {
             <ConnectProviderModal>
               <SystemConnectionsProvider>
                 <UserConnectionsProvider>
+                  <LabelTemplateEditModalProvider>
 
-                  <TabStateProvider tabs={tabs} setSelectedToURL={true}>
-                    <Component />
-                  </TabStateProvider>
+                    <TabStateProvider tabs={tabs} setSelectedToURL={true}>
+                      <Component />
+                    </TabStateProvider>
 
+                  </LabelTemplateEditModalProvider>
                 </UserConnectionsProvider>
               </SystemConnectionsProvider>
             </ConnectProviderModal>

@@ -1,4 +1,4 @@
-import { CommodityType, ShipmentType } from '@/lib/types';
+import { CommodityType, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -26,33 +26,30 @@ import ShipmentMutationProvider from '@/context/shipment-mutation';
 import { useLoader } from '@/components/loader';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
+import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import MessagesDescription from '@/components/descriptions/messages-description';
+import { useAppMode } from '@/context/app-mode-provider';
+import { useNotifier } from '@/components/notifier';
+import { bundleContexts } from '@/context/utils';
 
 export { getServerSideProps } from "@/lib/middleware";
 
-const CONTEXT_PROVIDERS: React.FC<any>[] = [
+const ContextProviders = bundleContexts([
+  OrdersProvider,
   TemplatesProvider,
   LabelMutationProvider,
   ShipmentMutationProvider,
   LabelDataProvider,
   ModalProvider,
-];
-
-
-const ContextProviders: React.FC = ({ children, ...props }) => {
-  const NestedContexts = CONTEXT_PROVIDERS.reduce((_, Ctx) => <Ctx {...props}>{_}</Ctx>, children);
-
-  return (
-    <>
-      <OrdersProvider setVariablesToURL={false}>{NestedContexts}</OrdersProvider>
-    </>
-  );
-};
+]);
 
 export default function FulfillmentPage(pageProps: any) {
   const Component: React.FC = () => {
+    const loader = useLoader();
+    const notifier = useNotifier();
+    const { basePath } = useAppMode();
     const mutation = useLabelMutation();
     const orders = useContext(OrdersContext);
-    const loader = useLoader();
     const { addUrlParam, ...router } = useLocation();
     const { shipment, called, ...label } = useLabelData();
     const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
@@ -79,9 +76,12 @@ export default function FulfillmentPage(pageProps: any) {
         shipment.recipient.country_code !== shipment.shipper.country_code
       );
     };
-    const getParent = (id: string | null) => {
+    const getItems = () => {
       return orders.orders
-        .map(({ line_items }) => line_items).flat()
+        .map(({ line_items }) => line_items).flat();
+    }
+    const getParent = (id: string | null) => {
+      return getItems()
         .find((item) => item.id === id);
     };
     const getOrder = (item_id?: string | null) => {
@@ -89,7 +89,7 @@ export default function FulfillmentPage(pageProps: any) {
         .find((order) => order.line_items.find((item) => item.id === item_id));
     };
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
-      const parent_quantity = getParent(item.parent_id)?.quantity || 0;
+      const parent_quantity = getParent(item.parent_id)?.unfulfilled_quantity || 0;
       const packed_quantity = shipment.parcels
         .map(({ items }) => items || []).flat()
         .filter((_, index) => index !== item_index)
@@ -102,9 +102,9 @@ export default function FulfillmentPage(pageProps: any) {
     const setInitialData = () => {
       const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
-      const items = orders.orders
-        .map(({ line_items }) => line_items).flat()
-        .map(({ id: parent_id, ...item }) => ({ ...item, parent_id }));
+      const items = getItems().map(
+        ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
+      ).filter(({ quantity }) => quantity || 0 > 0);
       const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
       const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
 
@@ -116,6 +116,8 @@ export default function FulfillmentPage(pageProps: any) {
         label_type: LabelTypeEnum.PDF,
         metadata: { order_ids },
       });
+
+      setReady(true);
     };
     const onChange = async (changes: Partial<ShipmentType>) => {
       if (changes === undefined) { return; }
@@ -129,33 +131,31 @@ export default function FulfillmentPage(pageProps: any) {
     useEffect(() => {
       if (!template.called && !template.loading && template.load) template.load();
     }, []);
+    useEffect(() => { setLoading(label.loading || loader.loading); }, [label.loading, loader.loading]);
     useEffect(() => {
-      if (!orders.called && !orders.loading && orders.load) orders.load({
+      if (isNoneOrEmpty(order_id)) {
+        notifier.notify({ type: NotificationType.info, message: 'Select order(s) first! redirecting...' });
+        setTimeout(() => router.push(basePath + '/orders'), 2000);
+      }
+    }, [order_id]);
+    useEffect(() => {
+      if (!orders.called && !orders.loading && !isNoneOrEmpty(order_id) && orders.load) orders.load({
         first: 20,
         status: ['unfulfilled', 'partial'],
         ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
       });
     }, []);
     useEffect(() => {
-      setLoading(label.loading || loader.loading);
-    }, [label.loading, loader.loading]);
-    useEffect(() => {
       if (
         !ready && called &&
-        template.called &&
+        template.data &&
         orders.called &&
         shipment_id === 'new' &&
         orders.orders.length > 0
       ) {
-        setInitialData();
-        setReady(true);
+        setTimeout(() => setInitialData(), 1000);
       }
-    }, [orders.orders, template.called, orders.called, called]);
-    useEffect(() => {
-      if (router.query.shipment_id === 'new' && isNone(shipment.rates) && !requireInfoForRating(shipment)) {
-        mutation.fetchRates();
-      }
-    }, [shipment]);
+    }, [called, orders.called, orders.orders, template.data]);
 
     return (
       <>
@@ -163,9 +163,13 @@ export default function FulfillmentPage(pageProps: any) {
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
           <span className="title is-4">
-            Fulfill order{(orders.orders || []).length > 1 ? `s` : ""}
+            Create shipment
           </span>
         </header>
+
+        {(shipment.messages || []).length > 0 && <div className="notification is-danger is-light is-size-7 my-2 p-2">
+          <MessagesDescription messages={shipment.messages} />
+        </div>}
 
         {!ready && <Spinner />}
 
@@ -186,7 +190,7 @@ export default function FulfillmentPage(pageProps: any) {
               <div className="p-3">
 
                 <header className="is-flex is-justify-content-space-between">
-                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING ADDRESS</span>
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP TO</span>
                   <div className="is-vcentered">
                     <AddressModalEditor
                       shipment={shipment}
@@ -194,7 +198,7 @@ export default function FulfillmentPage(pageProps: any) {
                       onSubmit={(address) => onChange({ recipient: address })}
                       trigger={
                         <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                          Edit shipping address
+                          Edit ship to address
                         </button>
                       }
                     />
@@ -208,7 +212,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>
 
             {/* Parcel & Items section */}
-            <div className="card px-0 py-3 mt-4">
+            <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">PACKAGES AND ITEMS</span>
@@ -274,7 +278,6 @@ export default function FulfillmentPage(pageProps: any) {
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                               <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>
                               {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
-                              {isNoneOrEmpty(item.quantity) && ` | ORDER QTY: ${item.quantity}`}
                             </p>
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                             </p>
@@ -300,7 +303,7 @@ export default function FulfillmentPage(pageProps: any) {
                                 </p>
                                 <p className="control">
                                   <a className="button is-static is-small">
-                                    of {getParent(item.parent_id)?.quantity}
+                                    of {getParent(item.parent_id)?.unfulfilled_quantity}
                                   </a>
                                 </p>
                               </div>
@@ -315,8 +318,8 @@ export default function FulfillmentPage(pageProps: any) {
                       </React.Fragment>
                     ))}
 
-                    {(pkg.items || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
-                      You must add at least one item to this package.
+                    {(pkg.items || []).length === 0 && <div className="notification is-light my-2 py-2 px-4 is-size-7">
+                      You can specify content items.
                     </div>}
 
                     <div className="mt-4">
@@ -337,7 +340,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>
 
             {/* Customs section */}
-            {isInternational(shipment) && <div className="card px-0 py-3 mt-4">
+            {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">CUSTOMS DECLARATION</span>
@@ -345,7 +348,7 @@ export default function FulfillmentPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs}
+                    customs={shipment?.customs || { ...DEFAULT_CUSTOMS_CONTENT, commodities: getItems() }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
                       <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
@@ -374,7 +377,7 @@ export default function FulfillmentPage(pageProps: any) {
             </div>}
 
             {/* Live rates section */}
-            <div className="card px-0 py-3 mt-4">
+            <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
                 <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
@@ -391,11 +394,13 @@ export default function FulfillmentPage(pageProps: any) {
 
               <div className="p-3">
 
-                {(shipment.rates || []).length === 0 && <div className="notification is-default">
+                {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+
+                {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
                   Provide all shipping details to retrieve shipping rates.
                 </div>}
 
-                {(shipment.rates || []).length > 0 && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
                   {(shipment.rates || []).map(rate => (
                     <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
                       className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
@@ -425,7 +430,7 @@ export default function FulfillmentPage(pageProps: any) {
           <div className="column is-5 px-0 pb-6 is-relative">
             <div style={{ position: 'sticky', top: '8.5%', right: 0, left: 0 }}>
 
-              {/* Metadata section */}
+              {/* Shipping section */}
               <div className="card px-0">
 
                 <header className="p-3">
@@ -450,7 +455,7 @@ export default function FulfillmentPage(pageProps: any) {
                 <div className="p-3">
 
                   <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING FROM</span>
+                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
                     <div className="is-vcentered">
                       <AddressModalEditor
                         shipment={shipment}
@@ -486,7 +491,7 @@ export default function FulfillmentPage(pageProps: any) {
                     name="shipment_date"
                     type="date"
                     className="is-small"
-                    fieldClass="column mb-0 is-5 p-0"
+                    fieldClass="column mb-0 is-6 p-0"
                     defaultValue={shipment.options?.shipment_date}
                     onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
                   />
@@ -537,7 +542,7 @@ export default function FulfillmentPage(pageProps: any) {
               </div>
 
               {/* Metadata section */}
-              <div className="card px-0 mt-4">
+              <div className="card px-0 mt-5">
 
                 <div className="p-1 pb-4">
                   <MetadataEditor
@@ -577,7 +582,7 @@ export default function FulfillmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <GoogleGeocodingScript />
-      <Head><title>Fulfillment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>Create shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <ContextProviders>
 

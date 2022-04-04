@@ -202,7 +202,8 @@ export async function handleFailure<T>(request: Promise<T>): Promise<T> {
 }
 
 export enum ServerErrorCode {
-  API_CONNECTION_ERROR
+  API_CONNECTION_ERROR,
+  API_AUTH_ERROR,
 }
 
 export type ServerError = { code?: ServerErrorCode; message?: string; };
@@ -356,3 +357,5 @@ export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
 export function isListEqual<T>(list1: T[], list2: T[]) {
   return list1.length === list2.length && list1.every((item, index) => item === list2[index]);
 }
+
+export const isEqual = require('lodash.isequal');

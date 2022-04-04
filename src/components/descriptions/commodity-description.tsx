@@ -5,12 +5,13 @@ import { CommodityType } from '@/lib/types';
 interface CommodityDescriptionComponent {
   commodity: CommodityType;
   suffix?: string;
+  className?: string;
 }
 
-const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodity, suffix }) => {
+const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodity, suffix, className }) => {
   return (
-    <div className="columns is-multiline m-0">
-      <div className="column is-8 p-0">
+    <div className={`is-flex ${className || ''}`}>
+      <div className="is-flex-grow-3 p-0">
         <p className="is-size-7 my-1 has-text-weight-semibold">
           {isNoneOrEmpty(commodity.description) ? 'Item' : commodity.description} {suffix}
         </p>
@@ -20,7 +21,7 @@ const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodi
         </p>
       </div>
 
-      <div className="column is-4 p-0">
+      <div className="is-flex-grow-1 p-0">
         <span className="is-size-7 my-1 has-text-weight-semibold">
           {commodity.quantity}{' x '}{formatWeight(commodity)}
         </span>

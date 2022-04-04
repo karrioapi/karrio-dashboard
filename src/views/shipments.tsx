@@ -65,7 +65,7 @@ export default function ShipmentsPage(pageProps: any) {
           <span className="title is-4">Shipments</span>
           <div>
             <ShipmentsFilter />
-            <AppLink href="/buy_label/new" className="button is-primary is-small is-pulled-right ml-1">
+            <AppLink href="/create_label?shipment_id=new" className="button is-primary is-small is-pulled-right ml-1">
               <span>Create Label</span>
             </AppLink>
           </div>
@@ -107,8 +107,8 @@ export default function ShipmentsPage(pageProps: any) {
               </tr>
 
               {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items is-clickable" onClick={() => previewShipment(shipment.id)}>
-                  <td className="carrier is-vcentered has-text-centered p-1">
+                <tr key={shipment.id} className="items is-clickable">
+                  <td className="carrier is-vcentered has-text-centered p-1" onClick={() => previewShipment(shipment.id)}>
                     {isNone(shipment.carrier_name) && <AppBadge />}
                     {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
                       <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
@@ -120,28 +120,25 @@ export default function ShipmentsPage(pageProps: any) {
                         short
                       />}
                   </td>
-                  <td className="service is-vcentered p-1 pl-2">
+                  <td className="service is-vcentered p-1 pl-2" onClick={() => previewShipment(shipment.id)}>
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
                       {!isNone(shipment.carrier_name) && formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
                       {isNone(shipment.carrier_name) && "NOT COMPLETED"}
                     </p>
                   </td>
-                  <td className="status is-vcentered">
+                  <td className="status is-vcentered" onClick={() => previewShipment(shipment.id)}>
                     <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
                   </td>
-                  <td className="recipient is-vcentered">
+                  <td className="recipient is-vcentered" onClick={() => previewShipment(shipment.id)}>
                     <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient as AddressType)}</p>
                   </td>
-                  <td className="date is-vcentered px-1">
+                  <td className="date is-vcentered px-1" onClick={() => previewShipment(shipment.id)}>
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
                   </td>
                   <td className="action is-vcentered px-0">
                     <ShipmentMenu
                       shipment={shipment}
                       templates={templates}
-                      onClick={e => e.stopPropagation()}
-                      className="is-pulled-right"
-                      style={{ width: '150px' }}
                     />
                   </td>
                 </tr>
@@ -178,7 +175,7 @@ export default function ShipmentsPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
-        <DocumentTemplatesProvider filter={{ related_objects: ["shipment"] }}>
+        <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
           <LabelPrinter>
             <CustomInvoicePrinter>
               <ShipmentsProvider>

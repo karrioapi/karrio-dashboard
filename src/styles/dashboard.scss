@@ -6,7 +6,7 @@ Karrio custom styling
 
 .card {
   border-radius: 6px;
-  box-shadow: none;
+  box-shadow: 0.5px 0.5px 2.5px #efefef;
   border: 1px solid #e5e5e5;
 }
 
@@ -412,10 +412,6 @@ td > div.dropdown.is-active .dropdown-menu {
   max-height: 11em;
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-.modal-card {
-  max-height: 80vh !important;
 }
 
 .modal-form {

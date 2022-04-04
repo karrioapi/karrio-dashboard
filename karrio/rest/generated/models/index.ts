@@ -15,6 +15,7 @@ export * from './CustomsList';
 export * from './Documents';
 export * from './Duty';
 export * from './ErrorResponse';
+export * from './LineItem';
 export * from './Message';
 export * from './Metadata';
 export * from './Operation';

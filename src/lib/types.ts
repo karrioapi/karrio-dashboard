@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum } from 'karrio/graphql';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum } from 'karrio/graphql';
 import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from 'karrio/rest/index';
 import { Session } from 'next-auth';
 
@@ -8,7 +8,13 @@ export type MessageType = get_tracker_tracker_messages;
 export type LogType = get_logs_logs_edges_node;
 export type EventType = get_events_events_edges_node;
 export type AddressType = get_shipment_shipment_shipper;
-export type CommodityType = get_shipment_shipment_customs_commodities;
+export type CommodityType = (
+  get_order_order_line_items |
+  get_shipment_shipment_customs_commodities |
+  get_shipment_shipment_parcels_items
+) & {
+  unfilled_quantity?: number;
+};
 export type DutyType = get_shipment_shipment_customs_duty;
 export type CustomsType = get_shipment_shipment_customs & {
   commodities: CommodityType[];
@@ -35,7 +41,7 @@ export type ShipmentType = get_shipment_shipment & {
   selected_rate?: RateType;
 };
 export type OrderType = get_order_order & {
-  line_items: CommodityType[];
+  line_items: get_order_order_line_items[];
   shipments: ShipmentType[];
 };
 
@@ -67,7 +73,7 @@ export enum NotificationType {
 
 export interface Notification {
   type?: NotificationType;
-  message: string | Error | RequestError | ApolloError | ErrorType[];
+  message: string | Error | RequestError | ApolloError | ErrorType[] | RequestError[];
 }
 
 export interface LabelData {

@@ -10,33 +10,31 @@ import { useCreateOrganizationModal } from '@/components/create-organization-mod
 
 
 const OrganizationDropdown: React.FC = () => {
-  const btn = useRef<HTMLInputElement>(null);
+  const trigger = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { acceptInvitation } = useAcceptInvitation();
   const { createOrganization } = useCreateOrganizationModal();
   const { authenticateOrg, ...token } = useContext(TokenData);
   const { load, organizations, organization, loading, called } = useContext(Organizations);
   const { setLoading } = useContext(Loading);
-  const [active, setActive] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
   const [selected, setSelected] = useState<OrganizationType>();
 
   const handleOnClick = (e: React.MouseEvent) => {
-    if (!active) {
-      setActive(true);
-      document.addEventListener('click', onBodyClick);
-    }
-    e.stopPropagation();
+    setIsActive(!isActive);
+    if (!isActive) { document.addEventListener('click', onBodyClick); }
+    else { document.removeEventListener('click', onBodyClick); }
   };
   const onBodyClick = (e: MouseEvent) => {
-    if (e.target !== btn.current) {
-      setActive(false);
+    if (!trigger.current?.contains(e.target as Node)) {
+      setIsActive(false);
       document.removeEventListener('click', onBodyClick);
     }
   };
   const select = (org: OrganizationType) => async (e: any) => {
-    if (!active) {
-      setActive(true);
+    if (!isActive) {
+      setIsActive(true);
       document.addEventListener('click', onBodyClick);
     }
     e.preventDefault();
@@ -46,12 +44,12 @@ const OrganizationDropdown: React.FC = () => {
     setLoading(true);
     setSelected(org);
     authenticateOrg(org.id).then(() => setLoading(false));
-    setActive(false);
+    setIsActive(false);
   };
   const create = async () => {
     createOrganization({
       onChange: (org_id: string) => {
-        setActive(false);
+        setIsActive(false);
         return authenticateOrg(org_id);
       }
     });
@@ -77,9 +75,9 @@ const OrganizationDropdown: React.FC = () => {
   return (
     <>
       {((organizations || []).length > 0) &&
-        <div className={`dropdown ${active ? 'is-active' : ''}`} style={{ width: '100%' }}>
+        <div className={`dropdown ${isActive ? 'is-active' : ''}`} style={{ width: '100%' }}>
           <div className="dropdown-trigger control has-icons-left" style={{ width: '100%' }}>
-            <div className="select is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={btn}>
+            <div className="select is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={trigger}>
               <input
                 type="text"
                 className="input is-clickable is-lowercase has-text-grey has-text-weight-semibold"

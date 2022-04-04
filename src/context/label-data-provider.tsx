@@ -3,19 +3,20 @@ import { AddressType, ParcelType, ShipmentType } from '@/lib/types';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_shipment, GET_SHIPMENT, get_shipmentVariables, LabelTypeEnum } from 'karrio/graphql';
 import { debounce, isNoneOrEmpty } from '@/lib/helper';
+import moment from 'moment';
 
 const DEFAULT_SHIPMENT_DATA = {
   shipper: {} as AddressType,
   recipient: {} as AddressType,
   parcels: [] as ParcelType[],
-  options: {},
+  options: { shipment_date: moment().format('YYYY-MM-DD') },
   label_type: LabelTypeEnum.PDF
 } as ShipmentType;
 
 type LabelDataContext = LazyQueryResult<get_shipment, get_shipmentVariables> & {
   shipment: ShipmentType;
   loadShipment: (id: string) => void;
-  updateShipment: (data: Partial<ShipmentType>) => ShipmentType;
+  updateShipment: (data: Partial<ShipmentType>) => Promise<ShipmentType>;
 };
 
 export const LabelContext = React.createContext<LabelDataContext>({} as LabelDataContext);
@@ -41,12 +42,17 @@ const LabelDataProvider: React.FC = ({ children }) => {
     }
   };
   const updateShipment = (data: Partial<ShipmentType>) => {
-    const newState = { ...shipment, ...data } as ShipmentType;
-    Object.entries(data).forEach(([key, val]) => {
-      if (val === undefined) delete newState[key as keyof ShipmentType];
+    return new Promise<ShipmentType>(resolve => {
+      setTimeout(() => {
+        const newState = { ...shipment, ...data } as ShipmentType;
+        Object.entries(data).forEach(([key, val]) => {
+          if (val === undefined) delete newState[key as keyof ShipmentType];
+        });
+        setShipment(newState);
+
+        resolve(newState);
+      })
     });
-    setShipment(newState);
-    return newState;
   };
 
   useEffect(() => {

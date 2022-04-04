@@ -11,8 +11,10 @@ import { ConfirmModalContext } from '@/components/confirm-modal';
 import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
 import { isNoneOrEmpty } from '@/lib/helper';
-import CopiableLink from './copiable-link';
+import CopiableLink from '@/components/copiable-link';
+import { useLabelTemplateModal } from './label-template-edit-modal';
 
+type ConnectionUpdateType = Partial<UserConnectionType> & { id: string, __typename: string };
 interface UserConnectionListView { }
 
 const UserConnectionList: React.FC<UserConnectionListView> = () => {
@@ -20,22 +22,20 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
+  const labelModal = useLabelTemplateModal();
   const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
   const { user_connections, loading, called, refetch } = useContext(UserConnections);
   const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
-  const onUpdate = async () => refetch && await refetch();
-  const toggle = ({ __typename, active, id }: UserConnectionType) => async () => {
+  const onRefresh = async () => refetch && await refetch();
+  const update = ({ __typename, id, ...changes }: ConnectionUpdateType) => async () => {
     try {
-      const data = { [__typename.toLowerCase()]: { active: !active } };
+      const data = { [__typename.toLowerCase()]: changes };
       await updateConnection({ id, ...data });
-      notify({
-        type: NotificationType.success,
-        message: `carrier connection ${!active ? 'activated' : 'deactivated'}!`
-      });
-      onUpdate();
+      notify({ type: NotificationType.success, message: `carrier connection updated!` });
+      onRefresh();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
@@ -47,7 +47,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
         type: NotificationType.success,
         message: `carrier connection deleted!`
       });
-      onUpdate();
+      onRefresh();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
@@ -55,9 +55,19 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
   useEffect(() => { setLoading(loading); });
   useEffect(() => {
+    if (labelModal.isActive) {
+      const connection = user_connections.find(c => c.id === labelModal.operation?.connection.id);
+      connection && labelModal.editLabelTemplate({
+        connection: connection as any, onSubmit: label_template => update({
+          id: connection.id, __typename: connection.__typename, label_template
+        } as any)()
+      })
+    }
+  }, [user_connections]);
+  useEffect(() => {
     if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
       const connection = user_connections.find(c => c.id === router.query.modal);
-      connection && editConnection({ connection, onConfirm: onUpdate });
+      connection && editConnection({ connection, onConfirm: onRefresh });
     }
   }, [router.query.modal, user_connections]);
 
@@ -92,7 +102,11 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                 {connection.test && <span className="tag is-warning is-centered">Test</span>}
               </td>
               <td className="active is-vcentered">
-                <button className="button is-white is-large" onClick={toggle(connection)}>
+                <button className="button is-white is-large" onClick={update({
+                  id: connection.id,
+                  __typename: connection.__typename,
+                  active: !connection.active
+                })}>
                   <span className={`icon is-medium ${connection.active ? 'has-text-success' : 'has-text-grey'}`}>
                     <i className={`fas fa-${connection.active ? 'toggle-on' : 'toggle-off'} fa-lg`}></i>
                   </span>
@@ -116,14 +130,24 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
               </td>
               <td className="action is-vcentered pr-0">
                 <div className="buttons is-justify-content-end">
-                  <button className="button is-white" onClick={() => editConnection({
-                    connection, onConfirm: onUpdate
+                  {!isNoneOrEmpty((connection as any).custom_carrier_name) && <button
+                    title="edit label" className="button is-white" onClick={() => labelModal.editLabelTemplate({
+                      connection: connection as any, onSubmit: label_template => update({
+                        id: connection.id, __typename: connection.__typename, label_template
+                      } as any)()
+                    })}>
+                    <span className="icon is-small">
+                      <i className="fas fa-sticky-note"></i>
+                    </span>
+                  </button>}
+                  <button title="edit account" className="button is-white" onClick={() => editConnection({
+                    connection, onConfirm: onRefresh
                   })}>
                     <span className="icon is-small">
                       <i className="fas fa-pen"></i>
                     </span>
                   </button>
-                  <button className="button is-white" onClick={() => confirmDeletion({
+                  <button title="discard connection" className="button is-white" onClick={() => confirmDeletion({
                     identifier: connection.id,
                     label: `Carrier connection`,
                     onConfirm: onDelete(connection.id),

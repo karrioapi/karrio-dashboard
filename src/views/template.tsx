@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import Head from 'next/head';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import DocumentTemplateMutationProvider, { useDocumentTemplateMutation } from '@/context/document-template-mutation';
-import DashboardLayout from '@/layouts/dashboard-layout';
 import CodeMirror from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
 import InputField from '@/components/generic/input-field';
@@ -10,23 +9,19 @@ import TextAreaField from '@/components/generic/textarea-field';
 import { DocumentTemplateType, DOCUMENT_RELATED_OBJECTS, NotificationType, TemplateType } from '@/lib/types';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { deepEqual, isNoneOrEmpty, p, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { isEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
 import { bundleContexts } from '@/context/utils';
 import { KARRIO_API } from '@/client/context';
-import { useAppMode } from '@/context/app-mode-provider';
 import AppLink from '@/components/app-link';
+import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 type stateValue = string | boolean | string[] | Partial<TemplateType>;
 const DEFAULT_STATE = {
-  template: `<div>
-  <h1>Document</h1>
-</div>
-<style type="text/css">
-  @page { size: A4; margin: 1cm };
-</style>`,
+  related_object: 'order',
+  template: DEFAULT_DOCUMENT_TEMPLATE,
 };
 const ContextProviders: React.FC = bundleContexts([
   DocumentTemplateProvider,
@@ -47,15 +42,14 @@ export default function DocumentTemplatePage(pageProps: any) {
     const loader = useLoader();
     const router = useLocation();
     const notifier = useNotifier();
-    const { basePath } = useAppMode();
     const query = useDocumentTemplate();
     const mutation = useDocumentTemplateMutation();
     const [isNew, setIsNew] = useState<boolean>();
     const [template, dispatch] = useReducer(reducer, DEFAULT_STATE, () => DEFAULT_STATE);
 
     const computeParams = (template: DocumentTemplateType) => {
-      if ((template.related_objects || []).length === 0) { return ''; }
-      return `?${(template.related_objects || []).map(k => `${k}s=sample`).join('&')}`;
+      if (isNoneOrEmpty(template.related_object)) { return ''; }
+      return `?${template.related_object}s=sample`;
     };
     const handleChange = (event: React.ChangeEvent<any>) => {
       const target = event.target;
@@ -74,19 +68,27 @@ export default function DocumentTemplatePage(pageProps: any) {
       try {
         if (isNew) {
           const response = await mutation.createDocumentTemplate(template);
-          router.addUrlParam('id', response?.template?.id as string);
+          setTimeout(() => {
+            router.updateUrlParam('id', response?.template?.id as string);
+          }, 1000);
+          notifier.notify({
+            type: NotificationType.success,
+            message: `Document template created successfully`
+          });
+          loader.setLoading(false);
         } else {
           await mutation.updateDocumentTemplate(template);
+          query.refetch();
+          notifier.notify({
+            type: NotificationType.success,
+            message: `Document template updated successfully`
+          });
+          loader.setLoading(false);
         }
-        query.refetch();
-        notifier.notify({
-          type: NotificationType.success,
-          message: `Document template ${isNew ? 'added' : 'updated'} successfully`
-        });
       } catch (message: any) {
         notifier.notify({ type: NotificationType.error, message });
+        loader.setLoading(false);
       }
-      loader.setLoading(false);
     };
 
     useEffect(() => {
@@ -102,13 +104,13 @@ export default function DocumentTemplatePage(pageProps: any) {
     }, [query.template]);
 
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="p-4">
 
         <div className="py-4 is-flex is-justify-content-space-between has-background-white">
           <div className="is-vcentered">
             <AppLink className="button is-small is-white" href="/settings/templates">
-              <span className="icon is-small">
-                <i className="fas fa-times"></i>
+              <span className="icon is-large">
+                <i className="fas fa-lg fa-times"></i>
               </span>
             </AppLink>
             <span className="title is-6 has-text-weight-semibold p-3">Edit document template</span>
@@ -122,7 +124,7 @@ export default function DocumentTemplatePage(pageProps: any) {
             <button
               type="submit"
               className="button is-small is-success"
-              disabled={deepEqual(template, query.template || DEFAULT_STATE)}
+              disabled={loader.loading || isEqual(template, query.template || DEFAULT_STATE)}
             >
               Save Template
             </button>
@@ -164,8 +166,8 @@ export default function DocumentTemplatePage(pageProps: any) {
               </label>
 
               <div className="control">
-                <div className="select is-multiple is-small is-fullwidth">
-                  <select name="related_objects" onChange={handleChange} value={template?.related_objects} size={3} multiple required>
+                <div className="select is-small is-fullwidth">
+                  <select name="related_object" onChange={handleChange} value={template?.related_object} required>
                     {DOCUMENT_RELATED_OBJECTS.map(obj => <option key={obj} value={obj}>{obj}</option>)}
                   </select>
                 </div>
@@ -180,14 +182,34 @@ export default function DocumentTemplatePage(pageProps: any) {
               className="is-small"
             />
 
+            <div className="box mt-5">
+              <div className="content" style={{ fontSize: '90%' }}>
+                <p className='is-size-6'><strong>Editing your template</strong></p>
+                <p>
+                  To edit your template, use HTML, CSS, and
+                  {' '} <a href="https://jinja.palletsprojects.com/en/3.0.x/templates/" target="_blank" rel="noreferrer">
+                    <span>Jinja variables</span>
+                    <i className="fas fa-external-link-alt pl-2 is-size-7"></i>
+                  </a>{' '} for documents.
+                </p>
+                <p className="mt-2">
+                  The template can be styled with
+                  {' '} <a href="https://bulma.io/documentation/helpers/" target="_blank" rel="noreferrer">
+                    <span>bulma css framework</span>
+                    <i className="fas fa-external-link-alt pl-2 is-size-7"></i>
+                  </a>{' '}.
+                </p>
+              </div>
+            </div>
+
           </div>
 
-          <div className="p-2"></div>
+          <div className="p-3"></div>
 
-          <div className="column px-0 is-8">
-            <div className="card">
+          <div className="column px-0 is-9">
+            <div className="card" style={{ borderRadius: 0 }}>
               <CodeMirror
-                height="60vh"
+                height="80vh"
                 extensions={[html({})]}
                 value={template.template as string}
                 onChange={value => dispatch({ name: 'template', value })}
@@ -202,7 +224,7 @@ export default function DocumentTemplatePage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <>
       <Head><title>Template - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <ContextProviders>
@@ -210,6 +232,6 @@ export default function DocumentTemplatePage(pageProps: any) {
         <Component />
 
       </ContextProviders>
-    </DashboardLayout>
+    </>
   ), pageProps);
 }

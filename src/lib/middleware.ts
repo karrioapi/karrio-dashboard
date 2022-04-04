@@ -3,13 +3,14 @@ import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import logger from "@/lib/logger";
 import { Response } from "node-fetch";
 import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
 import axios from "axios";
 import getConfig from "next/config";
+import logger from "./logger";
 
 const { publicRuntimeConfig } = getConfig();
+const AUTH_HTTP_CODES = [401, 403, 407];
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -19,8 +20,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const pathname = ctx.resolvedUrl;
   const org_id = session?.org_id || "";
   const data = session ? await loadContextData(session as SessionType) : {};
-
-  ctx.res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59');
 
   return {
     props: { pathname, org_id, ...data }
@@ -37,15 +36,17 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
-      logger.error(e);
+      logger.error(e.response);
+      const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
+        ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
       const error = createServerError({
-        code: ServerErrorCode.API_CONNECTION_ERROR,
+        code,
         message: `
           Server (${KARRIO_API}) unreachable.
           Please make sure taht the API is running and reachable.
         `
-      })
+      });
       reject({ error });
     }
   });
@@ -70,11 +71,17 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
     const [references, { data }] = await Promise.all([getReferences(), getUserData()]);
 
     return { metadata, references, ...data };
-  } catch (e) {
-    logger.error(e);
-    const error = createServerError({ message: 'Failed to load intial data...' });
+  } catch (e: any | Response) {
+    logger.error(`Failed to fetch API data from (${KARRIO_API})`);
+    logger.error(e.response);
+    const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
+      ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
-    return { ...metadata, error };
+    const error = createServerError({
+      code,
+      message: 'Failed to load intial data...'
+    });
+    return { metadata, error };
   }
 }
 

@@ -82,8 +82,8 @@ export default function TrackersPage(pageProps: any) {
             <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
               <a onClick={() => !isNone(filters?.status) && fetchTrackers({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('in-transit') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('in-transit') && fetchTrackers({ status: ['in-transit'], offset: 0 })}>in-transit</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('in_transit') ? 'is-active' : ''}`}>
+              <a onClick={() => !filters?.status?.includes('in_transit') && fetchTrackers({ status: ['in_transit'], offset: 0 })}>in-transit</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('pending') ? 'is-active' : ''}`}>
               <a onClick={() => !filters?.status?.includes('pending') && fetchTrackers({ status: ['pending'], offset: 0 })}>pending</a>

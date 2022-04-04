@@ -12,7 +12,7 @@ const ShortcutDropdown: React.FC<ShortcutDropdownComponent> = ({ ...props }) => 
     <Dropdown>
 
       {/* Dropdown trigger  */}
-      <button className="button is-primary is-outlined is-rounded is-small mx-1">
+      <button className="button is-primary is-outlined is-small mx-1">
         <span className="is-size-7 has-text-weight-semibold">Create</span>
         <span className="icon">
           <i className="is-size-6 fas fa-angle-down"></i>
@@ -31,7 +31,7 @@ const ShortcutDropdown: React.FC<ShortcutDropdownComponent> = ({ ...props }) => 
               <span>Carrier account</span>
             </AppLink>
 
-            <AppLink href="/buy_label/new" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
+            <AppLink href="/create_label?shipment_id=new" className="options-item py-2 has-text-info has-text-weight-bold is-size-7">
               <i className="fas fa-file-invoice pr-2"></i>
               <span>Shipping label</span>
             </AppLink>
