@@ -10,6 +10,7 @@ import getConfig from "next/config";
 import logger from "./logger";
 
 const { publicRuntimeConfig } = getConfig();
+const AUTH_HTTP_CODES = [401, 403, 407];
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -19,8 +20,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const pathname = ctx.resolvedUrl;
   const org_id = session?.org_id || "";
   const data = session ? await loadContextData(session as SessionType) : {};
-
-  ctx.res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=59');
 
   return {
     props: { pathname, org_id, ...data }
@@ -38,7 +37,7 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
       logger.error(e.response);
-      const code = (e.response?.status + '').startsWith('4') ?
+      const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
         ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
       const error = createServerError({
@@ -75,7 +74,7 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
   } catch (e: any | Response) {
     logger.error(`Failed to fetch API data from (${KARRIO_API})`);
     logger.error(e.response);
-    const code = (e.response?.status + '').startsWith('4') ?
+    const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
       ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
     const error = createServerError({
