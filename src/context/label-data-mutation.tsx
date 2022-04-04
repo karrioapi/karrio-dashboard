@@ -174,7 +174,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       });
       router.push(basePath);
     } catch (message: any) {
-      notifier.notify({ type: NotificationType.error, message });
+      updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {
       loader.setLoading(false);
     }
