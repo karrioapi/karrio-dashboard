@@ -228,6 +228,10 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {has("logistics_manager_mailer_id") && <InputField label="Logistics Manager Mailer ID" defaultValue={payload.logistics_manager_mailer_id} onChange={handleOnChange("logistics_manager_mailer_id")} className="is-small" />}
 
+                {has("access_key") && <InputField label="Access Key" defaultValue={payload.access_key} onChange={handleOnChange("access_key")} className="is-small" />}
+
+                {has("secret_key") && <InputField label="Secret Key" defaultValue={payload.secret_key} onChange={handleOnChange("secret_key")} className="is-small" />}
+
                 {has("services") && <CarrierServiceEditor defaultValue={payload.services || service_levels[payload.carrier_name]} onChange={directChange("services")} />}
 
                 {/* Carrier specific fields END */}
@@ -290,6 +294,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: string): boolean {
   // TODO: Use carriers settings types when available for automatic validation
   return ({
+    [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test", "access_key", "secret_key", "aws_region"],
     [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test", "api_key", "password", "account_number"],
     [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test", "username", "password", "customer_number", "contract_id"],
@@ -299,6 +304,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test", "username", "password", "account_number", "services"],
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
     [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Easypost]: ["carrier_id", "test", "api_key"],
     [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Generic]: ["display_name", "custom_carrier_name", "carrier_id", "test", "account_number", "account_country_code", "label_template", "services", "metadata"],
     [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code"],

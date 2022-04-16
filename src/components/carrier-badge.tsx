@@ -15,6 +15,7 @@ const THEME: Collection = {
   'dhl_poland': 'is-dhl',
   'dhl_universal': 'is-dhl',
   'eshipper': 'is-eshipper',
+  'easypost': 'is-easypost',
   'fedex': 'is-fedex',
   'freightcom': 'is-freightcom',
   'generic': 'is-generic',
