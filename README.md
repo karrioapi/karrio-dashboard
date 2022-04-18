@@ -10,7 +10,7 @@ Karrio Dashboard is a browser-based logistics and shipping app for [karrio](http
 
 ### Using a Karrio Dashboard Release
 
-If you just want to try Karrio out, check out the [karrio/dashboard Docker Image](https://hub.docker.com/repository/docker/karrio/dashboard) to give it a whirl.
+If you just want to try Karrio out, check out the [karrio/dashboard](https://hub.docker.com/repository/docker/karrio/dashboard) Docker Image to give it a whirl.
 
 ### Building and Running Karrio Dashboard
 
