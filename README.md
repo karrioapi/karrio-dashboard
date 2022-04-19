@@ -1,6 +1,6 @@
 # Karrio Dashboard
 
-<picture><img alt="Karrio Dashboard" src="./screenshots/dashboard.png" /></picture>
+![Karrio Dashboard](screenshots/dashboard.png)
 
 [![karrio-dashboard](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml)
 
