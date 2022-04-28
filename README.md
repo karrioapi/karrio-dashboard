@@ -1,6 +1,7 @@
 # Karrio Dashboard
 
 ![Karrio Dashboard](screenshots/dashboard.png)
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=b8c7c533-f1eb-4615-b966-79a90307e6b4" />
 
 [![karrio-dashboard](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/karrioapi/karrio-dashboard/actions/workflows/ci.yml)
 
