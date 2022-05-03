@@ -2,30 +2,24 @@ import { KARRIO_API } from "@/client/context";
 import { TokenObtainPair } from "karrio/rest";
 import axios from "axios";
 import { isNone } from "@/lib/helper";
-
+import logger from '@/lib/logger';
 
 
 export async function authenticate(data: TokenObtainPair) {
+  logger.debug("authenticating...");
   return axios({
     url: KARRIO_API + '/api/token',
     method: 'POST',
-    headers: {
-      'Cache-Control': 'no-store, max-age=0',
-      'CDN-Cache-Control': 'no-store, max-age=0'
-    },
     data
   })
     .then(({ data }) => data);
 }
 
 export async function refreshToken(refresh: string, org_id?: string) {
+  logger.debug("refreshing token...");
   return axios({
     url: KARRIO_API + '/api/token/refresh',
     method: 'POST',
-    headers: {
-      'Cache-Control': 'no-store, max-age=0',
-      'CDN-Cache-Control': 'no-store, max-age=0'
-    },
     data: {
       refresh,
       ...(isNone(org_id) ? {} : { org_id })

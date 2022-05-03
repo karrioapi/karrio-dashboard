@@ -22,7 +22,7 @@ logger.debug("API clients initialized for Server: " + KARRIO_API);
 export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
 export const restClient = new BehaviorSubject<KarrioClient>(createRestContext());
 export const RestContext = React.createContext<KarrioClient | undefined>(restClient.getValue());
-export const OrgToken = new BehaviorSubject<TokenPair | undefined>(undefined);
+export const OrgToken = new BehaviorSubject<{ [key: string]: TokenPair }>({});
 const AuthToken = new BehaviorSubject<string | undefined>(undefined);
 
 

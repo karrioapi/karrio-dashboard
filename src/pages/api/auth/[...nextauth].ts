@@ -8,6 +8,7 @@ import CredentialProvider from "next-auth/providers/credentials";
 import logger from '@/lib/logger';
 import { authenticate, refreshToken } from '@/lib/auth';
 import { withSentry } from '@sentry/nextjs';
+import requestIp from 'request-ip';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
@@ -47,9 +48,10 @@ const auth = NextAuth({
       }
 
       // Refresh the token with a new organization if provideed
-      if (!isNone(OrgToken.value)) {
-        logger.debug('Refreshing token with new organization');
-        const { access, refresh } = OrgToken.value as TokenPair;
+      if (!isNone(OrgToken.value[token.refreshToken as string])) {
+        logger.debug('Refreshing token with a new organization');
+        const { access, refresh } = OrgToken.value[token.refreshToken as string];
+
         return {
           ...token,
           accessToken: access,

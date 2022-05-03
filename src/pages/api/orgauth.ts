@@ -16,7 +16,7 @@ async function OrgAPI(req: NextApiRequest, res: NextApiResponse) {
     const current = await getToken({ req, secret });
 
     const token = await refreshToken(current?.refreshToken as string, orgId);
-    OrgToken.next(token);
+    OrgToken.next({ ...OrgToken.value, [current?.refreshToken as string]: token });
 
     await getSession({ req });
 
