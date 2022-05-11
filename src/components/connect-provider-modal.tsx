@@ -294,7 +294,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: string): boolean {
   // TODO: Use carriers settings types when available for automatic validation
   return ({
-    [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test", "access_key", "secret_key", "aws_region"],
+    // [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test", "access_key", "secret_key", "aws_region"],
     [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test", "api_key", "password", "account_number"],
     [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test", "username", "password", "customer_number", "contract_id"],
