@@ -43,7 +43,7 @@ const ContextProviders = bundleContexts([
   ModalProvider,
 ]);
 
-export default function FulfillmentPage(pageProps: any) {
+export default function CreateShipmentPage(pageProps: any) {
   const Component: React.FC = () => {
     const loader = useLoader();
     const notifier = useNotifier();

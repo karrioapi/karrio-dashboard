@@ -47,8 +47,8 @@ const ContextProviders = bundleContexts([
   ModalProvider,
 ]);
 
-export default function FulfillmentPage(pageProps: any) {
-  const { ORDERS_MANAGEMENT } = pageProps.metadata;
+export default function CreateLabelPage(pageProps: any) {
+  const { ORDERS_MANAGEMENT } = pageProps?.metadata || {};
 
   const Component: React.FC = () => {
     const loader = useLoader();
