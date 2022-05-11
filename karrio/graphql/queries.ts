@@ -1403,16 +1403,6 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
 export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics($test: Boolean) {
   user_connections(test: $test) {
     __typename
-    ... on AmazonMwsSettings {
-      id
-      carrier_id
-      carrier_name
-      test
-      active
-      access_key
-      secret_key
-      aws_region
-    }
     ... on AramexSettings {
       id
       carrier_id
