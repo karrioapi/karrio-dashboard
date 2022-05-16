@@ -96,6 +96,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   carrier={connection.carrier_name}
                   custom_name={(connection as any).display_name}
                   className="box has-text-weight-bold"
+                  textOnly
                 />
               </td>
               <td className="mode is-vcentered">

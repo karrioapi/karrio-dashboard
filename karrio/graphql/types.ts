@@ -754,8 +754,6 @@ export interface get_shipment_shipment_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
   extra_charges: get_shipment_shipment_selected_rate_extra_charges[] | null;
@@ -776,8 +774,6 @@ export interface get_shipment_shipment_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
   extra_charges: get_shipment_shipment_rates_extra_charges[] | null;
@@ -969,10 +965,7 @@ export interface get_shipments_shipments_edges_node_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_shipments_shipments_edges_node_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -991,10 +984,7 @@ export interface get_shipments_shipments_edges_node_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_shipments_shipments_edges_node_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1209,10 +1199,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_select
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1231,10 +1218,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_rates 
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: partial_shipment_update_partial_shipment_update_shipment_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1303,11 +1287,6 @@ export interface partial_shipment_updateVariables {
 // GraphQL query operation: get_tracker
 // ====================================================
 
-export interface get_tracker_tracker_created_by {
-  email: string;
-  full_name: string;
-}
-
 export interface get_tracker_tracker_events {
   description: string | null;
   location: string | null;
@@ -1324,20 +1303,27 @@ export interface get_tracker_tracker_messages {
   details: any | null;
 }
 
+export interface get_tracker_tracker_created_by {
+  email: string;
+  full_name: string;
+}
+
 export interface get_tracker_tracker {
   id: string;  // The ID of the object.
-  created_at: any;
-  updated_at: any;
-  created_by: get_tracker_tracker_created_by;
-  status: TrackerStatusEnum;
   tracking_number: string;
+  carrier_id: string;
+  carrier_name: string;
+  status: TrackerStatusEnum;
   events: get_tracker_tracker_events[] | null;
   delivered: boolean | null;
   estimated_delivery: any | null;
-  test_mode: boolean;
+  meta: any | null;
+  metadata: any | null;
   messages: get_tracker_tracker_messages[] | null;
-  carrier_id: string;
-  carrier_name: string;
+  created_at: any;
+  updated_at: any;
+  created_by: get_tracker_tracker_created_by;
+  test_mode: boolean;
 }
 
 export interface get_tracker {
@@ -1398,6 +1384,8 @@ export interface get_trackers_trackers_edges_node {
   messages: get_trackers_trackers_edges_node_messages[] | null;
   carrier_id: string;
   carrier_name: string;
+  meta: any | null;
+  metadata: any | null;
 }
 
 export interface get_trackers_trackers_edges {
@@ -3043,10 +3031,7 @@ export interface get_order_order_shipments_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_order_order_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3065,10 +3050,7 @@ export interface get_order_order_shipments_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_order_order_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3310,10 +3292,7 @@ export interface get_orders_orders_edges_node_shipments_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_orders_orders_edges_node_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3332,10 +3311,7 @@ export interface get_orders_orders_edges_node_shipments_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_orders_orders_edges_node_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -4056,6 +4032,7 @@ export enum ShipmentStatusEnum {
 // An enumeration.
 export enum LabelTypeEnum {
   PDF = "PDF",
+  PNG = "PNG",
   ZPL = "ZPL",
 }
 

@@ -80,9 +80,9 @@ const OrganizationDropdown: React.FC = () => {
             <div className="select is-fullwidth" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleOnClick} ref={trigger}>
               <input
                 type="text"
-                className="input is-clickable is-lowercase has-text-grey has-text-weight-semibold"
+                className="input is-clickable has-text-grey has-text-weight-semibold"
                 value={selected?.name || "All Organizations"}
-                onChange={() => { }}
+                onChange={_ => _}
                 readOnly
               />
             </div>

@@ -2,7 +2,6 @@ import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter from "@/components/descriptions/custom-invoice-printer";
-import LabelPrinter from "@/components/label/label-printer";
 import { Loading } from "@/components/loader";
 import ModeIndicator from "@/components/mode-indicator";
 import ShipmentMenu from "@/components/shipment-menu";
@@ -10,10 +9,9 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import ShipmentMutationProvider from "@/context/shipment-mutation";
 import ShipmentsFilter from "@/components/filters/shipments-filter";
@@ -108,17 +106,14 @@ export default function ShipmentsPage(pageProps: any) {
 
               {shipments?.map(shipment => (
                 <tr key={shipment.id} className="items is-clickable">
-                  <td className="carrier is-vcentered has-text-centered p-1" onClick={() => previewShipment(shipment.id)}>
+                  <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
+                    {!isNone(shipment.carrier_name) && <CarrierBadge
+                      className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
+                      carrier={shipmentCarrier(shipment)}
+                      custom_name={(shipment as any).custom_carrier_name as string}
+                      short
+                    />}
                     {isNone(shipment.carrier_name) && <AppBadge />}
-                    {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
-                      <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} height={25} width={'100%'} alt="carrier logo" />
-                    </div>}
-                    {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
-                      <CarrierBadge
-                        className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
-                        custom_name={shipment.carrier_id as string}
-                        short
-                      />}
                   </td>
                   <td className="service is-vcentered p-1 pl-2" onClick={() => previewShipment(shipment.id)}>
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
@@ -176,17 +171,15 @@ export default function ShipmentsPage(pageProps: any) {
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
         <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
-          <LabelPrinter>
-            <CustomInvoicePrinter>
-              <ShipmentsProvider>
-                <ShipmentPreview>
+          <CustomInvoicePrinter>
+            <ShipmentsProvider>
+              <ShipmentPreview>
 
-                  <Component />
+                <Component />
 
-                </ShipmentPreview>
-              </ShipmentsProvider>
-            </CustomInvoicePrinter>
-          </LabelPrinter>
+              </ShipmentPreview>
+            </ShipmentsProvider>
+          </CustomInvoicePrinter>
         </DocumentTemplatesProvider>
       </ShipmentMutationProvider>
     </DashboardLayout>

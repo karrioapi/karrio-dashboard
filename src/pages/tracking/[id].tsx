@@ -5,6 +5,7 @@ import Head from "next/head";
 import React from "react";
 import { formatDayDate, isNone, p } from "@/lib/helper";
 import { Metadata } from "@/lib/types";
+import CarrierImage from "@/components/carrier-image";
 
 export { getServerSideProps } from '@/lib/static/tracker';
 
@@ -28,15 +29,17 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
         <div className="container">
 
           <div className="has-text-centered my-4">
-            <Image src={p`/logo.svg`} width="130" height="100%" alt={metadata.APP_NAME} />
+            <a href={p`/`} className="is-size-4 has-text-primary has-text-weight-bold is-lowercase">
+              {metadata?.APP_NAME}
+            </a>
           </div>
 
           {!isNone(tracker) && <>
             <div className="card isolated-card">
               <div className="card-content">
 
-                <div className="has-text-centered pb-4">
-                  <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
+                <div className="pb-4 is-flex is-justify-content-center">
+                  <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
                 </div>
 
 

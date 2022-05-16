@@ -10,8 +10,8 @@ const DashboardLayout: React.FC = ({ children }) => {
     <>
       <ExpandedSidebar />
 
-      <div className="plex-wrapper is-flex pb-6">
-        <div className="wrapper-inner mb-3">
+      <div className="plex-wrapper is-flex is-flex-direction-column">
+        <div className="wrapper-inner is-flex-grow-1 mb-3">
           <Notifier />
           <Navbar />
 
@@ -20,9 +20,10 @@ const DashboardLayout: React.FC = ({ children }) => {
           </div>
 
         </div>
+
+        <Footer />
       </div>
 
-      <Footer />
     </>
   )
 };

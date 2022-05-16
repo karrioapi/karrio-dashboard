@@ -127,10 +127,7 @@ function testPayloadSample() {
           "carrier_id": "canadapost",
           "currency": "CAD",
           "service": "canadapost_regular_parcel",
-          "discount": 1.22,
-          "base_charge": 39.17,
           "total_charge": 46.45,
-          "duties_and_taxes": 6.06,
           "transit_days": 10,
           "extra_charges": [
             {
@@ -156,10 +153,7 @@ function testPayloadSample() {
             "carrier_id": "canadapost",
             "currency": "CAD",
             "service": "canadapost_regular_parcel",
-            "discount": 1.22,
-            "base_charge": 39.17,
             "total_charge": 46.45,
-            "duties_and_taxes": 6.06,
             "transit_days": 10,
             "extra_charges": [
               {

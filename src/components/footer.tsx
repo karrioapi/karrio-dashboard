@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
   const { OPENAPI, GRAPHQL } = useContext(APIReference);
 
   return (
-    <footer className="footer py-6">
+    <footer className="footer py-6 px-0">
       <div className="content columns">
         <div className="column has-text-right-desktop">
           <a className="button is-white footer-api-reference-link"

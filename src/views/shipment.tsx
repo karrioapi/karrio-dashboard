@@ -1,16 +1,13 @@
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import CustomInvoicePrinter, { CustomInvoicePrinterContext } from "@/components/descriptions/custom-invoice-printer";
-import LabelPrinter, { LabelPrinterContext } from "@/components/label/label-printer";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatDimension, formatParcelLabel, formatRef, formatWeight, isNone, p, shipmentCarrier } from "@/lib/helper";
+import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
 import { MetadataObjectType, ShipmentStatusEnum } from "karrio/graphql";
@@ -34,8 +31,6 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const events = useContext(EventsContext);
   const { basePath } = useContext(AppMode);
   const { setLoading } = useContext(Loading);
-  const { printLabel } = useContext(LabelPrinterContext);
-  const { printInvoice } = useContext(CustomInvoicePrinterContext);
   const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
   const { id } = router.query;
 
@@ -115,16 +110,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
             <div className="p-4 mr-4">
               <span className="subtitle is-size-7 my-4">Courier</span><br />
-              {(!isNone(shipment.carrier_name) && shipment.carrier_name !== 'generic') && <div className="mt-1">
-                <Image src={p`/carriers/${shipmentCarrier(shipment)}_logo.svg`} width={100} height={25} alt="logo" className="mt-1" />
-              </div>}
-              {(!isNone(shipment.carrier_name) && shipment.carrier_name === 'generic') &&
-                <CarrierBadge
-                  className="has-background-primary has-text-weight-bold has-text-white-bis has-text-centered is-size-7 my-1"
-                  style={{ width: '100px' }}
-                  custom_name={shipment.carrier_id as string}
-                  short
-                />}
+              <CarrierBadge
+                className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
+                carrier={shipmentCarrier(shipment)}
+                custom_name={(shipment as any).custom_carrier_name as string}
+                short
+              />
             </div>
 
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
@@ -177,16 +168,6 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <div className="column is-6 is-size-6 py-1">
                 <p className="is-title is-size-6 my-2 has-text-weight-semibold">CHARGES</p>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-
-                <div className="columns m-0">
-                  <div className="column is-5 is-size-7 px-0 py-1">
-                    <span className="is-uppercase">Base Charge</span>
-                  </div>
-                  <div className="is-size-7 py-1 has-text-grey has-text-right" style={{ minWidth: '100px' }}>
-                    <span className="mr-1">{shipment.selected_rate?.base_charge}</span>
-                    {!isNone(shipment.selected_rate?.currency) && <span>{shipment.selected_rate?.currency}</span>}
-                  </div>
-                </div>
 
                 {(shipment.selected_rate?.extra_charges || []).map((charge, index) => <div key={index} className="columns m-0">
                   <div className="column is-5 is-size-7 px-0 py-1">
@@ -437,15 +418,11 @@ export default function ShipmentPage(pageProps: any) {
       <ShipmentProvider>
         <EventsProvider setVariablesToURL={false}>
           <LogsProvider setVariablesToURL={false}>
-            <LabelPrinter>
-              <CustomInvoicePrinter>
-                <MetadataMutationProvider>
+            <MetadataMutationProvider>
 
-                  <ShipmentComponent />
+              <ShipmentComponent />
 
-                </MetadataMutationProvider>
-              </CustomInvoicePrinter>
-            </LabelPrinter>
+            </MetadataMutationProvider>
           </LogsProvider>
         </EventsProvider>
       </ShipmentProvider>
