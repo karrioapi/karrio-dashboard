@@ -130,6 +130,19 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
 
               <CheckBoxField name="test_mode" checked={payload.test_mode} onChange={handleChange}>Test Mode</CheckBoxField>
 
+              {!isNew && <>
+                <hr className="my-4" style={{ height: '1px' }} />
+
+                <InputField
+                  label="Secret"
+                  name="secret"
+                  value={payload?.secret}
+                  className="is-small"
+                  readOnly
+                  disabled
+                />
+              </>}
+
               <div className="p-3 my-5"></div>
               <ButtonField
                 type="submit"

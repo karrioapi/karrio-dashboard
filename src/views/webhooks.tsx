@@ -83,15 +83,15 @@ export default function WebhooksPage(pageProps: any) {
 
               {results.map(webhook => (
                 <tr key={webhook.id}>
-                  <td className="url is-vcentered">
+                  <td className="url is-vcentered is-clickable" onClick={() => editWebhook({ webhook, onConfirm: update })}>
                     <span className="is-subtitle is-size-7 has-text-weight-semibold has-text-grey">{webhook.url}</span>
                   </td>
-                  <td className="mode is-vcentered is-centered p-1">
+                  <td className="mode is-vcentered is-centered is-clickable p-1" onClick={() => editWebhook({ webhook, onConfirm: update })}>
                     <span className={`tag ${webhook.test_mode ? 'is-warning' : 'is-success'} is-centered`}>
                       {webhook.test_mode ? 'test' : 'live'}
                     </span>
                   </td>
-                  <td className="last-event">
+                  <td className="last-event is-vcentered is-clickable" onClick={() => editWebhook({ webhook, onConfirm: update })}>
                     <span className="is-subtitle is-size-7 has-text-weight-semibold has-text-grey">
                       {webhook.last_event_at || "No recent event"}
                     </span>
@@ -107,12 +107,6 @@ export default function WebhooksPage(pageProps: any) {
                         <i className="fas fa-flask"></i>
                       </span>
                     </WebhookTestModal>
-                    <button className="button is-white"
-                      onClick={() => editWebhook({ webhook, onConfirm: update })}>
-                      <span className="icon is-small">
-                        <i className="fas fa-pen"></i>
-                      </span>
-                    </button>
                     <button className="button is-white" onClick={() => confirmDeletion({
                       label: "Webhook endpoint",
                       identifier: webhook.id as string,
