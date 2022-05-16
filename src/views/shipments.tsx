@@ -110,7 +110,7 @@ export default function ShipmentsPage(pageProps: any) {
                     {!isNone(shipment.carrier_name) && <CarrierBadge
                       className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
                       carrier={shipmentCarrier(shipment)}
-                      custom_name={(shipment as any).custom_carrier_name as string}
+                      custom_name={(shipment as any).carrier_id as string}
                       short
                     />}
                     {isNone(shipment.carrier_name) && <AppBadge />}
