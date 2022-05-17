@@ -86,9 +86,9 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 </span>
               </AppLink>}
 
-              {!isNone(shipment.label_url) && <div style={{ display: 'inline-flex' }}>
+              <div style={{ display: 'inline-flex' }}>
                 <ShipmentMenu shipment={shipment} templates={templates} isViewing />
-              </div>}
+              </div>
 
             </div>
           </div>

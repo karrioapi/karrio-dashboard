@@ -34,6 +34,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
 import { bundleContexts } from '@/context/utils';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
+import CommodityDescription from '@/components/descriptions/commodity-description';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -562,6 +563,7 @@ export default function CreateLabelPage(pageProps: any) {
                     shipment={shipment}
                     customs={shipment?.customs || {
                       ...DEFAULT_CUSTOMS_CONTENT,
+                      duty: { ...DEFAULT_CUSTOMS_CONTENT.duty, currency: shipment.options?.currency },
                       commodities: shipment.parcels.map(({ items }) => items || []).flat()
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
@@ -578,14 +580,26 @@ export default function CreateLabelPage(pageProps: any) {
 
               <div className="p-3">
 
-                {!isNone(shipment.customs) && <CustomsInfoDescription customs={shipment.customs} />}
+                {!isNone(shipment.customs) && <>
+                  <CustomsInfoDescription customs={shipment.customs} />
 
+                  {/* Commodities section */}
+                  <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
+
+                  {(shipment.customs.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                    <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                    <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                  </React.Fragment>)}
+
+                  {(shipment.customs.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
+                    You need to specify customs commodities.
+                  </div>}
+                </>}
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                   Looks like you have an international shipment.
-                  You need to add customs information to ensure safe delivery.
+                  You need to provide a customs declaration.
                 </div>}
-
 
               </div>
 
