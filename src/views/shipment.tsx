@@ -22,6 +22,9 @@ import CarrierBadge from "@/components/carrier-badge";
 import ParcelDescription from "@/components/descriptions/parcel-description";
 import ShipmentMenu from "@/components/shipment-menu";
 import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
+import AddressDescription from "@/components/descriptions/address-description";
+import CommodityDescription from "@/components/descriptions/commodity-description";
+import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -108,6 +111,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 className="has-background-primary has-text-centered has-text-weight-bold has-text-white-bis is-size-7"
                 carrier={shipmentCarrier(shipment)}
                 custom_name={(shipment as any).carrier_id as string}
+                style={{ minWidth: '90px' }}
                 short
               />
             </div>
@@ -181,6 +185,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         </>}
 
 
+        {/* Shipment details section */}
         <h2 className="title is-5 my-4">Shipment Details</h2>
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
@@ -191,81 +196,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ADDRESS</p>
 
-              <p className="is-size-6 my-1">{shipment.recipient.person_name}</p>
-              <p className="is-size-6 my-1">{shipment.recipient.company_name}</p>
-              <p className="is-size-6 my-1 has-text-info">{shipment.recipient.email}</p>
-              <p className="is-size-6 my-1 has-text-info">{shipment.recipient.phone_number}</p>
-              <p className="is-size-6 my-1">
-                <span>{shipment.recipient.address_line1}</span>
-                {!isNone(shipment.recipient.address_line2) && <span>{shipment.recipient.address_line2}</span>}
-              </p>
-              <p className="is-size-6 my-1">{formatAddressLocation(shipment.recipient)}</p>
+              <AddressDescription address={shipment.recipient} />
             </div>
-
-            {/* Parcels section */}
-            <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">PARCELS</p>
-
-              {shipment.parcels.map((parcel: ParcelType, index) => <React.Fragment key={index + "parcel-info"}>
-                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <ParcelDescription parcel={parcel} />
-              </React.Fragment>)}
-            </div>
-          </div>
-
-          <div className="columns mt-6 mb-0 is-multiline">
-
-            {/* Customs section */}
-            {!isNone(shipment.customs) && <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">CUSTOMS DECLARATION</p>
-
-              <p className="is-size-6 my-1">{formatCustomsLabel(shipment.customs as CustomsType)}</p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.options?.aes) && <span>AES: <strong>{shipment.customs?.options?.aes}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.options?.eel_pfc) && <span>EEL / PFC: <strong>{shipment.customs?.options?.eel_pfc}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.invoice) && <span>Invoice Number: <strong>{shipment.customs?.invoice}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.invoice_date) && <span>Invoice Date: <strong>{shipment.customs?.invoice_date}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.options?.certificate_number) && <span>Certificate Number: <strong>{shipment.customs?.options?.certificate_number}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.duty) && <span>Duties paid by <strong>{formatRef('' + shipment.customs?.duty?.paid_by)}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.signer) && <span>Certified and Signed By <strong>{shipment.customs?.signer}</strong></span>}
-              </p>
-              <p className="is-size-6 my-1 has-text-grey">
-                {!isNone(shipment.customs?.content_description) && <span>Content: {shipment.customs?.content_description}</span>}
-              </p>
-            </div>}
-
-            {/* Commodities section */}
-            {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
-
-              {(shipment.customs?.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
-                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <p className="is-size-7 my-1 has-text-weight-semibold">{commodity.sku}</p>
-                <p className="is-size-7 my-1">{commodity.description}</p>
-                <p className="is-size-7 my-1 has-text-grey">
-                  {isNone(commodity?.value_amount) ? '' : <>
-                    <span>Value: {commodity?.quantity} x {commodity?.value_amount} {commodity?.value_currency}</span>
-                  </>}
-                </p>
-                <p className="is-size-7 my-1 has-text-grey">{formatWeight(commodity)}</p>
-              </React.Fragment>)}
-            </div>}
 
             {/* Options section */}
             {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">SHIPMENT OPTIONS</p>
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">OPTIONS</p>
 
               {[shipment.options].map((options: any, index) => <React.Fragment key={index + "parcel-info"}>
                 <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
@@ -295,6 +231,61 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </React.Fragment>)}
 
             </div>}
+          </div>
+
+          {/* Parcels section */}
+          <div className="mt-6 mb-0">
+            <p className="is-title is-size-6 my-2 has-text-weight-semibold">
+              PARCEL{shipment.parcels.length > 1 && "S"}
+            </p>
+
+            {shipment.parcels.map((parcel: ParcelType, index) => <React.Fragment key={index + "parcel-info"}>
+
+              <hr className="my-4" style={{ height: '1px' }} />
+
+              <div className="columns mb-0 is-multiline">
+
+                {/* Parcel details */}
+                <div className="column is-6 is-size-6 py-1">
+                  <ParcelDescription parcel={parcel} />
+                </div>
+
+                {/* Parcel items */}
+                {((parcel.items || []).length > 0) &&
+                  <div className="column is-6 is-size-6 py-1">
+                    <p className="is-title is-size-6 my-2 has-text-weight-semibold">ITEMS</p>
+
+                    {(parcel.items || []).map((item, index) => <React.Fragment key={index + "item-info"}>
+                      <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                      <CommodityDescription commodity={item} prefix={`${index + 1} - `} />
+                    </React.Fragment>)}
+                  </div>}
+
+              </div>
+
+            </React.Fragment>)}
+          </div>
+
+          {/* Customs section */}
+          <div className="columns mt-6 mb-0 is-multiline">
+
+            {/* Customs details */}
+            {!isNone(shipment.customs) && <div className="column is-6 is-size-6 py-1">
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">CUSTOMS DECLARATION</p>
+
+              <CustomsInfoDescription customs={shipment.customs} />
+            </div>}
+
+            {/* Customs commodities */}
+            {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
+
+              {(shipment.customs?.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+              </React.Fragment>)}
+            </div>}
+
           </div>
 
         </div>

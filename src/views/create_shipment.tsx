@@ -279,8 +279,6 @@ export default function CreateShipmentPage(pageProps: any) {
                               <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>
                               {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
                             </p>
-                            <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                            </p>
                           </div>
                           <div className="is-flex">
                             <div className="is-size-7 has-text-grey has-text-weight-semibold is-flex px-2">
