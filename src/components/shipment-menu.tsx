@@ -13,10 +13,11 @@ import { KARRIO_API } from '@/client/context';
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
   shipment: ShipmentType;
   templates?: DocumentTemplateType[];
+  isViewing?: boolean;
 }
 
 
-const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, className, style, onClick }) => {
+const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, isViewing }) => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
@@ -53,45 +54,46 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, cl
   };
 
   return (
-    <div className="field has-addons">
-      <p className="control is-expanded">
-        {!isNone(shipment.label_url) &&
-          <a className="button is-small is-fullwidth" href={`${KARRIO_API}${shipment?.label_url}`}
-            target="_blank" rel="noreferrer">
-            <span>Print Label</span>
-          </a>}
-        {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft &&
-          <a className="button is-small is-fullwidth" onClick={createLabel}>
-            <span>Buy Label</span>
-          </a>}
-        {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.cancelled &&
-          <a className="button is-small is-fullwidth" onClick={displayDetails}>
-            <span>View Shipment</span>
-          </a>}
-      </p>
+    <div className={`dropdown is-right ${isActive ? 'is-active' : ''}`} key={`menu-${shipment.id}`}>
 
-      <p className="control" onClick={handleOnClick} ref={trigger}>
+      <div className="dropdown-trigger" onClick={handleOnClick} ref={trigger}>
         <a className="button is-default is-small p-3">
-          <i className="fas fa-angle-down" aria-hidden="true"></i>
+          <i className={`fas fa-ellipsis-v`} aria-hidden="true"></i>
         </a>
-      </p>
+      </div>
 
-      <div className={`dropdown is-right ${isActive ? 'is-active' : ''}`} key={`menu-${shipment.id}`}>
-        <div className="dropdown-menu" id={`shipment-menu-${shipment.id}`} role="menu">
-          <div className="dropdown-content">
-            <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>
-            {shipment.status !== ShipmentStatusEnum.cancelled &&
-              <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
-            {!isNone(shipment.invoice_url) &&
-              <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}
-                target="_blank" rel="noreferrer">Print Invoice</a>}
-            {(templates || []).map(template =>
-              <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
-                className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
-                Download {template.name}
-              </a>
-            )}
-          </div>
+      <div className="dropdown-menu" id={`shipment-menu-${shipment.id}`} role="menu">
+        <div className="dropdown-content">
+          {isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft &&
+            <a className="dropdown-item" onClick={createLabel}>
+              <span>Buy Label</span>
+            </a>}
+
+          {!isNone(shipment.label_url) &&
+            <a className="dropdown-item" href={`${KARRIO_API}${shipment?.label_url}`}
+              target="_blank" rel="noreferrer">
+              <span>Print Label</span>
+            </a>}
+
+          {!isViewing &&
+            <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>}
+
+          {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status) &&
+            <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
+
+          {!isNone(shipment.invoice_url) &&
+            <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}
+              target="_blank" rel="noreferrer">Print Invoice</a>}
+
+          {templates && templates.length > 0 &&
+            <hr className="my-1" style={{ height: '1px' }} />}
+
+          {(templates || []).map(template =>
+            <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
+              className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
+              Download {template.name}
+            </a>
+          )}
         </div>
       </div>
 

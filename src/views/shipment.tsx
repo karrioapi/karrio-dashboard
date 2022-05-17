@@ -20,7 +20,8 @@ import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
 import CarrierBadge from "@/components/carrier-badge";
 import ParcelDescription from "@/components/descriptions/parcel-description";
-import { KARRIO_API } from "@/client/context";
+import ShipmentMenu from "@/components/shipment-menu";
+import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -31,6 +32,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const events = useContext(EventsContext);
   const { basePath } = useContext(AppMode);
   const { setLoading } = useContext(Loading);
+  const { templates } = useDocumentTemplates();
   const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
   const { id } = router.query;
 
@@ -67,33 +69,25 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <StatusBadge status={shipment.status} />
           </div>
 
-          <div className="column is-6 has-text-right pb-0">
-            <CopiableLink text={shipment.id as string} title="Copy ID" />
-            <br />
-            {!isNone(shipment.label_url) && <a className="button is-default is-small ml-1"
-              href={`${KARRIO_API}${shipment?.label_url}`}
-              target="_blank" rel="noreferrer">
-              <i className="fas fa-print"></i>
-              <span className="ml-1">Print Label</span>
-            </a>}
-            {!isNone(shipment.invoice_url) &&
-              <a className="button is-default is-small ml-1"
-                href={`${KARRIO_API}${shipment.invoice_url}`}
-                target="_blank" rel="noreferrer">
-                <i className="fas fa-print"></i>
-                <span className="ml-1">Print Invoice</span>
-              </a>}
-            {(isNone(shipment.label_url) && shipment.status === ShipmentStatusEnum.draft) &&
-              <button className="button is-default is-small ml-1" onClick={buyLabel}>Buy Label</button>}
+          <div className="column is-6 pb-0">
+            <div className="is-flex is-justify-content-right">
+              <CopiableLink text={shipment.id as string} title="Copy ID" />
+            </div>
+            <div className="is-flex is-justify-content-right">
 
-            {!isNone(shipmentId) &&
-              <AppLink
+              {!isNone(shipmentId) && <AppLink
                 href={`/shipments/${shipmentId}`} target="blank"
                 className="button is-default has-text-info is-small mx-1">
                 <span className="icon">
                   <i className="fas fa-external-link-alt"></i>
                 </span>
               </AppLink>}
+
+              {!isNone(shipment.label_url) && <div style={{ display: 'inline-flex' }}>
+                <ShipmentMenu shipment={shipment} templates={templates} isViewing />
+              </div>}
+
+            </div>
           </div>
         </div>
 
@@ -165,20 +159,22 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 </div>
               </div>
 
-              <div className="column is-6 is-size-6 py-1">
-                <p className="is-title is-size-6 my-2 has-text-weight-semibold">CHARGES</p>
-                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+              {(shipment.selected_rate?.extra_charges || []).length > 0 &&
+                <div className="column is-6 is-size-6 py-1">
+                  <p className="is-title is-size-6 my-2 has-text-weight-semibold">CHARGES</p>
+                  <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
-                {(shipment.selected_rate?.extra_charges || []).map((charge, index) => <div key={index} className="columns m-0">
-                  <div className="column is-5 is-size-7 px-0 py-1">
-                    <span className="is-uppercase">{charge?.name?.toLocaleLowerCase()}</span>
-                  </div>
-                  <div className="is-size-7 py-1 has-text-grey has-text-right" style={{ minWidth: '100px' }}>
-                    <span className="mr-1">{charge?.amount}</span>
-                    {!isNone(charge?.currency) && <span>{charge?.currency}</span>}
-                  </div>
-                </div>)}
-              </div>
+                  {(shipment.selected_rate?.extra_charges || []).map((charge, index) => <div key={index} className="columns m-0">
+                    <div className="column is-5 is-size-7 px-0 py-1">
+                      <span className="is-uppercase">{charge?.name?.toLocaleLowerCase()}</span>
+                    </div>
+                    <div className="is-size-7 py-1 has-text-grey has-text-right" style={{ minWidth: '100px' }}>
+                      <span className="mr-1">{charge?.amount}</span>
+                      {!isNone(charge?.currency) && <span>{charge?.currency}</span>}
+                    </div>
+                  </div>)}
+                </div>}
+
             </div>
           </div>
 
@@ -416,15 +412,17 @@ export default function ShipmentPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentProvider>
-        <EventsProvider setVariablesToURL={false}>
-          <LogsProvider setVariablesToURL={false}>
-            <MetadataMutationProvider>
+        <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
+          <EventsProvider setVariablesToURL={false}>
+            <LogsProvider setVariablesToURL={false}>
+              <MetadataMutationProvider>
 
-              <ShipmentComponent />
+                <ShipmentComponent />
 
-            </MetadataMutationProvider>
-          </LogsProvider>
-        </EventsProvider>
+              </MetadataMutationProvider>
+            </LogsProvider>
+          </EventsProvider>
+        </DocumentTemplatesProvider>
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);

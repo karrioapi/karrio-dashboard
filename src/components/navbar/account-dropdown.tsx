@@ -27,7 +27,7 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
   };
 
   return (
-    <div className={`dropdown-wrap is-right ${isActive ? "is-active" : ""}`} {...props}>
+    <div className={`dropdown-wrap is-right ${isActive ? "is-active" : ""} m-0`} {...props}>
       <button className="dropdown-button is-rounded button is-small p-1" onClick={handleOnClick} ref={btn}>
         <span className="icon">
           <i className="is-size-6 fas fa-user"></i>

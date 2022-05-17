@@ -106,7 +106,7 @@ export default function ShipmentsPage(pageProps: any) {
 
               {shipments?.map(shipment => (
                 <tr key={shipment.id} className="items is-clickable">
-                  <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
+                  <td className="carrier is-vcentered has-text-centered" onClick={() => previewShipment(shipment.id)}>
                     {!isNone(shipment.carrier_name) && <CarrierBadge
                       className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
                       carrier={shipmentCarrier(shipment)}
@@ -134,6 +134,7 @@ export default function ShipmentsPage(pageProps: any) {
                     <ShipmentMenu
                       shipment={shipment}
                       templates={templates}
+                      className="is-fullwidth"
                     />
                   </td>
                 </tr>
