@@ -83,7 +83,8 @@ export interface ShipmentUpdateData {
 */
 export enum ShipmentUpdateDataLabelTypeEnum {
     Pdf = 'PDF',
-    Zpl = 'ZPL'
+    Zpl = 'ZPL',
+    Png = 'PNG'
 }
 
 export function ShipmentUpdateDataFromJSON(json: any): ShipmentUpdateData {

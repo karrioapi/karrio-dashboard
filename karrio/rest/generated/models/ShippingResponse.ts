@@ -273,7 +273,8 @@ export interface ShippingResponse {
 */
 export enum ShippingResponseLabelTypeEnum {
     Pdf = 'PDF',
-    Zpl = 'ZPL'
+    Zpl = 'ZPL',
+    Png = 'PNG'
 }/**
 * @export
 * @enum {string}

@@ -137,7 +137,8 @@ export interface ShippingRequest {
 */
 export enum ShippingRequestLabelTypeEnum {
     Pdf = 'PDF',
-    Zpl = 'ZPL'
+    Zpl = 'ZPL',
+    Png = 'PNG'
 }
 
 export function ShippingRequestFromJSON(json: any): ShippingRequest {

@@ -64,7 +64,8 @@ export interface ShipmentPurchaseData {
 */
 export enum ShipmentPurchaseDataLabelTypeEnum {
     Pdf = 'PDF',
-    Zpl = 'ZPL'
+    Zpl = 'ZPL',
+    Png = 'PNG'
 }
 
 export function ShipmentPurchaseDataFromJSON(json: any): ShipmentPurchaseData {
