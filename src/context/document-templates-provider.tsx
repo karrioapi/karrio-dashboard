@@ -35,7 +35,7 @@ const DocumentTemplatesProvider: React.FC<{ filter?: get_document_templatesVaria
     return response;
   };
 
-  React.useEffect(() => { (!query.loading && load) && load() }, []);
+  React.useEffect(() => { (DOCUMENTS_MANAGEMENT && !query.loading && load) && load() }, []);
 
   if (!DOCUMENTS_MANAGEMENT) return <>{children}</>;
 
