@@ -16,7 +16,7 @@ import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum 
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
-  duty: undefined,
+  duty: { paid_by: PaidByEnum.recipient } as any,
   certify: true,
   commodities: [],
   incoterm: IncotermCodeEnum.DDU,
@@ -196,9 +196,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         {/* Duties */}
         <div className="columns is-multiline mb-0 pt-4">
 
-          <CheckBoxField defaultChecked={!isNone(customs?.duty)} onChange={handleChange} name="hasDuty" fieldClass="column mb-0 is-12 px-2 py-2">
-            <span>Duties</span>
-          </CheckBoxField>
+          <span className="is-size-7 has-text-weight-bold px-2">Duties</span>
 
           <div className="columns column is-multiline mb-0 ml-6 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd", display: `${!isNone(customs?.duty) ? 'block' : 'none'}` }}>
 

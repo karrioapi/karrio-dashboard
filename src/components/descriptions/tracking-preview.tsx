@@ -3,6 +3,7 @@ import { formatDayDate, isNone, p, useLocation } from '@/lib/helper';
 import { ListStatusEnum } from 'karrio/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { TrackerType, TrackingEventType } from '@/lib/types';
+import CarrierImage from '../carrier-image';
 
 type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {
@@ -73,7 +74,8 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
         {!isNone(tracker) && <div className="modal-card">
           <section className="modal-card-body">
             <div className="has-text-centered pb-4">
-              <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} />
+              {/* <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} /> */}
+              <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
             </div>
 
             <p className="subtitle has-text-centered is-6 my-3">

@@ -189,11 +189,11 @@ const ShipmentParcelsEditor: React.FC<ShipmentParcelsEditorProps> = ({ defaultVa
                 onChange={(items) => setParcelItems({ ...parcelItems, [uid]: items })}
                 pickLineItems
               >
-                <CommodityCollectionEditorContext.Consumer>{({ commodities, isExpanded }) => (<>
+                <CommodityCollectionEditorContext.Consumer>{({ commodities }) => (<>
                   <a className="is-size-7 has-text-info has-text-weight-semibold">
                     {commodities.length == 0 ? 'No' : commodities.length} item(s) declared
                     <span className="icon is-small pl-2">
-                      <i className={`fas ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-up'}`}></i>
+                      <i className={`fas fa-chevron-down`}></i>
                     </span>
                   </a>
                 </>)}</CommodityCollectionEditorContext.Consumer>

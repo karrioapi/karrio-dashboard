@@ -754,8 +754,6 @@ export interface get_shipment_shipment_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
   extra_charges: get_shipment_shipment_selected_rate_extra_charges[] | null;
@@ -776,8 +774,6 @@ export interface get_shipment_shipment_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
   duties_and_taxes: number | null;
   extra_charges: get_shipment_shipment_rates_extra_charges[] | null;
@@ -969,10 +965,7 @@ export interface get_shipments_shipments_edges_node_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_shipments_shipments_edges_node_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -991,10 +984,7 @@ export interface get_shipments_shipments_edges_node_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_shipments_shipments_edges_node_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1209,10 +1199,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_select
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1231,10 +1218,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_rates 
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: partial_shipment_update_partial_shipment_update_shipment_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -1303,11 +1287,6 @@ export interface partial_shipment_updateVariables {
 // GraphQL query operation: get_tracker
 // ====================================================
 
-export interface get_tracker_tracker_created_by {
-  email: string;
-  full_name: string;
-}
-
 export interface get_tracker_tracker_events {
   description: string | null;
   location: string | null;
@@ -1324,20 +1303,27 @@ export interface get_tracker_tracker_messages {
   details: any | null;
 }
 
+export interface get_tracker_tracker_created_by {
+  email: string;
+  full_name: string;
+}
+
 export interface get_tracker_tracker {
   id: string;  // The ID of the object.
-  created_at: any;
-  updated_at: any;
-  created_by: get_tracker_tracker_created_by;
-  status: TrackerStatusEnum;
   tracking_number: string;
+  carrier_id: string;
+  carrier_name: string;
+  status: TrackerStatusEnum;
   events: get_tracker_tracker_events[] | null;
   delivered: boolean | null;
   estimated_delivery: any | null;
-  test_mode: boolean;
+  meta: any | null;
+  metadata: any | null;
   messages: get_tracker_tracker_messages[] | null;
-  carrier_id: string;
-  carrier_name: string;
+  created_at: any;
+  updated_at: any;
+  created_by: get_tracker_tracker_created_by;
+  test_mode: boolean;
 }
 
 export interface get_tracker {
@@ -1398,6 +1384,8 @@ export interface get_trackers_trackers_edges_node {
   messages: get_trackers_trackers_edges_node_messages[] | null;
   carrier_id: string;
   carrier_name: string;
+  meta: any | null;
+  metadata: any | null;
 }
 
 export interface get_trackers_trackers_edges {
@@ -1439,7 +1427,7 @@ export interface get_webhook_webhook_created_by {
 export interface get_webhook_webhook {
   id: string;  // The ID of the object.
   created_by: get_webhook_webhook_created_by;
-  enabled_events: string[];
+  enabled_events: (EventTypes | null)[] | null;
   url: string;
   test_mode: boolean;
   disabled: boolean | null;
@@ -1480,7 +1468,7 @@ export interface get_webhooks_webhooks_edges_node {
   created_at: any;
   updated_at: any;
   created_by: get_webhooks_webhooks_edges_node_created_by;
-  enabled_events: string[];
+  enabled_events: (EventTypes | null)[] | null;
   url: string;
   test_mode: boolean;
   disabled: boolean | null;
@@ -1929,7 +1917,7 @@ export interface GetTokenVariables {
 // ====================================================
 
 export interface get_user_connections_user_connections_GenericSettings {
-  __typename: "GenericSettings";
+  __typename: "GenericSettings" | "EasyPostSettings";
 }
 
 export interface get_user_connections_user_connections_AramexSettings {
@@ -2358,6 +2346,16 @@ export interface get_user_connections_with_generics_user_connections_EShipperSet
   password: string;
 }
 
+export interface get_user_connections_with_generics_user_connections_EasyPostSettings {
+  __typename: "EasyPostSettings";
+  id: string;
+  carrier_id: string;  // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
+  carrier_name: string;
+  test: boolean;       // Toggle carrier connection mode
+  active: boolean;     // Disable/Hide carrier from clients
+  api_key: string;
+}
+
 export interface get_user_connections_with_generics_user_connections_FedexSettings {
   __typename: "FedexSettings";
   id: string;
@@ -2550,7 +2548,7 @@ export interface get_user_connections_with_generics_user_connections_YunExpressS
   api_secret: string;
 }
 
-export type get_user_connections_with_generics_user_connections = get_user_connections_with_generics_user_connections_AramexSettings | get_user_connections_with_generics_user_connections_AustraliaPostSettings | get_user_connections_with_generics_user_connections_CanadaPostSettings | get_user_connections_with_generics_user_connections_CanparSettings | get_user_connections_with_generics_user_connections_DHLExpressSettings | get_user_connections_with_generics_user_connections_DHLPolandSettings | get_user_connections_with_generics_user_connections_DHLUniversalSettings | get_user_connections_with_generics_user_connections_DicomSettings | get_user_connections_with_generics_user_connections_EShipperSettings | get_user_connections_with_generics_user_connections_FedexSettings | get_user_connections_with_generics_user_connections_FreightcomSettings | get_user_connections_with_generics_user_connections_GenericSettings | get_user_connections_with_generics_user_connections_PurolatorSettings | get_user_connections_with_generics_user_connections_RoyalMailSettings | get_user_connections_with_generics_user_connections_SendleSettings | get_user_connections_with_generics_user_connections_SFExpressSettings | get_user_connections_with_generics_user_connections_TNTSettings | get_user_connections_with_generics_user_connections_UPSSettings | get_user_connections_with_generics_user_connections_USPSSettings | get_user_connections_with_generics_user_connections_USPSInternationalSettings | get_user_connections_with_generics_user_connections_YanwenSettings | get_user_connections_with_generics_user_connections_YunExpressSettings;
+export type get_user_connections_with_generics_user_connections = get_user_connections_with_generics_user_connections_AramexSettings | get_user_connections_with_generics_user_connections_AustraliaPostSettings | get_user_connections_with_generics_user_connections_CanadaPostSettings | get_user_connections_with_generics_user_connections_CanparSettings | get_user_connections_with_generics_user_connections_DHLExpressSettings | get_user_connections_with_generics_user_connections_DHLPolandSettings | get_user_connections_with_generics_user_connections_DHLUniversalSettings | get_user_connections_with_generics_user_connections_DicomSettings | get_user_connections_with_generics_user_connections_EShipperSettings | get_user_connections_with_generics_user_connections_EasyPostSettings | get_user_connections_with_generics_user_connections_FedexSettings | get_user_connections_with_generics_user_connections_FreightcomSettings | get_user_connections_with_generics_user_connections_GenericSettings | get_user_connections_with_generics_user_connections_PurolatorSettings | get_user_connections_with_generics_user_connections_RoyalMailSettings | get_user_connections_with_generics_user_connections_SendleSettings | get_user_connections_with_generics_user_connections_SFExpressSettings | get_user_connections_with_generics_user_connections_TNTSettings | get_user_connections_with_generics_user_connections_UPSSettings | get_user_connections_with_generics_user_connections_USPSSettings | get_user_connections_with_generics_user_connections_USPSInternationalSettings | get_user_connections_with_generics_user_connections_YanwenSettings | get_user_connections_with_generics_user_connections_YunExpressSettings;
 
 export interface get_user_connections_with_generics {
   user_connections: get_user_connections_with_generics_user_connections[];
@@ -2805,7 +2803,7 @@ export interface confirm_password_resetVariables {
 
 export interface get_event_event {
   id: string;  // The ID of the object.
-  type: string;
+  type: EventTypes | null;
   data: any | null;
   test_mode: boolean;
   pending_webhooks: number;
@@ -2837,7 +2835,7 @@ export interface get_events_events_pageInfo {
 
 export interface get_events_events_edges_node {
   id: string;  // The ID of the object.
-  type: string;
+  type: EventTypes | null;
   data: any | null;
   test_mode: boolean;
   pending_webhooks: number;
@@ -3033,10 +3031,7 @@ export interface get_order_order_shipments_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_order_order_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3055,10 +3050,7 @@ export interface get_order_order_shipments_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_order_order_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3300,10 +3292,7 @@ export interface get_orders_orders_edges_node_shipments_selected_rate {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_orders_orders_edges_node_shipments_selected_rate_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -3322,10 +3311,7 @@ export interface get_orders_orders_edges_node_shipments_rates {
   currency: CurrencyCodeEnum | null;
   service: string;
   transit_days: number | null;
-  discount: number | null;
-  base_charge: number;
   total_charge: number;
-  duties_and_taxes: number | null;
   extra_charges: get_orders_orders_edges_node_shipments_rates_extra_charges[] | null;
   test_mode: boolean;
   meta: any | null;
@@ -4046,6 +4032,7 @@ export enum ShipmentStatusEnum {
 // An enumeration.
 export enum LabelTypeEnum {
   PDF = "PDF",
+  PNG = "PNG",
   ZPL = "ZPL",
 }
 
@@ -4202,6 +4189,21 @@ export enum TrackerStatusEnum {
   in_transit = "in_transit",
   incident = "incident",
   pending = "pending",
+}
+
+// An enumeration.
+export enum EventTypes {
+  all = "all",
+  order_cancelled = "order_cancelled",
+  order_created = "order_created",
+  order_delivered = "order_delivered",
+  order_fulfilled = "order_fulfilled",
+  order_updated = "order_updated",
+  shipment_cancelled = "shipment_cancelled",
+  shipment_fulfilled = "shipment_fulfilled",
+  shipment_purchased = "shipment_purchased",
+  tracker_created = "tracker_created",
+  tracker_updated = "tracker_updated",
 }
 
 // An enumeration.
@@ -4397,6 +4399,7 @@ export interface CreateConnectionInput {
   dhlpolandsettings?: CreateDHLPolandSettings | null;
   dhluniversalsettings?: CreateDHLUniversalSettings | null;
   dicomsettings?: CreateDicomSettings | null;
+  easypostsettings?: CreateEasyPostSettings | null;
   eshippersettings?: CreateEShipperSettings | null;
   fedexsettings?: CreateFedexSettings | null;
   freightcomsettings?: CreateFreightcomSettings | null;
@@ -4531,6 +4534,16 @@ export interface CreateDicomSettings {
   username: string;
   password: string;
   billing_account: string;
+}
+
+// null
+export interface CreateEasyPostSettings {
+  id?: string | null;
+  carrier_id: string;
+  test?: boolean | null;
+  active?: boolean | null;
+  metadata?: any | null;
+  api_key: string;
 }
 
 // null
@@ -4727,6 +4740,7 @@ export interface UpdateConnectionInput {
   dhlpolandsettings?: UpdateDHLPolandSettings | null;
   dhluniversalsettings?: UpdateDHLUniversalSettings | null;
   dicomsettings?: UpdateDicomSettings | null;
+  easypostsettings?: UpdateEasyPostSettings | null;
   eshippersettings?: UpdateEShipperSettings | null;
   fedexsettings?: UpdateFedexSettings | null;
   freightcomsettings?: UpdateFreightcomSettings | null;
@@ -4863,6 +4877,16 @@ export interface UpdateDicomSettings {
   username?: string | null;
   password?: string | null;
   billing_account?: string | null;
+}
+
+// null
+export interface UpdateEasyPostSettings {
+  id?: string | null;
+  carrier_id?: string | null;
+  test?: boolean | null;
+  active?: boolean | null;
+  metadata?: any | null;
+  api_key?: string | null;
 }
 
 // null

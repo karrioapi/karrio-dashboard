@@ -31,6 +31,7 @@ import MessagesDescription from '@/components/descriptions/messages-description'
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { bundleContexts } from '@/context/utils';
+import CommodityDescription from '@/components/descriptions/commodity-description';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -43,7 +44,7 @@ const ContextProviders = bundleContexts([
   ModalProvider,
 ]);
 
-export default function FulfillmentPage(pageProps: any) {
+export default function CreateShipmentPage(pageProps: any) {
   const Component: React.FC = () => {
     const loader = useLoader();
     const notifier = useNotifier();
@@ -279,8 +280,6 @@ export default function FulfillmentPage(pageProps: any) {
                               <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>
                               {isNoneOrEmpty(item.sku) ? ' | SKU: 0000000' : ` | SKU: ${item.sku}`}
                             </p>
-                            <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                            </p>
                           </div>
                           <div className="is-flex">
                             <div className="is-size-7 has-text-grey has-text-weight-semibold is-flex px-2">
@@ -348,7 +347,11 @@ export default function FulfillmentPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs || { ...DEFAULT_CUSTOMS_CONTENT, commodities: getItems() }}
+                    customs={shipment?.customs || {
+                      ...DEFAULT_CUSTOMS_CONTENT,
+                      commodities: getItems(),
+                      duty: { ...DEFAULT_CUSTOMS_CONTENT.duty, currency: shipment.options?.currency },
+                    }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
                       <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
@@ -363,14 +366,26 @@ export default function FulfillmentPage(pageProps: any) {
 
               <div className="p-3">
 
-                {!isNone(shipment.customs) && <CustomsInfoDescription customs={shipment.customs} />}
+                {!isNone(shipment.customs) && <>
+                  <CustomsInfoDescription customs={shipment.customs} />
 
+                  {/* Commodities section */}
+                  <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
+
+                  {(shipment.customs.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                    <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                    <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                  </React.Fragment>)}
+
+                  {(shipment.customs.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
+                    You need to specify customs commodities.
+                  </div>}
+                </>}
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                   Looks like you have an international shipment.
-                  You need to add customs information to ensure safe delivery.
+                  You need to provide a customs declaration.
                 </div>}
-
 
               </div>
 

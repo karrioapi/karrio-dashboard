@@ -14,11 +14,11 @@ import TrackersProvider, { TrackersContext } from "@/context/trackers-provider";
 import UserConnectionsProvider from "@/context/user-connections-provider";
 import { getURLSearchParams, isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import Head from "next/head";
-import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 import TrackerMutationProvider from "@/context/tracker-mutation";
 import { useRouter } from "next/dist/client/router";
 import TrackersFilter from "@/components/filters/trackers-filter";
+import CarrierBadge from "@/components/carrier-badge";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -111,8 +111,12 @@ export default function TrackersPage(pageProps: any) {
 
               {trackers.map(tracker => (
                 <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
-                  <td className="carrier is-vcentered has-text-centered">
-                    <Image src={p`/carriers/${tracker.carrier_name}_logo.svg`} height="25" width="100%" alt="carrier logo" />
+                  <td className="carrier is-vcentered has-text-centered p-2">
+                    <CarrierBadge
+                      className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
+                      carrier={tracker.carrier_name}
+                      custom_name={tracker.carrier_id}
+                    />
                   </td>
                   <td className="tracking-number is-vcentered p-1">
                     <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>

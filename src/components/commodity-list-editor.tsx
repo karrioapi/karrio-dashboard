@@ -16,18 +16,15 @@ interface CommodityCollectionEditorProps {
   onChange?: (commodities: CommodityType[]) => void;
 }
 interface CommodityCollectionEditorInterface {
-  isExpanded: boolean;
   commodities: CommodityType[];
 }
 
 export const CommodityCollectionEditorContext = React.createContext<CommodityCollectionEditorInterface>({
-  isExpanded: false,
   commodities: [],
 } as CommodityCollectionEditorInterface);
 
 const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ defaultValue, children, className, onChange, onRemove, onUpdate, pickLineItems, ...props }) => {
   const { loading } = useContext(Loading);
-  const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [commodities, setCommodities] = React.useState<CommodityCollection>(toCommodityCollection(defaultValue));
   const [key, setKey] = React.useState<string>(`commodities-${Date.now()}`);
 
@@ -60,13 +57,13 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
   return (
     <article className={`panel is-shadowless ${className || 'is-white my-3'}`} {...props} key={key}>
       <CommodityEditModalProvider>
-        <CommodityCollectionEditorContext.Provider value={{ isExpanded, commodities: Object.values(commodities) }}>
+        <CommodityCollectionEditorContext.Provider value={{ commodities: Object.values(commodities) }}>
 
-          <div className="p-2" onClick={() => setIsExpanded(!isExpanded)}>
+          <div className="p-2">
             {children}
           </div>
 
-          {isExpanded && <CommodityStateContext.Consumer>{({ editCommodity }) => (<>
+          <CommodityStateContext.Consumer>{({ editCommodity }) => (<>
 
             {Object.entries(commodities).map(([uid, commodity]) => (
               <div key={uid} className="panel-block columns m-0 p-0">
@@ -88,7 +85,7 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
               </div>
             ))}
 
-            <div className="panel-block is-justify-content-space-between px-0 py-1" style={{ border: 'transparent' }}>
+            <div className="panel-block is-justify-content-space-between p-1" style={{ border: 'transparent' }}>
               <button
                 type="button"
                 className="button is-white is-small has-text-primary"
@@ -107,7 +104,7 @@ const CommodityCollectionEditor: React.FC<CommodityCollectionEditorProps> = ({ d
               }
             </div>
 
-          </>)}</CommodityStateContext.Consumer>}
+          </>)}</CommodityStateContext.Consumer>
 
         </CommodityCollectionEditorContext.Provider>
       </CommodityEditModalProvider>

@@ -453,8 +453,6 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       currency
       service
       transit_days
-      discount
-      base_charge
       total_charge
       duties_and_taxes
       extra_charges {
@@ -472,8 +470,6 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       currency
       service
       transit_days
-      discount
-      base_charge
       total_charge
       duties_and_taxes
       extra_charges {
@@ -628,10 +624,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           currency
           service
           transit_days
-          discount
-          base_charge
           total_charge
-          duties_and_taxes
           extra_charges {
             name
             amount
@@ -647,10 +640,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           currency
           service
           transit_days
-          discount
-          base_charge
           total_charge
-          duties_and_taxes
           extra_charges {
             name
             amount
@@ -808,10 +798,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         currency
         service
         transit_days
-        discount
-        base_charge
         total_charge
-        duties_and_taxes
         extra_charges {
           name
           amount
@@ -827,10 +814,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         currency
         service
         transit_days
-        discount
-        base_charge
         total_charge
-        duties_and_taxes
         extra_charges {
           name
           amount
@@ -861,14 +845,10 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
 export const GET_TRACKER = gql`query get_tracker($id: String!) {
   tracker(id: $id) {
     id
-    created_at
-    updated_at
-    created_by {
-      email
-      full_name
-    }
-    status
     tracking_number
+    carrier_id
+    carrier_name
+    status
     events {
       description
       location
@@ -878,7 +858,8 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
     }
     delivered
     estimated_delivery
-    test_mode
+    meta
+    metadata
     messages {
       carrier_name
       carrier_id
@@ -886,8 +867,13 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
       code
       details
     }
-    carrier_id
-    carrier_name
+    created_at
+    updated_at
+    created_by {
+      email
+      full_name
+    }
+    test_mode
   }
 }
 
@@ -931,6 +917,8 @@ export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $s
         }
         carrier_id
         carrier_name
+        meta
+        metadata
       }
     }
   }
@@ -1513,6 +1501,14 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       username
       password
     }
+    ... on EasyPostSettings {
+      id
+      carrier_id
+      carrier_name
+      test
+      active
+      api_key
+    }
     ... on FedexSettings {
       id
       carrier_id
@@ -1981,10 +1977,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         currency
         service
         transit_days
-        discount
-        base_charge
         total_charge
-        duties_and_taxes
         extra_charges {
           name
           amount
@@ -2000,10 +1993,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         currency
         service
         transit_days
-        discount
-        base_charge
         total_charge
-        duties_and_taxes
         extra_charges {
           name
           amount
@@ -2200,10 +2190,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             currency
             service
             transit_days
-            discount
-            base_charge
             total_charge
-            duties_and_taxes
             extra_charges {
               name
               amount
@@ -2219,10 +2206,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             currency
             service
             transit_days
-            discount
-            base_charge
             total_charge
-            duties_and_taxes
             extra_charges {
               name
               amount

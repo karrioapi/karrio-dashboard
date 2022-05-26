@@ -44,7 +44,7 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
         code,
         message: `
           Server (${KARRIO_API}) unreachable.
-          Please make sure taht the API is running and reachable.
+          Please make sure that the API is running and reachable.
         `
       });
       reject({ error });
