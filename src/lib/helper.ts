@@ -7,7 +7,7 @@ import React from "react";
 
 
 export function formatRef(s?: string): string {
-  return (s || "").replaceAll('_', ' ').toLocaleUpperCase();
+  return (s || "").replace(/:_:/, ' ').toLocaleUpperCase();
 }
 
 export function formatDate(date_string: string): string {
@@ -124,7 +124,7 @@ export function formatWeight(data?: { weight: number, weight_unit: string } | an
 }
 
 export function formatCarrierSlug(name?: string) {
-  const raw_name = (name || "").replaceAll('-', ' ').replaceAll('_', ' ').split(' ')[0];
+  const raw_name = (name || "").replace(/:-:/, ' ').replace(/:_:/, ' ').split(' ')[0];
   const count = raw_name.length > 10 ? 9 : 10;
   const short_name = raw_name.slice(0, count) + (count === 9 ? "." : "");
   return short_name.toUpperCase();
@@ -243,8 +243,8 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
   const template = `${base}${strings[strings.length - 1]}`;
 
   return `${BASE_PATH}/${template}`
-    .replaceAll('///', '/')
-    .replaceAll('//', '/');
+    .replace('///', '/')
+    .replace('//', '/');
 }
 
 export function useLocation() {

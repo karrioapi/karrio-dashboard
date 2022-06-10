@@ -1,4 +1,4 @@
-import { CommodityType, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -9,12 +9,12 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType } from 'karrio/graphql';
+import { LabelTypeEnum, MetadataObjectType, PaidByEnum } from 'karrio/graphql';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import RateDescription from '@/components/descriptions/rate-description';
-import { formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { formatRef, formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import LineItemSelector from '@/components/line-item-selector';
 import InputField from '@/components/generic/input-field';
 import ButtonField from '@/components/generic/button-field';
@@ -32,6 +32,8 @@ import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { bundleContexts } from '@/context/utils';
 import CommodityDescription from '@/components/descriptions/commodity-description';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import SelectField from '@/components/generic/select-field';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -338,6 +340,211 @@ export default function CreateShipmentPage(pageProps: any) {
 
             </div>
 
+
+
+            {/* Shipping options section */}
+            <div className="card px-0 py-3 mt-5">
+
+              <header className="px-3 is-flex is-justify-content-space-between">
+                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">OPTIONS</span>
+              </header>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3 pb-0">
+
+                {/* shipment date */}
+                <InputField name="shipment_date"
+                  label="shipment date"
+                  type="date"
+                  className="is-small"
+                  fieldClass="column mb-0 is-4 p-0 mb-2"
+                  defaultValue={shipment.options?.shipment_date}
+                  onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
+                />
+
+
+                {/* currency */}
+                <SelectField name="currency"
+                  label="shipment currency"
+                  className="is-small is-fullwidth"
+                  fieldClass="column is-4 mb-0 px-0 py-2"
+                  value={shipment.options?.currency}
+                  required={!isNone(shipment.options?.insurance) || !isNone(shipment.options?.cash_on_delivery) || !isNone(shipment.options?.declared_value)}
+                  onChange={e => onChange({ options: { ...shipment.options, currency: e.target.value } })}
+                >
+                  <option value="">Select a currency</option>
+                  {CURRENCY_OPTIONS.map(unit => <option key={unit} value={unit}>{unit}</option>)}
+                </SelectField>
+
+
+                {/* signature confirmation */}
+                <CheckBoxField name="signature_confirmation"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={shipment.options?.signature_confirmation}
+                  onChange={e => onChange({ options: { ...shipment.options, signature_confirmation: e.target.checked } })}
+                >
+                  <span>Add signature confirmation</span>
+                </CheckBoxField>
+
+
+                {/* insurance */}
+                <CheckBoxField name="addInsurance"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.insurance)}
+                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Add insurance</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.insurance) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="insurance"
+                    label="Coverage value"
+                    type="number"
+                    min={0}
+                    step="any"
+                    className="is-small"
+                    fieldClass="column mb-0 is-4 px-1 py-0"
+                    controlClass="has-icons-left has-icons-right"
+                    defaultValue={shipment.options?.insurance}
+                    required={!isNone(shipment.options?.insurance)}
+                    onChange={e => onChange({ options: { ...shipment.options, insurance: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+
+                {/* Cash on delivery */}
+                <CheckBoxField name="addCOD"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
+                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Collect on delivery</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.cash_on_delivery) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="cash_on_delivery"
+                    label="Amount to collect"
+                    type="number" min={0} step="any"
+                    className="is-small"
+                    controlClass="has-icons-left has-icons-right"
+                    fieldClass="column mb-0 is-4 px-1 py-2"
+                    defaultValue={shipment.options?.cash_on_delivery}
+                    required={!isNone(shipment.options?.cash_on_delivery)}
+                    onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+
+                {/* Declared value */}
+                <CheckBoxField name="addCOD"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={!isNone(shipment.options?.declared_value)}
+                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
+                >
+                  <span>Add package value</span>
+                </CheckBoxField>
+
+                <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
+                  borderLeft: "solid 1px #ddd",
+                  display: `${isNone(shipment.options?.declared_value) ? 'none' : 'block'}`
+                }}>
+
+                  <InputField name="declared_value"
+                    label="Package value"
+                    type="number" min={0} step="any"
+                    className="is-small"
+                    controlClass="has-icons-left has-icons-right"
+                    fieldClass="column mb-0 is-4 px-1 py-2"
+                    defaultValue={shipment.options?.declared_value}
+                    required={!isNone(shipment.options?.declared_value)}
+                    onChange={e => onChange({ options: { ...shipment.options, declared_value: parseFloat(e.target.value) } })}
+                  >
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-dollar-sign"></i>
+                    </span>
+                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
+                  </InputField>
+
+                </div>
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Shipment Paid By</label>
+
+                <div className="control">
+                      
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.sender}
+                      onChange={() => label.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
+                  </label>
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.recipient}
+                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
+                  </label>
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.third_party}
+                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.third_party.toString())}</span>
+                  </label>
+
+                </div>
+
+                {(shipment.payment?.paid_by && shipment.payment?.paid_by !== PaidByEnum.sender) &&
+                  <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+                    <InputField
+                      label="account number"
+                      className="is-small"
+                      fieldClass="column"
+                      defaultValue={shipment?.payment?.account_number as string}
+                      onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
+                    />
+                  </div>}
+
+              </div>
+
+            </div>
+
             {/* Customs section */}
             {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
@@ -495,23 +702,6 @@ export default function CreateShipmentPage(pageProps: any) {
                 </div>
 
                 <hr className='my-1' style={{ height: '1px' }} />
-
-                <div className="p-3 pb-0">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING DATE</span>
-                  </header>
-
-                  <InputField
-                    name="shipment_date"
-                    type="date"
-                    className="is-small"
-                    fieldClass="column mb-0 is-6 p-0"
-                    defaultValue={shipment.options?.shipment_date}
-                    onChange={e => onChange({ options: { ...shipment.options, shipment_date: e.target.value } })}
-                  />
-
-                </div>
 
                 <div className="p-3">
 

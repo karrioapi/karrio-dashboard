@@ -9,8 +9,9 @@ import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
-export const BASE_PATH = (publicRuntimeConfig.BASE_PATH || '/').replaceAll('//', '/');
-export const TEST_BASE_PATH = (publicRuntimeConfig.BASE_PATH + '/test').replaceAll('//', '/');
+
+export const BASE_PATH = (publicRuntimeConfig.BASE_PATH || '/').replace('//', '/');
+export const TEST_BASE_PATH = (publicRuntimeConfig.BASE_PATH + '/test').replace('//', '/');
 export const KARRIO_API = (
   typeof window === 'undefined'
     ? serverRuntimeConfig?.KARRIO_HOSTNAME
