@@ -39,6 +39,7 @@ export type ShipmentType = get_shipment_shipment & {
   rates?: RateType[];
   messages?: MessageType[];
   selected_rate?: RateType;
+  payment?: PaymentType;
 };
 export type OrderType = get_order_order & {
   line_items: get_order_order_line_items[];

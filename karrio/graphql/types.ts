@@ -1958,6 +1958,7 @@ export interface get_user_connections_user_connections_CanadaPostSettings {
   password: string;
   customer_number: string;
   contract_id: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_CanparSettings {
@@ -2254,6 +2255,7 @@ export interface get_user_connections_with_generics_user_connections_CanadaPostS
   password: string;
   customer_number: string;
   contract_id: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_CanparSettings {

@@ -1183,6 +1183,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       password
       customer_number
       contract_id
+      metadata
     }
     ... on CanparSettings {
       id
@@ -1424,6 +1425,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       customer_number
       contract_id
+      metadata
     }
     ... on CanparSettings {
       id

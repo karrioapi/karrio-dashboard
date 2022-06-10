@@ -33,15 +33,10 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const router = useRouter();
   const logs = useContext(LogsContext);
   const events = useContext(EventsContext);
-  const { basePath } = useContext(AppMode);
   const { setLoading } = useContext(Loading);
   const { templates } = useDocumentTemplates();
   const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
   const { id } = router.query;
-
-  const buyLabel = (_: React.MouseEvent) => {
-    router.push(basePath + '/create_label?shipment_id=' + shipment?.id);
-  };
 
   useEffect(() => { setLoading(loading); });
   useEffect(() => {

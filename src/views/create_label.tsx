@@ -9,12 +9,12 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import TemplatesProvider from '@/context/default-templates-provider';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType, ShipmentStatusEnum } from 'karrio/graphql';
+import { LabelTypeEnum, MetadataObjectType, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import RateDescription from '@/components/descriptions/rate-description';
-import { formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { formatRef, formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import LineItemSelector from '@/components/line-item-selector';
 import InputField from '@/components/generic/input-field';
 import ButtonField from '@/components/generic/button-field';
@@ -547,6 +547,59 @@ export default function CreateLabelPage(pageProps: any) {
                   className="is-small"
                   autoComplete="off"
                 />
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Shipment Paid By</label>
+
+                <div className="control">
+                      
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.sender}
+                      onChange={() => label.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
+                  </label>
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.recipient}
+                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
+                  </label>
+                  <label className="radio">
+                    <input
+                      className="mr-1"
+                      type="radio"
+                      name="paid_by"
+                      defaultChecked={shipment.payment?.paid_by === PaidByEnum.third_party}
+                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
+                    />
+                    <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.third_party.toString())}</span>
+                  </label>
+
+                </div>
+
+                {(shipment.payment?.paid_by && shipment.payment?.paid_by !== PaidByEnum.sender) &&
+                  <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+                    <InputField
+                      label="account number"
+                      className="is-small"
+                      fieldClass="column"
+                      defaultValue={shipment?.payment?.account_number as string}
+                      onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
+                    />
+                  </div>}
 
               </div>
 
