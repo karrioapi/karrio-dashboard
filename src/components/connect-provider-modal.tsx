@@ -297,7 +297,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum, property: str
     // [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test", "access_key", "secret_key", "aws_region"],
     [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test", "api_key", "password", "account_number"],
-    [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test", "username", "password", "customer_number", "contract_id"],
+    [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test", "username", "password", "customer_number", "contract_id", "metadata"],
     [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test", "username", "password", "billing_account"],
     [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test", "site_id", "password", "account_number", "account_country_code"],
