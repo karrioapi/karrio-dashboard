@@ -12,6 +12,7 @@ export const ShipmentContext = React.createContext<ShipmentContextContext>({} as
 
 const ShipmentProvider: React.FC = ({ children }) => {
   const [load, { fetchMore, ...result }] = useLazyQuery<get_shipment, get_shipmentVariables>(GET_SHIPMENT, {
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
   const [shipment, setShipment] = useState<ShipmentType>();
