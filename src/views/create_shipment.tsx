@@ -165,9 +165,13 @@ export default function CreateShipmentPage(pageProps: any) {
         <ModeIndicator />
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
-          <span className="title is-4">
-            Create shipment
-          </span>
+          <div>
+            <span className="title is-4 my-2">Create shipment</span>
+            <br />
+            {ready && <span className="has-text-weight-semibold is-size-7">
+              {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
+            </span>}
+          </div>
         </header>
 
         {(shipment.messages || []).length > 0 && <div className="notification is-danger is-light is-size-7 my-2 p-2">
@@ -179,16 +183,8 @@ export default function CreateShipmentPage(pageProps: any) {
         {(ready && Object.keys(shipment.recipient).length > 0) && <div className="columns pb-6 m-0">
           <div className="column px-0" style={{ minHeight: '850px' }}>
 
-            {/* Header section */}
-            <div className="card px-0 py-3">
-
-              <div className="p-3">
-                <span className="has-text-weight-bold is-size-6">
-                  {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
-                </span>
-              </div>
-
-              <hr className='my-1' style={{ height: '1px' }} />
+            {/* Address section */}
+            <div className="card p-0">
 
               <div className="p-3">
 
@@ -209,6 +205,35 @@ export default function CreateShipmentPage(pageProps: any) {
                 </header>
 
                 <AddressDescription address={shipment.recipient} />
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+
+                <header className="is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
+                  <div className="is-vcentered">
+                    <AddressModalEditor
+                      shipment={shipment}
+                      address={shipment.shipper}
+                      onSubmit={(address) => onChange({ shipper: address })}
+                      trigger={
+                        <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                          Edit origin address
+                        </button>
+                      }
+                    />
+                  </div>
+                </header>
+
+                <AddressDescription address={shipment.shipper} />
+
+                {Object.values(shipment.shipper || {}).length === 0 &&
+                  <div className="notification is-warning is-light my-2 py-2 px-4">
+                    Please specify the origin address.
+                  </div>}
 
               </div>
 
@@ -339,7 +364,6 @@ export default function CreateShipmentPage(pageProps: any) {
               </div>}
 
             </div>
-
 
 
             {/* Shipping options section */}
@@ -493,10 +517,25 @@ export default function CreateShipmentPage(pageProps: any) {
               <hr className='my-1' style={{ height: '1px' }} />
 
               <div className="p-3">
+
+                <InputField label="Reference"
+                  name="reference"
+                  defaultValue={shipment.reference as string}
+                  onChange={e => label.updateShipment({ reference: e.target.value })}
+                  placeholder="shipment reference"
+                  className="is-small"
+                  autoComplete="off"
+                />
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
                 <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Shipment Paid By</label>
 
                 <div className="control">
-                      
+
                   <label className="radio">
                     <input
                       className="mr-1"
@@ -545,7 +584,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
             </div>
 
-            {/* Customs section */}
+            {/* Customs declaration section */}
             {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
@@ -598,53 +637,6 @@ export default function CreateShipmentPage(pageProps: any) {
 
             </div>}
 
-            {/* Live rates section */}
-            <div className="card px-0 py-3 mt-5">
-
-              <header className="px-3 is-flex is-justify-content-space-between">
-                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
-                <div className="is-vcentered">
-                  <button className="button is-small is-info is-text is-inverted p-1"
-                    onClick={() => mutation.fetchRates()}
-                    disabled={requireInfoForRating(shipment)}>
-                    Refresh rates
-                  </button>
-                </div>
-              </header>
-
-              <hr className='my-1' style={{ height: '1px' }} />
-
-              <div className="p-3">
-
-                {loading && <Spinner className="my-1 p-1 has-text-centered" />}
-
-                {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
-                  Provide all shipping details to retrieve shipping rates.
-                </div>}
-
-                {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
-                  {(shipment.rates || []).map(rate => (
-                    <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                      className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
-                      onClick={() => setSelectedRate(rate)}>
-
-                      <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
-                        {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
-                      </span>
-
-                      <RateDescription rate={rate} />
-
-                      {rate.test_mode && <div className="has-text-warning p-1">
-                        <i className="fas fa-exclamation-circle"></i>
-                      </div>}
-                    </a>
-                  ))}
-                </div>}
-
-              </div>
-
-            </div>
-
           </div>
 
           <div className="p-2"></div>
@@ -655,59 +647,51 @@ export default function CreateShipmentPage(pageProps: any) {
               {/* Shipping section */}
               <div className="card px-0">
 
-                <header className="p-3">
-                  <span className="has-text-weight-bold is-size-6">Shipping</span>
+                <header className="px-3 py-2 is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
+                  <div className="is-vcentered">
+                    <button className="button is-small is-info is-text is-inverted p-1"
+                      onClick={() => mutation.fetchRates()}
+                      disabled={requireInfoForRating(shipment)}>
+                      Refresh rates
+                    </button>
+                  </div>
                 </header>
 
+                <hr className='my-1' style={{ height: '1px' }} />
+
                 <div className="p-3">
 
-                  <InputField label="Reference"
-                    name="reference"
-                    defaultValue={shipment.reference as string}
-                    onChange={e => label.updateShipment({ reference: e.target.value })}
-                    placeholder="shipment reference"
-                    className="is-small"
-                    autoComplete="off"
-                  />
+                  {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
+                    Provide all shipping details to retrieve shipping rates.
+                  </div>}
+
+                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                    {(shipment.rates || []).map(rate => (
+                      <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                        className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        onClick={() => setSelectedRate(rate)}>
+
+                        <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
+                          {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
+                        </span>
+
+                        <RateDescription rate={rate} />
+
+                        {rate.test_mode && <div className="has-text-warning p-1">
+                          <i className="fas fa-exclamation-circle"></i>
+                        </div>}
+                      </a>
+                    ))}
+                  </div>}
 
                 </div>
 
                 <hr className='my-1' style={{ height: '1px' }} />
 
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
-                    <div className="is-vcentered">
-                      <AddressModalEditor
-                        shipment={shipment}
-                        address={shipment.shipper}
-                        onSubmit={(address) => onChange({ shipper: address })}
-                        trigger={
-                          <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                            Edit origin address
-                          </button>
-                        }
-                      />
-                    </div>
-                  </header>
-
-                  <AddressDescription address={shipment.shipper} />
-
-                  {Object.values(shipment.shipper || {}).length === 0 &&
-                    <div className="notification is-warning is-light my-2 py-2 px-4">
-                      Please specify the origin address.
-                    </div>}
-
-                </div>
-
-                <hr className='my-1' style={{ height: '1px' }} />
-
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">LABEL TYPE</span>
-                  </header>
+                <div className="p-3 has-text-centered">
 
                   <div className="control">
                     <label className="radio">
@@ -733,8 +717,6 @@ export default function CreateShipmentPage(pageProps: any) {
                   </div>
 
                 </div>
-
-                <hr className='my-1' style={{ height: '1px' }} />
 
                 <ButtonField
                   onClick={() => mutation.buyLabel(selected_rate as any)}
