@@ -173,7 +173,9 @@ export default function OrdersPage(pageProps: any) {
                   </td>
                   <td className="items is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {order.line_items.length} item{order.line_items.length > 1 ? "s" : ""}
+                      {((items: number) => `${items} item${items === 1 ? '' : 's'}`)(
+                        order.line_items.reduce((acc, item) => acc + (item.quantity as number) || 1, 0)
+                      )}
                     </p>
                     <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
