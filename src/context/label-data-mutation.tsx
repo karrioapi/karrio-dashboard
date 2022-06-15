@@ -161,7 +161,10 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     loader.setLoading(false);
   };
   const buyLabel = async (rate: ShipmentType['rates'][0]) => {
-    const selection = isDraft(shipment.id) ? { service: rate.service } : { selecte_rate_id: rate.id };
+    const selection = isDraft(shipment.id) ? {
+      service: rate.service,
+      carrier_ids: [rate.carrier_id],
+    } : { selecte_rate_id: rate.id };
     try {
       loader.setLoading(true);
       await mutation.buyLabel({
