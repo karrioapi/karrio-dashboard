@@ -13,6 +13,7 @@ import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Loading } from '@/components/loader';
 import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '../commodity-list-editor';
 import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
+import moment from 'moment';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
@@ -54,7 +55,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         return { ...(value as object) };
       case 'commercial_invoice':
         return value === true ?
-          { ...state, [name]: value } :
+          { ...state, [name]: value, invoice_date: moment().format('YYYY-MM-DD') } :
           { ...state, [name]: value, invoice: null, invoice_date: null };
       default:
         return { ...state, [name]: value };

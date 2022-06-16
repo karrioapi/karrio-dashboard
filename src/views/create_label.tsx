@@ -14,7 +14,7 @@ import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import RateDescription from '@/components/descriptions/rate-description';
-import { formatRef, formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import LineItemSelector from '@/components/line-item-selector';
 import InputField from '@/components/generic/input-field';
 import ButtonField from '@/components/generic/button-field';
@@ -437,7 +437,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <CheckBoxField name="addInsurance"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.insurance)}
-                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add insurance</span>
                 </CheckBoxField>
@@ -472,7 +472,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
-                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : null } })}
                 >
                   <span>Collect on delivery</span>
                 </CheckBoxField>
@@ -505,7 +505,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.declared_value)}
-                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add package value</span>
                 </CheckBoxField>
@@ -605,7 +605,7 @@ export default function CreateLabelPage(pageProps: any) {
 
             </div>
 
-            {/* Customs section */}
+            {/* Customs declaration section */}
             {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
@@ -623,7 +623,7 @@ export default function CreateLabelPage(pageProps: any) {
                         paid_by: shipment.payment?.paid_by,
                         account_number: shipment.payment?.account_number
                       },
-                      commodities: shipment.parcels.map(({ items }) => items || []).flat()
+                      commodities: getShipmentCommodities(shipment)
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={

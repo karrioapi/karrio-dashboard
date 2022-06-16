@@ -444,7 +444,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <CheckBoxField name="addInsurance"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.insurance)}
-                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add insurance</span>
                 </CheckBoxField>
@@ -479,7 +479,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
-                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : null } })}
                 >
                   <span>Collect on delivery</span>
                 </CheckBoxField>
@@ -512,7 +512,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <CheckBoxField name="addDeclaredValue"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.declared_value)}
-                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add package value</span>
                 </CheckBoxField>
