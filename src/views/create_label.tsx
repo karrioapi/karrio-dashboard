@@ -556,7 +556,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Shipment Paid By</label>
 
                 <div className="control">
-                      
+
                   <label className="radio">
                     <input
                       className="mr-1"
@@ -616,7 +616,13 @@ export default function CreateLabelPage(pageProps: any) {
                     shipment={shipment}
                     customs={shipment?.customs || {
                       ...DEFAULT_CUSTOMS_CONTENT,
-                      duty: { ...DEFAULT_CUSTOMS_CONTENT.duty, currency: shipment.options?.currency },
+                      incoterm: shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
+                      duty: {
+                        ...DEFAULT_CUSTOMS_CONTENT.duty,
+                        currency: shipment.options?.currency,
+                        paid_by: shipment.payment?.paid_by,
+                        account_number: shipment.payment?.account_number
+                      },
                       commodities: shipment.parcels.map(({ items }) => items || []).flat()
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}

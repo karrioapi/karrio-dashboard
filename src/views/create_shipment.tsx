@@ -1,4 +1,4 @@
-import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -14,7 +14,7 @@ import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import RateDescription from '@/components/descriptions/rate-description';
-import { formatRef, formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
 import LineItemSelector from '@/components/line-item-selector';
 import InputField from '@/components/generic/input-field';
 import ButtonField from '@/components/generic/button-field';
@@ -34,6 +34,7 @@ import { bundleContexts } from '@/context/utils';
 import CommodityDescription from '@/components/descriptions/commodity-description';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
+import moment from 'moment';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -79,10 +80,14 @@ export default function CreateShipmentPage(pageProps: any) {
         shipment.recipient.country_code !== shipment.shipper.country_code
       );
     };
+    const getOptions = (): any => {
+      return orders.orders
+        .reduce((acc, { options }) => ({ ...acc, ...options }), {});
+    };
     const getItems = () => {
       return orders.orders
         .map(({ line_items }) => line_items).flat();
-    }
+    };
     const getParent = (id: string | null) => {
       return getItems()
         .find((item) => item.id === id);
@@ -103,21 +108,44 @@ export default function CreateShipmentPage(pageProps: any) {
       return parent_quantity - packed_quantity;
     };
     const setInitialData = () => {
+      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
       const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
-      const items = getItems().map(
+      // Collect orders merged options
+      const options = getOptions();
+      // Collect unfulfilled line items
+      const line_items = getItems().map(
         ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
       ).filter(({ quantity }) => quantity || 0 > 0);
-      const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
-      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
+      const parcel = default_parcel || DEFAULT_PARCEL_CONTENT;
+      const parcel_items = options.single_item_per_parcel ? toSingleItem(line_items as any) : [line_items];
+      const parcels = (parcel_items as typeof line_items[]).map(items => {
+        const weight = items.reduce((acc, { weight, quantity }) => (weight || 0) * (quantity || 1) + acc, 0.0);
+        const weight_unit = items[0].weight_unit || parcel.weight_unit;
+        return { ...parcel, items, weight, weight_unit };
+      });
+      const declared_value = line_items.reduce(
+        (acc, { value_amount, quantity }) => acc + (value_amount || 0) * (quantity || 1), 0
+      );
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
         ...(recipient ? { recipient: (recipient as typeof shipment['recipient']) } : {}),
-        ...(parcel ? { parcels: ([parcel] as typeof shipment['parcels']) } : {}),
+        options: {
+          ...shipment.options,
+          ...(options.currency ? { currency: options.currency } : {}),
+          declared_value,
+        },
+        payment: {
+          paid_by: options.paid_by as any || 'sender',
+          ...(options.currency ? { currency: options.currency } : {}),
+          ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
+        } as any,
+        parcels: parcels as any[],
         reference: `Order #${order_ids}`,
         label_type: LabelTypeEnum.PDF,
         metadata: { order_ids },
+        carrier_ids: options.carrier_ids || [],
       });
 
       setReady(true);
@@ -481,7 +509,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
 
                 {/* Declared value */}
-                <CheckBoxField name="addCOD"
+                <CheckBoxField name="addDeclaredValue"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.declared_value)}
                   onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
@@ -570,11 +598,10 @@ export default function CreateShipmentPage(pageProps: any) {
                 </div>
 
                 {(shipment.payment?.paid_by && shipment.payment?.paid_by !== PaidByEnum.sender) &&
-                  <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+                  <div className="columns m-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
                     <InputField
                       label="account number"
                       className="is-small"
-                      fieldClass="column"
                       defaultValue={shipment?.payment?.account_number as string}
                       onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
                     />
@@ -595,8 +622,18 @@ export default function CreateShipmentPage(pageProps: any) {
                     shipment={shipment}
                     customs={shipment?.customs || {
                       ...DEFAULT_CUSTOMS_CONTENT,
-                      commodities: getItems(),
-                      duty: { ...DEFAULT_CUSTOMS_CONTENT.duty, currency: shipment.options?.currency },
+                      commercial_invoice: true,
+                      invoice: orders.orders[0].order_id,
+                      invoice_date: getOptions().invoice_date || moment().format('YYYY-MM-DD'),
+                      incoterm: shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
+                      commodities: getShipmentCommodities(shipment),
+                      duty: {
+                        ...DEFAULT_CUSTOMS_CONTENT.duty,
+                        currency: shipment.options?.currency,
+                        paid_by: shipment.payment?.paid_by,
+                        account_number: shipment.payment?.account_number,
+                        declared_value: shipment.options?.declared_value,
+                      },
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
@@ -664,7 +701,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
                   {loading && <Spinner className="my-1 p-1 has-text-centered" />}
 
-                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default is-size-7">
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 
