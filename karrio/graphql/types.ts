@@ -2422,6 +2422,7 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
   carrier_name: string;
   display_name: string;         // Carrier display name
   custom_carrier_name: string;  // Unique carrier slug, lowercase alphanumeric characters and underscores only
+  account_number: string;
   test: boolean;                // Toggle carrier connection mode
   active: boolean;              // Disable/Hide carrier from clients
   account_country_code: string;

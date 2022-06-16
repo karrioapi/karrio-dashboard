@@ -1541,6 +1541,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       carrier_name
       display_name
       custom_carrier_name
+      account_number
       test
       active
       account_country_code

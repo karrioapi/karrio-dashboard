@@ -205,6 +205,8 @@ export const HTTP_METHODS = [
   "DELETE",
 ];
 
+export enum NoneEnum { none = "none" };
+
 export type SessionType = Session & { accessToken: string, org_id?: string };
 export type ContextDataType = {
   data: {
