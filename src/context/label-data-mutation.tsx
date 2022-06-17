@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
+import { Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
 import { PartialShipmentUpdateInput } from 'karrio/graphql';
 import { useLabelData } from '@/context/label-data-provider';
@@ -91,9 +91,21 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
     if (isDraft(shipment.id)) {
+      const indexes = new Set(shipment.parcels[parcel_index].items.map(item => item.parent_id));
+      const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
+        (acc, item) => ({ ...acc, [item.parent_id || item.id]: item }), {}
+      )
+
       updateParcel(parcel_index)({
         ...shipment.parcels[parcel_index],
-        items: [...(shipment.parcels[parcel_index].items || []), ...items]
+        items: [
+          ...(shipment.parcels[parcel_index].items || []).map(item => (
+            (item.parent_id && Object.keys(item_collection).includes(item.parent_id))
+              ? { ...item, quantity: (item.quantity || 0) + item_collection[item.parent_id].quantity }
+              : item
+          )),
+          ...items.filter(item => !indexes.has(item.parent_id))
+        ]
       });
     } else {
       await updateParcel(parcel_index, parcel_id)({ items } as ParcelType);
@@ -161,7 +173,10 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     loader.setLoading(false);
   };
   const buyLabel = async (rate: ShipmentType['rates'][0]) => {
-    const selection = isDraft(shipment.id) ? { service: rate.service } : { selecte_rate_id: rate.id };
+    const selection = isDraft(shipment.id) ? {
+      service: rate.service,
+      carrier_ids: [rate.carrier_id],
+    } : { selecte_rate_id: rate.id };
     try {
       loader.setLoading(true);
       await mutation.buyLabel({

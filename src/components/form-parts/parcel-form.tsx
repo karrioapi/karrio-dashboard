@@ -29,6 +29,7 @@ interface ParcelFormComponent {
 
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
+    case 'template':
     case 'parcel_type':
     case 'package_preset':
       const { width, height, length, dimension_unit, packaging_type, package_preset } = value as ParcelType;
@@ -41,8 +42,6 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
         packaging_type: packaging_type || null,
         package_preset: package_preset || null
       };
-    case 'template':
-      return { ...(value as ParcelType) };
     default:
       return { ...state, [name]: value }
   }
@@ -166,6 +165,18 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
             }
           </SelectField>
 
+          <span className="is-size-7 mt-4">L:</span>
+          <InputField
+            type="number" step="any" min="0"
+            name="length"
+            onChange={validityCheck(handleChange)}
+            value={parcel.length}
+            className="is-small"
+            fieldClass="column mb-0 px-1 py-2"
+            required={isDimensionRequired(parcel)}
+            onInvalid={validityCheck(validationMessage('Please enter a valid length'))}
+          />
+
           <span className="is-size-7 mt-4">W:</span>
           <InputField
             type="number" step="any" min="0"
@@ -188,18 +199,6 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
             fieldClass="column mb-0 px-1 py-2"
             required={isDimensionRequired(parcel)}
             onInvalid={validityCheck(validationMessage('Please enter a valid height'))}
-          />
-
-          <span className="is-size-7 mt-4">L:</span>
-          <InputField
-            type="number" step="any" min="0"
-            name="length"
-            onChange={validityCheck(handleChange)}
-            value={parcel.length}
-            className="is-small"
-            fieldClass="column mb-0 px-1 py-2"
-            required={isDimensionRequired(parcel)}
-            onInvalid={validityCheck(validationMessage('Please enter a valid length'))}
           />
 
           <SelectField name="dimension_unit" onChange={handleChange} value={parcel.dimension_unit} className="is-small is-fullwidth" fieldClass="column mb-0 px-1 py-2" required={isDimensionRequired(parcel)}>

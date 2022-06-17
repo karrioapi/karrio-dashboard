@@ -1,4 +1,4 @@
-import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -14,7 +14,7 @@ import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import RateDescription from '@/components/descriptions/rate-description';
-import { formatRef, formatWeight, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
 import LineItemSelector from '@/components/line-item-selector';
 import InputField from '@/components/generic/input-field';
 import ButtonField from '@/components/generic/button-field';
@@ -34,6 +34,7 @@ import { bundleContexts } from '@/context/utils';
 import CommodityDescription from '@/components/descriptions/commodity-description';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
+import moment from 'moment';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -79,10 +80,14 @@ export default function CreateShipmentPage(pageProps: any) {
         shipment.recipient.country_code !== shipment.shipper.country_code
       );
     };
+    const getOptions = (): any => {
+      return orders.orders
+        .reduce((acc, { options }) => ({ ...acc, ...options }), {});
+    };
     const getItems = () => {
       return orders.orders
         .map(({ line_items }) => line_items).flat();
-    }
+    };
     const getParent = (id: string | null) => {
       return getItems()
         .find((item) => item.id === id);
@@ -103,21 +108,44 @@ export default function CreateShipmentPage(pageProps: any) {
       return parent_quantity - packed_quantity;
     };
     const setInitialData = () => {
+      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
       const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
-      const items = getItems().map(
+      // Collect orders merged options
+      const options = getOptions();
+      // Collect unfulfilled line items
+      const line_items = getItems().map(
         ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
       ).filter(({ quantity }) => quantity || 0 > 0);
-      const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT), items };
-      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
+      const parcel = default_parcel || DEFAULT_PARCEL_CONTENT;
+      const parcel_items = options.single_item_per_parcel ? toSingleItem(line_items as any) : [line_items];
+      const parcels = (parcel_items as typeof line_items[]).map(items => {
+        const weight = items.reduce((acc, { weight, quantity }) => (weight || 0) * (quantity || 1) + acc, 0.0);
+        const weight_unit = items[0].weight_unit || parcel.weight_unit;
+        return { ...parcel, items, weight, weight_unit };
+      });
+      const declared_value = line_items.reduce(
+        (acc, { value_amount, quantity }) => acc + (value_amount || 0) * (quantity || 1), 0
+      );
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
         ...(recipient ? { recipient: (recipient as typeof shipment['recipient']) } : {}),
-        ...(parcel ? { parcels: ([parcel] as typeof shipment['parcels']) } : {}),
-        reference: `Order #${order_ids}`,
+        options: {
+          ...shipment.options,
+          ...(options.currency ? { currency: options.currency } : {}),
+          declared_value,
+        },
+        payment: {
+          paid_by: options.paid_by as any || 'sender',
+          ...(options.currency ? { currency: options.currency } : {}),
+          ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
+        } as any,
+        parcels: parcels as any[],
+        // reference: `Order #${order_ids}`,
         label_type: LabelTypeEnum.PDF,
         metadata: { order_ids },
+        carrier_ids: options.carrier_ids || [],
       });
 
       setReady(true);
@@ -165,9 +193,13 @@ export default function CreateShipmentPage(pageProps: any) {
         <ModeIndicator />
 
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
-          <span className="title is-4">
-            Create shipment
-          </span>
+          <div>
+            <span className="title is-4 my-2">Create shipment</span>
+            <br />
+            {ready && <span className="has-text-weight-semibold is-size-7">
+              {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
+            </span>}
+          </div>
         </header>
 
         {(shipment.messages || []).length > 0 && <div className="notification is-danger is-light is-size-7 my-2 p-2">
@@ -179,16 +211,8 @@ export default function CreateShipmentPage(pageProps: any) {
         {(ready && Object.keys(shipment.recipient).length > 0) && <div className="columns pb-6 m-0">
           <div className="column px-0" style={{ minHeight: '850px' }}>
 
-            {/* Header section */}
-            <div className="card px-0 py-3">
-
-              <div className="p-3">
-                <span className="has-text-weight-bold is-size-6">
-                  {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
-                </span>
-              </div>
-
-              <hr className='my-1' style={{ height: '1px' }} />
+            {/* Address section */}
+            <div className="card p-0">
 
               <div className="p-3">
 
@@ -209,6 +233,35 @@ export default function CreateShipmentPage(pageProps: any) {
                 </header>
 
                 <AddressDescription address={shipment.recipient} />
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
+
+                <header className="is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
+                  <div className="is-vcentered">
+                    <AddressModalEditor
+                      shipment={shipment}
+                      address={shipment.shipper}
+                      onSubmit={(address) => onChange({ shipper: address })}
+                      trigger={
+                        <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                          Edit origin address
+                        </button>
+                      }
+                    />
+                  </div>
+                </header>
+
+                <AddressDescription address={shipment.shipper} />
+
+                {Object.values(shipment.shipper || {}).length === 0 &&
+                  <div className="notification is-warning is-light my-2 py-2 px-4">
+                    Please specify the origin address.
+                  </div>}
 
               </div>
 
@@ -341,7 +394,6 @@ export default function CreateShipmentPage(pageProps: any) {
             </div>
 
 
-
             {/* Shipping options section */}
             <div className="card px-0 py-3 mt-5">
 
@@ -392,7 +444,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <CheckBoxField name="addInsurance"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.insurance)}
-                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add insurance</span>
                 </CheckBoxField>
@@ -427,7 +479,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
-                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : null } })}
                 >
                   <span>Collect on delivery</span>
                 </CheckBoxField>
@@ -457,10 +509,10 @@ export default function CreateShipmentPage(pageProps: any) {
 
 
                 {/* Declared value */}
-                <CheckBoxField name="addCOD"
+                <CheckBoxField name="addDeclaredValue"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={!isNone(shipment.options?.declared_value)}
-                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : undefined } })}
+                  onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add package value</span>
                 </CheckBoxField>
@@ -493,10 +545,25 @@ export default function CreateShipmentPage(pageProps: any) {
               <hr className='my-1' style={{ height: '1px' }} />
 
               <div className="p-3">
+
+                <InputField label="Reference"
+                  name="reference"
+                  defaultValue={shipment.reference as string}
+                  onChange={e => label.updateShipment({ reference: e.target.value })}
+                  placeholder="shipment reference"
+                  className="is-small"
+                  autoComplete="off"
+                />
+
+              </div>
+
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              <div className="p-3">
                 <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Shipment Paid By</label>
 
                 <div className="control">
-                      
+
                   <label className="radio">
                     <input
                       className="mr-1"
@@ -531,11 +598,10 @@ export default function CreateShipmentPage(pageProps: any) {
                 </div>
 
                 {(shipment.payment?.paid_by && shipment.payment?.paid_by !== PaidByEnum.sender) &&
-                  <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+                  <div className="columns m-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
                     <InputField
                       label="account number"
                       className="is-small"
-                      fieldClass="column"
                       defaultValue={shipment?.payment?.account_number as string}
                       onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
                     />
@@ -545,7 +611,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
             </div>
 
-            {/* Customs section */}
+            {/* Customs declaration section */}
             {isInternational(shipment) && <div className="card px-0 py-3 mt-5">
 
               <header className="px-3 is-flex is-justify-content-space-between">
@@ -556,8 +622,18 @@ export default function CreateShipmentPage(pageProps: any) {
                     shipment={shipment}
                     customs={shipment?.customs || {
                       ...DEFAULT_CUSTOMS_CONTENT,
-                      commodities: getItems(),
-                      duty: { ...DEFAULT_CUSTOMS_CONTENT.duty, currency: shipment.options?.currency },
+                      commercial_invoice: true,
+                      invoice: orders.orders[0].order_id,
+                      invoice_date: getOptions().invoice_date || moment().format('YYYY-MM-DD'),
+                      incoterm: shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
+                      commodities: getShipmentCommodities(shipment),
+                      duty: {
+                        ...DEFAULT_CUSTOMS_CONTENT.duty,
+                        currency: shipment.options?.currency,
+                        paid_by: shipment.payment?.paid_by,
+                        account_number: shipment.payment?.account_number,
+                        declared_value: shipment.options?.declared_value,
+                      },
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
@@ -598,53 +674,6 @@ export default function CreateShipmentPage(pageProps: any) {
 
             </div>}
 
-            {/* Live rates section */}
-            <div className="card px-0 py-3 mt-5">
-
-              <header className="px-3 is-flex is-justify-content-space-between">
-                <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
-                <div className="is-vcentered">
-                  <button className="button is-small is-info is-text is-inverted p-1"
-                    onClick={() => mutation.fetchRates()}
-                    disabled={requireInfoForRating(shipment)}>
-                    Refresh rates
-                  </button>
-                </div>
-              </header>
-
-              <hr className='my-1' style={{ height: '1px' }} />
-
-              <div className="p-3">
-
-                {loading && <Spinner className="my-1 p-1 has-text-centered" />}
-
-                {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default">
-                  Provide all shipping details to retrieve shipping rates.
-                </div>}
-
-                {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
-                  {(shipment.rates || []).map(rate => (
-                    <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                      className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
-                      onClick={() => setSelectedRate(rate)}>
-
-                      <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
-                        {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
-                      </span>
-
-                      <RateDescription rate={rate} />
-
-                      {rate.test_mode && <div className="has-text-warning p-1">
-                        <i className="fas fa-exclamation-circle"></i>
-                      </div>}
-                    </a>
-                  ))}
-                </div>}
-
-              </div>
-
-            </div>
-
           </div>
 
           <div className="p-2"></div>
@@ -655,59 +684,51 @@ export default function CreateShipmentPage(pageProps: any) {
               {/* Shipping section */}
               <div className="card px-0">
 
-                <header className="p-3">
-                  <span className="has-text-weight-bold is-size-6">Shipping</span>
+                <header className="px-3 py-2 is-flex is-justify-content-space-between">
+                  <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIPPING SERVICES</span>
+                  <div className="is-vcentered">
+                    <button className="button is-small is-info is-text is-inverted p-1"
+                      onClick={() => mutation.fetchRates()}
+                      disabled={requireInfoForRating(shipment)}>
+                      Refresh rates
+                    </button>
+                  </div>
                 </header>
 
+                <hr className='my-1' style={{ height: '1px' }} />
+
                 <div className="p-3">
 
-                  <InputField label="Reference"
-                    name="reference"
-                    defaultValue={shipment.reference as string}
-                    onChange={e => label.updateShipment({ reference: e.target.value })}
-                    placeholder="shipment reference"
-                    className="is-small"
-                    autoComplete="off"
-                  />
+                  {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default is-size-7">
+                    Provide all shipping details to retrieve shipping rates.
+                  </div>}
+
+                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                    {(shipment.rates || []).map(rate => (
+                      <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                        className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        onClick={() => setSelectedRate(rate)}>
+
+                        <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
+                          {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
+                        </span>
+
+                        <RateDescription rate={rate} />
+
+                        {rate.test_mode && <div className="has-text-warning p-1">
+                          <i className="fas fa-exclamation-circle"></i>
+                        </div>}
+                      </a>
+                    ))}
+                  </div>}
 
                 </div>
 
                 <hr className='my-1' style={{ height: '1px' }} />
 
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">SHIP FROM</span>
-                    <div className="is-vcentered">
-                      <AddressModalEditor
-                        shipment={shipment}
-                        address={shipment.shipper}
-                        onSubmit={(address) => onChange({ shipper: address })}
-                        trigger={
-                          <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
-                            Edit origin address
-                          </button>
-                        }
-                      />
-                    </div>
-                  </header>
-
-                  <AddressDescription address={shipment.shipper} />
-
-                  {Object.values(shipment.shipper || {}).length === 0 &&
-                    <div className="notification is-warning is-light my-2 py-2 px-4">
-                      Please specify the origin address.
-                    </div>}
-
-                </div>
-
-                <hr className='my-1' style={{ height: '1px' }} />
-
-                <div className="p-3">
-
-                  <header className="is-flex is-justify-content-space-between">
-                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">LABEL TYPE</span>
-                  </header>
+                <div className="p-3 has-text-centered">
 
                   <div className="control">
                     <label className="radio">
@@ -733,8 +754,6 @@ export default function CreateShipmentPage(pageProps: any) {
                   </div>
 
                 </div>
-
-                <hr className='my-1' style={{ height: '1px' }} />
 
                 <ButtonField
                   onClick={() => mutation.buyLabel(selected_rate as any)}

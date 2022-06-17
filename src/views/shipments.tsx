@@ -108,9 +108,10 @@ export default function ShipmentsPage(pageProps: any) {
                 <tr key={shipment.id} className="items is-clickable">
                   <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
                     {!isNone(shipment.carrier_name) && <CarrierBadge
-                      className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
+                      className="has-background-primary has-text-weight-bold has-text-white-bis"
+                      style={{ fontSize: '0.6rem' }}
                       carrier={shipmentCarrier(shipment)}
-                      custom_name={(shipment as any).carrier_id as string}
+                      custom_name={(shipment as any).carrier_name as string}
                       short
                     />}
                     {isNone(shipment.carrier_name) && <AppBadge />}

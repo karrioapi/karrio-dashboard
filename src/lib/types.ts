@@ -205,6 +205,8 @@ export const HTTP_METHODS = [
   "DELETE",
 ];
 
+export enum NoneEnum { none = "none" };
+
 export type SessionType = Session & { accessToken: string, org_id?: string };
 export type ContextDataType = {
   data: {
@@ -353,9 +355,9 @@ export const CARRIER_IMAGES: Collection = {
   'veho': 'generic',
   'yanwen': 'yanwen',
   'boxknight': 'generic',
-  'eshipper': 'generic',
-  'easypost': 'generic',
-  'freightcom': 'generic',
+  'eshipper': 'eshipper',
+  'easypost': 'easypost',
+  'freightcom': 'freightcom',
   'generic': 'generic',
   'sf_express': 'sf_express',
   'tnt': 'tnt',

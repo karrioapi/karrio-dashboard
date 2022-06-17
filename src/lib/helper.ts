@@ -1,5 +1,5 @@
 import { BASE_PATH } from "@/client/context";
-import { AddressType, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -106,7 +106,7 @@ export function formatDimension(parcel?: Partial<ParcelType> | null): string {
   if (parcel !== undefined && parcel !== null) {
 
     const { dimension_unit, height, length, width } = parcel;
-    let formatted = formatValues(' x ', width, height, length);
+    let formatted = formatValues(' x ', length, width, height);
 
     return `${formatted} ${dimension_unit}`;
   }
@@ -359,3 +359,28 @@ export function isListEqual<T>(list1: T[], list2: T[]) {
 }
 
 export const isEqual = require('lodash.isequal');
+
+
+export function toSingleItem(collection: CommodityType[]) {
+  return collection
+    .reduce((acc, item) => {
+      const clones = Array(item.quantity || 1)
+        .fill(item)
+        .map(clone => ([{ ...clone, quantity: 1 }]));
+
+      return acc.concat(clones);
+    }, [] as typeof collection[]);
+}
+
+export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] {
+  return Object.values(
+    shipment?.parcels
+      .map(parcel => parcel.items)
+      .flat()
+      .reduce((acc, item) => {
+        const index: string = item.parent_id || item.id;
+        acc[index] = { ...item, quantity: (acc[index]?.quantity || 0) + (item.quantity || 0) };
+        return acc;
+      }, {} as Collection<CommodityType>)
+  );
+}

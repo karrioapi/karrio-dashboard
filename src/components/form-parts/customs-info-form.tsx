@@ -13,6 +13,7 @@ import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Loading } from '@/components/loader';
 import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '../commodity-list-editor';
 import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
+import moment from 'moment';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
@@ -54,7 +55,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         return { ...(value as object) };
       case 'commercial_invoice':
         return value === true ?
-          { ...state, [name]: value } :
+          { ...state, [name]: value, invoice_date: moment().format('YYYY-MM-DD') } :
           { ...state, [name]: value, invoice: null, invoice_date: null };
       default:
         return { ...state, [name]: value };
@@ -196,7 +197,9 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         {/* Duties */}
         <div className="columns is-multiline mb-0 pt-4">
 
-          <span className="is-size-7 has-text-weight-bold px-2">Duties</span>
+          <div className="column is-12 is-size-7 has-text-weight-bold px-2 my-1">
+            Duties
+          </div>
 
           <div className="columns column is-multiline mb-0 ml-6 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd", display: `${!isNone(customs?.duty) ? 'block' : 'none'}` }}>
 
@@ -316,7 +319,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
           disabled={computeDisableState(customs, commodities)}>
-          <span>{isTemplate || !isNone(shipment?.id) ? 'Save' : 'Next'}</span>
+          <span>Save</span>
         </ButtonField>
 
       </form>}

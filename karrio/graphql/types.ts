@@ -813,6 +813,7 @@ export interface get_shipment_shipment {
   payment: get_shipment_shipment_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_shipment_shipment_selected_rate | null;
+  carrier_ids: string[];
   rates: get_shipment_shipment_rates[] | null;
   options: any | null;
   metadata: any;
@@ -1022,6 +1023,7 @@ export interface get_shipments_shipments_edges_node {
   payment: get_shipments_shipments_edges_node_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_shipments_shipments_edges_node_selected_rate | null;
+  carrier_ids: string[];
   rates: get_shipments_shipments_edges_node_rates[] | null;
   options: any | null;
   metadata: any;
@@ -1254,6 +1256,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   payment: partial_shipment_update_partial_shipment_update_shipment_payment | null;
   selected_rate_id: string | null;
   selected_rate: partial_shipment_update_partial_shipment_update_shipment_selected_rate | null;
+  carrier_ids: string[];
   rates: partial_shipment_update_partial_shipment_update_shipment_rates[] | null;
   options: any | null;
   metadata: any;
@@ -2419,6 +2422,7 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
   carrier_name: string;
   display_name: string;         // Carrier display name
   custom_carrier_name: string;  // Unique carrier slug, lowercase alphanumeric characters and underscores only
+  account_number: string;
   test: boolean;                // Toggle carrier connection mode
   active: boolean;              // Disable/Hide carrier from clients
   account_country_code: string;
@@ -2891,6 +2895,23 @@ export interface get_order_order_shipping_to {
   validate_location: boolean | null;
 }
 
+export interface get_order_order_shipping_from {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_order_order_line_items {
   id: string;
   weight: number | null;
@@ -3090,6 +3111,7 @@ export interface get_order_order_shipments {
   payment: get_order_order_shipments_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_order_order_shipments_selected_rate | null;
+  carrier_ids: string[];
   rates: get_order_order_shipments_rates[] | null;
   metadata: any;
   meta: any | null;
@@ -3102,6 +3124,7 @@ export interface get_order_order {
   source: string | null;
   status: OrderStatus;
   shipping_to: get_order_order_shipping_to;
+  shipping_from: get_order_order_shipping_from | null;
   line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
@@ -3136,6 +3159,23 @@ export interface get_orders_orders_pageInfo {
 }
 
 export interface get_orders_orders_edges_node_shipping_to {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_orders_orders_edges_node_shipping_from {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -3351,6 +3391,7 @@ export interface get_orders_orders_edges_node_shipments {
   payment: get_orders_orders_edges_node_shipments_payment | null;
   selected_rate_id: string | null;
   selected_rate: get_orders_orders_edges_node_shipments_selected_rate | null;
+  carrier_ids: string[];
   rates: get_orders_orders_edges_node_shipments_rates[] | null;
   metadata: any;
   meta: any | null;
@@ -3363,6 +3404,7 @@ export interface get_orders_orders_edges_node {
   source: string | null;
   status: OrderStatus;
   shipping_to: get_orders_orders_edges_node_shipping_to;
+  shipping_from: get_orders_orders_edges_node_shipping_from | null;
   line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;

@@ -463,6 +463,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       test_mode
       meta
     }
+    carrier_ids
     rates {
       id
       carrier_name
@@ -633,6 +634,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           test_mode
           meta
         }
+        carrier_ids
         rates {
           id
           carrier_name
@@ -807,6 +809,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         test_mode
         meta
       }
+      carrier_ids
       rates {
         id
         carrier_name
@@ -1538,6 +1541,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       carrier_name
       display_name
       custom_carrier_name
+      account_number
       test
       active
       account_country_code
@@ -1835,6 +1839,22 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       address_line2
       validate_location
     }
+    shipping_from {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      validate_location
+    }
     line_items {
       id
       weight
@@ -1988,6 +2008,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         test_mode
         meta
       }
+      carrier_ids
       rates {
         id
         carrier_name
@@ -2033,6 +2054,22 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
         source
         status
         shipping_to {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          validate_location
+        }
+        shipping_from {
           id
           postal_code
           city
@@ -2201,6 +2238,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             test_mode
             meta
           }
+          carrier_ids
           rates {
             id
             carrier_name
