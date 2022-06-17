@@ -142,7 +142,7 @@ export default function CreateShipmentPage(pageProps: any) {
           ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
         } as any,
         parcels: parcels as any[],
-        reference: `Order #${order_ids}`,
+        // reference: `Order #${order_ids}`,
         label_type: LabelTypeEnum.PDF,
         metadata: { order_ids },
         carrier_ids: options.carrier_ids || [],
