@@ -29,6 +29,7 @@ interface ParcelFormComponent {
 
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
+    case 'template':
     case 'parcel_type':
     case 'package_preset':
       const { width, height, length, dimension_unit, packaging_type, package_preset } = value as ParcelType;
@@ -41,8 +42,6 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
         packaging_type: packaging_type || null,
         package_preset: package_preset || null
       };
-    case 'template':
-      return { ...(value as ParcelType) };
     default:
       return { ...state, [name]: value }
   }
