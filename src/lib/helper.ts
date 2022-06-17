@@ -375,7 +375,7 @@ export function toSingleItem(collection: CommodityType[]) {
 export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] {
   return Object.values(
     shipment?.parcels
-      .map(parcel => parcel.items)
+      .map(parcel => parcel.items || [])
       .flat()
       .reduce((acc, item) => {
         const index: string = item.parent_id || item.id;
