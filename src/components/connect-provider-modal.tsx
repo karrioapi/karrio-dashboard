@@ -140,7 +140,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
             </div>
             <div className="p-3 my-4"></div>
 
-            <SelectField value={payload.carrier_name} onChange={handleOnChange("carrier_name")} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
+            <SelectField value={carrier_name} onChange={e => setCarrierName(e.target.value)} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
               <option value='none'>Select Carrier</option>
 
               {carriers && Object.keys(carriers).map(carrier => (
@@ -149,7 +149,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
             </SelectField>
 
-            {(payload.carrier_name !== 'none' && has("carrier_id")) &&
+            {(carrier_name !== NoneEnum.none && has("carrier_id")) &&
               <>
                 <hr />
 
