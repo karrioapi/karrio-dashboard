@@ -1,4 +1,4 @@
-import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -630,8 +630,8 @@ export default function CreateShipmentPage(pageProps: any) {
                       duty: {
                         ...DEFAULT_CUSTOMS_CONTENT.duty,
                         currency: shipment.options?.currency,
-                        paid_by: shipment.payment?.paid_by,
-                        account_number: shipment.payment?.account_number,
+                        paid_by: getOptions().duty_paid_by || shipment.payment?.paid_by,
+                        account_number: getOptions().duty_account_number || shipment.payment?.account_number,
                         declared_value: shipment.options?.declared_value,
                       },
                     }}
