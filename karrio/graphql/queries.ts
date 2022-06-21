@@ -1275,6 +1275,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       meter_number
       user_key
       account_country_code
+      metadata
     }
     ... on FreightcomSettings {
       id
@@ -1295,6 +1296,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       password
       account_number
       user_token
+      metadata
     }
     ... on RoyalMailSettings {
       id
@@ -1345,6 +1347,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       access_license_number
       account_number
       account_country_code
+      metadata
     }
     ... on USPSSettings {
       id
@@ -1513,6 +1516,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       test
       active
       api_key
+      metadata
     }
     ... on FedexSettings {
       id
@@ -1525,6 +1529,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       meter_number
       user_key
       account_country_code
+      metadata
     }
     ... on FreightcomSettings {
       id
@@ -1584,6 +1589,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       account_number
       user_token
+      metadata
     }
     ... on RoyalMailSettings {
       id
@@ -1634,6 +1640,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       access_license_number
       account_number
       account_country_code
+      metadata
     }
     ... on USPSSettings {
       id

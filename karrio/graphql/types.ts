@@ -2066,6 +2066,7 @@ export interface get_user_connections_user_connections_FedexSettings {
   meter_number: string;
   user_key: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_FreightcomSettings {
@@ -2090,6 +2091,7 @@ export interface get_user_connections_user_connections_PurolatorSettings {
   password: string;
   account_number: string;
   user_token: string | null;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_RoyalMailSettings {
@@ -2150,6 +2152,7 @@ export interface get_user_connections_user_connections_UPSSettings {
   access_license_number: string;
   account_number: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_USPSSettings {
@@ -2359,6 +2362,7 @@ export interface get_user_connections_with_generics_user_connections_EasyPostSet
   test: boolean;       // Toggle carrier connection mode
   active: boolean;     // Disable/Hide carrier from clients
   api_key: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_FedexSettings {
@@ -2373,6 +2377,7 @@ export interface get_user_connections_with_generics_user_connections_FedexSettin
   meter_number: string;
   user_key: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_FreightcomSettings {
@@ -2442,6 +2447,7 @@ export interface get_user_connections_with_generics_user_connections_PurolatorSe
   password: string;
   account_number: string;
   user_token: string | null;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_RoyalMailSettings {
@@ -2502,6 +2508,7 @@ export interface get_user_connections_with_generics_user_connections_UPSSettings
   access_license_number: string;
   account_number: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_USPSSettings {

@@ -82,12 +82,14 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
             name={name}
             onChange={e => updater.next({ address_line1: e.target.value || "" })}
             style={{ position: 'absolute', right: 0, zIndex: -1 }}
+            tabIndex={-1}
           />
           <input
             name={name}
             onChange={onChange}
             onClick={onClick}
             className={`input is-fullwidth ${className || ''}`}
+            style={{ height: '100%' }}
             {...(ADDRESS_AUTO_COMPLETE?.is_enabled ? { autoComplete: key } : {})}
             {...Props}
           />

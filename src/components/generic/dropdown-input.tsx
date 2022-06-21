@@ -86,12 +86,14 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
             required={required}
             aria-haspopup="true"
             readOnly
+            style={{ height: '100%' }}
             {...props}
           />
           <input
             style={{ zIndex: -1, position: "absolute", right: 0 }}
             name={name}
             onChange={onRefChange}
+            tabIndex={-1}
           />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>

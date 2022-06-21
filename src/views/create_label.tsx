@@ -319,7 +319,7 @@ export default function CreateLabelPage(pageProps: any) {
                           </div>
                           <div className="is-flex">
                             <div className="is-size-7 has-text-grey has-text-weight-semibold is-flex px-2">
-                              <span className='p-2'>{formatWeight(item)}</span>
+                              <span className="p-2 has-text-right" style={{ minWidth: '90px' }}>{formatWeight(item)}</span>
                               <div className="field has-addons">
                                 <p className="control is-expanded">
                                   <input
@@ -439,7 +439,7 @@ export default function CreateLabelPage(pageProps: any) {
                   defaultChecked={!isNone(shipment.options?.insurance)}
                   onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
-                  <span>Add insurance</span>
+                  <span>Add insurance coverage</span>
                 </CheckBoxField>
 
                 <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{

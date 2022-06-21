@@ -51,7 +51,7 @@ Karrio custom styling
   }
   .date {
     width: 15%;
-    min-width: 130px;
+    min-width: 170px;
   }
   .action {
     width: 2%;
@@ -217,16 +217,19 @@ Karrio custom styling
   }
   .items {
     width: 20%;
+    max-width: 250px;
   }
   .status {
     width: 10%;
   }
   .customer {
-    min-width: 30%;
+    width: 30%;
+    min-width: 170px;
+    max-width: 200px;
   }
   .date {
     width: 15%;
-    min-width: 130px;
+    min-width: 170px;
   }
 
   tbody > tr.items {
