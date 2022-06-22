@@ -26,6 +26,8 @@ export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($offset: In
           country_code
           email
           phone_number
+          federal_tax_id
+          state_tax_id
           validate_location
         }
       }
@@ -88,6 +90,8 @@ export const GET_DEFAULT_TEMPLATES = gql`query get_default_templates {
         country_code
         email
         phone_number
+        federal_tax_id
+        state_tax_id
         validate_location
       }
     }
@@ -357,6 +361,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       residential
       address_line1
       address_line2
+      federal_tax_id
+      state_tax_id
       validate_location
     }
     shipper {
@@ -373,6 +379,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       residential
       address_line1
       address_line2
+      federal_tax_id
+      state_tax_id
       validate_location
     }
     parcels {
@@ -529,6 +537,8 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           residential
           address_line1
           address_line2
+          federal_tax_id
+          state_tax_id
           validate_location
         }
         shipper {
@@ -545,6 +555,8 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           residential
           address_line1
           address_line2
+          federal_tax_id
+          state_tax_id
           validate_location
         }
         parcels {
@@ -692,6 +704,8 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         residential
         address_line1
         address_line2
+        federal_tax_id
+        state_tax_id
         validate_location
       }
       shipper {
@@ -708,6 +722,8 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         residential
         address_line1
         address_line2
+        federal_tax_id
+        state_tax_id
         validate_location
       }
       parcels {
@@ -1275,6 +1291,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       meter_number
       user_key
       account_country_code
+      metadata
     }
     ... on FreightcomSettings {
       id
@@ -1295,6 +1312,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       password
       account_number
       user_token
+      metadata
     }
     ... on RoyalMailSettings {
       id
@@ -1345,6 +1363,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       access_license_number
       account_number
       account_country_code
+      metadata
     }
     ... on USPSSettings {
       id
@@ -1513,6 +1532,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       test
       active
       api_key
+      metadata
     }
     ... on FedexSettings {
       id
@@ -1525,6 +1545,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       meter_number
       user_key
       account_country_code
+      metadata
     }
     ... on FreightcomSettings {
       id
@@ -1584,6 +1605,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       account_number
       user_token
+      metadata
     }
     ... on RoyalMailSettings {
       id
@@ -1634,6 +1656,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       access_license_number
       account_number
       account_country_code
+      metadata
     }
     ... on USPSSettings {
       id
@@ -1837,6 +1860,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       residential
       address_line1
       address_line2
+      federal_tax_id
+      state_tax_id
       validate_location
     }
     shipping_from {
@@ -1853,6 +1878,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       residential
       address_line1
       address_line2
+      federal_tax_id
+      state_tax_id
       validate_location
     }
     line_items {
@@ -1903,6 +1930,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         residential
         address_line1
         address_line2
+        federal_tax_id
+        state_tax_id
         validate_location
       }
       shipper {
@@ -1919,6 +1948,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         residential
         address_line1
         address_line2
+        federal_tax_id
+        state_tax_id
         validate_location
       }
       parcels {
@@ -2067,6 +2098,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           residential
           address_line1
           address_line2
+          federal_tax_id
+          state_tax_id
           validate_location
         }
         shipping_from {
@@ -2083,6 +2116,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           residential
           address_line1
           address_line2
+          federal_tax_id
+          state_tax_id
           validate_location
         }
         line_items {
@@ -2133,6 +2168,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             residential
             address_line1
             address_line2
+            federal_tax_id
+            state_tax_id
             validate_location
           }
           shipper {
@@ -2149,6 +2186,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             residential
             address_line1
             address_line2
+            federal_tax_id
+            state_tax_id
             validate_location
           }
           parcels {

@@ -48,6 +48,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
   const { loading, setLoading } = useContext(Loading);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [address, dispatch] = useReducer(reducer, value || DEFAULT_ADDRESS_CONTENT);
+  const [advancedExpanded, setAdvancedExpanded] = useState<boolean>(false);
 
   const computeDisableState = (state: AddressType): boolean => {
     const isUnchanged = (
@@ -191,12 +192,47 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
         />
       </div>
 
-      <div className="columns mb-0">
+      <div className="columns mb-0 py-2">
 
         <CheckBoxField name="residential" onChange={handleChange} defaultChecked={address.residential} fieldClass="column mb-0 is-12 px-2 py-2">
           <span>Residential address</span>
         </CheckBoxField>
 
+      </div>
+
+      {/* Advanced */}
+      <div className="columns is-multiline mb-0 pt-4">
+
+        <div className="column is-12 is-size-7 has-text-weight-bold has-text-info px-2 my-1 is-clickable"
+          onClick={() => setAdvancedExpanded(!advancedExpanded)}>
+          Advanced
+          <span className="icon is-small">
+            {advancedExpanded ? <i className="fas fa-chevron-down"></i> : <i className="fas fa-chevron-up"></i>}
+          </span>
+        </div>
+
+        <div className="columns column is-multiline mb-0 ml-6 my-1 px-2 py-0"
+          style={{ borderLeft: "solid 2px #ddd", display: `${advancedExpanded ? 'block' : 'none'}` }}>
+
+          <InputField
+            label="federal tax id"
+            name="federal_tax_id"
+            onChange={handleChange}
+            value={address.federal_tax_id}
+            className="is-small"
+            fieldClass="column is-7 mb-0 px-2 py-2"
+          />
+
+          <InputField
+            label="state tax id"
+            name="state_tax_id"
+            onChange={handleChange}
+            value={address.state_tax_id}
+            className="is-small"
+            fieldClass="column is-7 mb-0 px-2 py-2"
+          />
+
+        </div>
       </div>
 
       <div className="p-3 my-5"></div>

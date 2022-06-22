@@ -22,7 +22,7 @@ const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodi
         </p>
       </div>
 
-      <div className="is-flex-grow-1 p-0">
+      <div className="is-flex-grow-1 p-0 has-text-right" style={{ minWidth: '90px' }}>
         <span className="is-size-7 my-1 has-text-weight-semibold">
           {commodity.quantity}{' x '}{formatWeight(commodity)}
         </span>

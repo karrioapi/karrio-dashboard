@@ -1,4 +1,4 @@
-import { Collection, CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -137,7 +137,7 @@ export default function CreateShipmentPage(pageProps: any) {
           declared_value,
         },
         payment: {
-          paid_by: options.paid_by as any || 'sender',
+          paid_by: options.paid_by as any || PaidByEnum.sender,
           ...(options.currency ? { currency: options.currency } : {}),
           ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
         } as any,
@@ -338,7 +338,7 @@ export default function CreateShipmentPage(pageProps: any) {
                           </div>
                           <div className="is-flex">
                             <div className="is-size-7 has-text-grey has-text-weight-semibold is-flex px-2">
-                              <span className='p-2'>{formatWeight(item)}</span>
+                              <span className="p-2 has-text-right" style={{ minWidth: '90px' }}>{formatWeight(item)}</span>
                               <div className="field has-addons">
                                 <p className="control is-expanded">
                                   <input
@@ -446,7 +446,7 @@ export default function CreateShipmentPage(pageProps: any) {
                   defaultChecked={!isNone(shipment.options?.insurance)}
                   onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
-                  <span>Add insurance</span>
+                  <span>Add insurance coverage</span>
                 </CheckBoxField>
 
                 <div className="column is-multiline mb-0 ml-4 my-1 px-2 py-0" style={{
@@ -630,8 +630,8 @@ export default function CreateShipmentPage(pageProps: any) {
                       duty: {
                         ...DEFAULT_CUSTOMS_CONTENT.duty,
                         currency: shipment.options?.currency,
-                        paid_by: shipment.payment?.paid_by,
-                        account_number: shipment.payment?.account_number,
+                        paid_by: getOptions().duty_paid_by || shipment.payment?.paid_by,
+                        account_number: getOptions().duty_account_number || shipment.payment?.account_number,
                         declared_value: shipment.options?.declared_value,
                       },
                     }}

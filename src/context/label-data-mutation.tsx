@@ -179,7 +179,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } : { selecte_rate_id: rate.id };
     try {
       loader.setLoading(true);
-      await mutation.buyLabel({
+      const { id } = await mutation.buyLabel({
         ...shipment,
         ...selection
       } as ShipmentType);
@@ -187,7 +187,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         type: NotificationType.success,
         message: 'Label successfully purchased!'
       });
-      router.push(basePath);
+      router.push(`${basePath}/shipments/${id}`);
     } catch (message: any) {
       updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {

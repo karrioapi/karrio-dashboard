@@ -26,6 +26,8 @@ export interface get_address_templates_address_templates_edges_node_address {
   country_code: CountryCodeEnum;
   email: string | null;
   phone_number: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -134,6 +136,8 @@ export interface get_default_templates_default_templates_default_address_address
   country_code: CountryCodeEnum;
   email: string | null;
   phone_number: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -651,6 +655,8 @@ export interface get_shipment_shipment_recipient {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -668,6 +674,8 @@ export interface get_shipment_shipment_shipper {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -863,6 +871,8 @@ export interface get_shipments_shipments_edges_node_recipient {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -880,6 +890,8 @@ export interface get_shipments_shipments_edges_node_shipper {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -1084,6 +1096,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment_recipi
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -1101,6 +1115,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment_shippe
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -2066,6 +2082,7 @@ export interface get_user_connections_user_connections_FedexSettings {
   meter_number: string;
   user_key: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_FreightcomSettings {
@@ -2090,6 +2107,7 @@ export interface get_user_connections_user_connections_PurolatorSettings {
   password: string;
   account_number: string;
   user_token: string | null;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_RoyalMailSettings {
@@ -2150,6 +2168,7 @@ export interface get_user_connections_user_connections_UPSSettings {
   access_license_number: string;
   account_number: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_user_connections_USPSSettings {
@@ -2359,6 +2378,7 @@ export interface get_user_connections_with_generics_user_connections_EasyPostSet
   test: boolean;       // Toggle carrier connection mode
   active: boolean;     // Disable/Hide carrier from clients
   api_key: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_FedexSettings {
@@ -2373,6 +2393,7 @@ export interface get_user_connections_with_generics_user_connections_FedexSettin
   meter_number: string;
   user_key: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_FreightcomSettings {
@@ -2442,6 +2463,7 @@ export interface get_user_connections_with_generics_user_connections_PurolatorSe
   password: string;
   account_number: string;
   user_token: string | null;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_RoyalMailSettings {
@@ -2502,6 +2524,7 @@ export interface get_user_connections_with_generics_user_connections_UPSSettings
   access_license_number: string;
   account_number: string;
   account_country_code: string;
+  metadata: any | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_USPSSettings {
@@ -2892,6 +2915,8 @@ export interface get_order_order_shipping_to {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -2909,6 +2934,8 @@ export interface get_order_order_shipping_from {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -2951,6 +2978,8 @@ export interface get_order_order_shipments_recipient {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -2968,6 +2997,8 @@ export interface get_order_order_shipments_shipper {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -3172,6 +3203,8 @@ export interface get_orders_orders_edges_node_shipping_to {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -3189,6 +3222,8 @@ export interface get_orders_orders_edges_node_shipping_from {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -3231,6 +3266,8 @@ export interface get_orders_orders_edges_node_shipments_recipient {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
@@ -3248,6 +3285,8 @@ export interface get_orders_orders_edges_node_shipments_shipper {
   residential: boolean | null;
   address_line1: string | null;
   address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
   validate_location: boolean | null;
 }
 
