@@ -18,8 +18,8 @@ const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, t
   const name = CARRIER_IMAGES[carrier || 'generic'];
   const carrier_name = carriers[carrier as string];
 
-  const hasImage = !textOnly && (!isNone(carrier_name) && name !== 'generic');
-  const useText = (!hasImage && textOnly) || (!hasImage && (!isNone(carrier_name) || carrier_name === 'generic'));
+  const hasImage = !textOnly && (!isNone(name) && name !== 'generic');
+  const useText = (!hasImage && textOnly) || (!hasImage && (!isNone(carrier_name) || carrier_name === 'Generic'));
 
   return (
     <>
