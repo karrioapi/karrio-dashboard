@@ -616,7 +616,7 @@ export default function CreateLabelPage(pageProps: any) {
                     shipment={shipment}
                     customs={shipment?.customs || {
                       ...DEFAULT_CUSTOMS_CONTENT,
-                      incoterm: shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
+                      incoterm: shipment.payment?.paid_by == PaidByEnum.sender ? 'DDP' : 'DDU',
                       duty: {
                         ...DEFAULT_CUSTOMS_CONTENT.duty,
                         currency: shipment.options?.currency,

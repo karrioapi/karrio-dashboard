@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AddressType, ParcelType, ShipmentType } from '@/lib/types';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { get_shipment, GET_SHIPMENT, get_shipmentVariables, LabelTypeEnum } from 'karrio/graphql';
+import { get_shipment, GET_SHIPMENT, get_shipmentVariables, LabelTypeEnum, PaidByEnum } from 'karrio/graphql';
 import { debounce, isNoneOrEmpty } from '@/lib/helper';
 import moment from 'moment';
 
@@ -10,6 +10,7 @@ const DEFAULT_SHIPMENT_DATA = {
   recipient: {} as AddressType,
   parcels: [] as ParcelType[],
   options: { shipment_date: moment().format('YYYY-MM-DD') },
+  payment: { paid_by: PaidByEnum.sender },
   label_type: LabelTypeEnum.PDF
 } as ShipmentType;
 

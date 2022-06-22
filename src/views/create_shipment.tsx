@@ -137,7 +137,7 @@ export default function CreateShipmentPage(pageProps: any) {
           declared_value,
         },
         payment: {
-          paid_by: options.paid_by as any || 'sender',
+          paid_by: options.paid_by as any || PaidByEnum.sender,
           ...(options.currency ? { currency: options.currency } : {}),
           ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
         } as any,
