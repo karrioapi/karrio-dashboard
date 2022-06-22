@@ -187,7 +187,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         type: NotificationType.success,
         message: 'Label successfully purchased!'
       });
-      router.push(`${basePath}/${id}`);
+      router.push(`${basePath}/shipments/${id}`);
     } catch (message: any) {
       updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {
