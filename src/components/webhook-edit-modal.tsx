@@ -62,7 +62,6 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
     };
 
     const handleChange = (event: React.ChangeEvent<any>) => {
-      event.preventDefault();
       const target = event.target;
       let name: string = target.name;
       let value: stateValue = target.type === 'checkbox' ? target.checked : target.value;
@@ -128,7 +127,9 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
                 </div>
               </div>
 
-              <CheckBoxField name="test_mode" checked={payload.test_mode} onChange={handleChange}>Test Mode</CheckBoxField>
+              <CheckBoxField name="test_mode" defaultChecked={payload.test_mode} onChange={handleChange}>
+                <span>Test Mode</span>
+              </CheckBoxField>
 
               {!isNew && <>
                 <hr className="my-4" style={{ height: '1px' }} />

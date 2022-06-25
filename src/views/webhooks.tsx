@@ -13,7 +13,7 @@ import { NotificationType } from "@/lib/types";
 import Head from "next/head";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
-import { isNoneOrEmpty } from "@/lib/helper";
+import { formatDateTime, isNoneOrEmpty } from "@/lib/helper";
 import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -93,7 +93,7 @@ export default function WebhooksPage(pageProps: any) {
                   </td>
                   <td className="last-event is-vcentered is-clickable" onClick={() => editWebhook({ webhook, onConfirm: update })}>
                     <span className="is-subtitle is-size-7 has-text-weight-semibold has-text-grey">
-                      {webhook.last_event_at || "No recent event"}
+                      {webhook.last_event_at ? formatDateTime(webhook.last_event_at as any) : "No recent event"}
                     </span>
                   </td>
                   <td className="action is-flex is-justify-content-end px-0">

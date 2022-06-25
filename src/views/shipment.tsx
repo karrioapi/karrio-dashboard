@@ -144,6 +144,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   </div>
                 </div>
                 <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-1">Tracking Number</div>
+                  <div className="column is-size-6 has-text-weight-semibold py-1">
+                    <CopiableLink text={shipment.tracking_number as string} className="button is-white is-size-6 m-1" title="Copy tracking number" />
+                  </div>
+                </div>
+                <div className="columns my-0">
                   <div className="column is-4 is-size-6 py-1">Service Level</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
                     {formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
