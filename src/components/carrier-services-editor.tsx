@@ -12,7 +12,7 @@ interface CarrierServiceEditorProps {
 const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ defaultValue, onChange }) => {
   const [expand, setExpand] = React.useState<boolean>(false);
   const [currency, setCurrency] = React.useState<ServiceLevelCurrency>(
-    (defaultValue.length > 0 && defaultValue[0].currency as ServiceLevelCurrency) || ServiceLevelCurrency.USD
+    ((defaultValue || []).length > 0 && defaultValue[0].currency as ServiceLevelCurrency) || ServiceLevelCurrency.USD
   );
   const [services, setServices] = React.useState<ServiceLevelType[]>(defaultValue);
 
