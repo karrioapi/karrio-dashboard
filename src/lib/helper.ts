@@ -7,7 +7,7 @@ import React from "react";
 
 
 export function formatRef(s?: string): string {
-  return (s || "").replace(/:_:/, ' ').toLocaleUpperCase();
+  return (s || "").split('_').join(' ').toLocaleUpperCase();
 }
 
 export function formatDate(date_string: string): string {

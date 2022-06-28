@@ -1,3 +1,4 @@
+import { formatRef } from '@/lib/helper';
 import { ShipmentStatusEnum } from 'karrio/rest/index';
 import React from 'react';
 
@@ -23,7 +24,7 @@ const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...pro
 
   return (
     <span className={`tag is-size-7 is-capitalized has-text-weight-semibold ${color} ${className}`} {...props}>
-      {(status || "").replace(/:_:/g, " ")}
+      {formatRef(status || "").toLocaleLowerCase()}
     </span>
   )
 };
