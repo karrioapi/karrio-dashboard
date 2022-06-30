@@ -685,6 +685,7 @@ export interface get_shipment_shipment_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -721,6 +722,7 @@ export interface get_shipment_shipment_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -901,6 +903,7 @@ export interface get_shipments_shipments_edges_node_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -937,6 +940,7 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -1126,6 +1130,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_parcel
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -1162,6 +1167,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -1175,6 +1181,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -2946,6 +2953,7 @@ export interface get_order_order_line_items {
   quantity: number | null;
   unfulfilled_quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3008,6 +3016,7 @@ export interface get_order_order_shipments_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3044,6 +3053,7 @@ export interface get_order_order_shipments_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -3234,6 +3244,7 @@ export interface get_orders_orders_edges_node_line_items {
   quantity: number | null;
   unfulfilled_quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3296,6 +3307,7 @@ export interface get_orders_orders_edges_node_shipments_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3332,6 +3344,7 @@ export interface get_orders_orders_edges_node_shipments_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -5272,6 +5285,7 @@ export interface PartialCommodity {
   description?: string | null;
   quantity?: number | null;
   sku?: string | null;
+  hs_code?: string | null;
   value_amount?: number | null;
   metadata?: any | null;
   parent_id?: string | null;
@@ -5378,6 +5392,7 @@ export interface Commodity {
   description?: string | null;
   quantity?: number | null;
   sku?: string | null;
+  hs_code?: string | null;
   value_amount?: number | null;
   metadata?: any | null;
   parent_id?: string | null;

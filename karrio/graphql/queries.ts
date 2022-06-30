@@ -400,6 +400,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         description
         quantity
         sku
+        hs_code
         value_amount
         weight_unit
         value_currency
@@ -441,6 +442,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         description
         quantity
         sku
+        hs_code
         value_amount
         value_currency
         origin_country
@@ -576,6 +578,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
             description
             quantity
             sku
+            hs_code
             value_amount
             weight_unit
             value_currency
@@ -617,6 +620,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
             description
             quantity
             sku
+            hs_code
             value_amount
             value_currency
             origin_country
@@ -743,6 +747,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           description
           quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -784,6 +789,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           description
           quantity
           sku
+          hs_code
           value_amount
           value_currency
           origin_country
@@ -796,6 +802,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
             description
             quantity
             sku
+            hs_code
             value_amount
             value_currency
             origin_country
@@ -1889,6 +1896,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       quantity
       unfulfilled_quantity
       sku
+      hs_code
       value_amount
       weight_unit
       value_currency
@@ -1969,6 +1977,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           description
           quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -2010,6 +2019,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           description
           quantity
           sku
+          hs_code
           value_amount
           value_currency
           origin_country
@@ -2127,6 +2137,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           quantity
           unfulfilled_quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -2207,6 +2218,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
               description
               quantity
               sku
+              hs_code
               value_amount
               weight_unit
               value_currency
@@ -2248,6 +2260,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
               description
               quantity
               sku
+              hs_code
               value_amount
               value_currency
               origin_country
