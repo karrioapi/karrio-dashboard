@@ -816,6 +816,7 @@ export interface get_shipment_shipment {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -1032,6 +1033,7 @@ export interface get_shipments_shipments_edges_node {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -1272,6 +1274,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -1334,6 +1337,23 @@ export interface get_tracker_tracker_created_by {
   full_name: string;
 }
 
+export interface get_tracker_tracker_shipment_shipper {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_tracker_tracker_shipment_recipient {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_tracker_tracker_shipment {
+  id: string;  // The ID of the object.
+  shipper: get_tracker_tracker_shipment_shipper;
+  recipient: get_tracker_tracker_shipment_recipient;
+  reference: string | null;
+}
+
 export interface get_tracker_tracker {
   id: string;  // The ID of the object.
   tracking_number: string;
@@ -1350,6 +1370,7 @@ export interface get_tracker_tracker {
   updated_at: any;
   created_by: get_tracker_tracker_created_by;
   test_mode: boolean;
+  shipment: get_tracker_tracker_shipment | null;
 }
 
 export interface get_tracker {
@@ -1396,6 +1417,23 @@ export interface get_trackers_trackers_edges_node_messages {
   details: any | null;
 }
 
+export interface get_trackers_trackers_edges_node_shipment_shipper {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_trackers_trackers_edges_node_shipment_recipient {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_trackers_trackers_edges_node_shipment {
+  id: string;  // The ID of the object.
+  shipper: get_trackers_trackers_edges_node_shipment_shipper;
+  recipient: get_trackers_trackers_edges_node_shipment_recipient;
+  reference: string | null;
+}
+
 export interface get_trackers_trackers_edges_node {
   id: string;  // The ID of the object.
   created_at: any;
@@ -1412,6 +1450,7 @@ export interface get_trackers_trackers_edges_node {
   carrier_name: string;
   meta: any | null;
   metadata: any | null;
+  shipment: get_trackers_trackers_edges_node_shipment | null;
 }
 
 export interface get_trackers_trackers_edges {

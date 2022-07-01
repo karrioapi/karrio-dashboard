@@ -415,6 +415,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
     label_url
     invoice_url
     tracking_url
+    tracker_id
     test_mode
     service
     reference
@@ -593,6 +594,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
         label_url
         invoice_url
         tracking_url
+        tracker_id
         test_mode
         service
         reference
@@ -762,6 +764,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
       label_url
       invoice_url
       tracking_url
+      tracker_id
       test_mode
       service
       reference
@@ -900,6 +903,18 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
       full_name
     }
     test_mode
+    shipment {
+      id
+      shipper {
+        city
+        country_code
+      }
+      recipient {
+        city
+        country_code
+      }
+      reference
+    }
   }
 }
 
@@ -945,6 +960,18 @@ export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $s
         carrier_name
         meta
         metadata
+        shipment {
+          id
+          shipper {
+            city
+            country_code
+          }
+          recipient {
+            city
+            country_code
+          }
+          reference
+        }
       }
     }
   }
