@@ -165,7 +165,7 @@ export default function OrdersPage(pageProps: any) {
                   </td>
                   <td className="order is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
-                      #{order.order_id}
+                      {order.order_id}
                     </p>
                     <p className="is-size-7 has-text-grey is-lowercase">
                       {order.source}

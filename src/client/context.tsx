@@ -79,6 +79,7 @@ function createGrapQLContext(accessToken?: string): ApolloClient<any> {
     'logs', 'events', 'trackers', 'shipments', 'shipment',
     'customs_templates', 'address_templates', 'parcel_templates',
     'orders', 'order',
+    'shipment_results', 'order_results', 'tracker_results',
   ];
 
   return new ApolloClient({

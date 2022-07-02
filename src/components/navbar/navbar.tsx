@@ -1,6 +1,8 @@
 import React from 'react';
+import ShortcutDropdown from '@/components/navbar/shortcut-dropdown';
 import AccountDropdown from '@/components/navbar/account-dropdown';
-import ShortcutDropdown from './shortcut-dropdown';
+import SearchBar from '@/components/navbar/search-bar';
+import SearchProvider from '@/context/search-provider';
 
 interface NavbarComponent { }
 
@@ -20,14 +22,9 @@ const Navbar: React.FC<NavbarComponent> = () => {
           </button>
         </div>
 
-        <div className="field">
-          <p className="control has-icons-left has-icons-right">
-            <input className="input is-small" type="email" placeholder="Search for shipments..." />
-            <span className="icon is-small is-left">
-              <i className="fas fa-search"></i>
-            </span>
-          </p>
-        </div>
+        <SearchProvider>
+          <SearchBar />
+        </SearchProvider>
 
       </div>
       <div className="nav-end">
