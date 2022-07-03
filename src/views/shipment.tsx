@@ -3,16 +3,15 @@ import CopiableLink from "@/components/copiable-link";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
-import { AppMode } from "@/context/app-mode-provider";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatAddressLocation, formatCustomsLabel, formatDate, formatDateTime, formatRef, formatWeight, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatDate, formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
-import { MetadataObjectType, ShipmentStatusEnum } from "karrio/graphql";
+import { MetadataObjectType } from "karrio/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
-import { CustomsType, ParcelType } from "@/lib/types";
+import { ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
@@ -145,8 +144,15 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 </div>
                 <div className="columns my-0">
                   <div className="column is-4 is-size-6 py-1">Tracking Number</div>
-                  <div className="column is-size-6 has-text-weight-semibold py-1">
-                    <CopiableLink text={shipment.tracking_number as string} className="button is-white is-size-6 m-1" title="Copy tracking number" />
+                  <div className="column py-1">
+                    {shipment.tracker_id
+                    ? <a className="has-text-info p-0 m-0 is-size-6 has-text-weight-semibold"
+                        href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
+                        <span>{shipment.tracking_number as string}</span> {" "}
+                        <span style={{ fontSize: '0.8em' }}><i className="fas fa-external-link-alt"></i></span>
+                      </a>
+                    : <span>{shipment.tracking_number as string}</span>
+                    }
                   </div>
                 </div>
                 <div className="columns my-0">

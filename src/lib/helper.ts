@@ -7,7 +7,7 @@ import React from "react";
 
 
 export function formatRef(s?: string): string {
-  return (s || "").replace(/:_:/, ' ').toLocaleUpperCase();
+  return (s || "").split('_').join(' ').toLocaleUpperCase();
 }
 
 export function formatDate(date_string: string): string {
@@ -38,6 +38,13 @@ export function formatAddress(address: AddressType): string {
   ].filter(a => !isNone(a) && a !== "").join(', ');
 }
 
+export function formatAddressShort(address: AddressType): string {
+  return [
+    address.person_name || address.company_name,
+    address.city,
+  ].filter(a => !isNone(a) && a !== "").join(', ');
+}
+
 export function formatFullAddress(address: AddressType, countries?: { [country_code: string]: string }): string {
   const country = countries === undefined ? address.country_code : countries[address.country_code];
   return [
@@ -54,6 +61,15 @@ export function formatAddressLocation(address: AddressType, countries?: { [count
   const country = countries === undefined ? address.country_code : countries[address.country_code];
   return [
     address.city,
+    address.state_code,
+    address.postal_code,
+    country
+  ].filter(a => !isNone(a) && a !== "").join(', ');
+}
+
+export function formatAddressLocationShort(address: AddressType, countries?: { [country_code: string]: string }): string {
+  const country = countries === undefined ? address.country_code : countries[address.country_code];
+  return [
     address.state_code,
     address.postal_code,
     country

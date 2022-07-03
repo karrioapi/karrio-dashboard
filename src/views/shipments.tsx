@@ -9,7 +9,7 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import ShipmentsProvider from "@/context/shipments-provider";
 import { ShipmentsContext } from "@/context/shipments-provider";
-import { formatAddress, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
+import { formatAddressShort, formatAddressLocationShort, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -126,7 +126,11 @@ export default function ShipmentsPage(pageProps: any) {
                     <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
                   </td>
                   <td className="recipient is-vcentered" onClick={() => previewShipment(shipment.id)}>
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">{formatAddress(shipment.recipient as AddressType)}</p>
+                  <p className="is-size-7 has-text-weight-bold has-text-grey">
+                      <span>{formatAddressShort(shipment.recipient as AddressType)}</span>
+                      <br/>
+                      <span className="has-text-weight-medium">{formatAddressLocationShort(shipment.recipient as AddressType)}</span>
+                    </p>
                   </td>
                   <td className="date is-vcentered px-1" onClick={() => previewShipment(shipment.id)}>
                     <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>

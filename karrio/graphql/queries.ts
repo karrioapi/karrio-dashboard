@@ -400,6 +400,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         description
         quantity
         sku
+        hs_code
         value_amount
         weight_unit
         value_currency
@@ -414,6 +415,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
     label_url
     invoice_url
     tracking_url
+    tracker_id
     test_mode
     service
     reference
@@ -441,6 +443,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         description
         quantity
         sku
+        hs_code
         value_amount
         value_currency
         origin_country
@@ -576,6 +579,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
             description
             quantity
             sku
+            hs_code
             value_amount
             weight_unit
             value_currency
@@ -590,6 +594,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
         label_url
         invoice_url
         tracking_url
+        tracker_id
         test_mode
         service
         reference
@@ -617,6 +622,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
             description
             quantity
             sku
+            hs_code
             value_amount
             value_currency
             origin_country
@@ -743,6 +749,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           description
           quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -757,6 +764,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
       label_url
       invoice_url
       tracking_url
+      tracker_id
       test_mode
       service
       reference
@@ -784,6 +792,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           description
           quantity
           sku
+          hs_code
           value_amount
           value_currency
           origin_country
@@ -796,6 +805,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
             description
             quantity
             sku
+            hs_code
             value_amount
             value_currency
             origin_country
@@ -893,6 +903,18 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
       full_name
     }
     test_mode
+    shipment {
+      id
+      shipper {
+        city
+        country_code
+      }
+      recipient {
+        city
+        country_code
+      }
+      reference
+    }
   }
 }
 
@@ -938,6 +960,18 @@ export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $s
         carrier_name
         meta
         metadata
+        shipment {
+          id
+          shipper {
+            city
+            country_code
+          }
+          recipient {
+            city
+            country_code
+          }
+          reference
+        }
       }
     }
   }
@@ -1889,6 +1923,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       quantity
       unfulfilled_quantity
       sku
+      hs_code
       value_amount
       weight_unit
       value_currency
@@ -1969,6 +2004,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           description
           quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -2010,6 +2046,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           description
           quantity
           sku
+          hs_code
           value_amount
           value_currency
           origin_country
@@ -2127,6 +2164,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           quantity
           unfulfilled_quantity
           sku
+          hs_code
           value_amount
           weight_unit
           value_currency
@@ -2207,6 +2245,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
               description
               quantity
               sku
+              hs_code
               value_amount
               weight_unit
               value_currency
@@ -2248,6 +2287,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
               description
               quantity
               sku
+              hs_code
               value_amount
               value_currency
               origin_country
@@ -2385,6 +2425,262 @@ export const UPDATE_DOCUMENT_TEMPLATE = gql`mutation update_document_template($d
 export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($data: DeleteDocumentTemplateInput!) {
   delete_document_template(input: $data) {
     id
+  }
+}
+`;
+
+export const SEARCH_DATA = gql`query search_data($keyword: String, $test_mode: Boolean) {
+  shipment_results: shipments(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  trackers_results: trackers(tracking_number: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: String, $test_mode: Boolean) {
+  shipment_results: shipments(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  order_results: orders(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        order_id
+        shipping_to {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  tracker_results: trackers(tracking_number: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_ADDRESS = gql`query search_data_by_address($address: String, $test_mode: Boolean) {
+  shipment_results: shipments(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_ADDRESS_EXTENDED = gql`query search_data_by_address_extended($address: String, $test_mode: Boolean) {
+  shipment_results: shipments(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  order_results: orders(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        order_id
+        shipping_to {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_TRACKING_NUMBER = gql`query search_data_by_tracking_number($tracking_number: String, $test_mode: Boolean) {
+  shipment_results: shipments(tracking_number: $tracking_number, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  tracker_results: trackers(tracking_number: $tracking_number, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_ORDER_ID = gql`query search_data_by_order_id($order_id: [String], $test_mode: Boolean) {
+  order_results: orders(order_id: $order_id, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        order_id
+        shipping_to {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_REFERENCE = gql`query search_data_by_reference($reference: String, $test_mode: Boolean) {
+  shipment_results: shipments(reference: $reference, test_mode: $test_mode, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
   }
 }
 `;

@@ -15,7 +15,7 @@ const DashboardLayout: React.FC = ({ children }) => {
           <Notifier />
           <Navbar />
 
-          <div className="dashboard-content is-relative" style={{ zIndex: 'auto', paddingTop: 0, height: '100%' }}>
+          <div className="dashboard-content is-relative" style={{ paddingTop: 0, height: '100%' }}>
             {children}
           </div>
 

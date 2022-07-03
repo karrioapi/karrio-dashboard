@@ -685,6 +685,7 @@ export interface get_shipment_shipment_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -721,6 +722,7 @@ export interface get_shipment_shipment_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -814,6 +816,7 @@ export interface get_shipment_shipment {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -901,6 +904,7 @@ export interface get_shipments_shipments_edges_node_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -937,6 +941,7 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -1028,6 +1033,7 @@ export interface get_shipments_shipments_edges_node {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -1126,6 +1132,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_parcel
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -1162,6 +1169,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -1175,6 +1183,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -1265,6 +1274,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   label_url: string | null;
   invoice_url: string | null;
   tracking_url: string | null;
+  tracker_id: string | null;
   test_mode: boolean;
   service: string | null;
   reference: string | null;
@@ -1327,6 +1337,23 @@ export interface get_tracker_tracker_created_by {
   full_name: string;
 }
 
+export interface get_tracker_tracker_shipment_shipper {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_tracker_tracker_shipment_recipient {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_tracker_tracker_shipment {
+  id: string;  // The ID of the object.
+  shipper: get_tracker_tracker_shipment_shipper;
+  recipient: get_tracker_tracker_shipment_recipient;
+  reference: string | null;
+}
+
 export interface get_tracker_tracker {
   id: string;  // The ID of the object.
   tracking_number: string;
@@ -1343,6 +1370,7 @@ export interface get_tracker_tracker {
   updated_at: any;
   created_by: get_tracker_tracker_created_by;
   test_mode: boolean;
+  shipment: get_tracker_tracker_shipment | null;
 }
 
 export interface get_tracker {
@@ -1389,6 +1417,23 @@ export interface get_trackers_trackers_edges_node_messages {
   details: any | null;
 }
 
+export interface get_trackers_trackers_edges_node_shipment_shipper {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_trackers_trackers_edges_node_shipment_recipient {
+  city: string | null;
+  country_code: CountryCodeEnum;
+}
+
+export interface get_trackers_trackers_edges_node_shipment {
+  id: string;  // The ID of the object.
+  shipper: get_trackers_trackers_edges_node_shipment_shipper;
+  recipient: get_trackers_trackers_edges_node_shipment_recipient;
+  reference: string | null;
+}
+
 export interface get_trackers_trackers_edges_node {
   id: string;  // The ID of the object.
   created_at: any;
@@ -1405,6 +1450,7 @@ export interface get_trackers_trackers_edges_node {
   carrier_name: string;
   meta: any | null;
   metadata: any | null;
+  shipment: get_trackers_trackers_edges_node_shipment | null;
 }
 
 export interface get_trackers_trackers_edges {
@@ -2946,6 +2992,7 @@ export interface get_order_order_line_items {
   quantity: number | null;
   unfulfilled_quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3008,6 +3055,7 @@ export interface get_order_order_shipments_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3044,6 +3092,7 @@ export interface get_order_order_shipments_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -3234,6 +3283,7 @@ export interface get_orders_orders_edges_node_line_items {
   quantity: number | null;
   unfulfilled_quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3296,6 +3346,7 @@ export interface get_orders_orders_edges_node_shipments_parcels_items {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
   value_currency: CurrencyCodeEnum | null;
@@ -3332,6 +3383,7 @@ export interface get_orders_orders_edges_node_shipments_customs_commodities {
   description: string | null;
   quantity: number | null;
   sku: string | null;
+  hs_code: string | null;
   value_amount: number | null;
   value_currency: CurrencyCodeEnum | null;
   origin_country: CountryCodeEnum | null;
@@ -3656,6 +3708,436 @@ export interface delete_document_template {
 
 export interface delete_document_templateVariables {
   data: DeleteDocumentTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data
+// ====================================================
+
+export interface search_data_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_shipment_results_edges {
+  node: search_data_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_shipment_results {
+  edges: (search_data_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_trackers_results_edges_node {
+  id: string;  // The ID of the object.
+  status: TrackerStatusEnum;
+  tracking_number: string;
+  created_at: any;
+}
+
+export interface search_data_trackers_results_edges {
+  node: search_data_trackers_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_trackers_results {
+  edges: (search_data_trackers_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data {
+  shipment_results: search_data_shipment_results;
+  trackers_results: search_data_trackers_results;
+}
+
+export interface search_dataVariables {
+  keyword?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_extended
+// ====================================================
+
+export interface search_data_extended_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_extended_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_extended_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_extended_shipment_results_edges {
+  node: search_data_extended_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_extended_shipment_results {
+  edges: (search_data_extended_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_extended_order_results_edges_node_shipping_to {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_extended_order_results_edges_node {
+  id: string;  // The ID of the object.
+  status: OrderStatus;
+  order_id: string;
+  shipping_to: search_data_extended_order_results_edges_node_shipping_to;
+  created_at: any;
+}
+
+export interface search_data_extended_order_results_edges {
+  node: search_data_extended_order_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_extended_order_results {
+  edges: (search_data_extended_order_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_extended_tracker_results_edges_node {
+  id: string;  // The ID of the object.
+  status: TrackerStatusEnum;
+  tracking_number: string;
+  created_at: any;
+}
+
+export interface search_data_extended_tracker_results_edges {
+  node: search_data_extended_tracker_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_extended_tracker_results {
+  edges: (search_data_extended_tracker_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_extended {
+  shipment_results: search_data_extended_shipment_results;
+  order_results: search_data_extended_order_results;
+  tracker_results: search_data_extended_tracker_results;
+}
+
+export interface search_data_extendedVariables {
+  keyword?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_by_address
+// ====================================================
+
+export interface search_data_by_address_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_address_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_by_address_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_by_address_shipment_results_edges {
+  node: search_data_by_address_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_address_shipment_results {
+  edges: (search_data_by_address_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_address {
+  shipment_results: search_data_by_address_shipment_results;
+}
+
+export interface search_data_by_addressVariables {
+  address?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_by_address_extended
+// ====================================================
+
+export interface search_data_by_address_extended_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_address_extended_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_by_address_extended_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_by_address_extended_shipment_results_edges {
+  node: search_data_by_address_extended_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_address_extended_shipment_results {
+  edges: (search_data_by_address_extended_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_address_extended_order_results_edges_node_shipping_to {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_address_extended_order_results_edges_node {
+  id: string;  // The ID of the object.
+  status: OrderStatus;
+  order_id: string;
+  shipping_to: search_data_by_address_extended_order_results_edges_node_shipping_to;
+  created_at: any;
+}
+
+export interface search_data_by_address_extended_order_results_edges {
+  node: search_data_by_address_extended_order_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_address_extended_order_results {
+  edges: (search_data_by_address_extended_order_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_address_extended {
+  shipment_results: search_data_by_address_extended_shipment_results;
+  order_results: search_data_by_address_extended_order_results;
+}
+
+export interface search_data_by_address_extendedVariables {
+  address?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_by_tracking_number
+// ====================================================
+
+export interface search_data_by_tracking_number_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_tracking_number_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_by_tracking_number_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_by_tracking_number_shipment_results_edges {
+  node: search_data_by_tracking_number_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_tracking_number_shipment_results {
+  edges: (search_data_by_tracking_number_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_tracking_number_tracker_results_edges_node {
+  id: string;  // The ID of the object.
+  status: TrackerStatusEnum;
+  tracking_number: string;
+  created_at: any;
+}
+
+export interface search_data_by_tracking_number_tracker_results_edges {
+  node: search_data_by_tracking_number_tracker_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_tracking_number_tracker_results {
+  edges: (search_data_by_tracking_number_tracker_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_tracking_number {
+  shipment_results: search_data_by_tracking_number_shipment_results;
+  tracker_results: search_data_by_tracking_number_tracker_results;
+}
+
+export interface search_data_by_tracking_numberVariables {
+  tracking_number?: string | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_by_order_id
+// ====================================================
+
+export interface search_data_by_order_id_order_results_edges_node_shipping_to {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_order_id_order_results_edges_node {
+  id: string;  // The ID of the object.
+  status: OrderStatus;
+  order_id: string;
+  shipping_to: search_data_by_order_id_order_results_edges_node_shipping_to;
+  created_at: any;
+}
+
+export interface search_data_by_order_id_order_results_edges {
+  node: search_data_by_order_id_order_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_order_id_order_results {
+  edges: (search_data_by_order_id_order_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_order_id {
+  order_results: search_data_by_order_id_order_results;
+}
+
+export interface search_data_by_order_idVariables {
+  order_id?: (string | null)[] | null;
+  test_mode?: boolean | null;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: search_data_by_reference
+// ====================================================
+
+export interface search_data_by_reference_shipment_results_edges_node_recipient {
+  id: string;
+  city: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  country_code: CountryCodeEnum;
+  postal_code: string | null;
+  person_name: string | null;
+  phone_number: string | null;
+  company_name: string | null;
+  state_code: string | null;
+}
+
+export interface search_data_by_reference_shipment_results_edges_node {
+  id: string;  // The ID of the object.
+  status: ShipmentStatusEnum;
+  tracking_number: string | null;
+  recipient: search_data_by_reference_shipment_results_edges_node_recipient;
+  created_at: any;
+}
+
+export interface search_data_by_reference_shipment_results_edges {
+  node: search_data_by_reference_shipment_results_edges_node | null;  // The item at the end of the edge
+}
+
+export interface search_data_by_reference_shipment_results {
+  edges: (search_data_by_reference_shipment_results_edges | null)[];  // Contains the nodes in this connection.
+}
+
+export interface search_data_by_reference {
+  shipment_results: search_data_by_reference_shipment_results;
+}
+
+export interface search_data_by_referenceVariables {
+  reference?: string | null;
+  test_mode?: boolean | null;
 }
 
 /* tslint:disable */
@@ -5272,6 +5754,7 @@ export interface PartialCommodity {
   description?: string | null;
   quantity?: number | null;
   sku?: string | null;
+  hs_code?: string | null;
   value_amount?: number | null;
   metadata?: any | null;
   parent_id?: string | null;
@@ -5378,6 +5861,7 @@ export interface Commodity {
   description?: string | null;
   quantity?: number | null;
   sku?: string | null;
+  hs_code?: string | null;
   value_amount?: number | null;
   metadata?: any | null;
   parent_id?: string | null;

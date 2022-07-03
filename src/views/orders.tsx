@@ -6,7 +6,7 @@ import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import OrdersProvider from "@/context/orders-provider";
 import { OrdersContext } from "@/context/orders-provider";
-import { formatAddress, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
+import { formatAddressLocationShort, formatAddressShort, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { ChangeEvent, useContext, useEffect } from "react";
@@ -165,7 +165,7 @@ export default function OrdersPage(pageProps: any) {
                   </td>
                   <td className="order is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
-                      #{order.order_id}
+                      {order.order_id}
                     </p>
                     <p className="is-size-7 has-text-grey is-lowercase">
                       {order.source}
@@ -173,7 +173,7 @@ export default function OrdersPage(pageProps: any) {
                   </td>
                   <td className="items is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {((items: number) => `${items} item${items === 1 ? '' : 's'}`)(
+                      {((items: number): any => `${items} item${items === 1 ? '' : 's'}`)(
                         order.line_items.reduce((acc, item) => acc + (item.quantity as number) || 1, 0)
                       )}
                     </p>
@@ -186,7 +186,9 @@ export default function OrdersPage(pageProps: any) {
                   </td>
                   <td className="customer is-vcentered">
                     <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {formatAddress(order.shipping_to as AddressType)}
+                      <span>{formatAddressShort(order.shipping_to as AddressType)}</span>
+                      <br/>
+                      <span className="has-text-weight-medium">{formatAddressLocationShort(order.shipping_to as AddressType)}</span>
                     </p>
                   </td>
                   <td className="date is-vcentered has-text-right">
