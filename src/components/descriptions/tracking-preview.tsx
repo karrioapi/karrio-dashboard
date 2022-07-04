@@ -153,7 +153,7 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
                 <div className="column is-3 is-size-7 py-1">Link</div>
                 <div className="column py-1">
                   <AppLink className="has-text-info p-0 m-0 is-size-7 has-text-weight-semibold"
-                    href={`/tracking/${tracker?.shipment?.id}`} target="_blank">
+                    href={`/shipments/${tracker?.shipment?.id}`} target="_blank">
                     <span>{tracker?.shipment?.id}</span> {" "}
                     <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
                   </AppLink>
