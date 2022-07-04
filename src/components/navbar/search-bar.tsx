@@ -69,7 +69,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
                 href={`/shipments/${result.id}`}
                 className="options-item px-2 py-1 has-text-weight-semibold is-size-7">
                 <i className="fas fa-truck pr-2"></i>
-                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                <span className="text-ellipsis">
                   {formatAddressShort((result as any).recipient)}
                 </span>
                 <StatusBadge status={result.status as string} className="is-lowercase ml-2 p-1" />
@@ -82,7 +82,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
                 href={`/orders/${result.id}`}
                 className="options-item px-2 py-1 has-text-weight-semibold is-size-7">
                 <i className="fas fa-inbox pr-2"></i>
-                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                <span className="text-ellipsis">
                   {formatAddressShort((result as any).shipping_to)}
                 </span>
                 <StatusBadge status={result.status as string} className="is-lowercase ml-2 p-1" />
@@ -95,7 +95,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
                 href={`/tracking/${result.id}`}
                 className="options-item px-2 py-1 has-text-weight-semibold is-size-7">
                 <i className="fas fa-location-arrow pr-2"></i>
-                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                <span className="text-ellipsis">
                   {(result as any).tracking_number}
                 </span>
                 <StatusBadge status={result.status as string} className="is-lowercase ml-2 p-1" />

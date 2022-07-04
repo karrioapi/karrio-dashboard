@@ -108,111 +108,111 @@ export default function OrdersPage(pageProps: any) {
 
         {loading && <Spinner />}
 
-        {(!loading && orders?.length > 0) && <div className="table-container">
-          <table className="orders-table table is-fullwidth">
-            <tbody>
+        {(!loading && orders?.length > 0) && <>
+          <div className="table-container pb-3">
+            <table className="orders-table table is-fullwidth">
+              <tbody>
 
-              <tr>
-                <td className="selector has-text-centered p-0" onClick={preventPropagation}>
-                  <label className="checkbox p-2">
-                    <input
-                      name="all"
-                      type="checkbox"
-                      onChange={handleSelection}
-                      checked={allChecked}
-                    />
-                  </label>
-                </td>
-
-                {selection.length > 0 && <td className="p-1" colSpan={5}>
-                  <AppLink
-                    href={`/orders/create_shipment?shipment_id=new&order_id=${selection.join(',')}`}
-                    className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
-                    <span className="has-text-weight-semibold">Create shipment</span>
-                  </AppLink>
-                  {(templates || []).map(template =>
-                    <a
-                      key={template.id}
-                      href={`${KARRIO_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
-                      className="button is-small is-default px-3 mx-2"
-                      target="_blank"
-                      rel="noreferrer">
-                      <span className="has-text-weight-semibold">Print {template.name}</span>
-                    </a>
-                  )}
-                </td>}
-
-                {selection.length === 0 && <>
-                  <td className="order is-size-7">ORDER #</td>
-                  <td className="items is-size-7">ITEMS</td>
-                  <td className="status"></td>
-                  <td className="customer is-size-7">SHIP TO</td>
-                  <td className="date has-text-right is-size-7">DATE</td>
-                </>}
-              </tr>
-
-              {orders?.map(order => (
-                <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
-                  <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
-                    <label className="checkbox py-3 px-2">
+                <tr>
+                  <td className="selector has-text-centered p-0" onClick={preventPropagation}>
+                    <label className="checkbox p-2">
                       <input
+                        name="all"
                         type="checkbox"
-                        name={order.id}
                         onChange={handleSelection}
-                        checked={selection.includes(order.id)}
+                        checked={allChecked}
                       />
                     </label>
                   </td>
-                  <td className="order is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
-                      {order.order_id}
-                    </p>
-                    <p className="is-size-7 has-text-grey is-lowercase">
-                      {order.source}
-                    </p>
-                  </td>
-                  <td className="items is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {((items: number): any => `${items} item${items === 1 ? '' : 's'}`)(
-                        order.line_items.reduce((acc, item) => acc + (item.quantity as number) || 1, 0)
-                      )}
-                    </p>
-                    <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
-                    </p>
-                  </td>
-                  <td className="status is-vcentered">
-                    <StatusBadge status={order.status as string} style={{ width: '100%' }} />
-                  </td>
-                  <td className="customer is-vcentered">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      <span>{formatAddressShort(order.shipping_to as AddressType)}</span>
-                      <br/>
-                      <span className="has-text-weight-medium">{formatAddressLocationShort(order.shipping_to as AddressType)}</span>
-                    </p>
-                  </td>
-                  <td className="date is-vcentered has-text-right">
-                    <p className="is-size-7 has-text-weight-semibold has-text-grey">
-                      {formatDateTime(order.created_at)}
-                    </p>
-                  </td>
+
+                  {selection.length > 0 && <td className="p-1" colSpan={5}>
+                    <AppLink
+                      href={`/orders/create_shipment?shipment_id=new&order_id=${selection.join(',')}`}
+                      className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
+                      <span className="has-text-weight-semibold">Create shipment</span>
+                    </AppLink>
+                    {(templates || []).map(template =>
+                      <a
+                        key={template.id}
+                        href={`${KARRIO_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
+                        className="button is-small is-default px-3 mx-2"
+                        target="_blank"
+                        rel="noreferrer">
+                        <span className="has-text-weight-semibold">Print {template.name}</span>
+                      </a>
+                    )}
+                  </td>}
+
+                  {selection.length === 0 && <>
+                    <td className="order is-size-7">ORDER #</td>
+                    <td className="status"></td>
+                    <td className="items is-size-7">ITEMS</td>
+                    <td className="customer is-size-7">SHIP TO</td>
+                    <td className="date has-text-right is-size-7">DATE</td>
+                  </>}
                 </tr>
-              ))}
 
-            </tbody>
+                {orders?.map(order => (
+                  <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
+                    <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
+                      <label className="checkbox py-3 px-2">
+                        <input
+                          type="checkbox"
+                          name={order.id}
+                          onChange={handleSelection}
+                          checked={selection.includes(order.id)}
+                        />
+                      </label>
+                    </td>
+                    <td className="order is-vcentered">
+                      <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
+                        {order.order_id}
+                      </p>
+                      <p className="is-size-7 has-text-grey is-lowercase">
+                        {order.source}
+                      </p>
+                    </td>
+                    <td className="status is-vcentered">
+                      <StatusBadge status={order.status as string} style={{ width: '100%' }} />
+                    </td>
+                    <td className="items is-vcentered">
+                      <p className="is-size-7 has-text-weight-bold has-text-grey">
+                        {((items: number): any => `${items} item${items === 1 ? '' : 's'}`)(
+                          order.line_items.reduce((acc, item) => acc + (item.quantity as number) || 1, 0)
+                        )}
+                      </p>
+                      <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
+                      </p>
+                    </td>
+                    <td className="customer is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis">
+                      <span className="text-ellipsis" title={formatAddressShort(order.shipping_to as AddressType)}>
+                        {formatAddressShort(order.shipping_to as AddressType)}
+                      </span>
+                      <br />
+                      <span className="has-text-weight-medium">{formatAddressLocationShort(order.shipping_to as AddressType)}</span>
+                    </td>
+                    <td className="date is-vcentered has-text-right">
+                      <p className="is-size-7 has-text-weight-semibold has-text-grey">
+                        {formatDateTime(order.created_at)}
+                      </p>
+                    </td>
+                  </tr>
+                ))}
 
-          </table>
+              </tbody>
+            </table>
+          </div>
 
-          <footer className="px-2 py-2 is-vcentered">
+          <div className="px-2 py-2 is-vcentered">
             <span className="is-size-7 has-text-weight-semibold">{(orders || []).length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
-          </footer>
-
-        </div>}
+          </div>
+        </>}
 
         {(called && !loading && (orders || []).length == 0) && <div className="card my-6">
 

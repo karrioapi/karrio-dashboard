@@ -38,20 +38,22 @@ Karrio custom styling
 .shipments-table {
   .carrier {
     width: 8%;
-    min-width: 83px;
+    min-width: 50px;
   }
   .service {
-    width: 25%;
+    min-width: 10vw;
+    max-width: 160px;
   }
   .status {
     width: 10%;
   }
   .recipient {
     min-width: 10vw;
+    max-width: 200px;
   }
   .date {
     width: 15%;
-    min-width: 170px;
+    min-width: 120px;
   }
   .action {
     width: 2%;
@@ -163,16 +165,18 @@ Karrio custom styling
 .trackers-table {
   .carrier {
     width: 8%;
-    min-width: 83px;
+    min-width: 50px;
   }
   .tracking-number {
-    width: 20%;
+    min-width: 10vw;
+    max-width: 160px;
   }
   .status {
     width: 10%;
   }
   .last-event {
-    min-width: 40%;
+    min-width: 10vw;
+    max-width: 200px;
   }
   .date {
     width: 15%;
@@ -220,20 +224,19 @@ Karrio custom styling
     width: 15%;
   }
   .items {
-    width: 20%;
-    max-width: 250px;
+    min-width: 10vw;
+    max-width: 150px;
   }
   .status {
     width: 10%;
   }
   .customer {
-    width: 30%;
-    min-width: 170px;
+    min-width: 10vw;
     max-width: 200px;
   }
   .date {
     width: 15%;
-    min-width: 170px;
+    min-width: 120px;
   }
 
   tbody > tr.items {
@@ -285,6 +288,10 @@ hr {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.text-overflow {
+  white-space: break-spaces;
 }
 
 .plex-sidebar {
@@ -344,10 +351,6 @@ hr {
     font-size: 0.55em;
     font-weight: bold;
   }
-}
-
-.table-container {
-  overflow: visible;
 }
 
 td > div.dropdown.is-active .dropdown-menu {

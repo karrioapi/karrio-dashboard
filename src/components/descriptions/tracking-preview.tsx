@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { formatDayDate, isNone, p, useLocation } from '@/lib/helper';
+import { formatAddressRegion, formatDayDate, formatRef, isNone, p, useLocation } from '@/lib/helper';
 import { ListStatusEnum } from 'karrio/rest/generated/apis/TrackersApi';
 import Image from 'next/image';
 import { TrackerType, TrackingEventType } from '@/lib/types';
 import CarrierImage from '../carrier-image';
+import AppLink from '../app-link';
 
 type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {
@@ -74,7 +75,6 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
         {!isNone(tracker) && <div className="modal-card">
           <section className="modal-card-body">
             <div className="has-text-centered pb-4">
-              {/* <Image src={p`/carriers/${tracker?.carrier_name}_icon.svg`} width={60} height={60} alt={tracker?.carrier_name} /> */}
               <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
             </div>
 
@@ -122,11 +122,50 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
               </p>
             </div>}
 
+            {!isNone(tracker?.shipment) && <>
+              <hr />
+              <p className="has-text-weight-bold my-4 is-size-6">Shipment details</p>
+
+              <div className="columns my-0">
+                <div className="column is-3 is-size-7 py-1">Origin/Destination</div>
+                <div className="column is-size-7 has-text-weight-semibold py-1">
+                  <span>{formatAddressRegion(tracker?.shipment?.shipper as any)}</span>
+                  <i className="fa fa-arrow-right px-3"></i>
+                  <span>{formatAddressRegion(tracker?.shipment?.recipient as any)}</span>
+                </div>
+              </div>
+
+              <div className="columns my-0">
+                <div className="column is-3 is-size-7 py-1">Service</div>
+                <div className="column is-size-7 has-text-weight-semibold py-1">
+                  {(tracker?.shipment?.meta as any)?.service_name || tracker?.shipment?.service}
+                </div>
+              </div>
+
+              {tracker?.shipment?.reference && <div className="columns my-0">
+                <div className="column is-3 is-size-7 py-1">Reference</div>
+                <div className="column is-size-7 has-text-weight-semibold py-1">
+                  {tracker?.shipment?.reference}
+                </div>
+              </div>}
+
+              <div className="columns my-0">
+                <div className="column is-3 is-size-7 py-1">Link</div>
+                <div className="column py-1">
+                  <AppLink className="has-text-info p-0 m-0 is-size-7 has-text-weight-semibold"
+                    href={`/tracking/${tracker?.shipment?.id}`} target="_blank">
+                    <span>{tracker?.shipment?.id}</span> {" "}
+                    <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
+                  </AppLink>
+                </div>
+              </div>
+            </>}
+
             <hr />
 
             <div className="field">
               <div className="control">
-                <label className="label">Share with customer</label>
+                <label className="label">Share</label>
                 <input
                   className="input is-small" type="text" title="Click to Copy"
                   value={sharingLink}

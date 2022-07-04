@@ -15,7 +15,7 @@ export function formatDate(date_string: string): string {
 }
 
 export function formatDateTime(date_string: string): string {
-  return moment(date_string).format('lll');
+  return moment(date_string).format('MMM D, hh:mm A');
 }
 
 export function formatDateTimeLong(date_string: string): string {
@@ -81,6 +81,13 @@ export function formatAddressName(address: AddressType): string {
     address.person_name,
     address.company_name
   ].filter(a => !isNone(a) && a !== "").join(' - ');
+}
+
+export function formatAddressRegion(address: AddressType): string {
+  return [
+    address.city,
+    address.country_code
+  ].filter(a => !isNone(a) && a !== "").join(', ');
 }
 
 export function formatCustomsLabel(customs: CustomsType): string {

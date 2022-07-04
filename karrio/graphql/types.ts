@@ -1349,8 +1349,10 @@ export interface get_tracker_tracker_shipment_recipient {
 
 export interface get_tracker_tracker_shipment {
   id: string;  // The ID of the object.
+  service: string | null;
   shipper: get_tracker_tracker_shipment_shipper;
   recipient: get_tracker_tracker_shipment_recipient;
+  meta: any | null;
   reference: string | null;
 }
 
@@ -1429,8 +1431,10 @@ export interface get_trackers_trackers_edges_node_shipment_recipient {
 
 export interface get_trackers_trackers_edges_node_shipment {
   id: string;  // The ID of the object.
+  service: string | null;
   shipper: get_trackers_trackers_edges_node_shipment_shipper;
   recipient: get_trackers_trackers_edges_node_shipment_recipient;
+  meta: any | null;
   reference: string | null;
 }
 

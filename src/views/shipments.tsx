@@ -91,74 +91,84 @@ export default function ShipmentsPage(pageProps: any) {
 
         {loading && <Spinner />}
 
-        {(!loading && shipments?.length > 0) && <div className="table-container">
-          <table className="shipments-table table is-fullwidth">
-            <tbody>
+        {(!loading && shipments?.length > 0) && <>
+          <div className="table-container pb-3">
+            <table className="shipments-table table is-fullwidth">
+              <tbody>
 
-              <tr>
-                <td className="carrier is-size-7 has-text-centered">CARRIER</td>
-                <td className="service is-size-7">SERVICE</td>
-                <td className="status"></td>
-                <td className="recipient is-size-7">RECIPIENT</td>
-                <td className="date is-size-7">DATE</td>
-                <td className="action"></td>
-              </tr>
-
-              {shipments?.map(shipment => (
-                <tr key={shipment.id} className="items is-clickable">
-                  <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
-                    {!isNone(shipment.carrier_name) && <CarrierBadge
-                      className="has-background-primary has-text-weight-bold has-text-white-bis"
-                      style={{ fontSize: '0.6rem' }}
-                      carrier={shipmentCarrier(shipment)}
-                      custom_name={(shipment as any).carrier_name as string}
-                      short
-                    />}
-                    {isNone(shipment.carrier_name) && <AppBadge />}
-                  </td>
-                  <td className="service is-vcentered p-1 pl-2" onClick={() => previewShipment(shipment.id)}>
-                    <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      {!isNone(shipment.carrier_name) && formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
-                      {isNone(shipment.carrier_name) && "NOT COMPLETED"}
-                    </p>
-                  </td>
-                  <td className="status is-vcentered" onClick={() => previewShipment(shipment.id)}>
-                    <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
-                  </td>
-                  <td className="recipient is-vcentered" onClick={() => previewShipment(shipment.id)}>
-                  <p className="is-size-7 has-text-weight-bold has-text-grey">
-                      <span>{formatAddressShort(shipment.recipient as AddressType)}</span>
-                      <br/>
-                      <span className="has-text-weight-medium">{formatAddressLocationShort(shipment.recipient as AddressType)}</span>
-                    </p>
-                  </td>
-                  <td className="date is-vcentered px-1" onClick={() => previewShipment(shipment.id)}>
-                    <p className="is-size-7 has-text-weight-semibold has-text-grey">{formatDateTime(shipment.created_at)}</p>
-                  </td>
-                  <td className="action is-vcentered px-0">
-                    <ShipmentMenu
-                      shipment={shipment}
-                      templates={templates}
-                      className="is-fullwidth"
-                    />
-                  </td>
+                <tr>
+                  <td className="carrier is-size-7 has-text-centered">CARRIER</td>
+                  <td className="service is-size-7">SERVICE</td>
+                  <td className="status"></td>
+                  <td className="recipient is-size-7">RECIPIENT</td>
+                  <td className="date is-size-7">DATE</td>
+                  <td className="action"></td>
                 </tr>
-              ))}
 
-            </tbody>
+                {shipments?.map(shipment => (
+                  <tr key={shipment.id} className="items is-clickable">
+                    <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
+                      {!isNone(shipment.carrier_name) && <CarrierBadge
+                        className="has-background-primary has-text-weight-bold has-text-white-bis"
+                        style={{ fontSize: '0.6rem' }}
+                        carrier={shipmentCarrier(shipment)}
+                        custom_name={(shipment as any).carrier_name as string}
+                        short
+                      />}
+                      {isNone(shipment.carrier_name) && <AppBadge />}
+                    </td>
+                    <td className="service is-vcentered p-1 pl-2 is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
+                      onClick={() => previewShipment(shipment.id)}
+                      title={
+                        isNone(shipment.carrier_name) ? "NOT COMPLETED"
+                          : formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)
+                      }>
+                      <span className="text-ellipsis">
+                        {!isNone(shipment.carrier_name) && formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
+                        {isNone(shipment.carrier_name) && "NOT COMPLETED"}
+                      </span>
+                      <br />
+                      <span className="has-text-weight-medium has-text-info">{shipment.tracking_number}</span>
+                    </td>
+                    <td className="status is-vcentered" onClick={() => previewShipment(shipment.id)}>
+                      <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
+                    </td>
+                    <td className="recipient is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis" onClick={() => previewShipment(shipment.id)}>
+                      <span className="text-ellipsis" title={formatAddressShort(shipment.recipient as AddressType)}>
+                        {formatAddressShort(shipment.recipient as AddressType)}
+                      </span>
+                      <br />
+                      <span className="has-text-weight-medium">{formatAddressLocationShort(shipment.recipient as AddressType)}</span>
+                    </td>
+                    <td className="date is-vcentered px-1" onClick={() => previewShipment(shipment.id)}>
+                      <p className="is-size-7 has-text-weight-semibold has-text-grey">
+                        {formatDateTime(shipment.created_at)}
+                      </p>
+                    </td>
+                    <td className="action is-vcentered px-0">
+                      <ShipmentMenu
+                        shipment={shipment}
+                        templates={templates}
+                        className="is-fullwidth"
+                      />
+                    </td>
+                  </tr>
+                ))}
 
-          </table>
+              </tbody>
 
-          <footer className="px-2 py-2 is-vcentered">
+            </table>
+          </div>
+
+          <div className="px-2 py-2 is-vcentered">
             <span className="is-size-7 has-text-weight-semibold">{(shipments || []).length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
-          </footer>
-
-        </div>}
+          </div>
+        </>}
 
         {(called && !loading && (shipments || []).length == 0) && <div className="card my-6">
 

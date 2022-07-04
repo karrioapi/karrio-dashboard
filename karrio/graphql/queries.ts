@@ -905,6 +905,7 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
     test_mode
     shipment {
       id
+      service
       shipper {
         city
         country_code
@@ -913,6 +914,7 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
         city
         country_code
       }
+      meta
       reference
     }
   }
@@ -962,6 +964,7 @@ export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $s
         metadata
         shipment {
           id
+          service
           shipper {
             city
             country_code
@@ -970,6 +973,7 @@ export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $s
             city
             country_code
           }
+          meta
           reference
         }
       }

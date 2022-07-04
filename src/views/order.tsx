@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import OrderProvider, { Order } from "@/context/order-provider";
-import { formatAddressLocation, formatDateTime, isNone } from "@/lib/helper";
+import { formatAddressLocation, formatDateTime, formatRef, isNone } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -133,7 +133,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
               {Object.entries(order.options).map(([key, value]: any, index) => <React.Fragment key={index + "item-info"}>
                 <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  <span>{key}: <strong>{value}</strong></span>
+                  <span>{formatRef(key).toLowerCase()}: <strong>{String(value)}</strong></span>
                 </p>
               </React.Fragment>)}
 

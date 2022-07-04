@@ -96,74 +96,75 @@ export default function TrackersPage(pageProps: any) {
 
         {loading && <Spinner />}
 
-        {(!loading && trackers.length > 0) && <div className="table-container">
-          <table className="trackers-table table is-fullwidth">
+        {(!loading && trackers.length > 0) && <>
+          <div className="table-container pb-3">
+            <table className="trackers-table table is-fullwidth">
 
-            <tbody className="trackers-table">
-              <tr>
-                <td className="carrier is-size-7 has-text-centered">CARRIER</td>
-                <td className="tracking-number is-size-7">TRACKING NUMBER</td>
-                <td className="status"></td>
-                <td className="last-event is-size-7">LAST EVENT</td>
-                <td className="date is-size-7"></td>
-                <td className="action"></td>
-              </tr>
-
-              {trackers.map(tracker => (
-                <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
-                  <td className="carrier is-vcentered has-text-centered p-2">
-                    <CarrierBadge
-                      className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
-                      carrier={tracker.carrier_name}
-                      custom_name={tracker.carrier_id}
-                    />
-                  </td>
-                  <td className="tracking-number is-vcentered p-1">
-                    <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>
-                  </td>
-                  <td className="status is-vcentered">
-                    <StatusBadge status={tracker.status as string} style={{ width: '100%' }} />
-                  </td>
-                  <td className="last-event is-vcentered py-1 last-event">
-                    <p className="is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
-                      style={{ width: '300px' }}
-                      title={isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}>
-                      {isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}
-                    </p>
-                  </td>
-                  <td className="date is-vcentered has-text-right">
-                    <p className="is-size-7 has-text-weight-semibold has-text-grey">
-                      {isNoneOrEmpty(tracker?.events) ? "" : formatEventDate((tracker?.events as TrackingEvent[])[0])}
-                    </p>
-                  </td>
-                  <td className="action is-vcentered p-1">
-                    <button className="button is-white is-pulled-right"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        confirmDeletion({ label: "Shipment Tracker", identifier: tracker.id as string, onConfirm: remove(tracker.id) })
-                      }}>
-                      <span className="icon is-small">
-                        <i className="fas fa-trash"></i>
-                      </span>
-                    </button>
-                  </td>
+              <tbody className="trackers-table">
+                <tr>
+                  <td className="carrier is-size-7 has-text-centered">CARRIER</td>
+                  <td className="tracking-number is-size-7">TRACKING #</td>
+                  <td className="status"></td>
+                  <td className="last-event is-size-7">LAST EVENT</td>
+                  <td className="date is-size-7"></td>
+                  <td className="action"></td>
                 </tr>
-              ))}
 
-            </tbody>
+                {trackers.map(tracker => (
+                  <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
+                    <td className="carrier is-vcentered has-text-centered p-2">
+                      <CarrierBadge
+                        className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
+                        carrier={tracker.carrier_name}
+                        custom_name={tracker.carrier_id}
+                      />
+                    </td>
+                    <td className="tracking-number is-vcentered p-1">
+                      <p className="is-subtitle is-size-7 has-text-weight-semibold has-text-info">{tracker.tracking_number}</p>
+                    </td>
+                    <td className="status is-vcentered">
+                      <StatusBadge status={tracker.status as string} style={{ width: '100%' }} />
+                    </td>
+                    <td className="last-event is-vcentered py-1 last-event is-size-7 has-text-weight-bold has-text-grey text-ellipsis">
+                      <span className="text-ellipsis"
+                        title={isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}>
+                        {isNoneOrEmpty(tracker?.events) ? "" : formatEventDescription((tracker?.events as TrackingEvent[])[0])}
+                      </span>
+                    </td>
+                    <td className="date is-vcentered has-text-right">
+                      <p className="is-size-7 has-text-weight-semibold has-text-grey">
+                        {isNoneOrEmpty(tracker?.events) ? "" : formatEventDate((tracker?.events as TrackingEvent[])[0])}
+                      </p>
+                    </td>
+                    <td className="action is-vcentered p-1">
+                      <button className="button is-white is-pulled-right"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          confirmDeletion({ label: "Shipment Tracker", identifier: tracker.id as string, onConfirm: remove(tracker.id) })
+                        }}>
+                        <span className="icon is-small">
+                          <i className="fas fa-trash"></i>
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
 
-          </table>
+              </tbody>
 
-          <footer className="px-2 py-2 is-vcentered">
+            </table>
+
+          </div>
+
+          <div className="px-2 py-2 is-vcentered">
             <span className="is-size-7 has-text-weight-semibold">{trackers.length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
               <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
             </div>
-          </footer>
-
-        </div>}
+          </div>
+        </>}
 
         {(!loading && trackers.length == 0) && <div className="card my-6">
 

@@ -12,7 +12,7 @@ interface CommodityDescriptionComponent {
 const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodity, prefix, suffix, className }) => {
   return (
     <div className={`is-flex ${className || ''}`}>
-      <div className="is-flex-grow-3 p-0">
+      <div className="is-flex-grow-3 p-0 text-ellipsis">
         <p className="is-size-7 my-1 has-text-weight-semibold">
           {prefix} {isNoneOrEmpty(commodity.description) ? 'Item' : commodity.description} {suffix}
         </p>

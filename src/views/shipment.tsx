@@ -137,32 +137,32 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="columns my-0 py-1">
               <div className="column is-6 is-size-6">
                 <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Courier Provider</div>
+                  <div className="column is-4 is-size-6 py-1">Courier</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
                     {formatRef(shipment.carrier_name as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Tracking Number</div>
+                  <div className="column is-4 is-size-6 py-1">Tracking</div>
                   <div className="column py-1">
                     {shipment.tracker_id
-                    ? <a className="has-text-info p-0 m-0 is-size-6 has-text-weight-semibold"
+                      ? <a className="has-text-info p-0 m-0 is-size-6 has-text-weight-semibold"
                         href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
                         <span>{shipment.tracking_number as string}</span> {" "}
-                        <span style={{ fontSize: '0.8em' }}><i className="fas fa-external-link-alt"></i></span>
+                        <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
                       </a>
-                    : <span>{shipment.tracking_number as string}</span>
+                      : <span>{shipment.tracking_number as string}</span>
                     }
                   </div>
                 </div>
                 <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Service Level</div>
+                  <div className="column is-4 is-size-6 py-1">Service</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
                     {formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Cost</div>
+                  <div className="column is-4 is-size-6 py-1">Rate</div>
                   <div className="column is-size-6 py-1">
                     <span className="has-text-weight-semibold mr-1">{shipment.selected_rate?.total_charge}</span>
                     <span>{shipment.selected_rate?.currency}</span>
@@ -210,30 +210,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">OPTIONS</p>
 
-              {[shipment.options].map((options: any, index) => <React.Fragment key={index + "parcel-info"}>
+              {Object.entries(shipment.options).map(([key, value]: any, index) => <React.Fragment key={index + "item-info"}>
                 <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.shipment_date) && <span>Shipment Date: <strong>{formatDate(options.shipment_date)}</strong></span>}
-                </p>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.currency) && <span>Preferred Currency: <strong>{options.currency}</strong></span>}
-                </p>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.signature_confirmation) && <span>Signature Confirmation <strong>Required</strong></span>}
-                </p>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.insurance) && <>
-                    <span>Insurance (Coverage Amount <strong>{options.insurance} {options.currency}</strong>)</span>
-                  </>}
-                </p>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.declared_value) && <>
-                    <span>Declared Value: <strong>{options.declared_value}</strong> {options.currency}</span>
-                  </>}
-                </p>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  {!isNone(options.cash_on_delivery) && <>
-                    <span>Amount To Collect <strong>{options.cash_on_delivery}</strong> {options.currency}</span>
-                  </>}
+                  <span>
+                    {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
+                    {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${shipment.options.currency}`}
+                  </span>
                 </p>
               </React.Fragment>)}
 
