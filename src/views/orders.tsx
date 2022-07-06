@@ -49,7 +49,7 @@ export default function OrdersPage(pageProps: any) {
       };
 
       setFilters(query);
-      (!loading) && (called ? loadMore : load)(query);
+      (!loading && load) && (called ? loadMore : load)(query);
     };
     const preventPropagation = (e: React.MouseEvent) => e.stopPropagation();
     const handleSelection = (e: ChangeEvent) => {

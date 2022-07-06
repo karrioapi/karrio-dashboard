@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatDate, formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
@@ -24,6 +24,7 @@ import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/docum
 import AddressDescription from "@/components/descriptions/address-description";
 import CommodityDescription from "@/components/descriptions/commodity-description";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
+import ShipmentMutationProvider from "@/context/shipment-mutation";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -242,11 +243,14 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 {/* Parcel items */}
                 {((parcel.items || []).length > 0) &&
                   <div className="column is-6 is-size-6 py-1">
-                    <p className="is-title is-size-6 my-2 has-text-weight-semibold">ITEMS</p>
+                    <p className="is-title is-size-6 my-2 has-text-weight-semibold">
+                      ITEMS {" "}
+                      <span className="is-size-7">({(parcel.items || []).reduce((acc, { quantity }) => acc + (quantity || 0), 0)})</span>
+                    </p>
 
                     {(parcel.items || []).map((item, index) => <React.Fragment key={index + "item-info"}>
                       <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                      <CommodityDescription commodity={item} prefix={`${index + 1} - `} />
+                      <CommodityDescription commodity={item} />
                     </React.Fragment>)}
                   </div>}
 
@@ -267,11 +271,14 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
             {/* Customs commodities */}
             {(!isNone(shipment.customs) && (shipment.customs?.commodities || []).length > 0) && <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">COMMODITIES</p>
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">
+                COMMODITIES {" "}
+                <span className="is-size-7">({(shipment.customs?.commodities || []).reduce((acc, { quantity }) => acc + (quantity || 0), 0)})</span>
+              </p>
 
               {(shipment.customs?.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                <CommodityDescription commodity={commodity} />
               </React.Fragment>)}
             </div>}
 
@@ -392,17 +399,19 @@ export default function ShipmentPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentProvider>
-        <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
-          <EventsProvider setVariablesToURL={false}>
-            <LogsProvider setVariablesToURL={false}>
-              <MetadataMutationProvider>
+        <ShipmentMutationProvider>
+          <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
+            <EventsProvider setVariablesToURL={false}>
+              <LogsProvider setVariablesToURL={false}>
+                <MetadataMutationProvider>
 
-                <ShipmentComponent />
+                  <ShipmentComponent />
 
-              </MetadataMutationProvider>
-            </LogsProvider>
-          </EventsProvider>
-        </DocumentTemplatesProvider>
+                </MetadataMutationProvider>
+              </LogsProvider>
+            </EventsProvider>
+          </DocumentTemplatesProvider>
+        </ShipmentMutationProvider>
       </ShipmentProvider>
     </DashboardLayout>
   ), pageProps);

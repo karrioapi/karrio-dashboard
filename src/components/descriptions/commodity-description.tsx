@@ -19,7 +19,6 @@ const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodi
         <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
           {isNoneOrEmpty(commodity.sku) ? ' SKU: 0000000' : ` SKU: ${commodity.sku}`}
           {isNoneOrEmpty(commodity.hs_code) ? '' : ` | HS code: ${commodity.hs_code}`}
-          {!isNoneOrEmpty(commodity.metadata?.ship_qty) && ` | SHIP QTY: ${commodity.metadata?.ship_qty}`}
         </p>
       </div>
 

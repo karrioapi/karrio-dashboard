@@ -11,12 +11,15 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
     <>
 
       <p className="is-size-7 my-1 has-text-weight-semibold">{formatCustomsLabel(customs)}</p>
-      <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.options?.aes) ? '' : <span>AES: <strong>{customs.options?.aes}</strong></span>}
-      </p>
-      <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.options?.eel_pfc) ? '' : <span>EEL / PFC: <strong>{customs.options?.eel_pfc}</strong></span>}
-      </p>
+
+      {Object.entries(customs.options || {}).map(([key, value]: any, index) => <React.Fragment key={index + "option-info"}>
+        <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
+          <span>
+            {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
+          </span>
+        </p>
+      </React.Fragment>)}
+
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {isNone(customs?.invoice) ? '' : <span>Invoice Number: <strong>{customs.invoice}</strong></span>}
       </p>
@@ -24,17 +27,25 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
         {isNone(customs?.invoice_date) ? '' : <span>Invoice Date: <strong>{customs.invoice_date}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs?.options?.certificate_number) ? '' : <span>Certificate Number: <strong>{customs.options?.certificate_number}</strong></span>}
-      </p>
-      <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {isNone(customs.duty) ? '' : <span>Duties paid by <strong>{formatRef('' + customs.duty?.paid_by)}</strong></span>}
-      </p>
-      <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {!customs?.certify ? '' : <span>Certified and Signed By <strong>{customs.signer}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {isNone(customs?.content_description) ? '' : <span><strong>Content:</strong> {customs.content_description}</span>}
       </p>
+
+      {/* Options section */}
+      {(Object.values(customs.duty as object).length > 0) && <div className="is-6 is-size-6 py-1">
+
+        <p className="is-title is-size-7 my-2 has-text-weight-semibold">DUTIES</p>
+
+        {Object.entries(customs.duty || {}).map(([key, value]: any, index) => <React.Fragment key={index + "option-info"}>
+          <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
+            <span>
+              {formatRef(key).toLowerCase()}: <strong>{formatRef(String(value))}</strong>
+            </span>
+          </p>
+        </React.Fragment>)}
+      </div>}
 
     </>
   );
