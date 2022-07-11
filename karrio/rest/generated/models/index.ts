@@ -1,9 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
+export * from './APIError';
 export * from './Address';
 export * from './AddressData';
 export * from './AddressList';
 export * from './AddressValidation';
+export * from './BatchObject';
+export * from './BatchOperation';
+export * from './BatchOperations';
 export * from './CarrierList';
 export * from './CarrierSettings';
 export * from './Charge';
@@ -14,6 +18,7 @@ export * from './CustomsData';
 export * from './CustomsList';
 export * from './Documents';
 export * from './Duty';
+export * from './ErrorMessages';
 export * from './ErrorResponse';
 export * from './LineItem';
 export * from './Message';
@@ -59,6 +64,7 @@ export * from './TrackerList';
 export * from './TrackingEvent';
 export * from './TrackingResponse';
 export * from './TrackingStatus';
+export * from './VerifiedTokenObtainPair';
 export * from './Webhook';
 export * from './WebhookData';
 export * from './WebhookList';

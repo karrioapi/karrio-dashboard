@@ -13,42 +13,104 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    BatchObject,
+    BatchObjectFromJSON,
+    BatchObjectFromJSONTyped,
+    BatchObjectToJSON,
+} from './BatchObject';
+
 /**
  * 
  * @export
- * @interface TokenRefresh
+ * @interface BatchOperation
  */
-export interface TokenRefresh {
+export interface BatchOperation {
+    /**
+     * A unique identifier
+     * @type {string}
+     * @memberof BatchOperation
+     */
+    id?: string;
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchOperation
      */
-    refresh: string;
+    status: BatchOperationStatusEnum;
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchOperation
      */
-    readonly access?: string;
+    resource_type: BatchOperationResourceTypeEnum;
+    /**
+     * 
+     * @type {Array<BatchObject>}
+     * @memberof BatchOperation
+     */
+    resources: Array<BatchObject>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof BatchOperation
+     */
+    created_at: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof BatchOperation
+     */
+    updated_at: Date;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BatchOperation
+     */
+    test_mode: boolean;
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+/**
+* @export
+* @enum {string}
+*/
+export enum BatchOperationStatusEnum {
+    Queued = 'queued',
+    Running = 'running',
+    Completed = 'completed',
+    Failed = 'failed'
+}/**
+* @export
+* @enum {string}
+*/
+export enum BatchOperationResourceTypeEnum {
+    Order = 'order',
+    Shipment = 'shipment',
+    Tracking = 'tracking',
+    Billing = 'billing'
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function BatchOperationFromJSON(json: any): BatchOperation {
+    return BatchOperationFromJSONTyped(json, false);
+}
+
+export function BatchOperationFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchOperation {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'refresh': json['refresh'],
-        'access': !exists(json, 'access') ? undefined : json['access'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'status': json['status'],
+        'resource_type': json['resource_type'],
+        'resources': ((json['resources'] as Array<any>).map(BatchObjectFromJSON)),
+        'created_at': (new Date(json['created_at'])),
+        'updated_at': (new Date(json['updated_at'])),
+        'test_mode': json['test_mode'],
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function BatchOperationToJSON(value?: BatchOperation | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +119,13 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     }
     return {
         
-        'refresh': value.refresh,
+        'id': value.id,
+        'status': value.status,
+        'resource_type': value.resource_type,
+        'resources': ((value.resources as Array<any>).map(BatchObjectToJSON)),
+        'created_at': (value.created_at.toISOString()),
+        'updated_at': (value.updated_at.toISOString()),
+        'test_mode': value.test_mode,
     };
 }
 

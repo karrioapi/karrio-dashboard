@@ -14,41 +14,48 @@
 
 import { exists, mapValues } from '../runtime';
 /**
- * 
+ * The list of API errors
  * @export
- * @interface TokenRefresh
+ * @interface APIError
  */
-export interface TokenRefresh {
+export interface APIError {
     /**
-     * 
+     * The error or warning message
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof APIError
      */
-    refresh: string;
+    message?: string;
     /**
-     * 
+     * The message code
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof APIError
      */
-    readonly access?: string;
+    code?: string;
+    /**
+     * any additional details
+     * @type {{ [key: string]: string; }}
+     * @memberof APIError
+     */
+    details?: { [key: string]: string; };
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+export function APIErrorFromJSON(json: any): APIError {
+    return APIErrorFromJSONTyped(json, false);
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function APIErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): APIError {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'refresh': json['refresh'],
-        'access': !exists(json, 'access') ? undefined : json['access'],
+        'message': !exists(json, 'message') ? undefined : json['message'],
+        'code': !exists(json, 'code') ? undefined : json['code'],
+        'details': !exists(json, 'details') ? undefined : json['details'],
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function APIErrorToJSON(value?: APIError | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +64,9 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     }
     return {
         
-        'refresh': value.refresh,
+        'message': value.message,
+        'code': value.code,
+        'details': value.details,
     };
 }
 

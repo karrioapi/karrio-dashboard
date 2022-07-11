@@ -16,39 +16,50 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface TokenRefresh
+ * @interface BatchObject
  */
-export interface TokenRefresh {
+export interface BatchObject {
     /**
-     * 
+     * A unique identifier
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchObject
      */
-    refresh: string;
+    id?: string;
     /**
-     * 
+     * The batch operation resource status
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchObject
      */
-    readonly access?: string;
+    status: BatchObjectStatusEnum;
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+/**
+* @export
+* @enum {string}
+*/
+export enum BatchObjectStatusEnum {
+    Queued = 'queued',
+    Running = 'running',
+    Completed = 'completed',
+    Failed = 'failed'
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function BatchObjectFromJSON(json: any): BatchObject {
+    return BatchObjectFromJSONTyped(json, false);
+}
+
+export function BatchObjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchObject {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'refresh': json['refresh'],
-        'access': !exists(json, 'access') ? undefined : json['access'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'status': json['status'],
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function BatchObjectToJSON(value?: BatchObject | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +68,8 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     }
     return {
         
-        'refresh': value.refresh,
+        'id': value.id,
+        'status': value.status,
     };
 }
 

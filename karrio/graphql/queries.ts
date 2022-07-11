@@ -506,8 +506,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
 }
 `;
 
-export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String], $test_mode: Boolean) {
-  shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service, test_mode: $test_mode) {
+export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String]) {
+  shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -922,8 +922,8 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
 
 `;
 
-export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $test_mode: Boolean) {
-  trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, test_mode: $test_mode) {
+export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String]) {
+  trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -999,8 +999,8 @@ export const GET_WEBHOOK = gql`query get_webhook($id: String!) {
 }
 `;
 
-export const GET_WEBHOOKS = gql`query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean, $test_mode: Boolean) {
-  webhooks(offset: $offset, first: $first, created_after: $created_after, created_before: $created_before, description: $description, events: $events, disabled: $disabled, test_mode: $test_mode) {
+export const GET_WEBHOOKS = gql`query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean) {
+  webhooks(offset: $offset, first: $first, created_after: $created_after, created_before: $created_before, description: $description, events: $events, disabled: $disabled) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -1058,11 +1058,11 @@ export const GET_PARCEL_TEMPLATES = gql`query get_parcel_templates($offset: Int,
 }
 `;
 
-export const GET_SYSTEM_CONNECTIONS = gql`query get_system_connections($test: Boolean) {
-  system_connections(test: $test) {
+export const GET_SYSTEM_CONNECTIONS = gql`query get_system_connections {
+  system_connections {
     id
     carrier_id
-    test
+    test_mode
     active
     capabilities
     carrier_name
@@ -1204,14 +1204,14 @@ export const GET_TOKEN = gql`  query GetToken($org_id: String) {
 }
 `;
 
-export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolean) {
-  user_connections(test: $test) {
+export const GET_USER_CONNECTIONS = gql`query get_user_connections {
+  user_connections {
     __typename
     ... on AramexSettings {
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1224,7 +1224,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       api_key
       password
@@ -1234,7 +1234,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1246,7 +1246,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1255,7 +1255,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       site_id
       password
@@ -1266,7 +1266,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1294,7 +1294,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       consumer_key
       consumer_secret
@@ -1303,7 +1303,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1313,7 +1313,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1322,7 +1322,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       account_number
       password
@@ -1335,7 +1335,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1344,7 +1344,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1356,7 +1356,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       client_id
       client_secret
@@ -1365,7 +1365,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       sendle_id
       api_key
@@ -1374,7 +1374,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       partner_id
       check_word
@@ -1383,7 +1383,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1394,7 +1394,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1407,7 +1407,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1419,7 +1419,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1431,7 +1431,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       customer_number
       license_key
@@ -1440,7 +1440,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       customer_number
       api_secret
@@ -1449,14 +1449,14 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections($test: Boolea
 }
 `;
 
-export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics($test: Boolean) {
-  user_connections(test: $test) {
+export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics {
+  user_connections {
     __typename
     ... on AramexSettings {
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1469,7 +1469,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       api_key
       password
@@ -1479,7 +1479,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1491,7 +1491,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1500,7 +1500,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       site_id
       password
@@ -1511,7 +1511,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1539,7 +1539,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       consumer_key
       consumer_secret
@@ -1548,7 +1548,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1558,7 +1558,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1567,7 +1567,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       api_key
       metadata
@@ -1576,7 +1576,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       account_number
       password
@@ -1589,7 +1589,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1601,7 +1601,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       display_name
       custom_carrier_name
       account_number
-      test
+      test_mode
       active
       account_country_code
       services {
@@ -1637,7 +1637,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1649,7 +1649,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       client_id
       client_secret
@@ -1658,7 +1658,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       sendle_id
       api_key
@@ -1667,7 +1667,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       partner_id
       check_word
@@ -1676,7 +1676,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1687,7 +1687,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1700,7 +1700,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1712,7 +1712,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       username
       password
@@ -1724,7 +1724,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       customer_number
       license_key
@@ -1733,7 +1733,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
-      test
+      test_mode
       active
       customer_number
       api_secret
@@ -2111,8 +2111,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
 }
 `;
 
-export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [String], $order_id: [String], $source: [String], $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $test_mode: Boolean, $option_key: [String], $option_value: String, $metadata_value: String) {
-  orders(offset: $offset, first: $first, id: $id, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, test_mode: $test_mode, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
+export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [String], $order_id: [String], $source: [String], $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $option_key: [String], $option_value: String, $metadata_value: String) {
+  orders(offset: $offset, first: $first, id: $id, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
     pageInfo {
       hasNextPage
       hasPreviousPage
@@ -2433,8 +2433,8 @@ export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($d
 }
 `;
 
-export const SEARCH_DATA = gql`query search_data($keyword: String, $test_mode: Boolean) {
-  shipment_results: shipments(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+export const SEARCH_DATA = gql`query search_data($keyword: String) {
+  shipment_results: shipments(address: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2456,7 +2456,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String, $test_mode: B
       }
     }
   }
-  trackers_results: trackers(tracking_number: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+  trackers_results: trackers(tracking_number: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2469,8 +2469,8 @@ export const SEARCH_DATA = gql`query search_data($keyword: String, $test_mode: B
 }
 `;
 
-export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: String, $test_mode: Boolean) {
-  shipment_results: shipments(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: String) {
+  shipment_results: shipments(address: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2492,7 +2492,7 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
       }
     }
   }
-  order_results: orders(address: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+  order_results: orders(address: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2514,7 +2514,7 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
       }
     }
   }
-  tracker_results: trackers(tracking_number: $keyword, test_mode: $test_mode, offset: 0, first: 10) {
+  tracker_results: trackers(tracking_number: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2527,8 +2527,8 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
 }
 `;
 
-export const SEARCH_DATA_BY_ADDRESS = gql`query search_data_by_address($address: String, $test_mode: Boolean) {
-  shipment_results: shipments(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
+export const SEARCH_DATA_BY_ADDRESS = gql`query search_data_by_address($address: String) {
+  shipment_results: shipments(address: $address, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2553,8 +2553,8 @@ export const SEARCH_DATA_BY_ADDRESS = gql`query search_data_by_address($address:
 }
 `;
 
-export const SEARCH_DATA_BY_ADDRESS_EXTENDED = gql`query search_data_by_address_extended($address: String, $test_mode: Boolean) {
-  shipment_results: shipments(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
+export const SEARCH_DATA_BY_ADDRESS_EXTENDED = gql`query search_data_by_address_extended($address: String) {
+  shipment_results: shipments(address: $address, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2576,69 +2576,7 @@ export const SEARCH_DATA_BY_ADDRESS_EXTENDED = gql`query search_data_by_address_
       }
     }
   }
-  order_results: orders(address: $address, test_mode: $test_mode, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        order_id
-        shipping_to {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_TRACKING_NUMBER = gql`query search_data_by_tracking_number($tracking_number: String, $test_mode: Boolean) {
-  shipment_results: shipments(tracking_number: $tracking_number, test_mode: $test_mode, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-  tracker_results: trackers(tracking_number: $tracking_number, test_mode: $test_mode, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_ORDER_ID = gql`query search_data_by_order_id($order_id: [String], $test_mode: Boolean) {
-  order_results: orders(order_id: $order_id, test_mode: $test_mode, offset: 0, first: 10) {
+  order_results: orders(address: $address, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2663,8 +2601,70 @@ export const SEARCH_DATA_BY_ORDER_ID = gql`query search_data_by_order_id($order_
 }
 `;
 
-export const SEARCH_DATA_BY_REFERENCE = gql`query search_data_by_reference($reference: String, $test_mode: Boolean) {
-  shipment_results: shipments(reference: $reference, test_mode: $test_mode, offset: 0, first: 10) {
+export const SEARCH_DATA_BY_TRACKING_NUMBER = gql`query search_data_by_tracking_number($tracking_number: String) {
+  shipment_results: shipments(tracking_number: $tracking_number, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        recipient {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+  tracker_results: trackers(tracking_number: $tracking_number, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        tracking_number
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_ORDER_ID = gql`query search_data_by_order_id($order_id: [String]) {
+  order_results: orders(order_id: $order_id, offset: 0, first: 10) {
+    edges {
+      node {
+        id
+        status
+        order_id
+        shipping_to {
+          id
+          city
+          address_line1
+          address_line2
+          country_code
+          postal_code
+          person_name
+          phone_number
+          company_name
+          state_code
+        }
+        created_at
+      }
+    }
+  }
+}
+`;
+
+export const SEARCH_DATA_BY_REFERENCE = gql`query search_data_by_reference($reference: String) {
+  shipment_results: shipments(reference: $reference, offset: 0, first: 10) {
     edges {
       node {
         id

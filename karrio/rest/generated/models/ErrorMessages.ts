@@ -13,42 +13,42 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    Message,
+    MessageFromJSON,
+    MessageFromJSONTyped,
+    MessageToJSON,
+} from './Message';
+
 /**
  * 
  * @export
- * @interface TokenRefresh
+ * @interface ErrorMessages
  */
-export interface TokenRefresh {
+export interface ErrorMessages {
     /**
-     * 
-     * @type {string}
-     * @memberof TokenRefresh
+     * The list of error messages
+     * @type {Array<Message>}
+     * @memberof ErrorMessages
      */
-    refresh: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TokenRefresh
-     */
-    readonly access?: string;
+    messages?: Array<Message>;
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+export function ErrorMessagesFromJSON(json: any): ErrorMessages {
+    return ErrorMessagesFromJSONTyped(json, false);
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function ErrorMessagesFromJSONTyped(json: any, ignoreDiscriminator: boolean): ErrorMessages {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'refresh': json['refresh'],
-        'access': !exists(json, 'access') ? undefined : json['access'],
+        'messages': !exists(json, 'messages') ? undefined : ((json['messages'] as Array<any>).map(MessageFromJSON)),
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function ErrorMessagesToJSON(value?: ErrorMessages | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +57,7 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     }
     return {
         
-        'refresh': value.refresh,
+        'messages': value.messages === undefined ? undefined : ((value.messages as Array<any>).map(MessageToJSON)),
     };
 }
 

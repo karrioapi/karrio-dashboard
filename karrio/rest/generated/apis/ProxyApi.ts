@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.4.6`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.  
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.4.6`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  
  *
  * The version of the OpenAPI document: 2022.4.6
  * Contact: 
@@ -15,6 +15,9 @@
 
 import * as runtime from '../runtime';
 import {
+    ErrorMessages,
+    ErrorMessagesFromJSON,
+    ErrorMessagesToJSON,
     ErrorResponse,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
@@ -60,37 +63,31 @@ export interface BuyLabelRequest {
 export interface CancelPickupRequest {
     carrierName: CancelPickupCarrierNameEnum;
     data: PickupCancelRequest;
-    test?: boolean | null;
 }
 
 export interface FetchRatesRequest {
     data: RateRequest;
-    test?: boolean | null;
 }
 
 export interface SchedulePickupRequest {
     carrierName: SchedulePickupCarrierNameEnum;
     data: PickupRequest;
-    test?: boolean | null;
 }
 
 export interface TrackShipmentRequest {
     trackingNumber: string;
     carrierName: TrackShipmentCarrierNameEnum;
-    test?: boolean | null;
     hub?: string;
 }
 
 export interface UpdatePickupRequest {
     carrierName: UpdatePickupCarrierNameEnum;
     data: PickupUpdateRequest;
-    test?: boolean | null;
 }
 
 export interface VoidLabelRequest {
     carrierName: VoidLabelCarrierNameEnum;
     data: ShipmentCancelRequest;
-    test?: boolean | null;
 }
 
 /**
@@ -152,10 +149,6 @@ export class ProxyApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
@@ -194,10 +187,6 @@ export class ProxyApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
-
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -242,10 +231,6 @@ export class ProxyApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
@@ -288,10 +273,6 @@ export class ProxyApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
-
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
 
         if (requestParameters.hub !== undefined) {
             queryParameters['hub'] = requestParameters.hub;
@@ -337,10 +318,6 @@ export class ProxyApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
@@ -350,8 +327,8 @@ export class ProxyApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/v1/proxy/pickups/{carrier_name}`.replace(`{${"carrier_name"}}`, encodeURIComponent(String(requestParameters.carrierName))),
-            method: 'PUT',
+            path: `/v1/proxy/pickups/{carrier_name}/update`.replace(`{${"carrier_name"}}`, encodeURIComponent(String(requestParameters.carrierName))),
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: PickupUpdateRequestToJSON(requestParameters.data),
@@ -383,10 +360,6 @@ export class ProxyApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
-
-        if (requestParameters.test !== undefined) {
-            queryParameters['test'] = requestParameters.test;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

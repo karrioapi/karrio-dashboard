@@ -16,28 +16,36 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface TokenRefresh
+ * @interface VerifiedTokenObtainPair
  */
-export interface TokenRefresh {
+export interface VerifiedTokenObtainPair {
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof VerifiedTokenObtainPair
      */
     refresh: string;
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof VerifiedTokenObtainPair
      */
     readonly access?: string;
+    /**
+     * 
+     * The OTP (One Time Password) token received by the user from the
+     * configured Two Factor Authentication method.
+     * @type {string}
+     * @memberof VerifiedTokenObtainPair
+     */
+    otp_token: string;
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+export function VerifiedTokenObtainPairFromJSON(json: any): VerifiedTokenObtainPair {
+    return VerifiedTokenObtainPairFromJSONTyped(json, false);
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function VerifiedTokenObtainPairFromJSONTyped(json: any, ignoreDiscriminator: boolean): VerifiedTokenObtainPair {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -45,10 +53,11 @@ export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'refresh': json['refresh'],
         'access': !exists(json, 'access') ? undefined : json['access'],
+        'otp_token': json['otp_token'],
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function VerifiedTokenObtainPairToJSON(value?: VerifiedTokenObtainPair | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -58,6 +67,7 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     return {
         
         'refresh': value.refresh,
+        'otp_token': value.otp_token,
     };
 }
 

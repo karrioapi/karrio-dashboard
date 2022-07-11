@@ -13,42 +13,63 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    BatchOperation,
+    BatchOperationFromJSON,
+    BatchOperationFromJSONTyped,
+    BatchOperationToJSON,
+} from './BatchOperation';
+
 /**
  * 
  * @export
- * @interface TokenRefresh
+ * @interface BatchOperations
  */
-export interface TokenRefresh {
+export interface BatchOperations {
+    /**
+     * 
+     * @type {number}
+     * @memberof BatchOperations
+     */
+    count?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchOperations
      */
-    refresh: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof TokenRefresh
+     * @memberof BatchOperations
      */
-    readonly access?: string;
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<BatchOperation>}
+     * @memberof BatchOperations
+     */
+    results: Array<BatchOperation>;
 }
 
-export function TokenRefreshFromJSON(json: any): TokenRefresh {
-    return TokenRefreshFromJSONTyped(json, false);
+export function BatchOperationsFromJSON(json: any): BatchOperations {
+    return BatchOperationsFromJSONTyped(json, false);
 }
 
-export function TokenRefreshFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenRefresh {
+export function BatchOperationsFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchOperations {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'refresh': json['refresh'],
-        'access': !exists(json, 'access') ? undefined : json['access'],
+        'count': !exists(json, 'count') ? undefined : json['count'],
+        'next': !exists(json, 'next') ? undefined : json['next'],
+        'previous': !exists(json, 'previous') ? undefined : json['previous'],
+        'results': ((json['results'] as Array<any>).map(BatchOperationFromJSON)),
     };
 }
 
-export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
+export function BatchOperationsToJSON(value?: BatchOperations | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +78,10 @@ export function TokenRefreshToJSON(value?: TokenRefresh | null): any {
     }
     return {
         
-        'refresh': value.refresh,
+        'count': value.count,
+        'next': value.next,
+        'previous': value.previous,
+        'results': ((value.results as Array<any>).map(BatchOperationToJSON)),
     };
 }
 
