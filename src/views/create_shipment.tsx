@@ -125,7 +125,7 @@ export default function CreateShipmentPage(pageProps: any) {
         return { ...parcel, items, weight, weight_unit };
       });
       const declared_value = line_items.reduce(
-        (acc, { value_amount, quantity }) => acc + (value_amount || 0) * (quantity || 1), 0
+        (acc, { value_amount, quantity }) => (acc + (value_amount || 0) * (quantity || 1)), 0
       );
 
       onChange({
@@ -134,7 +134,7 @@ export default function CreateShipmentPage(pageProps: any) {
         options: {
           ...shipment.options,
           ...(options.currency ? { currency: options.currency } : {}),
-          declared_value,
+          declared_value: parseFloat(`${declared_value}`).toFixed(2),
         },
         payment: {
           paid_by: options.paid_by as any || PaidByEnum.sender,
