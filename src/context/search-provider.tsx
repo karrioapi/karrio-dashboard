@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { search_data, SEARCH_DATA, search_dataVariables, SEARCH_DATA_BY_ADDRESS, search_data_by_address, search_data_by_addressVariables, SEARCH_DATA_BY_ADDRESS_EXTENDED, search_data_by_address_extended, search_data_by_address_extendedVariables, SEARCH_DATA_BY_ORDER_ID, search_data_by_order_id, search_data_by_order_idVariables, SEARCH_DATA_BY_REFERENCE, search_data_by_reference, search_data_by_referenceVariables, SEARCH_DATA_BY_TRACKING_NUMBER, search_data_by_tracking_number, search_data_by_tracking_numberVariables, SEARCH_DATA_EXTENDED, search_data_extended, search_data_extendedVariables } from 'karrio/graphql';
+import { search_data, SEARCH_DATA, search_dataVariables, SEARCH_DATA_EXTENDED, search_data_extended, search_data_extendedVariables } from 'karrio/graphql';
 import { OrderType, ShipmentType, TrackerType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { Subject } from 'rxjs';
@@ -11,23 +11,15 @@ const DEFAULT_SETTINGS: any = {
   notifyOnNetworkStatusChange: true
 };
 
-export type SearchFilterType =
-  search_dataVariables
-  & search_data_extendedVariables
-  & search_data_by_addressVariables
-  & search_data_by_address_extendedVariables
-  & search_data_by_order_idVariables
-  & search_data_by_referenceVariables
-  & search_data_by_tracking_numberVariables
-  ;
+export type SearchFilterType = search_dataVariables & search_data_extendedVariables;
 export type SearchResultType = (OrderType | TrackerType | ShipmentType);
 export type SearchFilterTypeKeys = keyof SearchFilterType;
-export type SearchCallType = (searchFilterType: SearchFilterTypeKeys, searchValue: string) => void;
+export type SearchCallType = (searchValue: string) => void;
 
-type SearchType = LazyQueryResult<(search_data_by_address | search_data_by_address_extended | search_data_by_tracking_number | search_data_by_order_id | search_data_by_reference), SearchFilterType> & {
+type SearchType = LazyQueryResult<(search_data_by_address | search_data_by_address_extended), SearchFilterType> & {
   variables: SearchFilterType;
   searchResults: SearchResultType[]
-  search: (search_type: keyof SearchFilterType, search_value: string) => Promise<any>;
+  search: (search_value: string) => Promise<any>;
 };
 
 export const SearchContext = React.createContext<SearchType>({} as SearchType);
@@ -39,28 +31,16 @@ const SearchProvider: React.FC = ({ children }) => {
   const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
   const searchData = useLazyQuery<search_data, SearchFilterType>(SEARCH_DATA, DEFAULT_SETTINGS);
   const searchDataExtended = useLazyQuery<search_data_extended, SearchFilterType>(SEARCH_DATA_EXTENDED, DEFAULT_SETTINGS);
-  const searchDataByAddress = useLazyQuery<search_data_by_address, SearchFilterType>(SEARCH_DATA_BY_ADDRESS, DEFAULT_SETTINGS);
-  const searchDataByOrderId = useLazyQuery<search_data_by_order_id, SearchFilterType>(SEARCH_DATA_BY_ORDER_ID, DEFAULT_SETTINGS);
-  const searchDataByReference = useLazyQuery<search_data_by_reference, SearchFilterType>(SEARCH_DATA_BY_REFERENCE, DEFAULT_SETTINGS);
-  const searchDataByTrackingNumber = useLazyQuery<search_data_by_tracking_number, SearchFilterType>(SEARCH_DATA_BY_TRACKING_NUMBER, DEFAULT_SETTINGS);
-  const searchDataByAddressExtended = useLazyQuery<search_data_by_address_extended, SearchFilterType>(SEARCH_DATA_BY_ADDRESS_EXTENDED, DEFAULT_SETTINGS);
 
-  function searchCall(searchFilterType: keyof SearchFilterType, searchValue: string) {
+  function searchCall(searchValue: string) {
     if (searchValue.length == 0) {
       setSearchResults([]);
       return;
     }
     if (searchValue.length < 2) { return; }
 
-    const requestVariables = { [searchFilterType]: searchValue };
-    const defaultQuery = ORDERS_MANAGEMENT ? searchDataExtended : searchData;
-    let [initialLoad, _query] = {
-      'keyword': defaultQuery,
-      'order_id': searchDataByOrderId,
-      'reference': searchDataByReference,
-      'tracking_number': searchDataByTrackingNumber,
-      'address': ORDERS_MANAGEMENT ? searchDataByAddressExtended : searchDataByAddress,
-    }[searchFilterType];
+    const requestVariables = { keyword: searchValue };
+    const [initialLoad, _query] = ORDERS_MANAGEMENT ? searchDataExtended : searchData;
 
     setQuery(_query);
     setVariables(requestVariables);
@@ -103,14 +83,14 @@ const SearchProvider: React.FC = ({ children }) => {
 };
 
 function initSearchObservable(searchCall: SearchCallType): SearchCallType {
-  const searchSubject: Subject<{ searchType: keyof SearchFilterType, searchValue: string }> = new Subject();
+  const searchSubject: Subject<{ searchValue: string }> = new Subject();
 
-  searchSubject.pipe(debounceTime(500)).subscribe(({ searchType, searchValue }) => {
-    searchCall(searchType, searchValue);
+  searchSubject.pipe(debounceTime(500)).subscribe(({ searchValue }) => {
+    searchCall(searchValue);
   });
 
-  return (searchType: keyof SearchFilterType, searchValue: string) => {
-    searchSubject.next({ searchType, searchValue });
+  return (searchValue: string) => {
+    searchSubject.next({ searchValue });
   };
 }
 

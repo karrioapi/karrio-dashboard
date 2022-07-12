@@ -1,5 +1,4 @@
-import { APIReference } from '@/context/references-provider';
-import { SearchContext, SearchFilterTypeKeys } from '@/context/search-provider';
+import { SearchContext } from '@/context/search-provider';
 import React, { useContext, useEffect } from 'react';
 import Dropdown, { closeDropdown, openDropdown } from '@/components/generic/dropdown';
 import AppLink from '@/components/app-link';
@@ -12,15 +11,13 @@ interface SearchBarComponent {
 
 const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { ORDERS_MANAGEMENT } = useContext(APIReference);
   const { searchResults, loading, search } = useContext(SearchContext);
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const [searchType, setSearchType] = React.useState<SearchFilterTypeKeys>('keyword');
 
   useEffect(() => {
-    search(searchType, searchValue);
+    search(searchValue);
     openDropdown(ref.current as any);
-  }, [searchType, searchValue])
+  }, [searchValue])
 
   return (
     <Dropdown direction={'is-center'} style={{ width: '100%' }}>
@@ -42,17 +39,6 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
           <span className="icon is-small is-right is-clickable"
             onClick={() => setSearchValue("")}>
             <i className="fas fa-times"></i>
-          </span>
-        </p>
-        <p className="control" onClick={e => { e.preventDefault(); e.stopPropagation() }}>
-          <span className="select is-small">
-            <select defaultValue={searchType} onChange={e => setSearchType(e.target.value as SearchFilterTypeKeys)}>
-              <option value="keyword"></option>
-              <option value="address">by:address</option>
-              <option value="reference">by:reference</option>
-              <option value="tracking_number">by:tracking_number</option>
-              {ORDERS_MANAGEMENT && <option value="order_id">by:order_id</option>}
-            </select>
           </span>
         </p>
       </div>

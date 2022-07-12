@@ -89,8 +89,6 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         session.accessToken = token.accessToken;
         session.testMode = token.testMode;
 
-        console.log(session)
-
         return session
       }
     }

@@ -2434,7 +2434,7 @@ export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($d
 `;
 
 export const SEARCH_DATA = gql`query search_data($keyword: String) {
-  shipment_results: shipments(address: $keyword, offset: 0, first: 10) {
+  shipment_results: shipments(keyword: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2470,7 +2470,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
 `;
 
 export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: String) {
-  shipment_results: shipments(address: $keyword, offset: 0, first: 10) {
+  shipment_results: shipments(keyword: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2492,7 +2492,7 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
       }
     }
   }
-  order_results: orders(address: $keyword, offset: 0, first: 10) {
+  order_results: orders(keyword: $keyword, offset: 0, first: 10) {
     edges {
       node {
         id
@@ -2520,168 +2520,6 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
         id
         status
         tracking_number
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_ADDRESS = gql`query search_data_by_address($address: String) {
-  shipment_results: shipments(address: $address, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_ADDRESS_EXTENDED = gql`query search_data_by_address_extended($address: String) {
-  shipment_results: shipments(address: $address, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-  order_results: orders(address: $address, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        order_id
-        shipping_to {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_TRACKING_NUMBER = gql`query search_data_by_tracking_number($tracking_number: String) {
-  shipment_results: shipments(tracking_number: $tracking_number, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-  tracker_results: trackers(tracking_number: $tracking_number, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_ORDER_ID = gql`query search_data_by_order_id($order_id: [String]) {
-  order_results: orders(order_id: $order_id, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        order_id
-        shipping_to {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_BY_REFERENCE = gql`query search_data_by_reference($reference: String) {
-  shipment_results: shipments(reference: $reference, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
         created_at
       }
     }
