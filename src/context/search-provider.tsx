@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { search_data, SEARCH_DATA, search_dataVariables, SEARCH_DATA_BY_ADDRESS, search_data_by_address, search_data_by_addressVariables, SEARCH_DATA_BY_ADDRESS_EXTENDED, search_data_by_address_extended, search_data_by_address_extendedVariables, SEARCH_DATA_BY_ORDER_ID, search_data_by_order_id, search_data_by_order_idVariables, SEARCH_DATA_BY_REFERENCE, search_data_by_reference, search_data_by_referenceVariables, SEARCH_DATA_BY_TRACKING_NUMBER, search_data_by_tracking_number, search_data_by_tracking_numberVariables, SEARCH_DATA_EXTENDED, search_data_extended, search_data_extendedVariables } from 'karrio/graphql';
 import { OrderType, ShipmentType, TrackerType } from '@/lib/types';
-import { AppMode } from '@/context/app-mode-provider';
 import { APIReference } from '@/context/references-provider';
 import { Subject } from 'rxjs';
 import { debounceTime } from "rxjs/operators";
@@ -34,7 +33,6 @@ type SearchType = LazyQueryResult<(search_data_by_address | search_data_by_addre
 export const SearchContext = React.createContext<SearchType>({} as SearchType);
 
 const SearchProvider: React.FC = ({ children }) => {
-  const { testMode } = useContext(AppMode);
   const { ORDERS_MANAGEMENT } = useContext(APIReference);
   const [query, setQuery] = useState<any>();
   const [variables, setVariables] = useState<SearchFilterType>({});
@@ -54,11 +52,10 @@ const SearchProvider: React.FC = ({ children }) => {
     }
     if (searchValue.length < 2) { return; }
 
-    const requestVariables = { [searchFilterType]: searchValue, test_mode: testMode };
+    const requestVariables = { [searchFilterType]: searchValue };
     const defaultQuery = ORDERS_MANAGEMENT ? searchDataExtended : searchData;
     let [initialLoad, _query] = {
       'keyword': defaultQuery,
-      'test_mode': defaultQuery,
       'order_id': searchDataByOrderId,
       'reference': searchDataByReference,
       'tracking_number': searchDataByTrackingNumber,

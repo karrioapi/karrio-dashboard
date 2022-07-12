@@ -1,13 +1,13 @@
 import React from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { GetToken, GetToken_token, GET_TOKEN } from 'karrio/graphql';
-import { useLocation } from '@/lib/helper';
+import { setCookie, useLocation } from '@/lib/helper';
 
 export type TokenType = GetToken_token;
 type TokenDataType = LazyQueryResult<GetToken, any> & {
   token: TokenType;
   load: () => Promise<any>;
-  authenticateOrg: (org_id: string) => Promise<any | undefined>
+  authenticateOrg: (orgId: string) => Promise<any | undefined>
 };
 
 export const TokenData = React.createContext<TokenDataType>({ token: { key: '' } } as TokenDataType);
@@ -18,10 +18,10 @@ const TokenProvider: React.FC = ({ children }) => {
 
   const fetchMore = (options: any) => result.called ? result.fetchMore(options) : initialLoad(options);
   const load = () => result.called ? fetchMore({}) : initialLoad({});
-  const authenticateOrg = async (org_id: string) => {
-    await fetch(`/api/orgauth?org_id=${org_id}`);
+  const authenticateOrg = async (orgId: string) => {
+    setCookie("orgId", orgId);
     insertUrlParam({});
-    setTimeout(() => location.reload(), 800);
+    setTimeout(() => location.reload(), 1000);
   };
 
   return (

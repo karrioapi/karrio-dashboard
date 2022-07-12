@@ -48,9 +48,9 @@ const OrganizationDropdown: React.FC = () => {
   };
   const create = async () => {
     createOrganization({
-      onChange: (org_id: string) => {
+      onChange: (orgId: string) => {
         setIsActive(false);
-        return authenticateOrg(org_id);
+        return authenticateOrg(orgId);
       }
     });
   };
@@ -60,11 +60,13 @@ const OrganizationDropdown: React.FC = () => {
     }
   }, [called, selected, token, load]);
 
-  useEffect(() => { setSelected(organization); }, [organization]);
+  useEffect(() => {
+    setSelected(organization);
+  }, [organization]);
   useEffect(() => { checkTokenChange(token?.token?.key) }, [token, checkTokenChange]);
   useEffect(() => {
     if (!initialized && !isNoneOrEmpty(router.query.accept_invitation)) {
-      acceptInvitation({ onChange: org_id => authenticateOrg(org_id) });
+      acceptInvitation({ onChange: orgId => authenticateOrg(orgId) });
       setInitialized(true);
     }
     if (router.query && isNoneOrEmpty(router.query.accept_invitation)) {

@@ -1,5 +1,5 @@
 import { BASE_PATH, TEST_BASE_PATH } from "@/client/context";
-import { useLocation } from "@/lib/helper";
+import { setCookie, useLocation } from "@/lib/helper";
 import React from "react";
 
 
@@ -27,6 +27,8 @@ const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }
     insertUrlParam({});
     const currentPathName = `${window.location.pathname}`;
     const isTestMode = computeMode(currentPathName);
+
+    setCookie("testMode", !isTestMode);
 
     if (isTestMode) window.location.pathname = currentPathName.replace(TEST_BASE_PATH, '');
     else window.location.replace(TEST_BASE_PATH + currentPathName);

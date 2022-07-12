@@ -210,6 +210,13 @@ export function getCookie(name: string): string {
   return cookieValue;
 }
 
+export function setCookie(cname: string, cvalue: any, exdays: number = 1) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 export async function handleFailure<T>(request: Promise<T>): Promise<T> {
   try {
     const response = await request;

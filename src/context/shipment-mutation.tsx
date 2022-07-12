@@ -32,7 +32,7 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const [discardParcelMutation] = useMutation<discard_parcel, discard_parcelVariables>(DISCARD_PARCEL);
 
   const fetchRates = async (shipment: ShipmentType) => handleFailure(
-    karrio!.proxy.fetchRates({ data: (shipment as any), test: testMode }),
+    karrio!.proxy.fetchRates({ data: (shipment as any) }),
   );
   const buyLabel = async (shipment: ShipmentType) => handleFailure(
     shipment.id !== undefined ?
@@ -40,7 +40,7 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
         id: shipment.id as string,
         data: { selected_rate_id: shipment.selected_rate_id as string },
       }) :
-      karrio!.shipments.create({ data: shipment as any, test: testMode })
+      karrio!.shipments.create({ data: shipment as any })
   );
   const voidLabel = async (shipment: ShipmentType) => handleFailure(
     karrio!.shipments.cancel({ id: shipment.id as string })

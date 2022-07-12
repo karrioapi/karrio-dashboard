@@ -55,7 +55,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
     evt.preventDefault();
     setLoading(true);
     try {
-      await createTracker(trackingNumber as string, carrier?.carrier_name as string, carrier?.test as boolean);
+      await createTracker(trackingNumber as string, carrier?.carrier_name as string);
       notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
       close({ updated: true });
     } catch (message: any) {
@@ -71,7 +71,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
   useEffect(() => {
     setCarrierList(
       [...(user_connections || []), ...(system_connections || [])]
-        .filter(c => c.active && c.test === testMode)
+        .filter(c => c.active && c.test_mode === testMode)
     );
   }, [user_connections, system_connections, testMode]);
 
@@ -100,7 +100,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
                   {carrierList
                     .map((carrier, index) => (
                       <option key={index} value={carrier.carrier_id}>
-                        {`${(carriers as any)[carrier.carrier_name]} ${carrier.test ? '(Sandbox)' : ''}`}
+                        {`${(carriers as any)[carrier.carrier_name]} ${carrier.test_mode ? '(Sandbox)' : ''}`}
                       </option>
                     ))}
                 </SelectField>}

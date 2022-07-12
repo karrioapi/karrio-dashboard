@@ -21,12 +21,12 @@ export default function LoginPage(pageProps: any) {
     setShowError(false);
     setIsLoading(true);
 
-    const org_id = getCookie('org_id');
+    const orgId = getCookie('orgId');
     const response: any = await signIn('credentials', {
       redirect: false,
       email: email.current?.value,
       password: password.current?.value,
-      ...((org_id || '').length == 0 ? {} : { org_id })
+      ...((orgId || '').length == 0 ? {} : { orgId })
     });
 
     if (response.ok) {
