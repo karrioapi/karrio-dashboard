@@ -245,7 +245,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {has("services") &&
                   <CarrierServiceEditor
-                    defaultValue={payload.services || service_levels[payload.carrier_name] || service_levels['generic']}
+                    defaultValue={payload.services || service_levels[carrier_name] || service_levels['generic']}
                     onChange={directChange("services")}
                   />}
 
