@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
-import { KarrioClient, TokenPair } from "karrio/rest/index";
+import { KarrioClient } from "karrio/rest/index";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject } from "rxjs";
