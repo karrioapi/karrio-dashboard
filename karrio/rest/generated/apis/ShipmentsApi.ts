@@ -62,6 +62,7 @@ export interface ListRequest {
     metadataKey?: string;
     metadataValue?: string;
     trackingNumber?: string;
+    keyword?: string;
     limit?: number;
     offset?: number;
 }
@@ -218,6 +219,10 @@ export class ShipmentsApi extends runtime.BaseAPI {
 
         if (requestParameters.trackingNumber !== undefined) {
             queryParameters['tracking_number'] = requestParameters.trackingNumber;
+        }
+
+        if (requestParameters.keyword !== undefined) {
+            queryParameters['keyword'] = requestParameters.keyword;
         }
 
         if (requestParameters.limit !== undefined) {

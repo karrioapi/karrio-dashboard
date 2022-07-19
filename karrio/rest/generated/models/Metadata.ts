@@ -60,6 +60,12 @@ export interface Metadata {
      * @type {boolean}
      * @memberof Metadata
      */
+    allow_multi_account: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Metadata
+     */
     orders_management: boolean;
     /**
      * 
@@ -72,7 +78,19 @@ export interface Metadata {
      * @type {boolean}
      * @memberof Metadata
      */
+    audit_logging: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Metadata
+     */
     allow_signup: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Metadata
+     */
+    allow_admin_approved_signup: boolean;
     /**
      * 
      * @type {string}
@@ -109,9 +127,12 @@ export function MetadataFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'custom_carrier_definition': json['CUSTOM_CARRIER_DEFINITION'],
         'data_import_export': json['DATA_IMPORT_EXPORT'],
         'multi_organizations': json['MULTI_ORGANIZATIONS'],
+        'allow_multi_account': json['ALLOW_MULTI_ACCOUNT'],
         'orders_management': json['ORDERS_MANAGEMENT'],
         'apps_management': json['APPS_MANAGEMENT'],
+        'audit_logging': json['AUDIT_LOGGING'],
         'allow_signup': json['ALLOW_SIGNUP'],
+        'allow_admin_approved_signup': json['ALLOW_ADMIN_APPROVED_SIGNUP'],
         'admin': json['ADMIN'],
         'openapi': json['OPENAPI'],
         'graphql': json['GRAPHQL'],
@@ -133,9 +154,12 @@ export function MetadataToJSON(value?: Metadata | null): any {
         'CUSTOM_CARRIER_DEFINITION': value.custom_carrier_definition,
         'DATA_IMPORT_EXPORT': value.data_import_export,
         'MULTI_ORGANIZATIONS': value.multi_organizations,
+        'ALLOW_MULTI_ACCOUNT': value.allow_multi_account,
         'ORDERS_MANAGEMENT': value.orders_management,
         'APPS_MANAGEMENT': value.apps_management,
+        'AUDIT_LOGGING': value.audit_logging,
         'ALLOW_SIGNUP': value.allow_signup,
+        'ALLOW_ADMIN_APPROVED_SIGNUP': value.allow_admin_approved_signup,
         'ADMIN': value.admin,
         'OPENAPI': value.openapi,
         'GRAPHQL': value.graphql,

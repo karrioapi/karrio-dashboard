@@ -52,6 +52,7 @@ export interface ListRequest {
     optionValue?: string;
     metadataKey?: string;
     metadataValue?: string;
+    keyword?: string;
     limit?: number;
     offset?: number;
 }
@@ -194,6 +195,10 @@ export class OrdersApi extends runtime.BaseAPI {
 
         if (requestParameters.metadataValue !== undefined) {
             queryParameters['metadata_value'] = requestParameters.metadataValue;
+        }
+
+        if (requestParameters.keyword !== undefined) {
+            queryParameters['keyword'] = requestParameters.keyword;
         }
 
         if (requestParameters.limit !== undefined) {

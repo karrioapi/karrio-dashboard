@@ -1920,6 +1920,24 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_tax_id
       validate_location
     }
+    billing_address {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
     line_items {
       id
       weight
@@ -2144,6 +2162,24 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
           validate_location
         }
         shipping_from {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
+        }
+        billing_address {
           id
           postal_code
           city

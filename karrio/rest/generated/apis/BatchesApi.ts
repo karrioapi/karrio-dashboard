@@ -27,6 +27,8 @@ import {
 } from '../models';
 
 export interface ListRequest {
+    resourceType?: string;
+    status?: string;
     limit?: number;
     offset?: number;
 }
@@ -46,6 +48,14 @@ export class BatchesApi extends runtime.BaseAPI {
      */
     async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<BatchOperations>> {
         const queryParameters: any = {};
+
+        if (requestParameters.resourceType !== undefined) {
+            queryParameters['resource_type'] = requestParameters.resourceType;
+        }
+
+        if (requestParameters.status !== undefined) {
+            queryParameters['status'] = requestParameters.status;
+        }
 
         if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;

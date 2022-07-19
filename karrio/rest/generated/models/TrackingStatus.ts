@@ -120,7 +120,8 @@ export enum TrackingStatusStatusEnum {
     Pending = 'pending',
     InTransit = 'in_transit',
     Incident = 'incident',
-    Delivered = 'delivered'
+    Delivered = 'delivered',
+    Unknown = 'unknown'
 }
 
 export function TrackingStatusFromJSON(json: any): TrackingStatus {

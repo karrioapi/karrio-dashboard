@@ -2974,6 +2974,25 @@ export interface get_order_order_shipping_from {
   validate_location: boolean | null;
 }
 
+export interface get_order_order_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_order_order_line_items {
   id: string;
   weight: number | null;
@@ -3194,6 +3213,7 @@ export interface get_order_order {
   status: OrderStatus;
   shipping_to: get_order_order_shipping_to;
   shipping_from: get_order_order_shipping_from | null;
+  billing_address: get_order_order_billing_address | null;
   line_items: get_order_order_line_items[];
   created_at: any;
   updated_at: any;
@@ -3247,6 +3267,25 @@ export interface get_orders_orders_edges_node_shipping_to {
 }
 
 export interface get_orders_orders_edges_node_shipping_from {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_orders_orders_edges_node_billing_address {
   id: string;
   postal_code: string | null;
   city: string | null;
@@ -3485,6 +3524,7 @@ export interface get_orders_orders_edges_node {
   status: OrderStatus;
   shipping_to: get_orders_orders_edges_node_shipping_to;
   shipping_from: get_orders_orders_edges_node_shipping_from | null;
+  billing_address: get_orders_orders_edges_node_billing_address | null;
   line_items: get_orders_orders_edges_node_line_items[];
   created_at: any;
   updated_at: any;
@@ -4464,6 +4504,7 @@ export enum TrackerStatusEnum {
   in_transit = "in_transit",
   incident = "incident",
   pending = "pending",
+  unknown = "unknown",
 }
 
 // An enumeration.
