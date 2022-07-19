@@ -3,7 +3,7 @@ import { getCookie, isNone, p } from "@/lib/helper";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useRef } from "react";
+import React, { FormEvent, useContext, useRef } from "react";
 import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from '@/lib/static/references';
@@ -95,9 +95,9 @@ export default function LoginPage(pageProps: any) {
           </div>
         </div>
 
-        <div className="has-text-centered my-4 is-size-6">
+        {pageProps?.metadata?.ALLOW_SIGNUP && <div className="has-text-centered my-4 is-size-6">
           Dont have an account? <Link href="/signup" passHref><a>Sign Up</a></Link>
-        </div>
+        </div>}
       </SectionLayout>
     </>
   )

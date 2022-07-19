@@ -7,11 +7,13 @@ import { isNone, isNoneOrEmpty, p } from '@/lib/helper';
 import { useRouter } from 'next/router';
 import { useAcceptInvitation } from '@/components/accept-invitation-modal';
 import { useCreateOrganizationModal } from '@/components/create-organization-modal';
+import { APIReference } from '@/context/references-provider';
 
 
 const OrganizationDropdown: React.FC = () => {
   const trigger = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { ALLOW_MULTI_ACCOUNT } = useContext(APIReference);
   const { acceptInvitation } = useAcceptInvitation();
   const { createOrganization } = useCreateOrganizationModal();
   const { authenticateOrg, ...token } = useContext(TokenData);
@@ -109,13 +111,10 @@ const OrganizationDropdown: React.FC = () => {
               ))}
 
               {/* Create organization action */}
-              <a
-                onClick={() => create()}
-                className="dropdown-item"
-              >
+              {ALLOW_MULTI_ACCOUNT && <a onClick={() => create()} className="dropdown-item">
                 <i className="fas fa-plus"></i>
                 <span className="px-2">New organization</span>
-              </a>
+              </a>}
 
             </div>
           </div>
