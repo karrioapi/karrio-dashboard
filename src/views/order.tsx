@@ -17,6 +17,7 @@ import EventsProvider, { EventsContext } from "@/context/events-provider";
 import LogsProvider, { LogsContext } from "@/context/logs-provider";
 import StatusCode from "@/components/status-code-badge";
 import CommodityDescription from "@/components/descriptions/commodity-description";
+import AddressDescription from "@/components/descriptions/address-description";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -136,6 +137,16 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                   <span>{formatRef(key).toLowerCase()}: <strong>{String(value)}</strong></span>
                 </p>
               </React.Fragment>)}
+
+            </div>}
+          </div>
+
+          {/* Billing address section */}
+          <div className="columns mt-6 mb-0 is-multiline">
+            {order.billing_address && <div className="column is-6 is-size-6 py-1">
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">BILL TO</p>
+
+              <AddressDescription address={order.billing_address} />
 
             </div>}
           </div>
