@@ -1,4 +1,4 @@
-import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
+import { isNone, isNoneOrEmpty, parseJwt } from '@/lib/helper';
 import getConfig from 'next/config';
 import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
@@ -46,9 +46,11 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
           token.orgId = user.orgId;
           token.accessToken = user.accessToken;
           token.refreshToken = user.refreshToken;
-          token.expiration = parseJwt(user.accessToken as string).exp
+          token.expiration = parseJwt(user.accessToken as string).exp;
+          token.testMode = user.testMode;
+        } else {
+          token.testMode = computeTestMode(req);
         }
-        token.testMode = user?.testMode || computeTestMode(req);
 
         // Check if organization updated
         const cookieOrgId = req.cookies['orgId'];

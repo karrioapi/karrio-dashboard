@@ -49,12 +49,13 @@ export async function getCurrentOrg(access: string, orgId?: string) {
 
 export function computeTestMode(req: NextApiRequest): boolean {
   const cookieTestMode = (req.cookies['testMode'] || "").toLowerCase();
-
-  if (cookieTestMode == 'true') return true;
-  if (cookieTestMode == 'false') return false;
-
-  return (
+  const urlTestMode = (
     req.url?.includes("/test")
     || req.headers.referer?.includes("/test")
   ) as boolean;
+
+  if (cookieTestMode === 'true' && urlTestMode) return true;
+  if (cookieTestMode === 'false' && !urlTestMode) return false;
+
+  return urlTestMode;
 }
