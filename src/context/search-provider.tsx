@@ -16,7 +16,7 @@ export type SearchResultType = (OrderType | TrackerType | ShipmentType);
 export type SearchFilterTypeKeys = keyof SearchFilterType;
 export type SearchCallType = (searchValue: string) => void;
 
-type SearchType = LazyQueryResult<(search_data_by_address | search_data_by_address_extended), SearchFilterType> & {
+type SearchType = LazyQueryResult<(search_data | search_data_extended), SearchFilterType> & {
   variables: SearchFilterType;
   searchResults: SearchResultType[]
   search: (search_value: string) => Promise<any>;
