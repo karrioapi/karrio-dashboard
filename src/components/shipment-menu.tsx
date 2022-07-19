@@ -47,7 +47,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
     try {
       await voidLabel(shipment);
       notify({ type: NotificationType.success, message: 'Shipment successfully cancelled!' });
-      shipments.refetch();
+      shipments.loadMore();
     } catch (err: any) {
       notify({ type: NotificationType.error, message: err });
     }
