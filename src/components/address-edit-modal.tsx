@@ -60,9 +60,6 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   };
 
   const handleChange = (event: React.ChangeEvent<any>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
     const target = event.target;
     const name = target.name;
     const value = target.type === 'checkbox' ? target.checked : target.value;
