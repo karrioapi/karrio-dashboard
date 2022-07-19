@@ -11,8 +11,15 @@ interface SearchBarComponent {
 
 const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
   const ref = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const { searchResults, loading, search } = useContext(SearchContext);
   const [searchValue, setSearchValue] = React.useState<string>("");
+  const clear = () => {
+    setSearchValue("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
 
   useEffect(() => {
     search(searchValue);
@@ -29,15 +36,16 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
             placeholder="Search..."
             defaultValue={searchValue}
             className="input is-small"
-            onChange={e => setSearchValue(e.target.value)} />
+            onChange={e => setSearchValue(e.target.value)}
+            ref={inputRef}
+          />
           <span className="icon is-small is-left">
             {loading
               ? <i className="fas fa-spinner fa-pulse"></i>
               : <i className="fas fa-search"></i>
             }
           </span>
-          <span className="icon is-small is-right is-clickable"
-            onClick={() => setSearchValue("")}>
+          <span className="icon is-small is-right is-clickable" onClick={clear}>
             <i className="fas fa-times"></i>
           </span>
         </p>
