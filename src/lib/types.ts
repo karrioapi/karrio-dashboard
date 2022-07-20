@@ -207,7 +207,7 @@ export const HTTP_METHODS = [
 
 export enum NoneEnum { none = "none" };
 
-export type SessionType = Session & { accessToken: string, org_id?: string };
+export type SessionType = Session & { accessToken: string, testMode?: boolean, orgId?: string };
 export type ContextDataType = {
   data: {
     user: GetUser_user,
@@ -220,10 +220,15 @@ export interface Metadata {
   APP_NAME: string;
   APP_WEBSITE?: string;
   MULTI_ORGANIZATIONS: boolean;
-  ORDERS_MANAGEMENT: boolean;
+  ALLOW_MULTI_ACCOUNT: boolean;
+  CUSTOM_CARRIER_DEFINITION: boolean;
   APPS_MANAGEMENT: boolean;
+  AUDIT_LOGGING: boolean;
   DOCUMENTS_MANAGEMENT: boolean;
+  DATA_IMPORT_EXPORT: boolean;
   ALLOW_SIGNUP: boolean;
+  ALLOW_ADMIN_APPROVED_SIGNUP: boolean;
+  ORDERS_MANAGEMENT: boolean;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;
@@ -234,13 +239,19 @@ export interface References {
   APP_NAME: string;
   APP_WEBSITE: string;
   MULTI_ORGANIZATIONS: boolean;
-  ORDERS_MANAGEMENT: boolean;
+  ALLOW_MULTI_ACCOUNT: boolean;
+  CUSTOM_CARRIER_DEFINITION: boolean;
   APPS_MANAGEMENT: boolean;
+  AUDIT_LOGGING: boolean;
   DOCUMENTS_MANAGEMENT: boolean;
+  DATA_IMPORT_EXPORT: boolean;
   ALLOW_SIGNUP: boolean;
+  ALLOW_ADMIN_APPROVED_SIGNUP: boolean;
+  ORDERS_MANAGEMENT: boolean;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;
+
   ADDRESS_AUTO_COMPLETE: object;
   countries: object;
   currencies: object;

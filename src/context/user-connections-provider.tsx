@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_user_connections, GET_USER_CONNECTIONS, GET_USER_CONNECTIONS_WITH_GENERICS, get_user_connections_with_generics_user_connections } from 'karrio/graphql';
-import { APIReference } from './references-provider';
+import { APIReference } from '@/context/references-provider';
 
 
 export type UserConnectionType = get_user_connections_with_generics_user_connections;

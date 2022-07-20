@@ -14,62 +14,41 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
+    Message,
+    MessageFromJSON,
+    MessageFromJSONTyped,
+    MessageToJSON,
+} from './Message';
 
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface ErrorMessages
  */
-export interface ShipmentList {
+export interface ErrorMessages {
     /**
-     * 
-     * @type {number}
-     * @memberof ShipmentList
+     * The list of error messages
+     * @type {Array<Message>}
+     * @memberof ErrorMessages
      */
-    count?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShipmentList
-     */
-    next?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShipmentList
-     */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
-     */
-    results: Array<Shipment>;
+    messages?: Array<Message>;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function ErrorMessagesFromJSON(json: any): ErrorMessages {
+    return ErrorMessagesFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function ErrorMessagesFromJSONTyped(json: any, ignoreDiscriminator: boolean): ErrorMessages {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'messages': !exists(json, 'messages') ? undefined : ((json['messages'] as Array<any>).map(MessageFromJSON)),
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function ErrorMessagesToJSON(value?: ErrorMessages | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +57,7 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'messages': value.messages === undefined ? undefined : ((value.messages as Array<any>).map(MessageToJSON)),
     };
 }
 

@@ -15,7 +15,7 @@ type OrganizationsQueryResult = LazyQueryResult<get_organizations, any> & {
 
 export const Organizations = React.createContext<OrganizationsQueryResult>({} as OrganizationsQueryResult);
 
-const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_id: string }> = ({ children, organizations, org_id }) => {
+const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], orgId: string }> = ({ children, organizations, orgId }) => {
   const { MULTI_ORGANIZATIONS } = useContext(APIReference);
   const [initialLoad, result] = useLazyQuery<get_organizations>(GET_ORGANIZATIONS);
   const [state, setState] = useState<OrganizationType[]>(organizations);
@@ -23,7 +23,7 @@ const OrganizationsProvider: React.FC<{ organizations: OrganizationType[], org_i
   const load = () => result.called ? result.fetchMore({}) : initialLoad({});
   const extractList = (results?: any[]): OrganizationType[] => (results || []).filter(r => r !== null);
   const extractCurrent = (results?: any[]): OrganizationType => {
-    const current = (results || []).find(org => org?.id === org_id)
+    const current = (results || []).find(org => org?.id === orgId)
     return current || {}
   };
 

@@ -795,6 +795,22 @@ export default function CreateShipmentPage(pageProps: any) {
 
               </div>
 
+              {/* Billing address section */}
+              {(orders.orders || [{}])[0].billing_address && <div className="card px-0 mt-5">
+
+
+                <div className="p-3">
+
+                  <header className="is-flex is-justify-content-space-between">
+                    <span className="is-title is-size-7 has-text-weight-bold is-vcentered my-2">BILL TO</span>
+                  </header>
+
+                  <AddressDescription address={orders.orders[0].billing_address as any} />
+
+                </div>
+
+              </div>}
+
             </div>
           </div>
         </div>}

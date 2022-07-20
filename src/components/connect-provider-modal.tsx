@@ -39,7 +39,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const { testMode } = useContext(AppMode);
   const { addUrlParam, removeUrlParam } = useLocation();
   const { updateConnection, createConnection } = useContext(ConnectionMutationContext);
-  const DEFAULT_STATE = (): Partial<UserConnectionType> => ({ carrier_name: NoneEnum.none, test: testMode });
+  const DEFAULT_STATE = (): Partial<UserConnectionType> => ({ carrier_name: NoneEnum.none, test_mode: testMode });
   const [key, setKey] = useState<string>(`connection-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [payload, setPayload] = useState<Partial<UserConnectionType | any>>(DEFAULT_STATE());
@@ -82,9 +82,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     let new_state = { ...payload, [property]: e.target.value || null };
     if (property === 'carrier_name') {
       setKey(`connection-${Date.now()}`);
-      new_state = { carrier_name: e.target.value, test: testMode };
-    } else if (property == 'test') {
-      new_state = { ...payload, test: e.target.checked };
+      new_state = { carrier_name: e.target.value, test_mode: testMode };
+    } else if (property == 'test_mode') {
+      new_state = { ...payload, test_mode: e.target.checked };
     }
     setPayload(new_state);
     setIsDisabled(deepEqual((operation.connection || DEFAULT_STATE), new_state));
@@ -245,13 +245,13 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {has("services") &&
                   <CarrierServiceEditor
-                    defaultValue={payload.services || service_levels[payload.carrier_name] || service_levels['generic']}
+                    defaultValue={payload.services || service_levels[carrier_name] || service_levels['generic']}
                     onChange={directChange("services")}
                   />}
 
                 {/* Carrier specific fields END */}
 
-                <CheckBoxField defaultChecked={payload.test} onChange={handleOnChange("test")}>Test Mode</CheckBoxField>
+                <CheckBoxField defaultChecked={payload.test_mode} onChange={handleOnChange("test_mode")}>Test Mode</CheckBoxField>
 
 
                 {has("metadata") && <>
@@ -309,30 +309,30 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, property: string): boolean {
   // TODO: Use carriers settings types when available for automatic validation
   return ({
-    // [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test", "access_key", "secret_key", "aws_region"],
-    [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
-    [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test", "api_key", "password", "account_number"],
-    [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test", "username", "password", "customer_number", "contract_id", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test", "username", "password", "billing_account"],
-    [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test", "site_id", "password", "account_number", "account_country_code"],
-    [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test", "username", "password", "account_number", "services"],
-    [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test", "consumer_key", "consumer_secret"],
-    [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Easypost]: ["carrier_id", "test", "api_key", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test", "username", "password"],
-    [CarrierSettingsCarrierNameEnum.Generic]: ["display_name", "custom_carrier_name", "carrier_id", "test", "account_number", "account_country_code", "label_template", "services", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test", "user_key", "password", "meter_number", "account_number", "account_country_code", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test", "username", "password", "account_number", "user_token", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test", "client_id", "client_secret"],
-    [CarrierSettingsCarrierNameEnum.Sendle]: ["carrier_id", "test", "sendle_id", "api_key"],
-    [CarrierSettingsCarrierNameEnum.SfExpress]: ["carrier_id", "test", "partner_id", "check_word"],
-    [CarrierSettingsCarrierNameEnum.Tnt]: ["carrier_id", "test", "username", "password", "account_country_code", "account_number"],
-    [CarrierSettingsCarrierNameEnum.Ups]: ["carrier_id", "test", "username", "password", "access_license_number", "account_number", "account_country_code", "metadata"],
-    [CarrierSettingsCarrierNameEnum.Usps]: ["carrier_id", "test", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
-    [CarrierSettingsCarrierNameEnum.UspsInternational]: ["carrier_id", "test", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
-    [CarrierSettingsCarrierNameEnum.Yanwen]: ["carrier_id", "test", "customer_number", "license_key"],
-    [CarrierSettingsCarrierNameEnum.Yunexpress]: ["carrier_id", "test", "customer_number", "api_secret"],
+    // [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test_mode", "access_key", "secret_key", "aws_region"],
+    [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test_mode", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
+    [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test_mode", "api_key", "password", "account_number"],
+    [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test_mode", "username", "password", "customer_number", "contract_id", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test_mode", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test_mode", "username", "password", "billing_account"],
+    [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test_mode", "site_id", "password", "account_number", "account_country_code"],
+    [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test_mode", "username", "password", "account_number", "services"],
+    [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test_mode", "consumer_key", "consumer_secret"],
+    [CarrierSettingsCarrierNameEnum.Eshipper]: ["carrier_id", "test_mode", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Easypost]: ["carrier_id", "test_mode", "api_key", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Freightcom]: ["carrier_id", "test_mode", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Generic]: ["display_name", "custom_carrier_name", "carrier_id", "test_mode", "account_number", "account_country_code", "label_template", "services", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Fedex]: ["carrier_id", "test_mode", "user_key", "password", "meter_number", "account_number", "account_country_code", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Purolator]: ["carrier_id", "test_mode", "username", "password", "account_number", "user_token", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Royalmail]: ["carrier_id", "test_mode", "client_id", "client_secret"],
+    [CarrierSettingsCarrierNameEnum.Sendle]: ["carrier_id", "test_mode", "sendle_id", "api_key"],
+    [CarrierSettingsCarrierNameEnum.SfExpress]: ["carrier_id", "test_mode", "partner_id", "check_word"],
+    [CarrierSettingsCarrierNameEnum.Tnt]: ["carrier_id", "test_mode", "username", "password", "account_country_code", "account_number"],
+    [CarrierSettingsCarrierNameEnum.Ups]: ["carrier_id", "test_mode", "username", "password", "access_license_number", "account_number", "account_country_code", "metadata"],
+    [CarrierSettingsCarrierNameEnum.Usps]: ["carrier_id", "test_mode", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
+    [CarrierSettingsCarrierNameEnum.UspsInternational]: ["carrier_id", "test_mode", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
+    [CarrierSettingsCarrierNameEnum.Yanwen]: ["carrier_id", "test_mode", "customer_number", "license_key"],
+    [CarrierSettingsCarrierNameEnum.Yunexpress]: ["carrier_id", "test_mode", "customer_number", "api_secret"],
     [NoneEnum.none]: [] as string[],
   }[carrier_name] || []).includes(property)
 }

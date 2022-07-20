@@ -13,63 +13,49 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
-
 /**
- * 
+ * The list of API errors
  * @export
- * @interface ShipmentList
+ * @interface APIError
  */
-export interface ShipmentList {
+export interface APIError {
     /**
-     * 
-     * @type {number}
-     * @memberof ShipmentList
-     */
-    count?: number | null;
-    /**
-     * 
+     * The error or warning message
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof APIError
      */
-    next?: string | null;
+    message?: string;
     /**
-     * 
+     * The message code
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof APIError
      */
-    previous?: string | null;
+    code?: string;
     /**
-     * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * any additional details
+     * @type {{ [key: string]: string; }}
+     * @memberof APIError
      */
-    results: Array<Shipment>;
+    details?: { [key: string]: string; };
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function APIErrorFromJSON(json: any): APIError {
+    return APIErrorFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function APIErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): APIError {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'message': !exists(json, 'message') ? undefined : json['message'],
+        'code': !exists(json, 'code') ? undefined : json['code'],
+        'details': !exists(json, 'details') ? undefined : json['details'],
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function APIErrorToJSON(value?: APIError | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +64,9 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'message': value.message,
+        'code': value.code,
+        'details': value.details,
     };
 }
 

@@ -13,63 +13,53 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
-
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface BatchObject
  */
-export interface ShipmentList {
+export interface BatchObject {
     /**
-     * 
-     * @type {number}
-     * @memberof ShipmentList
-     */
-    count?: number | null;
-    /**
-     * 
+     * A unique identifier
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchObject
      */
-    next?: string | null;
+    id?: string;
     /**
-     * 
+     * The batch operation resource status
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchObject
      */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
-     */
-    results: Array<Shipment>;
+    status: BatchObjectStatusEnum;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+/**
+* @export
+* @enum {string}
+*/
+export enum BatchObjectStatusEnum {
+    Queued = 'queued',
+    Running = 'running',
+    Completed = 'completed',
+    Failed = 'failed'
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function BatchObjectFromJSON(json: any): BatchObject {
+    return BatchObjectFromJSONTyped(json, false);
+}
+
+export function BatchObjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchObject {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'status': json['status'],
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function BatchObjectToJSON(value?: BatchObject | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +68,8 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'id': value.id,
+        'status': value.status,
     };
 }
 

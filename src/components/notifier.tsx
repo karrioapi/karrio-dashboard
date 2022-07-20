@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import { FieldError, NotificationType, Notification, RequestError, ErrorType } from '@/lib/types';
 import React, { useState } from 'react';
 
@@ -41,6 +42,7 @@ const Notifier: React.FC = ({ children }) => {
 
 export function formatMessage(msg: Notification['message']) {
   try {
+    console.log(msg)
     // Process plain text message
     if (typeof msg === 'string') {
       return msg;
@@ -54,7 +56,7 @@ export function formatMessage(msg: Notification['message']) {
     }
 
     // Process Rest Request errors
-    if (Array.isArray(msg) && msg.length > 0 && msg[0] instanceof RequestError) {
+    if (Array.isArray(msg) && msg.length > 0) {
       return msg.map(renderError);
     }
 
@@ -70,7 +72,7 @@ export function formatMessage(msg: Notification['message']) {
 };
 
 function renderError(msg: any, _: number) {
-  const error = msg.data.error;
+  const error = msg.data?.error || msg;
   if (error?.message !== undefined) {
     return error.message;
   } else if (error?.details?.messages !== undefined) {

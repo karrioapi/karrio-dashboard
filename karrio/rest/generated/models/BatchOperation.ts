@@ -14,62 +14,103 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
+    BatchObject,
+    BatchObjectFromJSON,
+    BatchObjectFromJSONTyped,
+    BatchObjectToJSON,
+} from './BatchObject';
 
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface BatchOperation
  */
-export interface ShipmentList {
+export interface BatchOperation {
     /**
-     * 
-     * @type {number}
-     * @memberof ShipmentList
+     * A unique identifier
+     * @type {string}
+     * @memberof BatchOperation
      */
-    count?: number | null;
+    id?: string;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchOperation
      */
-    next?: string | null;
+    status: BatchOperationStatusEnum;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchOperation
      */
-    previous?: string | null;
+    resource_type: BatchOperationResourceTypeEnum;
     /**
      * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * @type {Array<BatchObject>}
+     * @memberof BatchOperation
      */
-    results: Array<Shipment>;
+    resources: Array<BatchObject>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof BatchOperation
+     */
+    created_at: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof BatchOperation
+     */
+    updated_at: Date;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BatchOperation
+     */
+    test_mode: boolean;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+/**
+* @export
+* @enum {string}
+*/
+export enum BatchOperationStatusEnum {
+    Queued = 'queued',
+    Running = 'running',
+    Completed = 'completed',
+    Failed = 'failed'
+}/**
+* @export
+* @enum {string}
+*/
+export enum BatchOperationResourceTypeEnum {
+    Order = 'order',
+    Shipment = 'shipment',
+    Tracking = 'tracking',
+    Billing = 'billing'
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function BatchOperationFromJSON(json: any): BatchOperation {
+    return BatchOperationFromJSONTyped(json, false);
+}
+
+export function BatchOperationFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchOperation {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'status': json['status'],
+        'resource_type': json['resource_type'],
+        'resources': ((json['resources'] as Array<any>).map(BatchObjectFromJSON)),
+        'created_at': (new Date(json['created_at'])),
+        'updated_at': (new Date(json['updated_at'])),
+        'test_mode': json['test_mode'],
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function BatchOperationToJSON(value?: BatchOperation | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +119,13 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'id': value.id,
+        'status': value.status,
+        'resource_type': value.resource_type,
+        'resources': ((value.resources as Array<any>).map(BatchObjectToJSON)),
+        'created_at': (value.created_at.toISOString()),
+        'updated_at': (value.updated_at.toISOString()),
+        'test_mode': value.test_mode,
     };
 }
 

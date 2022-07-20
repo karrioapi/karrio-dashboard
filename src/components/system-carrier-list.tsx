@@ -44,7 +44,7 @@ const SystemConnectionList: React.FC = () => {
                 <CarrierBadge carrier={connection.carrier_name} className="box has-text-weight-bold" textOnly />
               </td>
               <td className="mode is-vcentered">
-                {connection.test ? <span className="tag is-warning is-centered">Test</span> : <></>}
+                {connection.test_mode ? <span className="tag is-warning is-centered">Test</span> : <></>}
               </td>
               <td className="details">
                 <ConnectionDescription connection={connection} />

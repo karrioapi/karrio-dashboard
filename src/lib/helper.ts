@@ -210,6 +210,13 @@ export function getCookie(name: string): string {
   return cookieValue;
 }
 
+export function setCookie(cname: string, cvalue: any, exdays: number = 1) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 export async function handleFailure<T>(request: Promise<T>): Promise<T> {
   try {
     const response = await request;
@@ -355,14 +362,20 @@ export function failsafe(fn: () => any, defaultValue: any = null) {
 export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
   return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(
     async (resolve, reject) => {
-      const { data } = await request({ ...options, onError: errors => reject(errors.graphQLErrors || errors) });
+      const { data, errors: requestErrors } = await request({
+        ...options, onError: errors => reject(errors.graphQLErrors || errors)
+      });
+
       if (data && (data[operation] as any).errors) {
         const errors = (data[operation] as any).errors
           .map((error: { field: string, messages: string[] }) => (
             new ErrorType(error.field, error.messages)
           ));
-
         reject(errors);
+      }
+
+      if ((requestErrors as any)?.networkError) {
+        reject([new ErrorType("", (requestErrors as any).networkError.message)]);
       }
 
       resolve((data ? data[operation] : null) as T[typeof operation]);

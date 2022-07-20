@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { formatAddressRegion, formatDayDate, formatRef, isNone, p, useLocation } from '@/lib/helper';
-import { ListStatusEnum } from 'karrio/rest/generated/apis/TrackersApi';
-import Image from 'next/image';
+import { formatAddressRegion, formatDayDate, isNone, useLocation } from '@/lib/helper';
 import { TrackerType, TrackingEventType } from '@/lib/types';
-import CarrierImage from '../carrier-image';
-import AppLink from '../app-link';
+import CarrierImage from '@/components/carrier-image';
+import AppLink from '@/components/app-link';
+import { TrackerStatusEnum } from '@karrio/graphql';
 
 type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {
@@ -47,12 +46,12 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
   };
   const computeColor = (tracker: TrackerType) => {
     if (tracker?.delivered) return "has-background-success";
-    else if (tracker?.status === ListStatusEnum.Pending.toString()) return "has-background-grey-dark";
+    else if (tracker?.status === TrackerStatusEnum.pending.toString()) return "has-background-grey-dark";
     else return "has-background-info";
   };
   const computeStatus = (tracker: TrackerType) => {
     if (tracker?.delivered) return "Delivered";
-    else if (tracker?.status === ListStatusEnum.Pending.toString()) return "Pending";
+    else if (tracker?.status === TrackerStatusEnum.pending.toString()) return "Pending";
     else return "In-Transit";
   };
   const computeEvents = (tracker: TrackerType): DayEvents => {

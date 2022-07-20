@@ -14,49 +14,49 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
+    BatchOperation,
+    BatchOperationFromJSON,
+    BatchOperationFromJSONTyped,
+    BatchOperationToJSON,
+} from './BatchOperation';
 
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface BatchOperations
  */
-export interface ShipmentList {
+export interface BatchOperations {
     /**
      * 
      * @type {number}
-     * @memberof ShipmentList
+     * @memberof BatchOperations
      */
     count?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchOperations
      */
     next?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof BatchOperations
      */
     previous?: string | null;
     /**
      * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * @type {Array<BatchOperation>}
+     * @memberof BatchOperations
      */
-    results: Array<Shipment>;
+    results: Array<BatchOperation>;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function BatchOperationsFromJSON(json: any): BatchOperations {
+    return BatchOperationsFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function BatchOperationsFromJSONTyped(json: any, ignoreDiscriminator: boolean): BatchOperations {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -65,11 +65,11 @@ export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'count': !exists(json, 'count') ? undefined : json['count'],
         'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'results': ((json['results'] as Array<any>).map(BatchOperationFromJSON)),
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function BatchOperationsToJSON(value?: BatchOperations | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -81,7 +81,7 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
         'count': value.count,
         'next': value.next,
         'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'results': ((value.results as Array<any>).map(BatchOperationToJSON)),
     };
 }
 

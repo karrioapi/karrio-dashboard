@@ -13,63 +13,51 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    Shipment,
-    ShipmentFromJSON,
-    ShipmentFromJSONTyped,
-    ShipmentToJSON,
-} from './Shipment';
-
 /**
  * 
  * @export
- * @interface ShipmentList
+ * @interface VerifiedTokenObtainPair
  */
-export interface ShipmentList {
-    /**
-     * 
-     * @type {number}
-     * @memberof ShipmentList
-     */
-    count?: number | null;
+export interface VerifiedTokenObtainPair {
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof VerifiedTokenObtainPair
      */
-    next?: string | null;
+    refresh: string;
     /**
      * 
      * @type {string}
-     * @memberof ShipmentList
+     * @memberof VerifiedTokenObtainPair
      */
-    previous?: string | null;
+    readonly access?: string;
     /**
      * 
-     * @type {Array<Shipment>}
-     * @memberof ShipmentList
+     * The OTP (One Time Password) token received by the user from the
+     * configured Two Factor Authentication method.
+     * @type {string}
+     * @memberof VerifiedTokenObtainPair
      */
-    results: Array<Shipment>;
+    otp_token: string;
 }
 
-export function ShipmentListFromJSON(json: any): ShipmentList {
-    return ShipmentListFromJSONTyped(json, false);
+export function VerifiedTokenObtainPairFromJSON(json: any): VerifiedTokenObtainPair {
+    return VerifiedTokenObtainPairFromJSONTyped(json, false);
 }
 
-export function ShipmentListFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShipmentList {
+export function VerifiedTokenObtainPairFromJSONTyped(json: any, ignoreDiscriminator: boolean): VerifiedTokenObtainPair {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(ShipmentFromJSON)),
+        'refresh': json['refresh'],
+        'access': !exists(json, 'access') ? undefined : json['access'],
+        'otp_token': json['otp_token'],
     };
 }
 
-export function ShipmentListToJSON(value?: ShipmentList | null): any {
+export function VerifiedTokenObtainPairToJSON(value?: VerifiedTokenObtainPair | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +66,8 @@ export function ShipmentListToJSON(value?: ShipmentList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(ShipmentToJSON)),
+        'refresh': value.refresh,
+        'otp_token': value.otp_token,
     };
 }
 

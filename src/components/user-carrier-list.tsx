@@ -6,7 +6,6 @@ import { ConnectionMutationContext } from '@/context/connection-mutation';
 import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
-import { AppMode, computeMode } from '@/context/app-mode-provider';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import Spinner from '@/components/spinner';
 import { useRouter } from 'next/dist/client/router';
@@ -21,13 +20,11 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
-  const { testMode } = useContext(AppMode);
   const labelModal = useLabelTemplateModal();
   const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
   const { user_connections, loading, called, refetch } = useContext(UserConnections);
-  const [viewOtherMode, showOther] = useState<boolean>(computeMode() || false);
 
   const onRefresh = async () => refetch && await refetch();
   const update = ({ __typename, id, ...changes }: ConnectionUpdateType) => async () => {
@@ -73,11 +70,6 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
   return (
     <>
-      <label className="checkbox p-2" style={{ position: 'absolute', top: 1, right: 1 }}>
-        <span className="is-size-7 has-text-weight-semibold has-text-info px-2">Show {testMode ? 'live' : 'test'} connections</span>
-        <input id="toggle" type="checkbox" defaultChecked={viewOtherMode} onChange={() => showOther(!viewOtherMode)} />
-      </label>
-
       {loading && <Spinner />}
 
       {(called && (user_connections || []).length > 0) && <table className="table is-fullwidth">
@@ -90,7 +82,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
           {user_connections.map((connection) => (
 
-            <tr key={`${connection.id}-${Date.now()}`} style={{ display: (testMode === connection.test || (testMode !== connection.test && viewOtherMode)) ? 'table-row' : 'none' }}>
+            <tr key={`${connection.id}-${Date.now()}`} style={{ display: 'table-row' }}>
               <td className="carrier pl-0">
                 <CarrierBadge
                   carrier={connection.carrier_name}
@@ -100,7 +92,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                 />
               </td>
               <td className="mode is-vcentered">
-                {connection.test && <span className="tag is-warning is-centered">Test</span>}
+                {connection.test_mode && <span className="tag is-warning is-centered">Test</span>}
               </td>
               <td className="active is-vcentered">
                 <button className="button is-white is-large" onClick={update({

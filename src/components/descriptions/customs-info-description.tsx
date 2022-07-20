@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatCustomsLabel, formatRef, isNone } from '@/lib/helper';
+import { formatCustomsLabel, formatRef, isNone, isNoneOrEmpty } from '@/lib/helper';
 import { CustomsType } from '@/lib/types';
 
 interface CustomsInfoDescriptionComponent {
@@ -13,11 +13,11 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
       <p className="is-size-7 my-1 has-text-weight-semibold">{formatCustomsLabel(customs)}</p>
 
       {Object.entries(customs.options || {}).map(([key, value]: any, index) => <React.Fragment key={index + "option-info"}>
-        <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
+        {!isNoneOrEmpty(value) && <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
           <span>
             {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
           </span>
-        </p>
+        </p>}
       </React.Fragment>)}
 
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
@@ -39,11 +39,11 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
         <p className="is-title is-size-7 my-2 has-text-weight-semibold">DUTIES</p>
 
         {Object.entries(customs.duty || {}).map(([key, value]: any, index) => <React.Fragment key={index + "option-info"}>
-          <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
+          {!isNoneOrEmpty(value) && <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
             <span>
               {formatRef(key).toLowerCase()}: <strong>{formatRef(String(value))}</strong>
             </span>
-          </p>
+          </p>}
         </React.Fragment>)}
       </div>}
 

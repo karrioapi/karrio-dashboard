@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { useOrganizationInvitation } from '@/context/organization-invitation-provider';
 import { useUser } from '@/context/user-provider';
 
-type OperationType = { onChange?: (org_id: string) => void; };
+type OperationType = { onChange?: (orgId: string) => void; };
 interface AcceptInvitationInterface {
   acceptInvitation: (operation?: OperationType) => void;
 }
@@ -31,10 +31,10 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
     operation && setOperation(operation);
     setIsActive(true);
   };
-  const close = ({ updated, org_id }: any | { updated?: boolean }) => {
+  const close = ({ updated, orgId }: any | { updated?: boolean }) => {
     setIsActive(false);
     setKey(`invite-${Date.now()}`);
-    (updated && operation?.onChange) && operation.onChange(org_id);
+    (updated && operation?.onChange) && operation.onChange(orgId);
     removeUrlParam('accept_invitation');
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -42,8 +42,8 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await accept(accept_invitation);
-      const org_id = data?.accept_organization_invitation?.organization?.id
-      setTimeout(() => close({ updated: true, org_id }), 500);
+      const orgId = data?.accept_organization_invitation?.organization?.id
+      setTimeout(() => close({ updated: true, orgId }), 500);
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }

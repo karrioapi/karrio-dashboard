@@ -1,13 +1,12 @@
-import { KARRIO_API } from "@/client/context";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
-import { Response } from "node-fetch";
-import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
 import axios from "axios";
+import logger from "@/lib/logger";
 import getConfig from "next/config";
-import logger from "./logger";
+import { Response } from "node-fetch";
+import { getSession } from "next-auth/react";
+import { KARRIO_API } from "@/client/context";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { createServerError, ServerErrorCode } from "@/lib/helper";
+import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
 
 const { publicRuntimeConfig } = getConfig();
 const AUTH_HTTP_CODES = [401, 403, 407];
@@ -15,14 +14,16 @@ const AUTH_HTTP_CODES = [401, 403, 407];
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
-  await setOrgHeader(ctx, session);
 
-  const pathname = ctx.resolvedUrl;
-  const org_id = session?.org_id || "";
   const data = session ? await loadContextData(session as SessionType) : {};
+  const pathname = ctx.resolvedUrl;
+  const orgId = (session?.orgId as string) || null;
+  const testMode = (session?.testMode as boolean);
+
+  await setSessionCookies(ctx, testMode, orgId)
 
   return {
-    props: { pathname, org_id, ...data }
+    props: { pathname, orgId, ...data }
   };
 };
 
@@ -52,9 +53,14 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
   });
 }
 
-export async function loadContextData({ accessToken, org_id }: SessionType): Promise<any> {
+export async function loadContextData({ accessToken, orgId, testMode }: SessionType): Promise<any> {
   const { metadata } = await checkAPI();
-  const headers = { Authorization: `Bearer ${accessToken}` };
+  const headers = {
+    ...(orgId ? { 'x-org-id': orgId } : {}),
+    ...(testMode ? { 'x-test-id': testMode } : {}),
+    'authorization': `Bearer ${accessToken}`,
+  } as any;
+
   const getReferences = () => axios
     .get<References>(
       publicRuntimeConfig.KARRIO_API_URL + '/v1/references', { headers }
@@ -63,7 +69,7 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
   const getUserData = () => axios
     .get<ContextDataType>(KARRIO_API + '/graphql', {
       headers,
-      data: { query: dataQuery(org_id), variables: { org_id } }
+      data: { query: dataQuery(metadata) }
     })
     .then(({ data }) => data);
 
@@ -85,15 +91,19 @@ export async function loadContextData({ accessToken, org_id }: SessionType): Pro
   }
 }
 
-async function setOrgHeader(ctx: GetServerSidePropsContext, session: Session | null) {
-  // Sets the authentication org_id cookie if the session has one
-  if (ctx.res && session?.org_id) {
-    ctx.res.setHeader('Set-Cookie', `org_id=${session.org_id}`);
+export async function setSessionCookies(ctx: GetServerSidePropsContext, testMode: boolean, orgId?: string | null) {
+  // Sets the authentication orgId cookie if the session has one
+  if (ctx.res && orgId) {
+    ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
   }
+  ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
 }
 
-function dataQuery(org_id?: string) {
-  const organizationQueries = isNone(org_id) ? '' : `
+function dataQuery(metadata: any) {
+  const organizationQueries = metadata?.MULTI_ORGANIZATIONS ? `
+  organization {
+    id
+  }
   organizations {
     id
     name
@@ -122,7 +132,7 @@ function dataQuery(org_id?: string) {
       last_login
     }
   }
-  `;
+  `: "";
 
   return `
     {

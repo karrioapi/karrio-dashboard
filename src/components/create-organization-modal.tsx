@@ -9,7 +9,7 @@ import { useOrganizationMutation } from '@/context/organization-mutation';
 import { CreateOrganizationInput } from 'karrio/graphql';
 
 type OperationType = {
-  onChange: (org_id: string) => Promise<any>;
+  onChange: (orgId: string) => Promise<any>;
 };
 type CreateOrganizationContextType = {
   createOrganization: (operation: OperationType) => void,
