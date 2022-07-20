@@ -74,7 +74,7 @@ export enum NotificationType {
 
 export interface Notification {
   type?: NotificationType;
-  message: string | Error | RequestError | ApolloError | ErrorType[] | RequestError[];
+  message: string | Error | RequestError | ApolloError | MessageType[] | ErrorType[];
 }
 
 export interface LabelData {
@@ -158,15 +158,22 @@ export type ErrorMessage = MessageType & {
 };
 
 export type FieldError = {
-  [key: string]: { code: string; message: string; };
+  [key: string]: { code: string; message: string | string[]; };
 };
 
 export interface APIError {
-  error: {
+  errors?: {
     code: string;
     message?: string;
     details: { messages?: ErrorMessage[]; } & FieldError;
-  };
+  }[],
+  messages?: {
+    code: string;
+    message?: string;
+    carrier_id?: string;
+    carrier_name?: string;
+    details: { messages?: ErrorMessage[]; } & FieldError;
+  }[],
 }
 
 export class RequestError extends Error {

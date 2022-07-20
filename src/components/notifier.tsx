@@ -1,4 +1,3 @@
-import logger from '@/lib/logger';
 import { FieldError, NotificationType, Notification, RequestError, ErrorType } from '@/lib/types';
 import React, { useState } from 'react';
 
@@ -42,7 +41,6 @@ const Notifier: React.FC = ({ children }) => {
 
 export function formatMessage(msg: Notification['message']) {
   try {
-    console.log(msg)
     // Process plain text message
     if (typeof msg === 'string') {
       return msg;
@@ -72,15 +70,27 @@ export function formatMessage(msg: Notification['message']) {
 };
 
 function renderError(msg: any, _: number) {
-  const error = msg.data?.error || msg;
+  const error = msg.data?.errors || msg.data?.messages || msg;
+
   if (error?.message !== undefined) {
     return error.message;
-  } else if (error?.details?.messages !== undefined) {
+  }
+
+  else if (error?.details?.messages !== undefined) {
     return (error.details.messages || []).map((msg: any, index: number) => {
       const carrier_name = msg.carrier_name !== undefined ? `${msg.carrier_id} :` : '';
       return <p key={index}>{carrier_name} {msg.message}</p>;
     });
-  } else {
+  }
+
+  else if (Array.isArray(error) && error.length > 0) {
+    return (error || []).map((msg: any, index: number) => {
+      const carrier_name = msg.carrier_name !== undefined ? `${msg.carrier_id} :` : '';
+      return <p key={index}>{carrier_name} {msg.message}</p>;
+    });
+  }
+
+  else {
     const render = ([field, msg]: [string, string | FieldError], index: number) => {
       return (<React.Fragment key={index}>
         <span className="is-size-7">{field} {(msg as any).message && `- ${(msg as any).message}`}</span>
