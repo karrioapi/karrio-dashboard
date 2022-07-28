@@ -2,14 +2,17 @@ import React from 'react';
 import { ServiceLevelCurrency } from 'karrio/graphql';
 import SelectField from './generic/select-field';
 import { CURRENCY_OPTIONS, ServiceLevelType } from '@/lib/types';
+import InputField from './generic/input-field';
+import { snakeCase } from '@/lib/helper';
 
 interface CarrierServiceEditorProps {
+  carrierName: string;
   defaultValue: ServiceLevelType[];
   onChange: (services: ServiceLevelType[]) => void;
 }
 
 
-const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ defaultValue, onChange }) => {
+const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName, defaultValue, onChange }) => {
   const [expand, setExpand] = React.useState<boolean>(false);
   const [currency, setCurrency] = React.useState<ServiceLevelCurrency>(
     ((defaultValue || []).length > 0 && defaultValue[0].currency as ServiceLevelCurrency) || ServiceLevelCurrency.USD
@@ -17,9 +20,9 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ defaultValu
   const [services, setServices] = React.useState<ServiceLevelType[]>(defaultValue);
 
   const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
-  const updateService = (index: number, cost?: number) => {
+  const updateService = (index: number, data: any) => {
     const newServices = [...services];
-    newServices[index] = { ...newServices[index], cost };
+    newServices[index] = { ...newServices[index], ...data };
     setServices(newServices);
     onChange(newServices);
   };
@@ -54,7 +57,15 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ defaultValu
 
         {(defaultValue || []).map((service_level: ServiceLevelType, index) => (
           <div key={index} className="panel-block is-justify-content-space-between">
-            <span className="is-size-7 my-1 has-text-weight-semibold">{service_level.service_name}</span>
+            <InputField
+              defaultValue={service_level.service_name || 'standard'}
+              onChange={e => updateService(index, {
+                service_name: e.target.value,
+                service_code: snakeCase(`${carrierName} ${e.target.value}`)
+              })}
+              className="is-small"
+            />
+
             <div className="field has-addons has-addons-right">
               <p className="control">
                 <input
@@ -62,7 +73,7 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ defaultValu
                   className="input is-small"
                   defaultValue={service_level.cost || 0.0}
                   onClick={onClick}
-                  onChange={e => updateService(index, Number.parseFloat(e.target.value || "0.0"))}
+                  onChange={e => updateService(index, {cost: Number.parseFloat(e.target.value || "0.0")})}
                 />
               </p>
               <p className="control">
