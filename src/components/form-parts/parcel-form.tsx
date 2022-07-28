@@ -18,6 +18,7 @@ export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
   packaging_type: "medium_box",
   weight_unit: WeightUnitEnum.KG,
   dimension_unit: DimensionUnitEnum.CM,
+  items: [],
 };
 
 interface ParcelFormComponent {
