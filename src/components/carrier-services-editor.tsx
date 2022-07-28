@@ -57,14 +57,20 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
 
         {(defaultValue || []).map((service_level: ServiceLevelType, index) => (
           <div key={index} className="panel-block is-justify-content-space-between">
-            <InputField
-              defaultValue={service_level.service_name || 'standard'}
-              onChange={e => updateService(index, {
-                service_name: e.target.value,
-                service_code: snakeCase(`${carrierName} ${e.target.value}`)
-              })}
-              className="is-small"
-            />
+            <div className="field my-1" style={{ width: '60%'}}>
+              <p className="control">
+                <input
+                  type='text'
+                  className="input is-small"
+                  defaultValue={service_level.service_name || 'Standard Service'}
+                  onClick={onClick}
+                  onChange={e => updateService(index, {
+                    service_name: e.target.value,
+                    service_code: snakeCase(`${carrierName} ${e.target.value}`)
+                  })}
+                />
+              </p>
+            </div>
 
             <div className="field has-addons has-addons-right">
               <p className="control">
@@ -82,6 +88,20 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
             </div>
           </div>
         ))}
+
+        <div className="is-flex is-justify-content-space-between mt-2 p-2">
+          <button type="button" className="button is-small is-info is-inverted p-2"
+            onClick={() => updateService(services.length, {
+              cost: 0.0,
+              service_name: `Standard Service ${services.length}`,
+              service_code: snakeCase(`${carrierName} Standard Service ${services.length}`)
+            })}>
+            <span className="icon is-small">
+              <i className="fas fa-plus"></i>
+            </span>
+            <span>Add service</span>
+          </button>
+        </div>
 
       </>}
     </article>
