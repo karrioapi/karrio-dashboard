@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { OperationResponse, RateResponse, Shipment } from 'karrio/rest/index';
 import { handleFailure, handleGraphQLRequest } from '@/lib/helper';
 import { LabelContext } from '@/context/label-data-provider';
-import { AppMode } from '@/context/app-mode-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
 import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from 'karrio/graphql';
@@ -23,7 +22,6 @@ export const ShipmentMutationContext = React.createContext<ShipmentMutator>({} a
 
 const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const karrio = useContext(RestContext);
-  const { testMode } = useContext(AppMode);
   const state = useContext(LabelContext);
 
   const [updateShipmentMutation] = useMutation<partial_shipment_update, partial_shipment_updateVariables>(PARTIAL_UPDATE_SHIPMENT);

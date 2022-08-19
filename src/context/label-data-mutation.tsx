@@ -41,12 +41,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     );
   };
   const shouldFetchRates = (changes: ShipmentType) => {
-    const currentWeight = shipment.parcels.reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
-    const newWeight = (changes.parcels || []).reduce((acc, parcel) => acc + (parcel.weight || 0), 0);
-
     return (
-      (!isNone(changes.parcels) && currentWeight !== newWeight) ||
-
       (!isNone(changes.shipper) && shipment.shipper.address_line1 !== changes.shipper.address_line1) ||
       (!isNone(changes.shipper) && shipment.shipper.country_code !== changes.shipper.country_code) ||
       (!isNone(changes.shipper) && shipment.shipper.city !== changes.shipper.city) ||
@@ -54,6 +49,13 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       (!isNone(changes.recipient) && shipment.recipient.address_line1 !== changes.recipient.address_line1) ||
       (!isNone(changes.recipient) && shipment.recipient.country_code !== changes.recipient.country_code) ||
       (!isNone(changes.recipient) && shipment.recipient.city !== changes.recipient.city)
+    );
+  };
+  const parcelHasRateUpdateChanges = (parcel: ParcelType, changes: Partial<ParcelType>) => {
+    return (
+      (!isNone(changes.packaging_type) && changes.packaging_type !== parcel.packaging_type) ||
+      (!isNone(changes.is_document) && changes.is_document !== parcel.is_document) ||
+      (!isNone(changes.weight) && changes.weight !== parcel.weight)
     );
   };
 
@@ -77,6 +79,10 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     }
   };
   const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
+    if (parcelHasRateUpdateChanges(shipment.parcels[parcel_index], data)) {
+      setUpdateRate(true);
+    }
+
     if (isDraft(shipment.id)) {
       const update = {
         ...shipment, parcels: shipment.parcels.map(
