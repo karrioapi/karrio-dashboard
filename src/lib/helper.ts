@@ -395,6 +395,7 @@ export function isListEqual<T>(list1: T[], list2: T[]) {
 }
 
 export const isEqual = require('lodash.isequal');
+export const snakeCase = require('lodash.snakecase');
 
 
 export function toSingleItem(collection: CommodityType[]) {

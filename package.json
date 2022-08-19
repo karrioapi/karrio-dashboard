@@ -26,6 +26,7 @@
     "highlight.js": "^11.2.0",
     "libphonenumber-js": "^1.9.23",
     "lodash.isequal": "^4.5.0",
+    "lodash.snakecase": "^4.1.1",
     "moment": "^2.29.4",
     "next": "^12.1.6",
     "next-auth": "^4.9.0",

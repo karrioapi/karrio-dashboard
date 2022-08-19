@@ -97,7 +97,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
     if (isDraft(shipment.id)) {
-      const indexes = new Set(shipment.parcels[parcel_index].items.map(item => item.parent_id));
+      const indexes = new Set((shipment.parcels[parcel_index].items || []).map(item => item.parent_id));
       const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
         (acc, item) => ({ ...acc, [item.parent_id || item.id]: item }), {}
       )
