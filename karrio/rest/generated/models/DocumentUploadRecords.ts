@@ -14,49 +14,49 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Order,
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
+    DocumentUploadRecord,
+    DocumentUploadRecordFromJSON,
+    DocumentUploadRecordFromJSONTyped,
+    DocumentUploadRecordToJSON,
+} from './DocumentUploadRecord';
 
 /**
  * 
  * @export
- * @interface OrderList
+ * @interface DocumentUploadRecords
  */
-export interface OrderList {
+export interface DocumentUploadRecords {
     /**
      * 
      * @type {number}
-     * @memberof OrderList
+     * @memberof DocumentUploadRecords
      */
     count?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadRecords
      */
     next?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadRecords
      */
     previous?: string | null;
     /**
      * 
-     * @type {Array<Order>}
-     * @memberof OrderList
+     * @type {Array<DocumentUploadRecord>}
+     * @memberof DocumentUploadRecords
      */
-    results: Array<Order>;
+    results: Array<DocumentUploadRecord>;
 }
 
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
+export function DocumentUploadRecordsFromJSON(json: any): DocumentUploadRecords {
+    return DocumentUploadRecordsFromJSONTyped(json, false);
 }
 
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
+export function DocumentUploadRecordsFromJSONTyped(json: any, ignoreDiscriminator: boolean): DocumentUploadRecords {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -65,11 +65,11 @@ export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'count': !exists(json, 'count') ? undefined : json['count'],
         'next': !exists(json, 'next') ? undefined : json['next'],
         'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
+        'results': ((json['results'] as Array<any>).map(DocumentUploadRecordFromJSON)),
     };
 }
 
-export function OrderListToJSON(value?: OrderList | null): any {
+export function DocumentUploadRecordsToJSON(value?: DocumentUploadRecords | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -81,7 +81,7 @@ export function OrderListToJSON(value?: OrderList | null): any {
         'count': value.count,
         'next': value.next,
         'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
+        'results': ((value.results as Array<any>).map(DocumentUploadRecordToJSON)),
     };
 }
 

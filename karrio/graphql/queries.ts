@@ -394,6 +394,8 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       weight_unit
       packaging_type
       package_preset
+      freight_class
+      reference_number
       items {
         id
         weight
@@ -573,6 +575,8 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           weight_unit
           packaging_type
           package_preset
+          freight_class
+          reference_number
           items {
             id
             weight
@@ -743,6 +747,8 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         weight_unit
         packaging_type
         package_preset
+        freight_class
+        reference_number
         items {
           id
           weight
@@ -1207,6 +1213,17 @@ export const GET_TOKEN = gql`  query GetToken($org_id: String) {
 export const GET_USER_CONNECTIONS = gql`query get_user_connections {
   user_connections {
     __typename
+    ... on AmazonMwsSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      seller_id
+      developer_id
+      mws_auth_token
+      aws_region
+    }
     ... on AramexSettings {
       id
       carrier_id
@@ -1250,6 +1267,16 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       username
       password
+    }
+    ... on ChronopostSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      password
+      account_number
+      account_country_code
     }
     ... on DHLExpressSettings {
       id
@@ -1309,6 +1336,18 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       billing_account
     }
+    ...on DPDHLSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      app_id
+      username
+      password
+      signature
+      account_number
+    }
     ... on EShipperSettings {
       id
       carrier_id
@@ -1317,6 +1356,15 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       username
       password
+    }
+    ... on EasyPostSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      api_key
+      metadata
     }
     ... on FedexSettings {
       id
@@ -1403,6 +1451,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_country_code
       metadata
     }
+    ... on UPSFreightSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      username
+      password
+      access_license_number
+      account_number
+      account_country_code
+      metadata
+    }
     ... on USPSSettings {
       id
       carrier_id
@@ -1452,6 +1513,17 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
 export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics {
   user_connections {
     __typename
+    ... on AmazonMwsSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      seller_id
+      developer_id
+      mws_auth_token
+      aws_region
+    }
     ... on AramexSettings {
       id
       carrier_id
@@ -1495,6 +1567,16 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       username
       password
+    }
+    ... on ChronopostSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      password
+      account_number
+      account_country_code
     }
     ... on DHLExpressSettings {
       id
@@ -1553,6 +1635,18 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       username
       password
       billing_account
+    }
+    ...on DPDHLSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      app_id
+      username
+      password
+      signature
+      account_number
     }
     ... on EShipperSettings {
       id
@@ -1684,6 +1778,19 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_country_code
     }
     ... on UPSSettings {
+      id
+      carrier_id
+      carrier_name
+      test_mode
+      active
+      username
+      password
+      access_license_number
+      account_number
+      account_country_code
+      metadata
+    }
+    ... on UPSFreightSettings {
       id
       carrier_id
       carrier_name
@@ -2020,6 +2127,8 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         weight_unit
         packaging_type
         package_preset
+        freight_class
+        reference_number
         items {
           id
           weight
@@ -2279,6 +2388,8 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             weight_unit
             packaging_type
             package_preset
+            freight_class
+            reference_number
             items {
               id
               weight

@@ -223,41 +223,49 @@ export type ContextDataType = {
 };
 
 export interface Metadata {
+  ADMIN: string;
+  OPENAPI: string;
+  GRAPHQL: string;
   VERSION: string;
   APP_NAME: string;
   APP_WEBSITE?: string;
-  MULTI_ORGANIZATIONS: boolean;
-  ALLOW_MULTI_ACCOUNT: boolean;
-  CUSTOM_CARRIER_DEFINITION: boolean;
-  APPS_MANAGEMENT: boolean;
+
   AUDIT_LOGGING: boolean;
-  DOCUMENTS_MANAGEMENT: boolean;
-  DATA_IMPORT_EXPORT: boolean;
   ALLOW_SIGNUP: boolean;
   ALLOW_ADMIN_APPROVED_SIGNUP: boolean;
+  ALLOW_MULTI_ACCOUNT: boolean;
   ORDERS_MANAGEMENT: boolean;
-  ADMIN: string;
-  OPENAPI: string;
-  GRAPHQL: string;
+  APPS_MANAGEMENT: boolean;
+  DOCUMENTS_MANAGEMENT: boolean;
+  DATA_IMPORT_EXPORT: boolean;
+  CUSTOM_CARRIER_DEFINITION: boolean;
+  MULTI_ORGANIZATIONS: boolean;
+  PERSIST_SDK_TRACING: boolean;
+  ORG_LEVEL_BILLING: boolean;
+  TENANT_LEVEL_BILLING: boolean;
 };
 
 export interface References {
-  VERSION: string;
-  APP_NAME: string;
-  APP_WEBSITE: string;
-  MULTI_ORGANIZATIONS: boolean;
-  ALLOW_MULTI_ACCOUNT: boolean;
-  CUSTOM_CARRIER_DEFINITION: boolean;
-  APPS_MANAGEMENT: boolean;
-  AUDIT_LOGGING: boolean;
-  DOCUMENTS_MANAGEMENT: boolean;
-  DATA_IMPORT_EXPORT: boolean;
-  ALLOW_SIGNUP: boolean;
-  ALLOW_ADMIN_APPROVED_SIGNUP: boolean;
-  ORDERS_MANAGEMENT: boolean;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;
+  VERSION: string;
+  APP_NAME: string;
+  APP_WEBSITE: string;
+
+  AUDIT_LOGGING: boolean;
+  ALLOW_SIGNUP: boolean;
+  ALLOW_ADMIN_APPROVED_SIGNUP: boolean;
+  ALLOW_MULTI_ACCOUNT: boolean;
+  ORDERS_MANAGEMENT: boolean;
+  APPS_MANAGEMENT: boolean;
+  DOCUMENTS_MANAGEMENT: boolean;
+  DATA_IMPORT_EXPORT: boolean;
+  CUSTOM_CARRIER_DEFINITION: boolean;
+  MULTI_ORGANIZATIONS: boolean;
+  PERSIST_SDK_TRACING: boolean;
+  ORG_LEVEL_BILLING: boolean;
+  TENANT_LEVEL_BILLING: boolean;
 
   ADDRESS_AUTO_COMPLETE: object;
   countries: object;

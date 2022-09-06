@@ -12,76 +12,74 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import {
-    Order,
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
+
+import * as runtime from '../runtime';
 
 /**
  * 
- * @export
- * @interface OrderList
  */
-export interface OrderList {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderList
-     */
-    count?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderList
-     */
-    next?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderList
-     */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Order>}
-     * @memberof OrderList
-     */
-    results: Array<Order>;
-}
+export class V1Api extends runtime.BaseAPI {
 
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
-}
+    /**
+     */
+    async v1BillingPortalCreateRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
 
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
-    if ((json === undefined) || (json === null)) {
-        return json;
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // JWT authentication
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/billing/portal`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
     }
-    return {
-        
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
-    };
-}
 
-export function OrderListToJSON(value?: OrderList | null): any {
-    if (value === undefined) {
-        return undefined;
+    /**
+     */
+    async v1BillingPortalCreate(initOverrides?: RequestInit): Promise<void> {
+        await this.v1BillingPortalCreateRaw(initOverrides);
     }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
-    };
-}
 
+    /**
+     */
+    async v1BillingWebhookCreateRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // JWT authentication
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/billing/webhook`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async v1BillingWebhookCreate(initOverrides?: RequestInit): Promise<void> {
+        await this.v1BillingWebhookCreateRaw(initOverrides);
+    }
+
+}

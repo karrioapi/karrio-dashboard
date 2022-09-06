@@ -14,62 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Order,
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
+    DocumentFileData,
+    DocumentFileDataFromJSON,
+    DocumentFileDataFromJSONTyped,
+    DocumentFileDataToJSON,
+} from './DocumentFileData';
 
 /**
  * 
  * @export
- * @interface OrderList
+ * @interface DocumentUploadData
  */
-export interface OrderList {
+export interface DocumentUploadData {
     /**
-     * 
-     * @type {number}
-     * @memberof OrderList
-     */
-    count?: number | null;
-    /**
-     * 
+     * The documents related shipment.
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadData
      */
-    next?: string | null;
+    shipment_id: string;
     /**
-     * 
+     * Shipping document files
+     * @type {Array<DocumentFileData>}
+     * @memberof DocumentUploadData
+     */
+    document_files: Array<DocumentFileData>;
+    /**
+     * Shipping document file reference
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadData
      */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Order>}
-     * @memberof OrderList
-     */
-    results: Array<Order>;
+    reference?: string | null;
 }
 
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
+export function DocumentUploadDataFromJSON(json: any): DocumentUploadData {
+    return DocumentUploadDataFromJSONTyped(json, false);
 }
 
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
+export function DocumentUploadDataFromJSONTyped(json: any, ignoreDiscriminator: boolean): DocumentUploadData {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
+        'shipment_id': json['shipment_id'],
+        'document_files': ((json['document_files'] as Array<any>).map(DocumentFileDataFromJSON)),
+        'reference': !exists(json, 'reference') ? undefined : json['reference'],
     };
 }
 
-export function OrderListToJSON(value?: OrderList | null): any {
+export function DocumentUploadDataToJSON(value?: DocumentUploadData | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +71,9 @@ export function OrderListToJSON(value?: OrderList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
+        'shipment_id': value.shipment_id,
+        'document_files': ((value.document_files as Array<any>).map(DocumentFileDataToJSON)),
+        'reference': value.reference,
     };
 }
 

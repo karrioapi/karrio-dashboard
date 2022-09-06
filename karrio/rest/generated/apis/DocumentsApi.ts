@@ -15,77 +15,57 @@
 
 import * as runtime from '../runtime';
 import {
-    CarrierList,
-    CarrierListFromJSON,
-    CarrierListToJSON,
+    DocumentUploadData,
+    DocumentUploadDataFromJSON,
+    DocumentUploadDataToJSON,
+    DocumentUploadRecord,
+    DocumentUploadRecordFromJSON,
+    DocumentUploadRecordToJSON,
+    DocumentUploadRecords,
+    DocumentUploadRecordsFromJSON,
+    DocumentUploadRecordsToJSON,
+    ErrorMessages,
+    ErrorMessagesFromJSON,
+    ErrorMessagesToJSON,
     ErrorResponse,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
 } from '../models';
 
-export interface GetServicesRequest {
-    carrierName: GetServicesCarrierNameEnum;
-}
-
 export interface ListRequest {
+    dateAfter?: string;
+    dateBefore?: string;
     limit?: number;
     offset?: number;
-    carrierName?: ListCarrierNameEnum;
-    active?: boolean | null;
-    systemOnly?: boolean | null;
+}
+
+export interface RetrieveRequest {
+    id: string;
+}
+
+export interface UploadRequest {
+    data: DocumentUploadData;
 }
 
 /**
  * 
  */
-export class CarriersApi extends runtime.BaseAPI {
+export class DocumentsApi extends runtime.BaseAPI {
 
     /**
-     * Retrieve a carrier\'s services
-     * Get carrier services
+     * Retrieve all shipping document upload records.
+     * List all upload records
      */
-    async getServicesRaw(requestParameters: GetServicesRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
-        if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
-            throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling getServices.');
-        }
-
+    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<DocumentUploadRecords>> {
         const queryParameters: any = {};
 
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // JWT authentication
+        if (requestParameters.dateAfter !== undefined) {
+            queryParameters['date_after'] = requestParameters.dateAfter;
         }
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        if (requestParameters.dateBefore !== undefined) {
+            queryParameters['date_before'] = requestParameters.dateBefore;
         }
-
-        const response = await this.request({
-            path: `/v1/carriers/{carrier_name}/services`.replace(`{${"carrier_name"}}`, encodeURIComponent(String(requestParameters.carrierName))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * Retrieve a carrier\'s services
-     * Get carrier services
-     */
-    async getServices(requestParameters: GetServicesRequest, initOverrides?: RequestInit): Promise<{ [key: string]: object; }> {
-        const response = await this.getServicesRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Returns the list of configured carriers
-     * List all carriers
-     */
-    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<CarrierList>> {
-        const queryParameters: any = {};
 
         if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
@@ -95,17 +75,45 @@ export class CarriersApi extends runtime.BaseAPI {
             queryParameters['offset'] = requestParameters.offset;
         }
 
-        if (requestParameters.carrierName !== undefined) {
-            queryParameters['carrier_name'] = requestParameters.carrierName;
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // JWT authentication
         }
 
-        if (requestParameters.active !== undefined) {
-            queryParameters['active'] = requestParameters.active;
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
         }
 
-        if (requestParameters.systemOnly !== undefined) {
-            queryParameters['system_only'] = requestParameters.systemOnly;
+        const response = await this.request({
+            path: `/v1/documents`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentUploadRecordsFromJSON(jsonValue));
+    }
+
+    /**
+     * Retrieve all shipping document upload records.
+     * List all upload records
+     */
+    async list(requestParameters: ListRequest = {}, initOverrides?: RequestInit): Promise<DocumentUploadRecords> {
+        const response = await this.listRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieve a shipping document upload record.
+     * Retrieve an upload record
+     */
+    async retrieveRaw(requestParameters: RetrieveRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<DocumentUploadRecord>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling retrieve.');
         }
+
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -118,89 +126,65 @@ export class CarriersApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/v1/carriers`,
+            path: `/v1/documents/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CarrierListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentUploadRecordFromJSON(jsonValue));
     }
 
     /**
-     * Returns the list of configured carriers
-     * List all carriers
+     * Retrieve a shipping document upload record.
+     * Retrieve an upload record
      */
-    async list(requestParameters: ListRequest = {}, initOverrides?: RequestInit): Promise<CarrierList> {
-        const response = await this.listRaw(requestParameters, initOverrides);
+    async retrieve(requestParameters: RetrieveRequest, initOverrides?: RequestInit): Promise<DocumentUploadRecord> {
+        const response = await this.retrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
-}
+    /**
+     * Upload a shipping document.
+     * Upload documents
+     */
+    async uploadRaw(requestParameters: UploadRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<DocumentUploadRecord>> {
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling upload.');
+        }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum GetServicesCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
-/**
-    * @export
-    * @enum {string}
-    */
-export enum ListCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // JWT authentication
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Token authentication
+        }
+
+        const response = await this.request({
+            path: `/v1/documents`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: DocumentUploadDataToJSON(requestParameters.data),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => DocumentUploadRecordFromJSON(jsonValue));
+    }
+
+    /**
+     * Upload a shipping document.
+     * Upload documents
+     */
+    async upload(requestParameters: UploadRequest, initOverrides?: RequestInit): Promise<DocumentUploadRecord> {
+        const response = await this.uploadRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }

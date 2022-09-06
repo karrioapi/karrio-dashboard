@@ -14,62 +14,89 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    Order,
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
+    DocumentDetails,
+    DocumentDetailsFromJSON,
+    DocumentDetailsFromJSONTyped,
+    DocumentDetailsToJSON,
+} from './DocumentDetails';
+import {
+    Message,
+    MessageFromJSON,
+    MessageFromJSONTyped,
+    MessageToJSON,
+} from './Message';
 
 /**
  * 
  * @export
- * @interface OrderList
+ * @interface DocumentUploadRecord
  */
-export interface OrderList {
+export interface DocumentUploadRecord {
     /**
-     * 
-     * @type {number}
-     * @memberof OrderList
-     */
-    count?: number | null;
-    /**
-     * 
+     * A unique identifier
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadRecord
      */
-    next?: string | null;
+    id?: string;
     /**
-     * 
+     * The shipment carrier
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentUploadRecord
      */
-    previous?: string | null;
+    carrier_name?: string | null;
     /**
-     * 
-     * @type {Array<Order>}
-     * @memberof OrderList
+     * The shipment carrier configured identifier
+     * @type {string}
+     * @memberof DocumentUploadRecord
      */
-    results: Array<Order>;
+    carrier_id?: string | null;
+    /**
+     * the carrier shipping document ids
+     * @type {Array<DocumentDetails>}
+     * @memberof DocumentUploadRecord
+     */
+    documents?: Array<DocumentDetails>;
+    /**
+     * provider specific metadata
+     * @type {object}
+     * @memberof DocumentUploadRecord
+     */
+    meta?: object | null;
+    /**
+     * Shipping document file reference
+     * @type {string}
+     * @memberof DocumentUploadRecord
+     */
+    reference?: string | null;
+    /**
+     * The list of note or warning messages
+     * @type {Array<Message>}
+     * @memberof DocumentUploadRecord
+     */
+    messages?: Array<Message>;
 }
 
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
+export function DocumentUploadRecordFromJSON(json: any): DocumentUploadRecord {
+    return DocumentUploadRecordFromJSONTyped(json, false);
 }
 
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
+export function DocumentUploadRecordFromJSONTyped(json: any, ignoreDiscriminator: boolean): DocumentUploadRecord {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'carrier_name': !exists(json, 'carrier_name') ? undefined : json['carrier_name'],
+        'carrier_id': !exists(json, 'carrier_id') ? undefined : json['carrier_id'],
+        'documents': !exists(json, 'documents') ? undefined : ((json['documents'] as Array<any>).map(DocumentDetailsFromJSON)),
+        'meta': !exists(json, 'meta') ? undefined : json['meta'],
+        'reference': !exists(json, 'reference') ? undefined : json['reference'],
+        'messages': !exists(json, 'messages') ? undefined : ((json['messages'] as Array<any>).map(MessageFromJSON)),
     };
 }
 
-export function OrderListToJSON(value?: OrderList | null): any {
+export function DocumentUploadRecordToJSON(value?: DocumentUploadRecord | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +105,13 @@ export function OrderListToJSON(value?: OrderList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
+        'id': value.id,
+        'carrier_name': value.carrier_name,
+        'carrier_id': value.carrier_id,
+        'documents': value.documents === undefined ? undefined : ((value.documents as Array<any>).map(DocumentDetailsToJSON)),
+        'meta': value.meta,
+        'reference': value.reference,
+        'messages': value.messages === undefined ? undefined : ((value.messages as Array<any>).map(MessageToJSON)),
     };
 }
 

@@ -13,63 +13,42 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    Order,
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
-
 /**
- * 
+ * the carrier shipping document ids
  * @export
- * @interface OrderList
+ * @interface DocumentDetails
  */
-export interface OrderList {
+export interface DocumentDetails {
     /**
-     * 
-     * @type {number}
-     * @memberof OrderList
-     */
-    count?: number | null;
-    /**
-     * 
+     * The uploaded document id.
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentDetails
      */
-    next?: string | null;
+    document_id?: string;
     /**
-     * 
+     * The uploaded document file name.
      * @type {string}
-     * @memberof OrderList
+     * @memberof DocumentDetails
      */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Order>}
-     * @memberof OrderList
-     */
-    results: Array<Order>;
+    file_name?: string;
 }
 
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
+export function DocumentDetailsFromJSON(json: any): DocumentDetails {
+    return DocumentDetailsFromJSONTyped(json, false);
 }
 
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
+export function DocumentDetailsFromJSONTyped(json: any, ignoreDiscriminator: boolean): DocumentDetails {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
+        'document_id': !exists(json, 'document_id') ? undefined : json['document_id'],
+        'file_name': !exists(json, 'file_name') ? undefined : json['file_name'],
     };
 }
 
-export function OrderListToJSON(value?: OrderList | null): any {
+export function DocumentDetailsToJSON(value?: DocumentDetails | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,10 +57,8 @@ export function OrderListToJSON(value?: OrderList | null): any {
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
+        'document_id': value.document_id,
+        'file_name': value.file_name,
     };
 }
 
