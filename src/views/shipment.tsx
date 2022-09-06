@@ -140,7 +140,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <div className="columns my-0">
                   <div className="column is-4 is-size-6 py-1">Courier</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
-                    {formatRef(shipment.carrier_name as string)}
+                    {formatRef((shipment.meta.rate_provider === 'generic' ? shipment.carrier_name : shipment.meta.rate_provider) as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
