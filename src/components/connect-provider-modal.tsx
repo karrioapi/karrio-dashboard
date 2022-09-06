@@ -177,9 +177,13 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {/* Carrier specific fields BEGING */}
 
+                {has("app_id") && <InputField label="App Id" defaultValue={payload.app_id} onChange={handleOnChange("app_id")} className="is-small" required />}
+
                 {has("site_id") && <InputField label="Site Id" defaultValue={payload.site_id} onChange={handleOnChange("site_id")} className="is-small" required />}
 
                 {has("sendle_id") && <InputField label="Sendle ID" defaultValue={payload.sendle_id} onChange={handleOnChange("sendle_id")} className="is-small" required />}
+
+                {has("seller_id") && <InputField label="Seller ID" defaultValue={payload.seller_id} onChange={handleOnChange("seller_id")} className="is-small" required />}
 
                 {has("api_key") && <InputField label="API Key" defaultValue={payload.api_key} onChange={handleOnChange("api_key")} className="is-small" required />}
 
@@ -187,7 +191,11 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {has("partner_id") && <InputField label="Partner ID" defaultValue={payload.partner_id} onChange={handleOnChange("partner_id")} className="is-small" required />}
 
+                {has("developer_id") && <InputField label="Developer ID" defaultValue={payload.developer_id} onChange={handleOnChange("developer_id")} className="is-small" required />}
+
                 {has("check_word") && <InputField label="Check Word" defaultValue={payload.check_word} onChange={handleOnChange("check_word")} className="is-small" required />}
+
+                {has("signature") && <InputField label="Signature" defaultValue={payload.signature} onChange={handleOnChange("signature")} className="is-small" required />}
 
                 {has("username") && <InputField label="Username" defaultValue={payload.username} onChange={handleOnChange("username")} className="is-small" required />}
 
@@ -242,6 +250,11 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 {has("access_key") && <InputField label="Access Key" defaultValue={payload.access_key} onChange={handleOnChange("access_key")} className="is-small" />}
 
                 {has("secret_key") && <InputField label="Secret Key" defaultValue={payload.secret_key} onChange={handleOnChange("secret_key")} className="is-small" />}
+
+                {has("aws_region") && <InputField label="AWS Region" defaultValue={payload.aws_region} onChange={handleOnChange("aws_region")} className="is-small" />}
+
+                {has("mws_auth_token") && <InputField label="MWS Auth Token" defaultValue={payload.mws_auth_token} onChange={handleOnChange("mws_auth_token")} className="is-small" required />}
+
 
                 {has("services") &&
                   <CarrierServiceEditor
@@ -310,12 +323,14 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, property: string): boolean {
   // TODO: Use carriers settings types when available for automatic validation
   return ({
-    // [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test_mode", "access_key", "secret_key", "aws_region"],
+    [CarrierSettingsCarrierNameEnum.AmazonMws]: ["carrier_id", "test_mode", "seller_id", "developer_id", "mws_auth_token", "aws_region"],
     [CarrierSettingsCarrierNameEnum.Aramex]: ["carrier_id", "test_mode", "username", "password", "account_pin", "account_entity", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Australiapost]: ["carrier_id", "test_mode", "api_key", "password", "account_number"],
     [CarrierSettingsCarrierNameEnum.Canadapost]: ["carrier_id", "test_mode", "username", "password", "customer_number", "contract_id", "metadata"],
     [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test_mode", "username", "password"],
+    [CarrierSettingsCarrierNameEnum.Chronopost]: ["carrier_id", "test_mode", "account_number", "password", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test_mode", "username", "password", "billing_account"],
+    [CarrierSettingsCarrierNameEnum.Dpdhl]: ["carrier_id", "test_mode", "app_id", "username", "password", "signature", "account_number"],
     [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test_mode", "site_id", "password", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test_mode", "username", "password", "account_number", "services"],
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test_mode", "consumer_key", "consumer_secret"],
@@ -330,6 +345,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pr
     [CarrierSettingsCarrierNameEnum.SfExpress]: ["carrier_id", "test_mode", "partner_id", "check_word"],
     [CarrierSettingsCarrierNameEnum.Tnt]: ["carrier_id", "test_mode", "username", "password", "account_country_code", "account_number"],
     [CarrierSettingsCarrierNameEnum.Ups]: ["carrier_id", "test_mode", "username", "password", "access_license_number", "account_number", "account_country_code", "metadata"],
+    [CarrierSettingsCarrierNameEnum.UpsFreight]: ["carrier_id", "test_mode", "username", "password", "access_license_number", "account_number", "account_country_code", "metadata"],
     [CarrierSettingsCarrierNameEnum.Usps]: ["carrier_id", "test_mode", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
     [CarrierSettingsCarrierNameEnum.UspsInternational]: ["carrier_id", "test_mode", "username", "password", "mailer_id", "customer_registration_id", "logistics_manager_mailer_id"],
     [CarrierSettingsCarrierNameEnum.Yanwen]: ["carrier_id", "test_mode", "customer_number", "license_key"],
