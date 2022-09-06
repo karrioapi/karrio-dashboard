@@ -104,14 +104,11 @@ const EmailManagement: React.FC<EmailManagementComponent> = UserMutation<EmailMa
 
               <div className="p-3 my-5"></div>
               <div className="form-floating-footer has-text-centered p-1">
-                <button className="button is-default m-1 is-small" onClick={close}>
-                  <span>Dismiss</span>
+                <button className="button is-default m-1 is-small" onClick={close} disabled={loading}>
+                  <span>Cancel</span>
                 </button>
-                <button
-                  type="submit"
-                  className="button is-primary m-1 is-small"
-                  disabled={loading}
-                >
+                <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
+                  disabled={loading} type="submit">
                   <span>Confirm</span>
                 </button>
               </div>

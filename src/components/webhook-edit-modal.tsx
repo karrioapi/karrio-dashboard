@@ -145,14 +145,17 @@ const WebhookEditModal: React.FC<WebhookEditModalComponent> = WebhookMutation<We
               </>}
 
               <div className="p-3 my-5"></div>
-              <ButtonField
-                type="submit"
-                className={`is-primary ${loading ? 'is-loading' : ''}`}
-                fieldClass="form-floating-footer p-3"
-                controlClass="has-text-centered"
-                disabled={deepEqual(payload, operation?.webhook) || loading}>
-                <span>Submit</span>
-              </ButtonField>
+              <div className="form-floating-footer has-text-centered p-1">
+                <button className="button is-default m-1 is-small" onClick={close} disabled={loading}>
+                  <span>Cancel</span>
+                </button>
+                <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
+                  disabled={deepEqual(payload, operation?.webhook) || loading}
+                  type="submit">
+                  <span>Submit</span>
+                </button>
+              </div>
+
             </section>
           </form>
           <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>

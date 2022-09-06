@@ -144,15 +144,15 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
             </nav>
 
             <div className="p-3 my-5"></div>
-            <ButtonField
-              type="button"
-              className="is-primary m-0"
-              fieldClass="form-floating-footer p-3"
-              controlClass="has-text-centered"
-              disabled={loading || selection.length === 0}
-              onClick={handleSubmit}>
-              <span>Add selection</span>
-            </ButtonField>
+            <div className="form-floating-footer has-text-centered p-1">
+              <button className="button is-default m-1 is-small" onClick={close} disabled={loading}>
+                <span>Cancel</span>
+              </button>
+              <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
+                disabled={loading || selection.length === 0} type="button" onClick={handleSubmit}>
+                <span>Add selection</span>
+              </button>
+            </div>
           </section>
 
         </div>

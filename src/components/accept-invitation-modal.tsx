@@ -83,11 +83,11 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
 
               <div className="p-3 my-5"></div>
               <div className="form-floating-footer has-text-centered p-1">
-                <button className="button is-default m-1" onClick={close}>
+                <button className="button is-default m-1 is-small" onClick={close}>
                   <span>Dismiss</span>
                 </button>
                 {invitation?.invitee_identifier === user?.email &&
-                  <button className="button is-primary m-1" type="submit" disabled={loading}>
+                  <button className="button is-primary m-1 is-small" type="submit" disabled={loading}>
                     <span>Confirm</span>
                   </button>}
               </div>
