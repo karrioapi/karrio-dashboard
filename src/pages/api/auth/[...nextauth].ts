@@ -1,4 +1,4 @@
-import { isNone, isNoneOrEmpty, parseJwt } from '@/lib/helper';
+import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
 import getConfig from 'next/config';
 import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
@@ -30,7 +30,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
             const org = await getCurrentOrg(token.access, orgId);
             const testMode = req.headers.referer?.includes("/test");
 
-            return { accessToken: token.access, refreshToken: token.refresh, orgId: org.id, testMode };
+            return { accessToken: token.access, refreshToken: token.refresh, orgId: org?.id, testMode };
           } catch (err) {
             logger.error(err);
           }

@@ -10,6 +10,7 @@ import TokenProvider from '@/context/token-provider';
 import Notifier from '@/components/notifier';
 import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
 import ErrorBoundary from '@/components/error-boudaries';
+import SubscriptionProvider from '@/context/subscription-provider';
 import AcceptInvitationProvider from '@/components/accept-invitation-modal';
 import CreateOrganizationModalProvider from '@/components/create-organization-modal';
 import { ServerError, ServerErrorCode } from '@/lib/helper';
@@ -18,6 +19,7 @@ import { signOut } from 'next-auth/react';
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
   OrganizationsProvider,
+  SubscriptionProvider,
   APIReferenceProvider,
   AppModeProvider,
   LoadingProvider,
@@ -77,7 +79,5 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
     </NextSessionProvider>
   )
 };
-
-AuthenticatedPage.whyDidYouRender = true
 
 export default AuthenticatedPage;

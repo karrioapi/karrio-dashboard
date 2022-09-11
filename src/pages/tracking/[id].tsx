@@ -1,6 +1,5 @@
 import { TrackingEvent, TrackingStatus } from "karrio/rest";
 import { NextPage } from "next";
-import Image from 'next/image';
 import Head from "next/head";
 import React from "react";
 import { formatDayDate, isNone, p } from "@/lib/helper";

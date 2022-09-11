@@ -43,7 +43,10 @@ export async function getCurrentOrg(access: string, orgId?: string) {
     .then(({ data: { data } }) => {
       return data?.organization
     })
-    .catch(() => ({ id: null }));
+    .catch(err => {
+      logger.error(err)
+      return { id: null };
+    });
 }
 
 

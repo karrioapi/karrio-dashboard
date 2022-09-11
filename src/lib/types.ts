@@ -222,6 +222,17 @@ export type ContextDataType = {
   }
 };
 
+export type SubscriptionType = {
+  status: string;
+  is_owner: boolean;
+  period_end: string;
+  subscription_type: string;
+};
+
+export type PortalSessionType = {
+  url: string;
+}
+
 export interface Metadata {
   ADMIN: string;
   OPENAPI: string;

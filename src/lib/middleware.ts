@@ -1,29 +1,38 @@
 import axios from "axios";
 import logger from "@/lib/logger";
-import getConfig from "next/config";
 import { Response } from "node-fetch";
 import { getSession } from "next-auth/react";
 import { KARRIO_API } from "@/client/context";
+import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { createServerError, ServerErrorCode } from "@/lib/helper";
-import { ContextDataType, Metadata, References, SessionType } from "@/lib/types";
+import { ContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType } from "@/lib/types";
 
-const { publicRuntimeConfig } = getConfig();
 const AUTH_HTTP_CODES = [401, 403, 407];
+const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
 
-  const data = session ? await loadContextData(session as SessionType) : {};
+  const data = await loadContextData(session as SessionType);
   const pathname = ctx.resolvedUrl;
   const orgId = (session?.orgId as string) || null;
   const testMode = (session?.testMode as boolean);
+  const subscription = await checkSubscription(session, data.metadata);
 
-  await setSessionCookies(ctx, testMode, orgId)
+  await setSessionCookies(ctx, testMode, orgId);
+
+  if (needValidSubscription(subscription)) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/billing'
+      }
+    }
+  }
 
   return {
-    props: { pathname, orgId, ...data }
+    props: { pathname, orgId, ...subscription, ...data }
   };
 };
 
@@ -53,7 +62,10 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
   });
 }
 
-export async function loadContextData({ accessToken, orgId, testMode }: SessionType): Promise<any> {
+export async function loadContextData(session: SessionType): Promise<any> {
+  if (isNone(session)) return {};
+
+  const { accessToken, orgId, testMode } = session;
   const { metadata } = await checkAPI();
   const headers = {
     ...(orgId ? { 'x-org-id': orgId } : {}),
@@ -62,9 +74,7 @@ export async function loadContextData({ accessToken, orgId, testMode }: SessionT
   } as any;
 
   const getReferences = () => axios
-    .get<References>(
-      publicRuntimeConfig.KARRIO_API_URL + '/v1/references', { headers }
-    )
+    .get<References>(KARRIO_API + '/v1/references', { headers })
     .then(({ data }) => data);
   const getUserData = () => axios
     .get<ContextDataType>(KARRIO_API + '/graphql', {
@@ -97,6 +107,58 @@ export async function setSessionCookies(ctx: GetServerSidePropsContext, testMode
     ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
   }
   ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
+}
+
+export async function checkSubscription(session: SessionType | any, metadata?: Metadata) {
+  if (isNone(session)) return {};
+  const { accessToken, orgId } = session;
+
+  if (orgId && (metadata?.ORG_LEVEL_BILLING || metadata?.TENANT_LEVEL_BILLING)) {
+    const headers = {
+      ...(orgId ? { 'x-org-id': orgId } : {}),
+      'authorization': `Bearer ${accessToken}`,
+    } as any;
+    const getOrgSubscription = () => axios
+      .get<SubscriptionType>(KARRIO_API + '/v1/billing/subscription', { headers })
+      .then(({ data }) => data)
+      .catch(() => { return null });
+
+    try {
+      const subscription = await getOrgSubscription();
+
+      return { subscription };
+    } catch (e: any | Response) {
+      logger.error(`Failed to fetch API subscription details from (${KARRIO_API})`);
+      logger.error(e.response);
+    }
+  }
+
+  return { subscription: null };
+}
+
+export async function createPortalSession(session: SessionType | any, host: string, subscription?: SubscriptionType) {
+  if (subscription?.is_owner) {
+    const return_url = 'http://' + host;
+    const getCustomerPortalSession = () => axios
+      .post<PortalSessionType>(KARRIO_API + '/v1/billing/portal', { return_url }, {
+        headers: {
+          ...(session.orgId ? { 'x-org-id': session.orgId } : {}),
+          'authorization': `Bearer ${session.accessToken}`,
+        } as any
+      })
+      .then(({ data }) => data);
+
+    try {
+      const portal_session = await getCustomerPortalSession();
+
+      return { session_url: portal_session.url };
+    } catch (e: any | Response) {
+      logger.error(`Failed to create customer portal session from (${KARRIO_API})`);
+      logger.error(e.response.data);
+    }
+  }
+
+  return {};
 }
 
 function dataQuery(metadata: any) {
@@ -146,4 +208,11 @@ function dataQuery(metadata: any) {
       ${organizationQueries}
     }
   `;
+}
+
+function needValidSubscription({ subscription }: { subscription?: SubscriptionType | null }) {
+  return (
+    subscription &&
+    !ACTIVE_SUBSCRIPTIONS.includes(subscription?.status as string)
+  )
 }
