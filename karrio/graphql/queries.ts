@@ -1357,15 +1357,6 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       username
       password
     }
-    ... on EasyPostSettings {
-      id
-      carrier_id
-      carrier_name
-      test_mode
-      active
-      api_key
-      metadata
-    }
     ... on FedexSettings {
       id
       carrier_id
