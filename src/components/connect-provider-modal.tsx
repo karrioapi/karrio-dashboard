@@ -332,7 +332,7 @@ function hasProperty(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pr
     [CarrierSettingsCarrierNameEnum.Canpar]: ["carrier_id", "test_mode", "username", "password"],
     [CarrierSettingsCarrierNameEnum.Chronopost]: ["carrier_id", "test_mode", "account_number", "password", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.Dicom]: ["carrier_id", "test_mode", "username", "password", "billing_account"],
-    [CarrierSettingsCarrierNameEnum.Dpdhl]: ["carrier_id", "test_mode", "app_id", "username", "password", "signature", "account_number"],
+    [CarrierSettingsCarrierNameEnum.Dpdhl]: ["carrier_id", "test_mode", "app_id", "username", "password", "signature", "account_number", "services"],
     [CarrierSettingsCarrierNameEnum.DhlExpress]: ["carrier_id", "test_mode", "site_id", "password", "account_number", "account_country_code"],
     [CarrierSettingsCarrierNameEnum.DhlPoland]: ["carrier_id", "test_mode", "username", "password", "account_number", "services"],
     [CarrierSettingsCarrierNameEnum.DhlUniversal]: ["carrier_id", "test_mode", "consumer_key", "consumer_secret"],

@@ -1347,6 +1347,24 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       signature
       account_number
+      services {
+        id
+        active
+        service_name
+        service_code
+        description
+        cost
+        currency
+        estimated_transit_days
+        max_weight
+        max_width
+        max_height
+        max_length
+        weight_unit
+        dimension_unit
+        domicile
+        international
+      }
     }
     ... on EShipperSettings {
       id
@@ -1638,6 +1656,24 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       signature
       account_number
+      services {
+        id
+        active
+        service_name
+        service_code
+        description
+        cost
+        currency
+        estimated_transit_days
+        max_weight
+        max_width
+        max_height
+        max_length
+        weight_unit
+        dimension_unit
+        domicile
+        international
+      }
     }
     ... on EShipperSettings {
       id

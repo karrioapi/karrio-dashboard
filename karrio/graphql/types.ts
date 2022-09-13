@@ -2133,6 +2133,25 @@ export interface get_user_connections_user_connections_DicomSettings {
   billing_account: string;
 }
 
+export interface get_user_connections_user_connections_DPDHLSettings_services {
+  id: string;  // The ID of the object.
+  active: boolean | null;
+  service_name: string;
+  service_code: string;
+  description: string | null;
+  cost: number | null;
+  currency: ServiceLevelCurrency | null;
+  estimated_transit_days: number | null;
+  max_weight: number | null;
+  max_width: number | null;
+  max_height: number | null;
+  max_length: number | null;
+  weight_unit: ServiceLevelWeightUnit | null;
+  dimension_unit: ServiceLevelDimensionUnit | null;
+  domicile: boolean | null;
+  international: boolean | null;
+}
+
 export interface get_user_connections_user_connections_DPDHLSettings {
   __typename: "DPDHLSettings";
   id: string;
@@ -2145,6 +2164,7 @@ export interface get_user_connections_user_connections_DPDHLSettings {
   password: string;
   signature: string;
   account_number: string;
+  services: get_user_connections_user_connections_DPDHLSettings_services[] | null;
 }
 
 export interface get_user_connections_user_connections_EShipperSettings {
@@ -2483,6 +2503,25 @@ export interface get_user_connections_with_generics_user_connections_DicomSettin
   billing_account: string;
 }
 
+export interface get_user_connections_with_generics_user_connections_DPDHLSettings_services {
+  id: string;  // The ID of the object.
+  active: boolean | null;
+  service_name: string;
+  service_code: string;
+  description: string | null;
+  cost: number | null;
+  currency: ServiceLevelCurrency | null;
+  estimated_transit_days: number | null;
+  max_weight: number | null;
+  max_width: number | null;
+  max_height: number | null;
+  max_length: number | null;
+  weight_unit: ServiceLevelWeightUnit | null;
+  dimension_unit: ServiceLevelDimensionUnit | null;
+  domicile: boolean | null;
+  international: boolean | null;
+}
+
 export interface get_user_connections_with_generics_user_connections_DPDHLSettings {
   __typename: "DPDHLSettings";
   id: string;
@@ -2495,6 +2534,7 @@ export interface get_user_connections_with_generics_user_connections_DPDHLSettin
   password: string;
   signature: string;
   account_number: string;
+  services: get_user_connections_with_generics_user_connections_DPDHLSettings_services[] | null;
 }
 
 export interface get_user_connections_with_generics_user_connections_EShipperSettings {
