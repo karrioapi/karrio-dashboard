@@ -39,8 +39,8 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<C
             <h3 className="subtitle is-3">Close Account</h3>
 
             <div className="buttons my=2">
-              <button className="button is-info is-light" onClick={close}>Cancel</button>
-              <input className="button is-danger" type="submit" value="Close My Account" />
+              <button className="button is-info is-light is-small" onClick={close}>Cancel</button>
+              <input className="button is-danger is-small" type="submit" value="Close My Account" />
             </div>
           </section>
         </form>

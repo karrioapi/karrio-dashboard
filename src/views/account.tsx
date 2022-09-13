@@ -9,15 +9,26 @@ import PasswordManagement from "@/components/password-management";
 import InviteMemberProvider from "@/components/invite-member-modal";
 import ConfirmModal from "@/components/confirm-modal";
 import EmailManagement from "@/components/email-management";
+import { useContext } from "react";
+import { Subscription } from "@/context/subscription-provider";
+import axios from "axios";
+import { KARRIO_API } from "@/client/context";
+import { PortalSessionType } from "@/lib/types";
+import SubscriptionManagement from "@/components/subscription-management";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function AccountPage(pageProps: any) {
-  const { MULTI_ORGANIZATIONS, APP_NAME } = (pageProps as any).metadata || {};
-  const tabs: string[] = ['Account', ...(MULTI_ORGANIZATIONS ? ['Organization'] : [])];
+  const { APP_NAME, MULTI_ORGANIZATIONS } = (pageProps as any).metadata || {};
+  const tabs: string[] = [
+    'Account',
+    ...(MULTI_ORGANIZATIONS ? ['Organization'] : []),
+    ...((pageProps as any).subscription ? ['Billing'] : []),
+  ];
 
   const Component: React.FC = () => {
+
     return (
       <>
         <header className="px-0 py-4">
@@ -72,6 +83,11 @@ export default function AccountPage(pageProps: any) {
               <OrganizationManagement />
             </InviteMemberProvider>
           </div>}
+
+          {(pageProps as any).subscription && <div>
+            <SubscriptionManagement />
+          </div>}
+
         </Tabs>
       </>
     );

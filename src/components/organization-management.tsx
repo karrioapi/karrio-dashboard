@@ -35,7 +35,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
     <>
       <div className="columns py-5 mb-5">
         <div className="column is-5 pr-6">
-          <p className="subtitle is-6 py-1">Display Name</p>
+          <p className="subtitle is-6 py-1">Organization Name</p>
         </div>
 
         <div className="column is-7">

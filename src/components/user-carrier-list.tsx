@@ -99,7 +99,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   id: connection.id,
                   __typename: connection.__typename,
                   active: !connection.active
-                })}>
+                } as any)}>
                   <span className={`icon is-medium ${connection.active ? 'has-text-success' : 'has-text-grey'}`}>
                     <i className={`fas fa-${connection.active ? 'toggle-on' : 'toggle-off'} fa-lg`}></i>
                   </span>

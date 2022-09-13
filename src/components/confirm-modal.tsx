@@ -60,8 +60,8 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
             <div className="p-3 my-4"></div>
 
             <div className="buttons my=2">
-              <button className="button is-info is-light" onClick={close}>Cancel</button>
-              <input className="button is-danger" type="submit" value="Delete" />
+              <button className="button is-info is-light is-small" onClick={close}>Cancel</button>
+              <input className="button is-danger is-small" type="submit" value="Delete" />
             </div>
           </section>
         </form>

@@ -89,14 +89,15 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
                 />
 
                 <div className="p-3 my-5"></div>
-                <ButtonField type="submit"
-                  className="is-primary m-0"
-                  fieldClass="form-floating-footer p-3"
-                  controlClass="has-text-centered"
-                  disabled={!isValid || loading || emails.length === 0}
-                >
-                  <span>Send invites</span>
-                </ButtonField>
+                <div className="form-floating-footer has-text-centered p-1">
+                  <button className="button is-default m-1 is-small" onClick={close} disabled={loading}>
+                    <span>Cancel</span>
+                  </button>
+                  <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
+                    disabled={!isValid || loading || emails.length === 0} type="submit">
+                    <span>Send invites</span>
+                  </button>
+                </div>
               </section>
             </form>}
 

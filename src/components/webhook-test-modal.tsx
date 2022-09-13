@@ -91,13 +91,18 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
                 </pre>
               </div>
 
-              <ButtonField
-                type="submit"
-                className={`is-primary ${loading ? 'is-loading' : ''}`}
-                fieldClass="has-text-centered mt-3"
-                disabled={loading}>
-                <span>Test Notification</span>
-              </ButtonField>
+              <div className="p-3 my-5"></div>
+              <div className="form-floating-footer has-text-centered p-1">
+                <button className="button is-default m-1 is-small" type="button" onClick={close} disabled={loading}>
+                  <span>Cancel</span>
+                </button>
+                <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
+                  disabled={loading}
+                  type="submit">
+                  <span>Test Notification</span>
+                </button>
+              </div>
+
             </section>
           </form>
           <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>

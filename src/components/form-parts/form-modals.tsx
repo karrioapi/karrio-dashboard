@@ -103,14 +103,16 @@ export const ParcelModalEditor: React.FC<ModalFormProps<ParcelModalEditorProps>>
               onChange={(parcel) => setParcel(parcel)}
             >
               <div className="p-3 my-5"></div>
-              <ButtonField type="submit"
-                className="is-primary m-0"
-                fieldClass="form-floating-footer p-3"
-                controlClass="has-text-centered"
-                disabled={deepEqual(value, parcel)}
-              >
-                <span>Save</span>
-              </ButtonField>
+              <div className="form-floating-footer has-text-centered p-1">
+                <button className="button is-default m-1 is-small" type="button" onClick={close}>
+                  <span>Cancel</span>
+                </button>
+                <button className="button is-primary m-1 is-small"
+                  disabled={deepEqual(value, parcel)}
+                  type="submit">
+                  <span>Save</span>
+                </button>
+              </div>
             </ParcelForm>
           </form>
         </ParcelTemplatesProvider>
