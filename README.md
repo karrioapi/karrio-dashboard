@@ -44,9 +44,6 @@ Use the following environment variables to configure the dashboard:
 
 - `NEXTAUTH_URL` (**required**) - The URL of your dashboard to restrict the authentication host to your instance. If you are running the dashboard locally, set `NEXTAUTH_URL` to: `http://localhost:3000`.
 
-- `KARRIO_HOSTNAME` - URL of a running instance of karrio server. Useful for an internal network request from the node side of the dashboard. *Note: the default value will be `NEXT_PUBLIC_KARRIO_API_URL` when not provided*
-
-- `BASE_PATH` - A base path to use for deploying the dashboard to a domain subpath. e.g. `instance.karrio.io/dashboard`
 
 #### Development
 
