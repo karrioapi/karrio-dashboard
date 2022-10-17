@@ -30,7 +30,6 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
   const updater: Subject<Partial<Address>> = new Subject();
   updater.subscribe(address => onValueChange(address));
 
-  const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
   const onChange = (e: ChangeEvent<any>) => {
     e.preventDefault();
     const inputValue: string = e.target.value || "";
@@ -87,7 +86,6 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
           <input
             name={name}
             onChange={onChange}
-            onClick={onClick}
             className={`input is-fullwidth ${className || ''}`}
             style={{ height: '100%' }}
             {...(ADDRESS_AUTO_COMPLETE?.is_enabled ? { autoComplete: key } : {})}
