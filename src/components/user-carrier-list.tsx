@@ -162,7 +162,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
         <div className="card-content has-text-centered">
           <p>No carriers have been connected yet.</p>
-          <p>Use the <strong>Connect a Carrier</strong> button above to add a new connection</p>
+          <p>Use the <strong>Register a Carrier</strong> button above to add a new connection</p>
         </div>
 
       </div>}
