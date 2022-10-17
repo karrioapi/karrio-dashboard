@@ -57,8 +57,8 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
     <div className={`dropdown is-right ${isActive ? 'is-active' : ''}`} key={`menu-${shipment.id}`}>
 
       <div className="dropdown-trigger" onClick={handleOnClick} ref={trigger}>
-        <a className="button is-default is-small p-3">
-          <i className={`fas fa-ellipsis-v`} aria-hidden="true"></i>
+        <a className="button is-white is-small p-3">
+          <i className={`fas fa-ellipsis-h`} aria-hidden="true"></i>
         </a>
       </div>
 

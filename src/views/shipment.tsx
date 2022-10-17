@@ -75,7 +75,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
               {!isNone(shipmentId) && <AppLink
                 href={`/shipments/${shipmentId}`} target="blank"
-                className="button is-default has-text-info is-small mx-1">
+                className="button is-white has-text-info is-small mx-1">
                 <span className="icon">
                   <i className="fas fa-external-link-alt"></i>
                 </span>
