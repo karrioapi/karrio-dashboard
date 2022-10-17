@@ -108,7 +108,7 @@ export default function WebhooksPage(pageProps: any) {
                       </span>
                     </WebhookTestModal>
                     <button className="button is-white" onClick={() => confirmDeletion({
-                      label: "Webhook endpoint",
+                      label: "Delete Webhook endpoint",
                       identifier: webhook.id as string,
                       onConfirm: remove(webhook.id as string),
                     })}>

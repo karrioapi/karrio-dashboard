@@ -142,7 +142,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   </button>
                   <button title="discard connection" className="button is-white" onClick={() => confirmDeletion({
                     identifier: connection.id,
-                    label: `Carrier connection`,
+                    label: `Delete Carrier connection`,
                     onConfirm: onDelete(connection.id),
                   })}>
                     <span className="icon is-small">

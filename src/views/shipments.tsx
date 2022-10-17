@@ -20,6 +20,7 @@ import ShipmentPreview, { ShipmentPreviewContext } from "@/components/descriptio
 import AppBadge from "@/components/app-badge";
 import CarrierBadge from "@/components/carrier-badge";
 import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
+import ConfirmModal from "@/components/confirm-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -190,9 +191,11 @@ export default function ShipmentsPage(pageProps: any) {
           <CustomInvoicePrinter>
             <ShipmentsProvider>
               <ShipmentPreview>
+                <ConfirmModal>
 
-                <Component />
+                  <Component />
 
+                </ConfirmModal>
               </ShipmentPreview>
             </ShipmentsProvider>
           </CustomInvoicePrinter>

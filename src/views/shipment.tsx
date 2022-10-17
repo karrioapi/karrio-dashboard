@@ -25,6 +25,7 @@ import AddressDescription from "@/components/descriptions/address-description";
 import CommodityDescription from "@/components/descriptions/commodity-description";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import ShipmentMutationProvider from "@/context/shipment-mutation";
+import ConfirmModal from "@/components/confirm-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -403,11 +404,13 @@ export default function ShipmentPage(pageProps: any) {
           <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
             <EventsProvider setVariablesToURL={false}>
               <LogsProvider setVariablesToURL={false}>
-                <MetadataMutationProvider>
+                <ConfirmModal>
+                  <MetadataMutationProvider>
 
-                  <ShipmentComponent />
+                    <ShipmentComponent />
 
-                </MetadataMutationProvider>
+                  </MetadataMutationProvider>
+                </ConfirmModal>
               </LogsProvider>
             </EventsProvider>
           </DocumentTemplatesProvider>

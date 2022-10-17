@@ -86,7 +86,7 @@ export default function CustomsInfoPage(pageProps: any) {
                         </span>
                       </button>
                       <button className="button is-white" onClick={() => confirmDeletion({
-                        label: "Customs info template",
+                        label: "Delete Customs info template",
                         identifier: template.id,
                         onConfirm: remove(template.id),
                       })}>
