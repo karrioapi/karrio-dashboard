@@ -90,10 +90,11 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
             {...props}
           />
           <input
-            style={{ zIndex: -1, position: "absolute", right: 0 }}
+            style={{ zIndex: -1, position: "absolute", left: '20px' }}
             name={name}
             onChange={onRefChange}
             tabIndex={-1}
+            required={required}
           />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
