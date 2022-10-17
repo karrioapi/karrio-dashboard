@@ -84,7 +84,7 @@ export default function AddressPage(pageProps: any) {
                         </span>
                       </button>
                       <button className="button is-white" onClick={() => confirmDeletion({
-                        label: "Address template",
+                        label: "Delete Address template",
                         identifier: template.id,
                         onConfirm: remove(template.id),
                       })}>

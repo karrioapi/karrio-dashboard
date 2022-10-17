@@ -95,6 +95,72 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
       {children}
 
       <div className="columns mb-0">
+        <CountryInput
+          label="country"
+          onValueChange={value => dispatch({ name: "country_code", value: value as string })}
+          value={address.country_code}
+          className="is-small"
+          dropdownClass="is-small"
+          fieldClass="column mb-0 px-2 py-2"
+          required
+        />
+      </div>
+
+      <div className="columns mb-0">
+        <AddressAutocompleteInput
+          label="Street (Line 1)"
+          name="address_line1"
+          onValueChange={(value) => dispatch({ name: "partial", value })}
+          value={address.address_line1}
+          country_code={address.country_code}
+          className="is-small"
+          fieldClass="column mb-0 px-2 py-2"
+          required
+        />
+      </div>
+
+      <div className="columns is-multiline mb-0">
+        <InputField
+          label="city"
+          name="city"
+          onChange={handleChange}
+          value={address.city}
+          className="is-small"
+          fieldClass="column is-6 mb-0 px-2 py-2"
+          required
+        />
+
+        <InputField
+          label="Street (Line 2)"
+          name="address_line2"
+          onChange={handleChange}
+          value={address.address_line2}
+          className="is-small"
+          fieldClass="column is-6 mb-0 px-2 py-2"
+        />
+
+        <StateInput
+          label="province or state"
+          onValueChange={value => dispatch({ name: "state_code", value: value as string })}
+          value={address.state_code}
+          className="is-small"
+          fieldClass="column is-6 mb-0 px-2 py-2"
+          country_code={address.country_code}
+          required={Object.keys(states || {}).includes(address.country_code)}
+        />
+
+        <PostalInput
+          label="postal code"
+          onValueChange={value => dispatch({ name: "postal_code", value: value as string })}
+          value={address.postal_code}
+          country={address.country_code}
+          className="is-small"
+          fieldClass="column is-6 mb-0 px-2 py-2"
+          required={COUNTRY_WITH_POSTAL_CODE.includes(address.country_code)}
+        />
+      </div>
+
+      <div className="columns mb-0">
         <NameInput label="name"
           className="is-small"
           value={address.person_name}
@@ -122,73 +188,6 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
           country={address.country_code}
           className="is-small"
           fieldClass="column mb-0 px-2 py-2"
-        />
-      </div>
-
-
-      <div className="columns mb-0">
-        <CountryInput
-          label="country"
-          onValueChange={value => dispatch({ name: "country_code", value: value as string })}
-          value={address.country_code}
-          className="is-small"
-          dropdownClass="is-small"
-          fieldClass="column mb-0 px-2 py-2"
-          required
-        />
-      </div>
-
-      <div className="columns mb-0">
-        <AddressAutocompleteInput
-          label="Street (Line 1)"
-          name="address_line1"
-          onValueChange={(value) => dispatch({ name: "partial", value })}
-          value={address.address_line1}
-          country_code={address.country_code}
-          className="is-small"
-          fieldClass="column mb-0 px-2 py-2"
-          required
-        />
-      </div>
-
-      <div className="columns is-multiline mb-0">
-        <InputField
-          label="Street (Line 2)"
-          name="address_line2"
-          onChange={handleChange}
-          value={address.address_line2}
-          className="is-small"
-          fieldClass="column is-6 mb-0 px-2 py-2"
-        />
-
-        <InputField
-          label="city"
-          name="city"
-          onChange={handleChange}
-          value={address.city}
-          className="is-small"
-          fieldClass="column is-6 mb-0 px-2 py-2"
-          required
-        />
-
-        <StateInput
-          label="province or state"
-          onValueChange={value => dispatch({ name: "state_code", value: value as string })}
-          value={address.state_code}
-          className="is-small"
-          fieldClass="column is-6 mb-0 px-2 py-2"
-          country_code={address.country_code}
-          required={Object.keys(states || {}).includes(address.country_code)}
-        />
-
-        <PostalInput
-          label="postal code"
-          onValueChange={value => dispatch({ name: "postal_code", value: value as string })}
-          value={address.postal_code}
-          country={address.country_code}
-          className="is-small"
-          fieldClass="column is-6 mb-0 px-2 py-2"
-          required={COUNTRY_WITH_POSTAL_CODE.includes(address.country_code)}
         />
       </div>
 

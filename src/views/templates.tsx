@@ -58,7 +58,7 @@ export default function TemplatesPage(pageProps: any) {
                         </span>
                       </AppLink>
                       <button className="button is-white" onClick={() => confirmDeletion({
-                        label: "Document template",
+                        label: "Delete Document template",
                         identifier: template.id,
                         onConfirm: remove(template.id),
                       })}>

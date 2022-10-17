@@ -1223,6 +1223,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       developer_id
       mws_auth_token
       aws_region
+      capabilities
     }
     ... on AramexSettings {
       id
@@ -1236,6 +1237,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_entity
       account_number
       account_country_code
+      capabilities
     }
     ... on AustraliaPostSettings {
       id
@@ -1246,6 +1248,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       api_key
       password
       account_number
+      capabilities
     }
     ... on CanadaPostSettings {
       id
@@ -1258,6 +1261,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       customer_number
       contract_id
       metadata
+      capabilities
     }
     ... on CanparSettings {
       id
@@ -1267,6 +1271,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       username
       password
+      capabilities
     }
     ... on ChronopostSettings {
       id
@@ -1277,6 +1282,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on DHLExpressSettings {
       id
@@ -1288,6 +1294,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on DHLPolandSettings {
       id
@@ -1316,6 +1323,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         domicile
         international
       }
+      capabilities
     }
     ... on DHLUniversalSettings {
       id
@@ -1325,6 +1333,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       consumer_key
       consumer_secret
+      capabilities
     }
     ... on DicomSettings {
       id
@@ -1335,6 +1344,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       username
       password
       billing_account
+      capabilities
     }
     ...on DPDHLSettings {
       id
@@ -1365,6 +1375,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         domicile
         international
       }
+      capabilities
     }
     ... on EShipperSettings {
       id
@@ -1374,6 +1385,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       username
       password
+      capabilities
     }
     ... on FedexSettings {
       id
@@ -1387,6 +1399,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       user_key
       account_country_code
       metadata
+      capabilities
     }
     ... on FreightcomSettings {
       id
@@ -1396,6 +1409,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       username
       password
+      capabilities
     }
     ... on PurolatorSettings {
       id
@@ -1408,6 +1422,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_number
       user_token
       metadata
+      capabilities
     }
     ... on RoyalMailSettings {
       id
@@ -1417,6 +1432,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       client_id
       client_secret
+      capabilities
     }
     ... on SendleSettings {
       id
@@ -1426,6 +1442,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       sendle_id
       api_key
+      capabilities
     }
     ... on SFExpressSettings {
       id
@@ -1435,6 +1452,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       partner_id
       check_word
+      capabilities
     }
     ... on TNTSettings {
       id
@@ -1446,6 +1464,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on UPSSettings {
       id
@@ -1459,6 +1478,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_number
       account_country_code
       metadata
+      capabilities
     }
     ... on UPSFreightSettings {
       id
@@ -1472,6 +1492,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_number
       account_country_code
       metadata
+      capabilities
     }
     ... on USPSSettings {
       id
@@ -1484,6 +1505,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
+      capabilities
     }
     ... on USPSInternationalSettings {
       id
@@ -1496,6 +1518,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
+      capabilities
     }
     ... on YanwenSettings {
       id
@@ -1505,6 +1528,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       customer_number
       license_key
+      capabilities
     }
     ... on YunExpressSettings {
       id
@@ -1514,6 +1538,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       customer_number
       api_secret
+      capabilities
     }
   }
 }
@@ -1532,6 +1557,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       developer_id
       mws_auth_token
       aws_region
+      capabilities
     }
     ... on AramexSettings {
       id
@@ -1545,6 +1571,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_entity
       account_number
       account_country_code
+      capabilities
     }
     ... on AustraliaPostSettings {
       id
@@ -1555,6 +1582,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       api_key
       password
       account_number
+      capabilities
     }
     ... on CanadaPostSettings {
       id
@@ -1567,6 +1595,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       customer_number
       contract_id
       metadata
+      capabilities
     }
     ... on CanparSettings {
       id
@@ -1576,6 +1605,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       username
       password
+      capabilities
     }
     ... on ChronopostSettings {
       id
@@ -1586,6 +1616,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on DHLExpressSettings {
       id
@@ -1597,6 +1628,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on DHLPolandSettings {
       id
@@ -1625,6 +1657,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
         domicile
         international
       }
+      capabilities
     }
     ... on DHLUniversalSettings {
       id
@@ -1634,6 +1667,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       consumer_key
       consumer_secret
+      capabilities
     }
     ... on DicomSettings {
       id
@@ -1644,6 +1678,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       username
       password
       billing_account
+      capabilities
     }
     ...on DPDHLSettings {
       id
@@ -1674,6 +1709,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
         domicile
         international
       }
+      capabilities
     }
     ... on EShipperSettings {
       id
@@ -1683,6 +1719,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       username
       password
+      capabilities
     }
     ... on EasyPostSettings {
       id
@@ -1692,6 +1729,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       api_key
       metadata
+      capabilities
     }
     ... on FedexSettings {
       id
@@ -1705,6 +1743,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       user_key
       account_country_code
       metadata
+      capabilities
     }
     ... on FreightcomSettings {
       id
@@ -1714,6 +1753,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       username
       password
+      capabilities
     }
     ... on GenericSettings {
       id
@@ -1753,6 +1793,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
         height
       }
       metadata
+      capabilities
     }
     ... on PurolatorSettings {
       id
@@ -1765,6 +1806,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_number
       user_token
       metadata
+      capabilities
     }
     ... on RoyalMailSettings {
       id
@@ -1774,6 +1816,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       client_id
       client_secret
+      capabilities
     }
     ... on SendleSettings {
       id
@@ -1783,6 +1826,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       sendle_id
       api_key
+      capabilities
     }
     ... on SFExpressSettings {
       id
@@ -1792,6 +1836,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       partner_id
       check_word
+      capabilities
     }
     ... on TNTSettings {
       id
@@ -1803,6 +1848,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       password
       account_number
       account_country_code
+      capabilities
     }
     ... on UPSSettings {
       id
@@ -1816,6 +1862,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_number
       account_country_code
       metadata
+      capabilities
     }
     ... on UPSFreightSettings {
       id
@@ -1829,6 +1876,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_number
       account_country_code
       metadata
+      capabilities
     }
     ... on USPSSettings {
       id
@@ -1841,6 +1889,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
+      capabilities
     }
     ... on USPSInternationalSettings {
       id
@@ -1853,6 +1902,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
+      capabilities
     }
     ... on YanwenSettings {
       id
@@ -1862,6 +1912,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       customer_number
       license_key
+      capabilities
     }
     ... on YunExpressSettings {
       id
@@ -1871,6 +1922,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       active
       customer_number
       api_secret
+      capabilities
     }
   }
 }

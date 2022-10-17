@@ -66,7 +66,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                 <span>Create shipment</span>
               </AppLink>}
             {!isNone(orderId) &&
-              <AppLink className="button is-default has-text-info is-small mx-1"
+              <AppLink className="button is-white has-text-info is-small mx-1"
                 href={`/orders/${orderId}`} target="blank">
                 <span className="icon">
                   <i className="fas fa-external-link-alt"></i>

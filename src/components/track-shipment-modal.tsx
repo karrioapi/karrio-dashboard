@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { NotificationType } from '@/lib/types';
-import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
 import { APIReference } from '@/context/references-provider';
 import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
@@ -71,7 +70,12 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
   useEffect(() => {
     setCarrierList(
       [...(user_connections || []), ...(system_connections || [])]
-        .filter(c => c.active && c.test_mode === testMode)
+        .filter(c => (
+          c.active &&
+          c.test_mode === testMode &&
+          c.carrier_name in carriers &&
+          c.capabilities.includes('tracking')
+        ))
     );
   }, [user_connections, system_connections, testMode]);
 

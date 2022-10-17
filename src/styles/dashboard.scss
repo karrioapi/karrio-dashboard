@@ -40,30 +40,35 @@ Karrio custom styling
     width: 8%;
     min-width: 50px;
   }
+
   .service {
     min-width: 10vw;
     max-width: 160px;
   }
+
   .status {
     width: 10%;
   }
+
   .recipient {
     min-width: 10vw;
     max-width: 200px;
   }
+
   .date {
     width: 15%;
     min-width: 120px;
   }
+
   .action {
     width: 2%;
   }
 
-  tbody > tr.items {
+  tbody>tr.items {
     cursor: pointer;
   }
 
-  tbody > tr.items:hover {
+  tbody>tr.items:hover {
     background-color: #fafafa;
   }
 }
@@ -73,14 +78,17 @@ Karrio custom styling
     width: 24%;
     text-align: center !important;
   }
+
   .mode {
     width: 6%;
   }
+
   .active {
     width: 6%;
   }
-  .details {
-  }
+
+  .details {}
+
   .action {
     width: 15%;
     min-width: 150px;
@@ -92,31 +100,35 @@ Karrio custom styling
     width: 24%;
     text-align: center !important;
   }
+
   .mode {
     width: 6%;
   }
+
   .details {
     width: 64%;
   }
+
   .action {
     width: 6%;
   }
 }
 
 .templates-table {
-  .template {
-  }
+  .template {}
+
   .default {
     width: 20%;
   }
+
   .action {
     width: 15%;
   }
 }
 
 .commodities-table {
-  .commodity {
-  }
+  .commodity {}
+
   .action {
     width: 115px;
   }
@@ -126,38 +138,40 @@ Karrio custom styling
   .status {
     width: 8%;
   }
-  .description {
-  }
+
+  .description {}
+
   .date {
     width: 20%;
     min-width: 185px;
   }
 
-  tbody > tr.items {
+  tbody>tr.items {
     cursor: pointer;
   }
 
-  tbody > tr.items:hover {
+  tbody>tr.items:hover {
     background-color: #fafafa;
   }
 }
 
 .events-table {
-  .event {
-  }
+  .event {}
+
   .id {
     width: 20%;
   }
+
   .date {
     width: 20%;
     min-width: 185px;
   }
 
-  tbody > tr.items {
+  tbody>tr.items {
     cursor: pointer;
   }
 
-  tbody > tr.items:hover {
+  tbody>tr.items:hover {
     background-color: #fafafa;
   }
 }
@@ -167,31 +181,36 @@ Karrio custom styling
     width: 8%;
     min-width: 50px;
   }
+
   .tracking-number {
     min-width: 10vw;
     max-width: 160px;
   }
+
   .status {
     width: 10%;
   }
+
   .last-event {
     min-width: 10vw;
     max-width: 200px;
   }
+
   .date {
     width: 15%;
     min-width: 130px;
   }
+
   .action {
     width: 5%;
     min-width: 50px;
   }
 
-  tbody > tr.items {
+  tbody>tr.items {
     cursor: pointer;
   }
 
-  tbody > tr.items:hover {
+  tbody>tr.items:hover {
     background-color: #fafafa;
   }
 }
@@ -202,14 +221,17 @@ Karrio custom styling
     min-width: 200px;
     max-width: 200px;
   }
+
   .mode {
     width: 50px;
   }
+
   .last-event {
     width: 10%;
     min-width: 150px;
     max-width: 150px;
   }
+
   .action {
     width: 10%;
     min-width: 150px;
@@ -220,30 +242,35 @@ Karrio custom styling
   .selector {
     width: 3%;
   }
+
   .order {
     width: 15%;
   }
+
   .items {
     min-width: 10vw;
     max-width: 150px;
   }
+
   .status {
     width: 10%;
   }
+
   .customer {
     min-width: 10vw;
     max-width: 200px;
   }
+
   .date {
     width: 15%;
     min-width: 120px;
   }
 
-  tbody > tr.items {
+  tbody>tr.items {
     cursor: pointer;
   }
 
-  tbody > tr.items:hover {
+  tbody>tr.items:hover {
     background-color: #fafafa;
   }
 }
@@ -255,9 +282,11 @@ Karrio custom styling
   .status {
     width: 8%;
   }
+
   .description {
     min-width: 40%;
   }
+
   .date {
     width: 15%;
     min-width: 130px;
@@ -268,13 +297,16 @@ Karrio custom styling
   .member {
     width: 40%;
   }
+
   .role {
     width: 30%;
   }
+
   .last-login {
     width: 20%;
     min-width: 130px;
   }
+
   .action {
     width: 10%;
   }
@@ -353,7 +385,7 @@ hr {
   }
 }
 
-td > div.dropdown.is-active .dropdown-menu {
+td>div.dropdown.is-active .dropdown-menu {
   top: 75%;
 }
 
@@ -381,7 +413,7 @@ td > div.dropdown.is-active .dropdown-menu {
   z-index: 1;
 }
 
-.small-icon > svg {
+.small-icon>svg {
   width: 0.8em !important;
   height: 0.8em !important;
 }
@@ -431,4 +463,17 @@ td > div.dropdown.is-active .dropdown-menu {
 
 pre.code {
   border: 1px solid #eee;
+}
+
+@media screen and (min-width: 1080px) {
+  .table-container {
+    overflow: unset;
+    overflow-y: unset;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .table-container {
+    overflow-y: visible;
+  }
 }

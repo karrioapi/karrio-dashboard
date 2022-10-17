@@ -25,6 +25,7 @@ const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
   const { insertUrlParam } = useLocation();
   const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
+    pollInterval: 600000,
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });

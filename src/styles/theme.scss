@@ -56,6 +56,7 @@ $footer-background-color: $white;
 .is-medium-modal {
   width: 70vw;
   height: 90vh;
+  max-width: 1040px;
 }
 
 .is-large-modal {
@@ -74,12 +75,15 @@ $footer-background-color: $white;
   .isolated-card {
     box-shadow: none;
   }
+
   .container {
     margin: 0;
   }
+
   .modal-card {
     height: 100vh;
   }
+
   .is-large-modal,
   .is-medium-modal {
     width: 100vw;
@@ -91,90 +95,112 @@ $footer-background-color: $white;
   background-color: #dc291e !important;
   color: #fff !important;
 }
+
 .is-australiapost {
   background-color: #dc1928 !important;
   color: #fff !important;
 }
+
 .is-boxknight {
   background-color: #ddd !important;
   color: #1890ff !important;
 }
+
 .is-canadapost {
   background-color: #1a4183 !important;
   color: #ddd !important;
 }
+
 .is-canpar {
   background-color: #004890 !important;
   color: #fff !important;
 }
+
 .is-dicom {
   background-color: #f26529 !important;
   color: #005daa !important;
 }
+
 .is-dhl {
   background-color: #fc0 !important;
   color: #c00 !important;
 }
+
 .is-dhl_universal {
   background-color: #fc0 !important;
   color: #c00 !important;
 }
+
 .is-eshipper {
   background-color: #472f92 !important;
   color: #fff !important;
 }
+
 .is-easypost {
   background-color: #303F9F !important;
   color: #fff !important;
 }
+
 .is-fedex {
   background-color: #4d148c !important;
   color: #ddd !important;
 }
+
 .is-freightcom {
   background-color: #0072bc !important;
   color: #333 !important;
 }
+
 .is-purolator {
   background-color: #001996 !important;
   color: #e00000 !important;
 }
+
 .is-generic {
   background-color: #5722cc !important;
   color: #ddd !important;
 }
+
 .is-royalmail {
   background-color: #dc3232 !important;
   color: #fdda24 !important;
 }
+
 .is-sendle {
   background-color: #ff6800 !important;
   color: #fff !important;
 }
+
 .is-sf_express {
   background-color: #dc1e32 !important;
   color: #fff !important;
 }
+
 .is-tnt {
   background-color: #fff !important;
   color: #ff6600;
 }
+
 .is-ups {
   background-color: #341b14 !important;
   color: #ffb406 !important;
 }
+
 .is-usps {
   background-color: #333366 !important;
   color: #fff !important;
 }
+
 .is-usps_international {
   background-color: #333366 !important;
   color: #fff !important;
 }
+
 .is-yanwen {
   background-color: #68b125 !important;
   color: #fff !important;
 }
+
 .is-yunexpress {
   background-color: #ddd !important;
   color: #388280 !important;

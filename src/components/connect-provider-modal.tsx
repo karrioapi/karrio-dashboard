@@ -265,9 +265,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
 
                 {/* Carrier specific fields END */}
 
-                <CheckBoxField defaultChecked={payload.test_mode} onChange={handleOnChange("test_mode")}>Test Mode</CheckBoxField>
-
-
                 {has("metadata") && <>
 
                   <hr className="mt-1 my-3" style={{ height: '1px' }} />

@@ -25,6 +25,7 @@ import AddressDescription from "@/components/descriptions/address-description";
 import CommodityDescription from "@/components/descriptions/commodity-description";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
 import ShipmentMutationProvider from "@/context/shipment-mutation";
+import ConfirmModal from "@/components/confirm-modal";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -75,7 +76,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
               {!isNone(shipmentId) && <AppLink
                 href={`/shipments/${shipmentId}`} target="blank"
-                className="button is-default has-text-info is-small mx-1">
+                className="button is-white has-text-info is-small mx-1">
                 <span className="icon">
                   <i className="fas fa-external-link-alt"></i>
                 </span>
@@ -403,11 +404,13 @@ export default function ShipmentPage(pageProps: any) {
           <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
             <EventsProvider setVariablesToURL={false}>
               <LogsProvider setVariablesToURL={false}>
-                <MetadataMutationProvider>
+                <ConfirmModal>
+                  <MetadataMutationProvider>
 
-                  <ShipmentComponent />
+                    <ShipmentComponent />
 
-                </MetadataMutationProvider>
+                  </MetadataMutationProvider>
+                </ConfirmModal>
               </LogsProvider>
             </EventsProvider>
           </DocumentTemplatesProvider>

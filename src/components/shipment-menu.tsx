@@ -8,6 +8,7 @@ import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { ShipmentStatusEnum } from 'karrio/graphql';
 import { KARRIO_API } from '@/client/context';
+import { ConfirmModalContext } from '@/components/confirm-modal';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -21,6 +22,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
   const router = useRouter();
   const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
+  const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
   const { voidLabel } = useContext(ShipmentMutationContext);
   const shipments = useContext(ShipmentsContext);
   const trigger = useRef<HTMLDivElement>(null);
@@ -43,22 +45,17 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
   const displayDetails = (_: React.MouseEvent) => {
     router.push(basePath + '/shipments/' + shipment.id);
   };
-  const cancelShipment = (shipment: ShipmentType) => async (e: React.MouseEvent) => {
-    try {
-      await voidLabel(shipment);
-      notify({ type: NotificationType.success, message: 'Shipment successfully cancelled!' });
-      shipments.loadMore();
-    } catch (err: any) {
-      notify({ type: NotificationType.error, message: err });
-    }
+  const cancelShipment = (shipment: ShipmentType) => async () => {
+    await voidLabel(shipment);
+    shipments.loadMore();
   };
 
   return (
     <div className={`dropdown is-right ${isActive ? 'is-active' : ''}`} key={`menu-${shipment.id}`}>
 
       <div className="dropdown-trigger" onClick={handleOnClick} ref={trigger}>
-        <a className="button is-default is-small p-3">
-          <i className={`fas fa-ellipsis-v`} aria-hidden="true"></i>
+        <a className="button is-white is-small p-3">
+          <i className={`fas fa-ellipsis-h`} aria-hidden="true"></i>
         </a>
       </div>
 
@@ -79,7 +76,12 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>}
 
           {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status) &&
-            <a className="dropdown-item" onClick={cancelShipment(shipment)}>Cancel Shipment</a>}
+            <a className="dropdown-item" onClick={() => confirmCancellation({
+              identifier: shipment.id,
+              label: `Cancel Shipment`,
+              action: 'Submit',
+              onConfirm: cancelShipment(shipment),
+            })}>Cancel Shipment</a>}
 
           {!isNone(shipment.invoice_url) &&
             <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}

@@ -5,6 +5,7 @@ import { Notify } from '@/components/notifier';
 type OperationType = {
   identifier: string;
   label: string;
+  action?: string;
   onConfirm: () => Promise<any>;
 };
 type ConfirmModalContextType = {
@@ -34,7 +35,7 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
     try {
       await operation?.onConfirm();
       notify({
-        type: NotificationType.success, message: `${operation?.label} deteled successfully!...`
+        type: NotificationType.success, message: `${operation?.label} successfully!...`
       });
       close();
     } catch (message: any) {
@@ -54,14 +55,14 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
           <section className="modal-card-body">
             <div className="form-floating-header p-4">
               <span className="has-text-weight-bold is-size-6">
-                Delete {operation?.label} <span className="is-size-7">({operation?.identifier})</span>
+                {operation?.label} <span className="is-size-7">({operation?.identifier})</span>
               </span>
             </div>
             <div className="p-3 my-4"></div>
 
             <div className="buttons my=2">
               <button className="button is-info is-light is-small" onClick={close}>Cancel</button>
-              <input className="button is-danger is-small" type="submit" value="Delete" />
+              <input className="button is-danger is-small" type="submit" value={operation?.action || "Delete"} />
             </div>
           </section>
         </form>

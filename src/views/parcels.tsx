@@ -86,7 +86,7 @@ export default function ParcelsPage(pageProps: any) {
                         </span>
                       </button>
                       <button className="button is-white" onClick={() => confirmDeletion({
-                        label: "Parcel template",
+                        label: "Delete Parcel template",
                         identifier: template.id,
                         onConfirm: remove(template.id),
                       })}>
