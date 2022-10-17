@@ -93,7 +93,7 @@ export default function ShipmentsPage(pageProps: any) {
         {loading && <Spinner />}
 
         {(!loading && shipments?.length > 0) && <>
-          <div className="table-container pb-3">
+          <div className="table-container">
             <table className="shipments-table table is-fullwidth">
               <tbody>
 

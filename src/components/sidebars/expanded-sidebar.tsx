@@ -35,7 +35,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
         {MULTI_ORGANIZATIONS
           ? <OrganizationDropdown />
           : <Image src={p`/icon.svg`} className="mt-1" width="30" height="100%" alt="logo" />}
-        <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger" onClick={dismiss}>
+        <button className="menu-icon v-5 is-open mobile-item is-block mobile-sidebar-trigger ml-2" onClick={dismiss}>
           <span></span>
         </button>
       </div>
