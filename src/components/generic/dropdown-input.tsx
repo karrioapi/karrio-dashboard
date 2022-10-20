@@ -94,7 +94,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
             name={name}
             onChange={onRefChange}
             tabIndex={-1}
-            required={required}
+            // required={required}
           />
 
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
