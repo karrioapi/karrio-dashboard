@@ -135,6 +135,15 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
 
       <div className="columns is-multiline mb-0">
         <InputField
+          label="Street (Line 2)"
+          name="address_line2"
+          onChange={handleChange}
+          value={address.address_line2}
+          className="is-small"
+          fieldClass="column is-6 mb-0 px-2 py-2"
+        />
+
+        <InputField
           label="city"
           name="city"
           onChange={handleChange}
@@ -142,15 +151,6 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
           className="is-small"
           fieldClass="column is-6 mb-0 px-2 py-2"
           required
-        />
-
-        <InputField
-          label="Street (Line 2)"
-          name="address_line2"
-          onChange={handleChange}
-          value={address.address_line2}
-          className="is-small"
-          fieldClass="column is-6 mb-0 px-2 py-2"
         />
 
         <StateInput
