@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
-import { DocumentTemplateType, NotificationType, ShipmentType } from '@/lib/types';
-import { Notify } from '@/components/notifier';
+import { DocumentTemplateType, ShipmentType } from '@/lib/types';
 import { ShipmentsContext } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
 import { AppMode } from '@/context/app-mode-provider';
@@ -20,10 +19,9 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 
 const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, isViewing }) => {
   const router = useRouter();
-  const { notify } = useContext(Notify);
   const { basePath } = useContext(AppMode);
-  const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
   const { voidLabel } = useContext(ShipmentMutationContext);
+  const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
   const shipments = useContext(ShipmentsContext);
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
