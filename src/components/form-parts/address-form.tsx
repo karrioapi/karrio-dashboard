@@ -95,6 +95,20 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
       {children}
 
       <div className="columns mb-0">
+        <NameInput label="name"
+          className="is-small"
+          value={address.person_name}
+          fieldClass="column mb-0 px-2 py-2"
+          disableSuggestion={isNone(shipment)}
+          onValueChange={(value, refresh) => {
+            dispatch({ name: "partial", value });
+            refresh && setKey(`address-${Date.now()}`);
+          }}
+          required
+        />
+      </div>
+
+      <div className="columns mb-0">
         <CountryInput
           label="country"
           onValueChange={value => dispatch({ name: "country_code", value: value as string })}
@@ -157,20 +171,6 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
           className="is-small"
           fieldClass="column is-6 mb-0 px-2 py-2"
           required={COUNTRY_WITH_POSTAL_CODE.includes(address.country_code)}
-        />
-      </div>
-
-      <div className="columns mb-0">
-        <NameInput label="name"
-          className="is-small"
-          value={address.person_name}
-          fieldClass="column mb-0 px-2 py-2"
-          disableSuggestion={isNone(shipment)}
-          onValueChange={(value, refresh) => {
-            dispatch({ name: "partial", value });
-            refresh && setKey(`address-${Date.now()}`);
-          }}
-          required
         />
       </div>
 
