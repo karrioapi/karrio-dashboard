@@ -1,5 +1,5 @@
 import { KARRIO_API } from "@/client/context";
-import { TokenObtainPair, TokenPair } from "karrio/rest";
+import { TokenObtainPair } from "karrio/rest";
 import axios from "axios";
 import logger from '@/lib/logger';
 import { NextApiRequest } from "next";

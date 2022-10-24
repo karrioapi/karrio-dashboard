@@ -9,11 +9,6 @@ import PasswordManagement from "@/components/password-management";
 import InviteMemberProvider from "@/components/invite-member-modal";
 import ConfirmModal from "@/components/confirm-modal";
 import EmailManagement from "@/components/email-management";
-import { useContext } from "react";
-import { Subscription } from "@/context/subscription-provider";
-import axios from "axios";
-import { KARRIO_API } from "@/client/context";
-import { PortalSessionType } from "@/lib/types";
 import SubscriptionManagement from "@/components/subscription-management";
 
 export { getServerSideProps } from "@/lib/middleware";
