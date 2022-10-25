@@ -182,7 +182,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const selection = isDraft(shipment.id) ? {
       service: rate.service,
       carrier_ids: [rate.carrier_id],
-    } : { selecte_rate_id: rate.id };
+    } : { selected_rate_id: rate.id };
     try {
       loader.setLoading(true);
       const { id } = await mutation.buyLabel({
