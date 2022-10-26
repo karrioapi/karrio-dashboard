@@ -1,4 +1,4 @@
-import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -614,7 +614,7 @@ export default function CreateLabelPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs || {
+                    customs={shipment?.customs as any || {
                       ...DEFAULT_CUSTOMS_CONTENT,
                       incoterm: shipment.payment?.paid_by == PaidByEnum.sender ? 'DDP' : 'DDU',
                       duty: {
@@ -640,17 +640,17 @@ export default function CreateLabelPage(pageProps: any) {
               <div className="p-3">
 
                 {!isNone(shipment.customs) && <>
-                  <CustomsInfoDescription customs={shipment.customs} />
+                  <CustomsInfoDescription customs={shipment.customs as CustomsType} />
 
                   {/* Commodities section */}
                   <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
 
-                  {(shipment.customs.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                     <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
                   </React.Fragment>)}
 
-                  {(shipment.customs.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
+                  {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                     You need to specify customs commodities.
                   </div>}
                 </>}

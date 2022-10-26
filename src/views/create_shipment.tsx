@@ -1,4 +1,4 @@
-import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
@@ -112,14 +112,16 @@ export default function CreateShipmentPage(pageProps: any) {
       const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
       // Collect orders merged options
-      const options = getOptions();
+      const order_options = getOptions();
       // Collect unfulfilled line items
-      const line_items = getItems().map(
-        ({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id })
-      ).filter(({ quantity }) => quantity || 0 > 0);
+      const line_items = (
+        getItems()
+          .map(({ id: parent_id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, parent_id }))
+          .filter(({ quantity }) => quantity || 0 > 0)
+      );
       const parcel = default_parcel || DEFAULT_PARCEL_CONTENT;
-      const parcel_items = options.single_item_per_parcel ? toSingleItem(line_items as any) : [line_items];
-      const parcels = (parcel_items as typeof line_items[]).map(items => {
+      const parcel_items = order_options.single_item_per_parcel ? toSingleItem(line_items as any) : [line_items];
+      const parcels: any[] = (parcel_items as typeof line_items[]).map(items => {
         const weight = items.reduce((acc, { weight, quantity }) => (weight || 0) * (quantity || 1) + acc, 0.0);
         const weight_unit = items[0].weight_unit || parcel.weight_unit;
         return { ...parcel, items, weight, weight_unit };
@@ -127,25 +129,44 @@ export default function CreateShipmentPage(pageProps: any) {
       const declared_value = line_items.reduce(
         (acc, { value_amount, quantity }) => (acc + (value_amount || 0) * (quantity || 1)), 0
       );
+      const options = {
+        ...shipment.options,
+        ...(order_options.currency ? { currency: order_options.currency } : {}),
+        declared_value: parseFloat(`${declared_value}`).toFixed(2),
+      };
+      const payment = {
+        paid_by: order_options.paid_by as any || PaidByEnum.sender,
+        ...(order_options.currency ? { currency: order_options.currency } : {}),
+        ...(order_options.payment_account_number ? { account_number: order_options.payment_account_number } : {}),
+      } as any;
+      const isIntl = shipper && (shipper.country_code !== recipient.country_code);
+      const isDocument = parcels.every(p => p.is_document);
+      const customs = (isDocument ? null : {
+        ...DEFAULT_CUSTOMS_CONTENT,
+        commercial_invoice: true,
+        invoice: orders.orders[0].order_id,
+        invoice_date: order_options.invoice_date || moment().format('YYYY-MM-DD'),
+        incoterm: payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
+        commodities: getShipmentCommodities({ parcels } as any),
+        duty: {
+          ...DEFAULT_CUSTOMS_CONTENT.duty,
+          currency: order_options?.currency,
+          paid_by: order_options.duty_paid_by || payment?.paid_by,
+          account_number: order_options.duty_account_number || payment?.account_number,
+          declared_value,
+        },
+      });
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
         ...(recipient ? { recipient: (recipient as typeof shipment['recipient']) } : {}),
-        options: {
-          ...shipment.options,
-          ...(options.currency ? { currency: options.currency } : {}),
-          declared_value: parseFloat(`${declared_value}`).toFixed(2),
-        },
-        payment: {
-          paid_by: options.paid_by as any || PaidByEnum.sender,
-          ...(options.currency ? { currency: options.currency } : {}),
-          ...(options.payment_account_number ? { account_number: options.payment_account_number } : {}),
-        } as any,
-        parcels: parcels as any[],
-        // reference: `Order #${order_ids}`,
+        options,
+        payment,
+        parcels,
         label_type: LabelTypeEnum.PDF,
         metadata: { order_ids },
-        carrier_ids: options.carrier_ids || [],
+        carrier_ids: order_options.carrier_ids || [],
+        customs: (isIntl ? customs : undefined) as typeof shipment['customs'],
       });
 
       setReady(true);
@@ -495,7 +516,7 @@ export default function CreateShipmentPage(pageProps: any) {
                     className="is-small"
                     controlClass="has-icons-left has-icons-right"
                     fieldClass="column mb-0 is-4 px-1 py-2"
-                    defaultValue={shipment.options?.cash_on_delivery}
+                    value={shipment.options?.cash_on_delivery}
                     required={!isNone(shipment.options?.cash_on_delivery)}
                     onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: parseFloat(e.target.value) } })}
                   >
@@ -620,7 +641,7 @@ export default function CreateShipmentPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs || {
+                    customs={shipment?.customs as any || {
                       ...DEFAULT_CUSTOMS_CONTENT,
                       commercial_invoice: true,
                       invoice: orders.orders[0].order_id,
@@ -650,17 +671,19 @@ export default function CreateShipmentPage(pageProps: any) {
               <div className="p-3">
 
                 {!isNone(shipment.customs) && <>
-                  <CustomsInfoDescription customs={shipment.customs} />
+                  <CustomsInfoDescription customs={shipment.customs as CustomsType} />
 
                   {/* Commodities section */}
                   <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
 
-                  {(shipment.customs.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                    <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                    <div className="px-1">
+                      <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                    </div>
                   </React.Fragment>)}
 
-                  {(shipment.customs.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
+                  {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                     You need to specify customs commodities.
                   </div>}
                 </>}

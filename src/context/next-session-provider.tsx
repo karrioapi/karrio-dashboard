@@ -12,6 +12,9 @@ const NextSessionProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     // set session state if session is not null, has no error and has a new access token
+    console.log(">>>> \n");
+    console.log("session:", session);
+    console.log("current:", sessionState);
     if (session?.error !== sessionState?.error || session?.accessToken !== sessionState?.accessToken || session === null) {
       if (
         session?.accessToken &&
@@ -22,11 +25,11 @@ const NextSessionProvider: React.FC = ({ children }) => {
       }
       setSessionState(session as Session);
     }
-  }, [session]);
+  }, [session, sessionState]);
 
   return (
-    <NextSession.Provider value={sessionState || session}>
-      {session !== undefined && children}
+    <NextSession.Provider value={sessionState}>
+      {sessionState !== undefined ? children : <>...</>}
     </NextSession.Provider>
   );
 };
