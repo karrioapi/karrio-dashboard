@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
 import { PartialShipmentUpdateInput } from 'karrio/graphql';
@@ -6,7 +6,8 @@ import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 
 type LabelMutationContext = {
   addParcel: (data: ParcelType) => Promise<void>;
@@ -32,6 +33,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const { addUrlParam, ...router } = useLocation();
   const [updateRate, setUpdateRate] = React.useState<boolean>(false);
 
+  // state checks
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
   const hasRateRequirements = (shipment: ShipmentType) => {
     return (
@@ -58,9 +60,83 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       (!isNone(changes.weight) && changes.weight !== parcel.weight)
     );
   };
+  const syncOptionsChanges = (changes: Partial<ShipmentType>): Partial<ShipmentType> => {
+    let options = changes.options || shipment.options || {};
+    const parcels = changes.parcels || shipment.parcels;
 
+    const declared_value = parcels.reduce((__, p) => {
+      const total = (p.items || []).reduce(
+        (_, { value_amount, quantity }) => _ + ((quantity || 1) * (value_amount || 0)),
+        0
+      );
+      return __ + total;
+    }, 0);
+    const currency = parcels.reduce((__, p) => {
+      const curr = (p.items || [])
+        .reduce((_, { value_currency }) => (_ ? _ : value_currency as any), null);
+      return (__ ? __ : curr) as any;
+    }, null);
+
+    if (declared_value > 0 && declared_value !== shipment.options.declared_value) {
+      options = { ...options, declared_value };
+    }
+
+    if (!isNone(currency) && currency !== shipment.options.currency) {
+      options = { ...options, currency };
+    }
+
+    return { ...changes, options };
+  };
+  const syncCustomsChanges = (changes: Partial<ShipmentType>): Partial<ShipmentType> => {
+    const shipper = changes.shipper || shipment.shipper;
+    const recipient = changes.recipient || shipment.recipient;
+    const isIntl = shipper && (shipper.country_code !== recipient.country_code);
+
+    const parcels = changes.parcels || shipment.parcels;
+    const isDocument = parcels.every(p => p.is_document);
+    const requireCustoms = isIntl && !isDocument;
+
+    const shouldChange = (
+      isNone(changes.customs) ||
+      (!requireCustoms && !isNone(shipment.customs)) ||
+      (requireCustoms && isNone(shipment.customs)) ||
+      (requireCustoms && !isNone(changes.parcels))
+    );
+
+    if (!shouldChange) return changes;
+    if (isDocument) return { ...changes, customs: null };
+
+    const options = changes.options || shipment.options;
+    const currency = (changes.customs?.duty?.currency || shipment.customs?.duty?.currency || options?.currency);
+    const paid_by = (changes.customs?.duty?.paid_by || shipment.customs?.duty?.paid_by || shipment.payment?.paid_by);
+    const incoterm = (changes.customs?.incoterm || shipment.customs?.incoterm || shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU');
+    const declared_value = (changes.customs?.duty?.declared_value || options?.declared_value || shipment.customs?.duty?.declared_value);
+    const account_number = (changes.customs?.duty?.account_number || shipment.customs?.duty?.account_number || shipment.payment?.account_number);
+    const commodities = getShipmentCommodities({ parcels } as any);
+    const customs: any = {
+      ...DEFAULT_CUSTOMS_CONTENT,
+      ...(shipment.customs || {}),
+      ...(incoterm ? { incoterm } : {}),
+      commodities: commodities.length > 0 ? commodities : (changes.customs || shipment.customs)?.commodities,
+      duty: {
+        ...DEFAULT_CUSTOMS_CONTENT.duty,
+        ...(shipment.customs?.duty || {}),
+        ...(paid_by ? { paid_by } : {}),
+        ...(currency ? { currency } : {}),
+        ...(declared_value ? { declared_value } : {}),
+        ...(account_number ? { account_number } : {}),
+      },
+    };
+
+    return { ...changes, customs };
+  };
+
+  // updates
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
     if (shouldFetchRates(changes as any)) { setUpdateRate(true); }
+    changes = { ...syncOptionsChanges(changes) };
+    changes = { ...syncCustomsChanges(changes) };
+
     if (isDraft(id)) {
       return await label.updateShipment(changes);
     } else {
@@ -168,6 +244,9 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       await mutation.updateShipment(update);
     }
   };
+
+
+  // requests
   const fetchRates = async () => {
     try {
       loader.setLoading(true);
@@ -182,7 +261,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const selection = isDraft(shipment.id) ? {
       service: rate.service,
       carrier_ids: [rate.carrier_id],
-    } : { selecte_rate_id: rate.id };
+    } : { selected_rate_id: rate.id };
     try {
       loader.setLoading(true);
       const { id } = await mutation.buyLabel({

@@ -22,11 +22,11 @@ const NextSessionProvider: React.FC = ({ children }) => {
       }
       setSessionState(session as Session);
     }
-  }, [session]);
+  }, [session, sessionState]);
 
   return (
-    <NextSession.Provider value={sessionState || session}>
-      {session !== undefined && children}
+    <NextSession.Provider value={sessionState}>
+      {sessionState !== undefined ? children : <>...</>}
     </NextSession.Provider>
   );
 };

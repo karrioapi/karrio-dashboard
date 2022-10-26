@@ -127,7 +127,7 @@ export const ParcelModalEditor: React.FC<ModalFormProps<ParcelModalEditorProps>>
 
 type CustomsModalEditorProps = {
   header?: string;
-  customs?: CustomsType;
+  customs?: CustomsType | null;
   shipment?: ShipmentType;
   onSubmit: (customs: CustomsType | null) => Promise<any>;
 };

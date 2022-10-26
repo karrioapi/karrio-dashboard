@@ -11,7 +11,7 @@ import React, { useContext, useEffect } from "react";
 import AppLink from "@/components/app-link";
 import { MetadataObjectType } from "karrio/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
-import { ParcelType } from "@/lib/types";
+import { CustomsType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
@@ -217,7 +217,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                   <span>
                     {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
-                    {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${shipment.options.currency}`}
+                    {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${shipment.options.currency || ''}`}
                   </span>
                 </p>
               </React.Fragment>)}
@@ -268,7 +268,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             {!isNone(shipment.customs) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">CUSTOMS DECLARATION</p>
 
-              <CustomsInfoDescription customs={shipment.customs} />
+              <CustomsInfoDescription customs={shipment.customs as CustomsType} />
             </div>}
 
             {/* Customs commodities */}

@@ -158,7 +158,7 @@ export function isNone(value: any): boolean {
 }
 
 export function isNoneOrEmpty(value: any): boolean {
-  return isNone(value) || value === "" || value === [];
+  return isNone(value) || value === "" || isEqual(value, []);
 }
 
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {

@@ -30,7 +30,7 @@ const DEFAULT_DUTY: Partial<DutyType> = {
 };
 
 interface CustomsInfoFormComponent {
-  value?: CustomsType;
+  value?: CustomsType | null;
   shipment?: ShipmentType;
   isTemplate?: boolean;
   onChange?: (customs: CustomsType | null) => void;
@@ -45,7 +45,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   const { loading, setLoading } = useContext(Loading);
   const { discardCustoms, discardCommodity } = useContext(ShipmentMutationContext);
   const { default_customs } = useContext(DefaultTemplatesData);
-  const [customs, dispatch] = useReducer((state: any, { name, value }: { name: string, value: string | boolean | object }) => {
+  const [customs, dispatch] = useReducer((state: any, { name, value }: { name: string, value: string | boolean | object | any }) => {
     switch (name) {
       case 'hasDuty':
         return { ...state, duty: value === true ? DEFAULT_DUTY : null };

@@ -3,7 +3,6 @@ import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import CustomInvoicePrinter from "@/components/descriptions/custom-invoice-printer";
 import { Loading } from "@/components/loader";
-import ModeIndicator from "@/components/mode-indicator";
 import ShipmentMenu from "@/components/shipment-menu";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
@@ -58,8 +57,6 @@ export default function ShipmentsPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Shipments</span>
           <div>
@@ -184,7 +181,7 @@ export default function ShipmentsPage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
         <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>

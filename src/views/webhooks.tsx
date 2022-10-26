@@ -60,8 +60,6 @@ export default function WebhooksPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-4">
           <span className="title is-4">Endpoints</span>
           <button className="button is-default is-pulled-right" onClick={() => editWebhook({ onConfirm: update })}>
@@ -139,7 +137,7 @@ export default function WebhooksPage(pageProps: any) {
   };
 
   const Wrapped = WebhookMutation<{}>(({ removeWebhook, updateWebhook }) => (
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Webhooks - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
       <WebhooksProvider>

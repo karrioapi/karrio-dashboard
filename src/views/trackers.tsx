@@ -4,7 +4,6 @@ import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";
 import { Loading } from "@/components/loader";
-import ModeIndicator from "@/components/mode-indicator";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import TrackerModalProvider, { TrackerModalContext } from "@/components/track-shipment-modal";
@@ -65,8 +64,6 @@ export default function TrackersPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Trackers</span>
           <div>
@@ -180,7 +177,7 @@ export default function TrackersPage(pageProps: any) {
 
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Trackers - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <UserConnectionsProvider>
         <SystemConnectionsProvider>

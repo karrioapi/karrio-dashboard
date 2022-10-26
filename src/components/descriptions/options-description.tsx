@@ -12,7 +12,7 @@ const OptionsDescription: React.FC<OptionsDescriptionComponent> = ({ options }) 
         <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
           <span>
             {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
-            {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${options.currency}`}
+            {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${options.currency || ''}`}
           </span>
         </p>
       </React.Fragment>)}

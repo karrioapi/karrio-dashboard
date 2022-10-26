@@ -80,7 +80,6 @@ export default function OrdersPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
 
         <header className="px-0 py-4 is-flex is-justify-content-space-between">
           <span className="title is-4">Orders</span>

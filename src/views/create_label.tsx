@@ -1,8 +1,7 @@
-import { CommodityType, CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
-import ModeIndicator from '@/components/mode-indicator';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
 import DashboardLayout from '@/layouts/dashboard-layout';
@@ -166,8 +165,6 @@ export default function CreateLabelPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
           <span className="title is-4">
             Create label
@@ -614,7 +611,7 @@ export default function CreateLabelPage(pageProps: any) {
                   <CustomsModalEditor
                     header='Edit customs info'
                     shipment={shipment}
-                    customs={shipment?.customs || {
+                    customs={shipment?.customs as any || {
                       ...DEFAULT_CUSTOMS_CONTENT,
                       incoterm: shipment.payment?.paid_by == PaidByEnum.sender ? 'DDP' : 'DDU',
                       duty: {
@@ -640,17 +637,17 @@ export default function CreateLabelPage(pageProps: any) {
               <div className="p-3">
 
                 {!isNone(shipment.customs) && <>
-                  <CustomsInfoDescription customs={shipment.customs} />
+                  <CustomsInfoDescription customs={shipment.customs as CustomsType} />
 
                   {/* Commodities section */}
                   <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
 
-                  {(shipment.customs.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                     <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
                   </React.Fragment>)}
 
-                  {(shipment.customs.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
+                  {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                     You need to specify customs commodities.
                   </div>}
                 </>}
@@ -795,7 +792,7 @@ export default function CreateLabelPage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <GoogleGeocodingScript />
       <Head><title>Create label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
