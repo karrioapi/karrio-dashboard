@@ -158,7 +158,7 @@ export function isNone(value: any): boolean {
 }
 
 export function isNoneOrEmpty(value: any): boolean {
-  return isNone(value) || value === "" || value === [];
+  return isNone(value) || value === "" || isEqual(value, []);
 }
 
 export function deepEqual(value1?: object | null, value2?: object | null): boolean {
@@ -366,8 +366,6 @@ export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (opti
         ...options, onError: errors => reject(errors.graphQLErrors || errors)
       });
 
-      console.log(requestErrors);
-
       if (data && (data[operation] as any).errors) {
         const errors = (data[operation] as any).errors
           .map((error: { field: string, messages: string[] }) => (
@@ -381,7 +379,7 @@ export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (opti
       }
 
       resolve((data ? data[operation] : null) as T[typeof operation]);
-    }).catch(_ => { console.log("error", _); return _; });
+    });
 }
 
 export function debounce(func: (...args: any[]) => any, timeout: number = 300) {

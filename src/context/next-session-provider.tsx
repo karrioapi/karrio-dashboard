@@ -12,9 +12,6 @@ const NextSessionProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     // set session state if session is not null, has no error and has a new access token
-    console.log(">>>> \n");
-    console.log("session:", session);
-    console.log("current:", sessionState);
     if (session?.error !== sessionState?.error || session?.accessToken !== sessionState?.accessToken || session === null) {
       if (
         session?.accessToken &&

@@ -22,27 +22,28 @@ export const KARRIO_API = (
 logger.debug("API clients initialized for Server: " + KARRIO_API);
 
 export const restClient = new BehaviorSubject<KarrioClient>(createRestContext());
-export const graphqlClient = new BehaviorSubject<ApolloClient<any>>(createGrapQLContext());
 export const RestContext = React.createContext<KarrioClient | undefined>(restClient.getValue());
 
 
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
   const { data: session } = useSession() as (any & { data: SessionType });
-  const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>();
+  const sessionState = new BehaviorSubject<SessionType | null>(session);
+  const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>(createGrapQLContext(sessionState));
   const [restCli, setRestCli] = React.useState<KarrioClient | undefined>();
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
 
       setRestCli(createRestContext(session));
-      !graphqlCli && setGraphqlCli(createGrapQLContext(session));
+      sessionState.next(session)
+      !graphqlCli && setGraphqlCli(createGrapQLContext(sessionState));
     }
   }, [session?.accessToken, session?.testMode, session?.orgId]);
 
   if (authenticated && !graphqlCli) return <></>;
 
   return (
-    <ApolloProvider client={graphqlCli || createGrapQLContext()}>
+    <ApolloProvider client={graphqlCli as any}>
       <RestContext.Provider value={restCli}>
         {children}
       </RestContext.Provider>
@@ -64,15 +65,15 @@ function createRestContext(session?: SessionType | null): KarrioClient {
   });
 }
 
-function createGrapQLContext(session?: SessionType | null): ApolloClient<any> {
+function createGrapQLContext(session: BehaviorSubject<SessionType | null>): ApolloClient<any> {
   const httpLink = createHttpLink({
     uri: `${KARRIO_API || ''}/graphql`,
   });
 
   const authLink = setContext((_, { headers }) => {
-    const orgHeader = session?.orgId ? { 'x-org-id': session?.orgId } : {};
-    const testHeader = session?.testMode ? { 'x-test-mode': session?.testMode } : {};
-    const authHeader = session?.accessToken ? { 'authorization': `Bearer ${session?.accessToken}` } : {};
+    const orgHeader = session.value?.orgId ? { 'x-org-id': session.value?.orgId } : {};
+    const testHeader = session.value?.testMode ? { 'x-test-mode': session.value?.testMode } : {};
+    const authHeader = session.value?.accessToken ? { 'authorization': `Bearer ${session.value?.accessToken}` } : {};
 
     return {
       headers: {

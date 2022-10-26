@@ -118,7 +118,9 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
             {/* Line Items section */}
             <div className="column is-6 is-size-6 py-1">
-              <p className="is-title is-size-6 my-2 has-text-weight-semibold">LINE ITEMS ({order.line_items.length})</p>
+              <p className="is-title is-size-6 my-2 has-text-weight-semibold">
+                LINE ITEMS ({order.line_items.reduce((_, { quantity }) => _ + (quantity || 1), 0)})
+              </p>
 
               {order.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
