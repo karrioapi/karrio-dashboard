@@ -364,9 +364,8 @@ hr {
 }
 
 .mode-indicator {
-  position: sticky;
+  position: absolute;
   top: 60px;
-  // z-index: 1;
   border-top: 1px solid rgb(196, 76, 52);
   padding: 0;
   text-align: center;

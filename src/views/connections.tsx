@@ -4,7 +4,6 @@ import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/
 import DashboardLayout from "@/layouts/dashboard-layout";
 import Tabs, { TabStateContext, TabStateProvider } from "@/components/generic/tabs";
 import { Loading } from "@/components/loader";
-import ModeIndicator from "@/components/mode-indicator";
 import SystemConnectionsProvider, { SystemConnections } from "@/context/system-connections-provider";
 import UserConnectionsProvider, { UserConnections } from "@/context/user-connections-provider";
 import Head from "next/head";
@@ -48,8 +47,6 @@ export default function ConnectionsPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-4">
           <span className="title is-4">Carriers</span>
           <button className="button is-primary is-small is-pulled-right" onClick={() => editConnection({ onConfirm: onChange })}>
@@ -74,7 +71,7 @@ export default function ConnectionsPage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Carrier Connections - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ConfirmModal>
         <ConnectionMutationProvider>

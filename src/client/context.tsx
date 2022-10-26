@@ -29,14 +29,11 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   const { data: session } = useSession() as (any & { data: SessionType });
   const sessionState = new BehaviorSubject<SessionType | null>(session);
   const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>(createGrapQLContext(sessionState));
-  const [restCli, setRestCli] = React.useState<KarrioClient | undefined>();
+  const [restCli, setRestCli] = React.useState<KarrioClient | undefined>(createRestContext(sessionState));
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
-
-      setRestCli(createRestContext(session));
-      sessionState.next(session)
-      !graphqlCli && setGraphqlCli(createGrapQLContext(sessionState));
+      sessionState.next(session);
     }
   }, [session?.accessToken, session?.testMode, session?.orgId]);
 
@@ -52,10 +49,10 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
 };
 
 
-function createRestContext(session?: SessionType | null): KarrioClient {
-  const orgHeader = session?.orgId ? { 'x-org-id': session?.orgId } : {};
-  const testHeader = session?.testMode ? { 'x-test-mode': session?.testMode } : {};
-  const authHeader = session?.accessToken ? `Bearer ${session?.accessToken}` : "";
+function createRestContext(session?: BehaviorSubject<SessionType | null>): KarrioClient {
+  const orgHeader = session?.value?.orgId ? { 'x-org-id': session?.value?.orgId } : {};
+  const testHeader = session?.value?.testMode ? { 'x-test-mode': session?.value?.testMode } : {};
+  const authHeader = session?.value?.accessToken ? `Bearer ${session?.value?.accessToken}` : "";
 
   return new KarrioClient({
     basePath: KARRIO_API || '',

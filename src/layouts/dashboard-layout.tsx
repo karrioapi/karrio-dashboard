@@ -5,7 +5,7 @@ import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
 import Footer from '@/components/footer';
 
 
-const DashboardLayout: React.FC = ({ children }) => {
+const DashboardLayout: React.FC<{ showModeIndicator?: boolean }> = ({ children, ...props }) => {
   return (
     <>
       <ExpandedSidebar />
@@ -13,7 +13,7 @@ const DashboardLayout: React.FC = ({ children }) => {
       <div className="plex-wrapper is-flex is-flex-direction-column">
         <div className="wrapper-inner is-flex-grow-1 mb-3">
           <Notifier />
-          <Navbar />
+          <Navbar showModeIndicator={props.showModeIndicator} />
 
           <div className="dashboard-content is-relative" style={{ paddingTop: 0, height: '100%' }}>
             {children}

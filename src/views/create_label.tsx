@@ -2,7 +2,6 @@ import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, Shipmen
 import React, { useContext, useEffect, useState } from 'react';
 import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
-import ModeIndicator from '@/components/mode-indicator';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
 import DashboardLayout from '@/layouts/dashboard-layout';
@@ -166,8 +165,6 @@ export default function CreateLabelPage(pageProps: any) {
 
     return (
       <>
-        <ModeIndicator />
-
         <header className="px-0 py-3 is-flex is-justify-content-space-between">
           <span className="title is-4">
             Create label
@@ -795,7 +792,7 @@ export default function CreateLabelPage(pageProps: any) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <GoogleGeocodingScript />
       <Head><title>Create label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
