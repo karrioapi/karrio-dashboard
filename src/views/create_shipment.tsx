@@ -546,7 +546,7 @@ export default function CreateShipmentPage(pageProps: any) {
                     className="is-small"
                     controlClass="has-icons-left has-icons-right"
                     fieldClass="column mb-0 is-4 px-1 py-2"
-                    defaultValue={shipment.options?.declared_value}
+                    value={shipment.options?.declared_value}
                     required={!isNone(shipment.options?.declared_value)}
                     onChange={e => onChange({ options: { ...shipment.options, declared_value: parseFloat(e.target.value) } })}
                   >

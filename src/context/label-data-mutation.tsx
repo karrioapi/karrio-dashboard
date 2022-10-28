@@ -90,14 +90,17 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const syncCustomsChanges = (changes: Partial<ShipmentType>): Partial<ShipmentType> => {
     const shipper = changes.shipper || shipment.shipper;
     const recipient = changes.recipient || shipment.recipient;
-    const isIntl = shipper && (shipper.country_code !== recipient.country_code);
+    const isIntl = (
+      (!isNone(shipper?.country_code) && !isNone(recipient?.country_code)) &&
+      (shipper.country_code !== recipient.country_code)
+    );
 
     const parcels = changes.parcels || shipment.parcels;
     const isDocument = parcels.every(p => p.is_document);
     const requireCustoms = isIntl && !isDocument;
 
     const shouldChange = (
-      isNone(changes.customs) ||
+      (!isNone(changes.customs)) ||
       (!requireCustoms && !isNone(shipment.customs)) ||
       (requireCustoms && isNone(shipment.customs)) ||
       (requireCustoms && !isNone(changes.parcels))
@@ -105,19 +108,21 @@ const LabelMutationProvider: React.FC = ({ children }) => {
 
     if (!shouldChange) return changes;
     if (isDocument) return { ...changes, customs: null };
+    if (!isIntl) return { ...changes, customs: undefined };
 
     const options = changes.options || shipment.options;
-    const currency = (changes.customs?.duty?.currency || shipment.customs?.duty?.currency || options?.currency);
-    const paid_by = (changes.customs?.duty?.paid_by || shipment.customs?.duty?.paid_by || shipment.payment?.paid_by);
-    const incoterm = (changes.customs?.incoterm || shipment.customs?.incoterm || shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU');
-    const declared_value = (changes.customs?.duty?.declared_value || options?.declared_value || shipment.customs?.duty?.declared_value);
-    const account_number = (changes.customs?.duty?.account_number || shipment.customs?.duty?.account_number || shipment.payment?.account_number);
-    const commodities = getShipmentCommodities({ parcels } as any);
+    const currency = (shipment.customs?.duty?.currency || options?.currency);
+    const paid_by = (shipment.customs?.duty?.paid_by || shipment.payment?.paid_by);
+    const incoterm = (shipment.customs?.incoterm || shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU');
+    const declared_value = (options?.declared_value || shipment.customs?.duty?.declared_value);
+    const account_number = (shipment.customs?.duty?.account_number || shipment.payment?.account_number);
+    const commodities = isNone(changes.parcels) ? shipment.customs?.commodities : getShipmentCommodities({ parcels } as any);
+
     const customs: any = {
       ...DEFAULT_CUSTOMS_CONTENT,
       ...(shipment.customs || {}),
       ...(incoterm ? { incoterm } : {}),
-      commodities: commodities.length > 0 ? commodities : (changes.customs || shipment.customs)?.commodities,
+      commodities,
       duty: {
         ...DEFAULT_CUSTOMS_CONTENT.duty,
         ...(shipment.customs?.duty || {}),
@@ -274,6 +279,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       });
       router.push(`${basePath}/shipments/${id}`);
     } catch (message: any) {
+      console.error(message)
       updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {
       loader.setLoading(false);
