@@ -13,15 +13,13 @@
  */
 
 
-import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
-import globalAxios from 'axios';
+import { Configuration } from './configuration';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
-import type { RequestArgs } from './base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * The list of API errors
@@ -2495,7 +2493,7 @@ export interface DocumentFileData {
      */
     'doc_name': string;
     /**
-     * Shipping document type
+     *  Shipment document type  values: <br/> `certificate_of_origin` `commercial_invoice` `pro_forma_invoice` `packing_list` `other`  For carrier specific packaging types, please consult the reference. 
      * @type {string}
      * @memberof DocumentFileData
      */
