@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import getConfig from 'next/config';
 import { KarrioClient } from "karrio/rest/index";
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import * as apollo from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { setContext } from "@apollo/client/link/context";
 import { BehaviorSubject } from "rxjs";
 import { isNone } from "@/lib/helper";
 import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
 import { SessionType } from "@/lib/types";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -21,6 +23,7 @@ export const KARRIO_API = (
 
 logger.debug("API clients initialized for Server: " + KARRIO_API);
 
+const queryClient = new QueryClient()
 export const restClient = new BehaviorSubject<KarrioClient>(createRestContext());
 export const RestContext = React.createContext<KarrioClient | undefined>(restClient.getValue());
 
@@ -28,8 +31,8 @@ export const RestContext = React.createContext<KarrioClient | undefined>(restCli
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
   const { data: session } = useSession() as (any & { data: SessionType });
   const sessionState = new BehaviorSubject<SessionType | null>(session);
-  const [graphqlCli, setGraphqlCli] = React.useState<ApolloClient<any> | undefined>(createGrapQLContext(sessionState));
-  const [restCli, setRestCli] = React.useState<KarrioClient | undefined>(createRestContext(sessionState));
+  const [graphqlCli] = React.useState<apollo.ApolloClient<any> | undefined>(createGrapQLContext(sessionState));
+  const [restCli] = React.useState<KarrioClient | undefined>(createRestContext(sessionState));
 
   useEffect(() => {
     if (!isNone(session?.accessToken)) {
@@ -40,11 +43,13 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   if (authenticated && !graphqlCli) return <></>;
 
   return (
-    <ApolloProvider client={graphqlCli as any}>
-      <RestContext.Provider value={restCli}>
-        {children}
-      </RestContext.Provider>
-    </ApolloProvider>
+    <QueryClientProvider client={queryClient}>
+      <apollo.ApolloProvider client={graphqlCli as any}>
+        <RestContext.Provider value={restCli}>
+          {children}
+        </RestContext.Provider>
+      </apollo.ApolloProvider>
+    </QueryClientProvider>
   );
 };
 
@@ -62,8 +67,8 @@ function createRestContext(session?: BehaviorSubject<SessionType | null>): Karri
   });
 }
 
-function createGrapQLContext(session: BehaviorSubject<SessionType | null>): ApolloClient<any> {
-  const httpLink = createHttpLink({
+function createGrapQLContext(session: BehaviorSubject<SessionType | null>): apollo.ApolloClient<any> {
+  const httpLink = apollo.createHttpLink({
     uri: `${KARRIO_API || ''}/graphql`,
   });
 
@@ -82,6 +87,14 @@ function createGrapQLContext(session: BehaviorSubject<SessionType | null>): Apol
     }
   });
 
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message }) =>
+        logger.debug(`[GraphQL error]: Message: ${message}`)
+      );
+    if (networkError) logger.debug(`[Network error]: ${networkError}`);
+  });
+
   const GRAPHQL_QUERIES = [
     'logs', 'events', 'trackers', 'shipments', 'shipment',
     'customs_templates', 'address_templates', 'parcel_templates',
@@ -89,9 +102,9 @@ function createGrapQLContext(session: BehaviorSubject<SessionType | null>): Apol
     'shipment_results', 'order_results', 'tracker_results',
   ];
 
-  return new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache({
+  return new apollo.ApolloClient({
+    link: apollo.from([errorLink, authLink.concat(httpLink)]),
+    cache: new apollo.InMemoryCache({
       addTypename: false,
       typePolicies: {
         Query: {

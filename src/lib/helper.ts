@@ -1,7 +1,9 @@
-import { BASE_PATH } from "@/client/context";
-import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, ShipmentType } from "@/lib/types";
+import { BASE_PATH, KARRIO_API } from "@/client/context";
+import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
 import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import axios from "axios";
 import moment from "moment";
+import { Session } from "next-auth";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -360,26 +362,36 @@ export function failsafe(fn: () => any, defaultValue: any = null) {
 }
 
 export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
-  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(
-    async (resolve, reject) => {
-      const { data, errors: requestErrors } = await request({
-        ...options, onError: errors => reject(errors.graphQLErrors || errors)
-      });
-
-      if (data && (data[operation] as any).errors) {
-        const errors = (data[operation] as any).errors
-          .map((error: { field: string, messages: string[] }) => (
-            new ErrorType(error.field, error.messages)
-          ));
-        reject(errors);
-      }
-
-      if ((requestErrors as any)?.networkError) {
-        reject([new ErrorType("", (requestErrors as any).networkError.message)]);
-      }
-
-      resolve((data ? data[operation] : null) as T[typeof operation]);
+  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(async (resolve, reject) => {
+    const { data, errors }: any = await request({
+      errorPolicy: "all", ...options,
+      onError: (error) => error
     });
+
+    if (data && (data[operation] as any).errors) {
+      const errors = (data[operation] as any).errors
+        .map((error: { field: string, messages: string[] }) => (
+          new ErrorType(error.field, error.messages)
+        ));
+      reject(errors);
+      return
+    }
+
+    if (errors?.graphQLErrors) {
+      reject(errors.graphQLErrors);
+      return
+    }
+
+    if (errors?.networkError) {
+      const _errors = (errors?.networkError?.result?.errors || []).map(
+        ({ message }: any) => new ErrorType("validation", [message])
+      );
+      reject(_errors);
+      return
+    }
+
+    resolve((data ? data[operation] : null) as T[typeof operation]);
+  });
 }
 
 export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
@@ -420,4 +432,34 @@ export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] 
         return acc;
       }, {} as Collection<CommodityType>)
   );
+}
+
+export function getSessionHeader(session: SessionType | Session) {
+  const orgHeader = session?.orgId ? { 'x-org-id': session?.orgId } : {};
+  const testHeader = session?.testMode ? { 'x-test-mode': session?.testMode } : {};
+  const authHeader = session?.accessToken ? { 'Authorization': `Bearer ${session?.accessToken}` } : {};
+
+  return { ...orgHeader, ...testHeader, ...authHeader };
+}
+
+type requestArgs<T> = {
+  query: string;
+  variables: T;
+  url?: string;
+  config?: any;
+};
+
+export async function request<T, R>(args: requestArgs<T>) {
+  const { url, query, variables, config } = args;
+  try {
+    const { data } = await axios.post<R>(url || `${KARRIO_API}/graphql`, { query, variables }, config);
+
+    if ((data as any).errors) {
+      throw new RequestError({ errors: (data as any).errors });
+    }
+
+    return data;
+  } catch (error: any) {
+    throw new RequestError(error.response?.data || error.data || error);
+  }
 }

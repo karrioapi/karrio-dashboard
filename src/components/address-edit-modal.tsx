@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import AddressForm, { DEFAULT_ADDRESS_CONTENT } from '@/components/form-parts/address-form';
 import { isNone, useLocation } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
-import CheckBoxField from './generic/checkbox-field';
+import CheckBoxField from '@/components/generic/checkbox-field';
 import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types';
-import { AddressMutationContext } from '@/context/address-template-mutation';
+import { useAddressTemplateMutation } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from 'karrio/graphql';
@@ -31,7 +31,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { createAddressTemplate, updateAddressTemplate } = useContext(AddressMutationContext);
+  const { createAddressTemplate, updateAddressTemplate } = useAddressTemplateMutation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
@@ -72,11 +72,11 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
     try {
       setLoading(true);
       if (isNew) {
-        await createAddressTemplate(payload as CreateAddressTemplateInput);
+        await createAddressTemplate.mutateAsync(payload as CreateAddressTemplateInput);
         notify({ type: NotificationType.success, message: 'Address successfully added!' });
       }
       else {
-        await updateAddressTemplate(payload as UpdateAddressTemplateInput);
+        await updateAddressTemplate.mutateAsync(payload as UpdateAddressTemplateInput);
         notify({ type: NotificationType.success, message: 'Address successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 2000);

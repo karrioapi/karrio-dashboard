@@ -1087,47 +1087,8 @@ export const MUTATE_SYSTEM_CONNECTION = gql`mutation mutate_system_connection($d
 }
 `;
 
-export const CREATE_ADDRESS_TEMPLATE = gql`mutation create_address_template($data: CreateAddressTemplateInput!) {
-  create_address_template(input: $data) {
-    template {
-      id
-    }
-    errors {
-      field
-      messages
-    }
-  }
-}
-`;
-
 export const CREATE_CUSTOMS_TEMPLATE = gql`mutation create_customs_template($data: CreateCustomsTemplateInput!) {
   create_customs_template(input: $data) {
-    template {
-      id
-    }
-    errors {
-      field
-      messages
-    }
-  }
-}
-`;
-
-export const CREATE_PARCEL_TEMPLATE = gql`mutation create_parcel_template($data: CreateParcelTemplateInput!) {
-  create_parcel_template(input: $data) {
-    template {
-      id
-    }
-    errors {
-      field
-      messages
-    }
-  }
-}
-`;
-
-export const UPDATED_ADDRESS_TEMPLATE = gql`mutation update_address_template($data: UpdateAddressTemplateInput!) {
-  update_address_template(input: $data) {
     template {
       id
     }
@@ -1152,6 +1113,26 @@ export const UPDATED_CUSTOMS_TEMPLATE = gql`mutation update_customs_template($da
 }
 `;
 
+export const DELETE_TEMPLATE = gql`mutation delete_template($data: DeleteTemplateInput!) {
+  delete_template(input: $data) {
+    id
+  }
+}
+`;
+
+export const CREATE_PARCEL_TEMPLATE = gql`mutation create_parcel_template($data: CreateParcelTemplateInput!) {
+  create_parcel_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
 export const UPDATED_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
   update_parcel_template(input: $data) {
     template {
@@ -1165,7 +1146,33 @@ export const UPDATED_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data
 }
 `;
 
-export const DELETE_TEMPLATE = gql`mutation delete_template($data: DeleteTemplateInput!) {
+export const CREATE_ADDRESS_TEMPLATE = `mutation create_address_template($data: CreateAddressTemplateInput!) {
+  create_address_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const UPDATED_ADDRESS_TEMPLATE = `mutation update_address_template($data: UpdateAddressTemplateInput!) {
+  update_address_template(input: $data) {
+    template {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const DELETE_ADDRESS_TEMPLATE = `mutation delete_template($data: DeleteTemplateInput!) {
   delete_template(input: $data) {
     id
   }
