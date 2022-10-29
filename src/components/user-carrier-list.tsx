@@ -14,7 +14,7 @@ import CopiableLink from '@/components/copiable-link';
 import { useLabelTemplateModal } from './label-template-edit-modal';
 import CarrierNameBadge from './carrier-name-badge';
 
-type ConnectionUpdateType = Partial<UserConnectionType> & { id: string, __typename: string };
+type ConnectionUpdateType = Partial<UserConnectionType> & { id: string, carrier_name: string };
 interface UserConnectionListView { }
 
 const UserConnectionList: React.FC<UserConnectionListView> = () => {
@@ -28,10 +28,10 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const { user_connections, loading, called, refetch } = useContext(UserConnections);
 
   const onRefresh = async () => refetch && await refetch();
-  const update = ({ __typename, id, ...changes }: ConnectionUpdateType) => async () => {
+  const update = ({ carrier_name, ...changes }: ConnectionUpdateType) => async () => {
     try {
-      const data = { [__typename.toLowerCase()]: changes };
-      await updateConnection({ id, ...data });
+      const data = { [carrier_name]: changes };
+      await updateConnection(data);
       notify({ type: NotificationType.success, message: `carrier connection updated!` });
       onRefresh();
     } catch (message: any) {
@@ -57,7 +57,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
       const connection = user_connections.find(c => c.id === labelModal.operation?.connection.id);
       connection && labelModal.editLabelTemplate({
         connection: connection as any, onSubmit: label_template => update({
-          id: connection.id, __typename: connection.__typename, label_template
+          id: connection.id, carrier_name: connection.carrier_name, label_template
         } as any)()
       })
     }
@@ -97,7 +97,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
               <td className="active is-vcentered">
                 <button className="button is-white is-large" onClick={update({
                   id: connection.id,
-                  __typename: connection.__typename,
+                  carrier_name: connection.carrier_name,
                   active: !connection.active
                 } as any)}>
                   <span className={`icon is-medium ${connection.active ? 'has-text-success' : 'has-text-grey'}`}>
@@ -126,7 +126,9 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   {!isNoneOrEmpty((connection as any).custom_carrier_name) && <button
                     title="edit label" className="button is-white" onClick={() => labelModal.editLabelTemplate({
                       connection: connection as any, onSubmit: label_template => update({
-                        id: connection.id, __typename: connection.__typename, label_template
+                        id: connection.id,
+                        carrier_name: connection.carrier_name,
+                        label_template,
                       } as any)()
                     })}>
                     <span className="icon is-small">

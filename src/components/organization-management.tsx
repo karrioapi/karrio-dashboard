@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import OrganizationUpdateInput from '@/components/organization-update-input';
 import { OrganizationMutationContext } from '@/context/organization-mutation';
 import { Organizations } from '@/context/organizations-provider';
-import { formatDateTimeLong } from '@/lib/helper';
+import { formatDateTimeLong, isNone } from '@/lib/helper';
 import Dropdown from '@/components/generic/dropdown';
 import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
@@ -47,7 +47,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
 
       <header className="px-0 pt-4">
         <span className="subtitle is-5">Team</span>
-        {organization.current_user.is_admin &&
+        {organization.current_user?.is_admin &&
           <button
             className="button is-primary is-small is-pulled-right"
             onClick={() => sendInvites({ onChange: load })}

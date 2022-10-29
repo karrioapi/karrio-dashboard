@@ -24,7 +24,7 @@ export const TrackersContext = React.createContext<TrackersType>({} as TrackersT
 const TrackersProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
   const { insertUrlParam } = useLocation();
-  const [initialLoad, query] = useLazyQuery<get_trackers, TrackersFilterType>(GET_TRACKERS, {
+  const [initialLoad, query] = useLazyQuery<get_trackers, any>(GET_TRACKERS, {
     pollInterval: 600000,
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -40,7 +40,7 @@ const TrackersProvider: React.FC = ({ children }) => {
         ...acc,
         [key]: (
           ["carrier_name", "status"].includes(key)
-            ? [].concat(options[key as keyof TrackersFilterType]).reduce(
+            ? [].concat((options as any)[key]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )
             : options[key as keyof TrackersFilterType]
@@ -71,7 +71,7 @@ const TrackersProvider: React.FC = ({ children }) => {
       loadMore,
       variables,
       trackers: extract(query?.data?.trackers?.edges),
-      next: query.data?.trackers?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      next: query.data?.trackers?.page_info?.has_next_page ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
     }}>
       {children}

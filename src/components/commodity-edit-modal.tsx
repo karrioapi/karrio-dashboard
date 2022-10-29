@@ -4,7 +4,6 @@ import { CommodityType, CURRENCY_OPTIONS, WEIGHT_UNITS } from '@/lib/types';
 import { CurrencyCodeEnum, MetadataObjectType, WeightUnitEnum } from 'karrio/graphql';
 import Notifier from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import ButtonField from '@/components/generic/button-field';
 import InputField from '@/components/generic/input-field';
 import CountryInput from '@/components/generic/country-input';
 import TextAreaField from '@/components/generic/textarea-field';

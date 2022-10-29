@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useEffect } from 'react';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { isNone } from '@/lib/helper';
 import { LogsContext } from '@/context/logs-provider';
-import Dropdown, { closeDropdown } from '../generic/dropdown';
+import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
 import { HTTP_METHODS, HTTP_STATUS_CODES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
 import Spinner from '@/components/spinner';

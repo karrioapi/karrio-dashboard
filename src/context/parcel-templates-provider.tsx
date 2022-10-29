@@ -39,7 +39,7 @@ const ParcelTemplatesProvider: React.FC = ({ children }) => {
     <ParcelTemplates.Provider value={{
       load, loadMore,
       templates: extract(query?.data?.parcel_templates?.edges),
-      next: query.data?.parcel_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
+      next: query.data?.parcel_templates?.page_info?.has_next_page ? (variables?.offset + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>

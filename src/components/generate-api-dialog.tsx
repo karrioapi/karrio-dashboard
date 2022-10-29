@@ -2,7 +2,7 @@ import { NotificationType } from '@/lib/types';
 import React, { useContext, useRef, useState } from 'react';
 import Notifier, { Notify } from '@/components/notifier';
 import TokenMutation from '@/context/token-mutation';
-import { useLoader } from './loader';
+import { useLoader } from '@/components/loader';
 import { useUser } from '@/context/user-provider';
 
 interface GenerateAPIModalComponent { }

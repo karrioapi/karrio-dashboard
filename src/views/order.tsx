@@ -36,8 +36,8 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
   }, [id || orderId]);
   useEffect(() => {
     if (called && !isNone(order)) {
-      (!logs.called && !logs.loading && logs.load) && logs.load({ entity_id: order?.id });
-      (!events.called && !events.loading && events.load) && events.load({ entity_id: order?.id });
+      (!logs.called && !logs.loading && logs.load) && logs.load({ entity_id: order?.id } as any);
+      (!events.called && !events.loading && events.load) && events.load({ entity_id: order?.id } as any);
     }
   }, [called, order]);
 

@@ -48,8 +48,8 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   }, [called, loading, id || shipmentId]);
   useEffect(() => {
     if (called && !isNone(shipment)) {
-      (!logs.called && !logs.loading && logs.load) && logs.load({ first: 6, entity_id: shipment?.id });
-      (!events.called && !events.loading && events.load) && events.load({ first: 6, entity_id: shipment?.id });
+      (!logs.called && !logs.loading && logs.load) && logs.load({ filter: { first: 6, entity_id: shipment?.id } });
+      (!events.called && !events.loading && events.load) && events.load({ filter: { first: 6, entity_id: shipment?.id } });
     }
   }, [called, shipment]);
 
@@ -409,7 +409,7 @@ export default function ShipmentPage(pageProps: any) {
       <ShipmentProvider>
         <ShipmentMutationProvider>
           <ShipmentsProvider>
-            <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
+            <DocumentTemplatesProvider filter={{ filter: { related_object: "shipment" as any } }}>
               <EventsProvider setVariablesToURL={false}>
                 <LogsProvider setVariablesToURL={false}>
                   <ConfirmModal>

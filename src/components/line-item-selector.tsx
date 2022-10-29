@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrdersContext } from '@/context/orders-provider';
-import ButtonField from '@/components/generic/button-field';
 import { CommodityType, OrderType, ShipmentType } from '@/lib/types';
 import { isNone, isNoneOrEmpty } from '@/lib/helper';
 
@@ -46,7 +45,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const commodities = lineItems
-      .filter(item => selection.includes(item.id))
+      .filter(item => selection.includes(item.id as string))
       .map((item) => {
         const { id: parent_id, ...content } = item;
         return { ...content, parent_id };
@@ -63,7 +62,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
           line_items: order.line_items
             .map(({ unfulfilled_quantity: quantity, ...item }) => ({
               ...item,
-              quantity: (quantity || 0) - getUsedQuantity(item.id)
+              quantity: (quantity || 0) - getUsedQuantity(item.id as string)
             }))
             .filter(item => item.quantity > 0)
         }))
@@ -113,8 +112,8 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                     <label className="panel-block has-background-grey-lighter is-size-7" key={`order-${order.id}`}>
                       <input type="checkbox"
                         name={order.id}
-                        checked={(order.line_items.filter(({ id }) => selection.includes(id)).length === order.line_items.length)}
-                        onChange={handleChange(order.line_items.map(({ id }) => id))}
+                        checked={(order.line_items.filter(({ id }) => selection.includes(id as string)).length === order.line_items.length)}
+                        onChange={handleChange(order.line_items.map(({ id }) => id as string))}
                       />
                       <span>{order.order_id}</span>
                       <span className="has-text-grey is-size-7">{` - ORDER ID`}</span>
@@ -123,9 +122,9 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                     {order.line_items.map((item, item_index) => (
                       <label className="panel-block ml-4" key={`line-${item.id}`}>
                         <input type="checkbox"
-                          name={item.id}
-                          checked={selection.includes(item.id)}
-                          onChange={handleChange([item.id])}
+                          name={item.id as string}
+                          checked={selection.includes(item.id as string)}
+                          onChange={handleChange([item.id as string])}
                         />
                         <div>
                           <p className="is-size-7 my-1 has-text-weight-semibold">

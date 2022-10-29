@@ -24,7 +24,7 @@ export const ShipmentsContext = React.createContext<ShipmentsType>({} as Shipmen
 const ShipmentsProvider: React.FC = ({ children }) => {
   const { testMode } = useContext(AppMode);
   const { insertUrlParam } = useLocation();
-  const [initialLoad, query] = useLazyQuery<get_shipments, ShipmentsFilterType>(GET_SHIPMENTS, {
+  const [initialLoad, query] = useLazyQuery<get_shipments, any>(GET_SHIPMENTS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true
   });
@@ -39,7 +39,7 @@ const ShipmentsProvider: React.FC = ({ children }) => {
         ...acc,
         [key]: (
           ["carrier_name", "status", "service"].includes(key)
-            ? [].concat(options[key as keyof ShipmentsFilterType]).reduce(
+            ? [].concat((options as any)[key]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )
             : options[key as keyof ShipmentsFilterType]
@@ -70,7 +70,7 @@ const ShipmentsProvider: React.FC = ({ children }) => {
       loadMore,
       variables,
       shipments: extract(query?.data?.shipments?.edges),
-      next: query.data?.shipments?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      next: query.data?.shipments?.page_info?.has_next_page ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
     } as ShipmentsType}>
       {children}

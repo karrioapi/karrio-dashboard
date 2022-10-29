@@ -57,7 +57,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
           <div className="is-flex my-0 px-3">
             <div className="py-1" style={{ width: '40%' }}>GRAPHQL API</div>
             <div className="py-1" style={{ width: '40%' }}>
-              <CopiableLink className="button is-white py-2 px-1" text={`${KARRIO_API}/graphql`} />
+              <CopiableLink className="button is-white py-2 px-1" text={`${KARRIO_API}/graphql/`} />
             </div>
           </div>
         </div>

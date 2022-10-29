@@ -3,7 +3,6 @@ import AuthenticatedPage from "@/layouts/authenticated-page";
 import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
-import ModeIndicator from "@/components/mode-indicator";
 import { Notify } from "@/components/notifier";
 import WebhookEditModal, { WebhookEditContext } from "@/components/webhook-edit-modal";
 import WebhookTestModal from "@/components/webhook-test-modal";

@@ -77,14 +77,13 @@ export async function loadContextData(session: SessionType): Promise<any> {
     .get<References>(KARRIO_API + '/v1/references', { headers })
     .then(({ data }) => data);
   const getUserData = () => axios
-    .post<ContextDataType>(KARRIO_API + '/graphql', 
-    { query: dataQuery(metadata) }, 
-    { headers })
+    .post<ContextDataType>(
+      KARRIO_API + '/graphql/', { query: dataQuery(metadata) }, { headers }
+    )
     .then(({ data }) => data);
 
   try {
     const [references, { data }] = await Promise.all([getReferences(), getUserData()]);
-
     return { metadata, references, ...data };
   } catch (e: any | Response) {
     logger.error(`Failed to fetch API data from (${KARRIO_API})`);
@@ -174,7 +173,6 @@ function dataQuery(metadata: any) {
       email
       full_name
       is_admin
-      is_staff
       is_owner
       last_login
     }

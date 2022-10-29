@@ -3,7 +3,7 @@ import { getCookie, isNone, p } from "@/lib/helper";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useContext, useRef } from "react";
+import React, { FormEvent, useRef } from "react";
 import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from '@/lib/static/references';

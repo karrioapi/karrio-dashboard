@@ -3,22 +3,21 @@ import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import UserMutation from "@/context/user-mutation";
-import { ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
+import { ConfirmPasswordResetMutationInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
-import logger from "@/lib/logger";
 import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
-const DEFAULT_VALUE: Partial<ConfirmPasswordResetInput> = {
+const DEFAULT_VALUE: Partial<ConfirmPasswordResetMutationInput> = {
   new_password1: "",
   new_password2: ""
 };
 
-function reducer(state: Partial<ConfirmPasswordResetInput>, { name, value }: { name: string, value: string | object }) {
+function reducer(state: Partial<ConfirmPasswordResetMutationInput>, { name, value }: { name: string, value: string | object }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -46,7 +45,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await confirmPasswordReset(data as ConfirmPasswordResetInput);
+      await confirmPasswordReset(data as ConfirmPasswordResetMutationInput);
       router.push('/password/reset/done');
     } catch (error: any) {
       setErrors(Array.isArray(error) ? error : [error]);

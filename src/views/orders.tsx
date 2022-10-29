@@ -27,7 +27,7 @@ export default function OrdersPage(pageProps: any) {
     const { previewOrder } = useContext(OrderPreviewContext);
     const { templates } = useDocumentTemplates();
     const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
-    const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [filters, setFilters] = React.useState<any>(variables);
     const [initialized, setInitialized] = React.useState(false);
     const [selection, setSelection] = React.useState<string[]>([]);
     const [allChecked, setAllChecked] = React.useState(false);
@@ -41,7 +41,7 @@ export default function OrdersPage(pageProps: any) {
         setSelection(selection);
       }
     };
-    const fetchOrders = (extra: Partial<typeof variables> = {}) => {
+    const fetchOrders = (extra: Partial<any> = {}) => {
       const query = {
         ...filters,
         ...getURLSearchParams(),
@@ -230,7 +230,7 @@ export default function OrdersPage(pageProps: any) {
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrdersProvider setVariablesToURL>
         <OrderPreview>
-          <DocumentTemplatesProvider filter={{ related_object: "order" }}>
+          <DocumentTemplatesProvider filter={({ related_object: "order" } as any)}>
 
             <Component />
 

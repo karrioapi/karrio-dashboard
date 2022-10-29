@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect } from 'react';
-import ButtonField from '@/components/generic/button-field';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import AddressForm from '@/components/form-parts/address-form';
 import { ModalFormProps, useModal } from '@/components/generic/modal';

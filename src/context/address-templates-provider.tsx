@@ -39,7 +39,7 @@ const AddressTemplatesProvider: React.FC = ({ children }) => {
     <AddressTemplates.Provider value={{
       load, loadMore,
       templates: extract(query?.data?.address_templates?.edges),
-      next: query.data?.address_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
+      next: query.data?.address_templates?.page_info?.has_next_page ? (variables?.offset + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>

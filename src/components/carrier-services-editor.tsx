@@ -27,7 +27,7 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
     setServices(newServices);
     onChange(newServices);
   };
-  const updateCurrency = (currency: ServiceLevelCurrency) => {
+  const updateCurrency = (currency: CurrencyCodeEnum) => {
     const newServices = services.map(service => ({ ...service, currency }));
     setServices(newServices);
     setCurrency(currency);
@@ -50,7 +50,7 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
 
         <div className="panel-block is-justify-content-right">
           <SelectField
-            onChange={e => updateCurrency(e.target.value as ServiceLevelCurrency)}
+            onChange={e => updateCurrency(e.target.value as CurrencyCodeEnum)}
             value={currency}
             name="currency"
             className="is-small is-fullwidth">

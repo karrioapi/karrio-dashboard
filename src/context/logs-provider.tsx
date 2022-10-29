@@ -22,7 +22,7 @@ export const LogsContext = React.createContext<LogsType>({} as LogsType);
 
 const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const { insertUrlParam } = useLocation();
-  const [initialLoad, query] = useLazyQuery<get_logs, LogsFilterType>(GET_LOGS, {
+  const [initialLoad, query] = useLazyQuery<get_logs, any>(GET_LOGS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
@@ -37,7 +37,7 @@ const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, set
         ...acc,
         [key]: (
           ["method", "status_code"].includes(key)
-            ? [].concat(options[key as keyof LogsFilterType]).reduce(
+            ? [].concat((options as any)[key]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )
             : options[key as keyof LogsFilterType]
@@ -67,7 +67,7 @@ const LogsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, set
       load,
       loadMore,
       logs: extract(query?.data?.logs?.edges),
-      next: query.data?.logs?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      next: query.data?.logs?.page_info?.has_next_page ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
       variables,
     }}>

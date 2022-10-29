@@ -63,7 +63,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
           logger.debug(`Switching organization to ${cookieOrgId}...`);
 
           const org = await getCurrentOrg((token as any).accessToken, cookieOrgId);
-          token.orgId = org.id;
+          token.orgId = org?.id;
         }
 
         // Return previous token if the access token has not expired yet

@@ -107,15 +107,11 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     setLoading(true);
     try {
       const { carrier_name: _, __typename, id, capabilities, display_name, ...content } = payload;
-      const settingsName = `${carrier_name}settings`.replace('_', '');
-      const data = {
-        [settingsName]: settingsName.includes('generic') ? { ...content, display_name } : content
-      };
-
+      const data = { [carrier_name]: carrier_name.includes('generic') ? { ...content, display_name } : content };
       if (isNew) {
         await createConnection(data);
       } else {
-        await updateConnection({ id, ...data });
+        await updateConnection({ id, ...data } as any);
         dispatch({ name: "partial", value: payload });
       }
       notify({
@@ -491,36 +487,36 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   )
 }
 
-function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, property: string) {
+function fieldState(carrier_name: CarrierNameEnum | NoneEnum, property: string) {
   const field = (
     ({
-      [CarrierSettingsCarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],
-      [CarrierSettingsCarrierNameEnum.Aramex]: [["carrier_id", true], ["username", true], ["password", true], ["account_pin", true], ["account_entity", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Australiapost]: [["carrier_id", true], ["api_key", true], ["password", true], ["account_number", true]],
-      [CarrierSettingsCarrierNameEnum.Canadapost]: [["carrier_id", true], ["username", true], ["password", true], ["customer_number", true], ["contract_id"]],
-      [CarrierSettingsCarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
-      [CarrierSettingsCarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Dicom]: [["carrier_id", true], ["username", true], ["password", true], ["billing_account"]],
-      [CarrierSettingsCarrierNameEnum.Dpdhl]: [["carrier_id", true], ["app_id", true], ["username", true], ["password", true], ["signature", true], ["account_number"], ["services"]],
-      [CarrierSettingsCarrierNameEnum.DhlExpress]: [["carrier_id", true], ["site_id", true], ["password", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.DhlPoland]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["services"]],
-      [CarrierSettingsCarrierNameEnum.DhlUniversal]: [["carrier_id", true], ["consumer_key", true], ["consumer_secret", true]],
-      [CarrierSettingsCarrierNameEnum.Eshipper]: [["carrier_id", true], ["username", true], ["password", true]],
-      [CarrierSettingsCarrierNameEnum.Easypost]: [["carrier_id", true], ["api_key", true]],
-      [CarrierSettingsCarrierNameEnum.Freightcom]: [["carrier_id", true], ["username", true], ["password", true]],
-      [CarrierSettingsCarrierNameEnum.Generic]: [["display_name", true], ["custom_carrier_name", true], ["carrier_id", true], ["account_number"], ["account_country_code"], ["services"]],
-      [CarrierSettingsCarrierNameEnum.Fedex]: [["carrier_id", true], ["user_key"], ["password", true], ["meter_number", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Purolator]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["user_token"]],
-      [CarrierSettingsCarrierNameEnum.Royalmail]: [["carrier_id", true], ["client_id", true], ["client_secret", true]],
-      [CarrierSettingsCarrierNameEnum.Sendle]: [["carrier_id", true], ["sendle_id", true], ["api_key", true]],
-      [CarrierSettingsCarrierNameEnum.SfExpress]: [["carrier_id", true], ["partner_id", true], ["check_word", true]],
-      [CarrierSettingsCarrierNameEnum.Tnt]: [["carrier_id", true], ["username", true], ["password", true], ["account_number"], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Ups]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.UpsFreight]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Usps]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
-      [CarrierSettingsCarrierNameEnum.UspsInternational]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
-      [CarrierSettingsCarrierNameEnum.Yanwen]: [["carrier_id", true], ["customer_number", true], ["license_key", true]],
-      [CarrierSettingsCarrierNameEnum.Yunexpress]: [["carrier_id", true], ["customer_number", true], ["api_secret", true]],
+      [CarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],
+      [CarrierNameEnum.Aramex]: [["carrier_id", true], ["username", true], ["password", true], ["account_pin", true], ["account_entity", true], ["account_number", true], ["account_country_code"]],
+      [CarrierNameEnum.Australiapost]: [["carrier_id", true], ["api_key", true], ["password", true], ["account_number", true]],
+      [CarrierNameEnum.Canadapost]: [["carrier_id", true], ["username", true], ["password", true], ["customer_number", true], ["contract_id"]],
+      [CarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
+      [CarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
+      [CarrierNameEnum.Dicom]: [["carrier_id", true], ["username", true], ["password", true], ["billing_account"]],
+      [CarrierNameEnum.Dpdhl]: [["carrier_id", true], ["app_id", true], ["username", true], ["password", true], ["signature", true], ["account_number"], ["services"]],
+      [CarrierNameEnum.DhlExpress]: [["carrier_id", true], ["site_id", true], ["password", true], ["account_number", true], ["account_country_code"]],
+      [CarrierNameEnum.DhlPoland]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["services"]],
+      [CarrierNameEnum.DhlUniversal]: [["carrier_id", true], ["consumer_key", true], ["consumer_secret", true]],
+      [CarrierNameEnum.Eshipper]: [["carrier_id", true], ["username", true], ["password", true]],
+      [CarrierNameEnum.Easypost]: [["carrier_id", true], ["api_key", true]],
+      [CarrierNameEnum.Freightcom]: [["carrier_id", true], ["username", true], ["password", true]],
+      [CarrierNameEnum.Generic]: [["display_name", true], ["custom_carrier_name", true], ["carrier_id", true], ["account_number"], ["account_country_code"], ["services"]],
+      [CarrierNameEnum.Fedex]: [["carrier_id", true], ["user_key"], ["password", true], ["meter_number", true], ["account_number", true], ["account_country_code"]],
+      [CarrierNameEnum.Purolator]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["user_token"]],
+      [CarrierNameEnum.Royalmail]: [["carrier_id", true], ["client_id", true], ["client_secret", true]],
+      [CarrierNameEnum.Sendle]: [["carrier_id", true], ["sendle_id", true], ["api_key", true]],
+      [CarrierNameEnum.SfExpress]: [["carrier_id", true], ["partner_id", true], ["check_word", true]],
+      [CarrierNameEnum.Tnt]: [["carrier_id", true], ["username", true], ["password", true], ["account_number"], ["account_country_code"]],
+      [CarrierNameEnum.Ups]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
+      [CarrierNameEnum.UpsFreight]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
+      [CarrierNameEnum.Usps]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
+      [CarrierNameEnum.UspsInternational]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
+      [CarrierNameEnum.Yanwen]: [["carrier_id", true], ["customer_number", true], ["license_key", true]],
+      [CarrierNameEnum.Yunexpress]: [["carrier_id", true], ["customer_number", true], ["api_secret", true]],
       [NoneEnum.none]: [],
     }[carrier_name] || [])
       .find(([_, ...__]) => `${_}`.includes(property)) || []

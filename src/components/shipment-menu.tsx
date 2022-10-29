@@ -73,9 +73,9 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
           {!isViewing &&
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>}
 
-          {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status) &&
+          {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status as any) &&
             <a className="dropdown-item" onClick={() => confirmCancellation({
-              identifier: shipment.id,
+              identifier: shipment.id as string,
               label: `Cancel Shipment`,
               action: 'Submit',
               onConfirm: cancelShipment(shipment),

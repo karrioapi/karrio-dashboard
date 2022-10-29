@@ -139,8 +139,10 @@ export default function CreateLabelPage(pageProps: any) {
     }, [shipment]);
     useEffect(() => {
       if (!orders.called && !orders.loading && orders.load) orders.load({
-        first: 100,
-        status: ['unfulfilled', 'partial']
+        filter: {
+          first: 100,
+          status: ['unfulfilled', 'partial'] as any,
+        }
       });
     }, []);
     useEffect(() => {

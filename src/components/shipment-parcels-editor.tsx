@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { CommodityType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
-import { deepEqual, formatDimension, isNone, isNoneOrEmpty } from '@/lib/helper';
+import { deepEqual, isNone, isNoneOrEmpty } from '@/lib/helper';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import ButtonField from '@/components/generic/button-field';
@@ -8,7 +8,7 @@ import { Loading } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/components/commodity-list-editor';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import ParcelDescription from './descriptions/parcel-description';
+import ParcelDescription from '@/components/descriptions/parcel-description';
 
 type ParcelCollection = Record<string, ParcelType>;
 type ParcelItemCollection = Record<string, CommodityType[]>;

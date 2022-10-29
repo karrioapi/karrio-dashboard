@@ -30,10 +30,10 @@ export default function ShipmentsPage(pageProps: any) {
     const { templates } = useDocumentTemplates();
     const { previewShipment } = useContext(ShipmentPreviewContext);
     const { loading, called, shipments, next, previous, variables, load, loadMore } = useContext(ShipmentsContext);
-    const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [filters, setFilters] = React.useState<any>(variables);
     const [initialized, setInitialized] = React.useState(false);
 
-    const fetchShipments = (extra: Partial<typeof variables> = {}) => {
+    const fetchShipments = (extra: Partial<any> = {}) => {
       const query = {
         ...filters,
         ...getURLSearchParams(),

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LazyQueryResult, useLazyQuery } from '@apollo/client';
-import { search_data, SEARCH_DATA, search_dataVariables, SEARCH_DATA_EXTENDED, search_data_extended, search_data_extendedVariables } from 'karrio/graphql';
+import { search_data, SEARCH_DATA, search_dataVariables } from 'karrio/graphql';
 import { OrderType, ShipmentType, TrackerType } from '@/lib/types';
 import { APIReference } from '@/context/references-provider';
 import { Subject } from 'rxjs';
@@ -11,12 +11,12 @@ const DEFAULT_SETTINGS: any = {
   notifyOnNetworkStatusChange: true
 };
 
-export type SearchFilterType = search_dataVariables & search_data_extendedVariables;
+export type SearchFilterType = search_dataVariables & search_dataVariables;
 export type SearchResultType = (OrderType | TrackerType | ShipmentType);
 export type SearchFilterTypeKeys = keyof SearchFilterType;
 export type SearchCallType = (searchValue: string) => void;
 
-type SearchType = LazyQueryResult<(search_data | search_data_extended), SearchFilterType> & {
+type SearchType = LazyQueryResult<search_data, SearchFilterType> & {
   variables: SearchFilterType;
   searchResults: SearchResultType[]
   search: (search_value: string) => Promise<any>;
@@ -25,12 +25,10 @@ type SearchType = LazyQueryResult<(search_data | search_data_extended), SearchFi
 export const SearchContext = React.createContext<SearchType>({} as SearchType);
 
 const SearchProvider: React.FC = ({ children }) => {
-  const { ORDERS_MANAGEMENT } = useContext(APIReference);
   const [query, setQuery] = useState<any>();
   const [variables, setVariables] = useState<SearchFilterType>({});
   const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
   const searchData = useLazyQuery<search_data, SearchFilterType>(SEARCH_DATA, DEFAULT_SETTINGS);
-  const searchDataExtended = useLazyQuery<search_data_extended, SearchFilterType>(SEARCH_DATA_EXTENDED, DEFAULT_SETTINGS);
 
   function searchCall(searchValue: string) {
     if (searchValue.length == 0) {
@@ -40,7 +38,7 @@ const SearchProvider: React.FC = ({ children }) => {
     if (searchValue.length < 2) { return; }
 
     const requestVariables = { keyword: searchValue };
-    const [initialLoad, _query] = ORDERS_MANAGEMENT ? searchDataExtended : searchData;
+    const [initialLoad, _query] = searchData;
 
     setQuery(_query);
     setVariables(requestVariables);
