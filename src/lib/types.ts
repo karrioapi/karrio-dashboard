@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum } from 'karrio/graphql';
-import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from 'karrio/rest/index';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, CreateServiceLevelInput, UpdateServiceLevelInput, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum, get_user_connections_user_connections_GenericSettingsType_label_template } from 'karrio/graphql';
+import { CarrierNameEnum, IncotermEnum, EnabledEventsEnum } from 'karrio/rest/index';
 import { Session } from 'next-auth';
 
 
@@ -58,7 +58,9 @@ export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_nod
 };
 export type TemplateType = AddressTemplateType & ParcelTemplateType & CustomsTemplateType;
 
-export type ServiceLevelType = PartialServiceLevel;
+export type ServiceLevelType = CreateServiceLevelInput & UpdateServiceLevelInput;
+
+export type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
 
 export type DocumentTemplateType = get_document_template_document_template;
 
@@ -115,7 +117,7 @@ export const WEIGHT_UNITS = Array.from(new Set(
 
 export const EVENT_TYPES: string[] = Array.from(new Set(
   Object
-    .values(WebhookEnabledEventsEnum)
+    .values(EnabledEventsEnum)
 ));
 
 export const SHIPMENT_STATUSES: string[] = Array.from(new Set(
@@ -135,12 +137,12 @@ export const TRACKER_STATUSES: string[] = Array.from(new Set(
 
 export const CARRIER_NAMES: string[] = Array.from(new Set(
   Object
-    .values(CarrierSettingsCarrierNameEnum)
+    .values(CarrierNameEnum)
 ));
 
 export const INCOTERMS: string[] = Array.from(new Set(
   Object
-    .values(CustomsIncotermEnum)
+    .values(IncotermEnum)
 ));
 
 export const CUSTOMS_CONTENT_TYPES: string[] = Array.from(new Set(

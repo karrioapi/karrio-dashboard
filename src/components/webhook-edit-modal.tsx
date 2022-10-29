@@ -1,6 +1,5 @@
 import React, { useContext, useReducer, useState } from 'react';
 import { NotificationType, EVENT_TYPES } from '@/lib/types';
-import ButtonField from '@/components/generic/button-field';
 import WebhookMutation from '@/context/webhook-mutation';
 import { Webhook, WebhookData } from 'karrio/rest/index';
 import { Notify } from '@/components/notifier';

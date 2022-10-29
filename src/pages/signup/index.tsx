@@ -3,7 +3,7 @@ import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import LoadingProvider, { Loading } from "@/components/loader";
 import UserMutation from "@/context/user-mutation";
-import { RegisterUserInput, register_user_register_user_errors } from "karrio/graphql";
+import { RegisterUserMutationInput, register_user_register_user_errors } from "karrio/graphql";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
@@ -14,14 +14,14 @@ import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
-const DEFAULT_VALUE: Partial<RegisterUserInput> = {
+const DEFAULT_VALUE: Partial<RegisterUserMutationInput> = {
   email: "",
   full_name: "",
   password1: "",
   password2: "",
 };
 
-function reducer(state: Partial<RegisterUserInput>, { name, value }: { name: string, value: string | object }) {
+function reducer(state: Partial<RegisterUserMutationInput>, { name, value }: { name: string, value: string | object }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -49,7 +49,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await registerUser({ ...user, redirect_url: location.origin + p`/email` } as RegisterUserInput);
+      await registerUser({ ...user, redirect_url: location.origin + p`/email` } as RegisterUserMutationInput);
       router.push(p`/signup/success`);
     } catch (error: any) {
       setErrors(Array.isArray(error) ? error : [error]);

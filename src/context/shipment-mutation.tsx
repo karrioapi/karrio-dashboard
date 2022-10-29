@@ -9,10 +9,10 @@ import React, { useContext } from 'react';
 
 
 export type ShipmentMutator = {
-  fetchRates: (shipment: ShipmentType) => Promise<RateResponse>;
-  buyLabel: (shipment: ShipmentType) => Promise<Shipment>;
-  voidLabel: (shipment: ShipmentType) => Promise<OperationResponse>;
-  updateShipment: (data: PartialShipmentUpdateInput) => Promise<void>;
+  fetchRates: (shipment: ShipmentType) => Promise<AxiosResponse<RateResponse, any>>;
+  buyLabel: (shipment: ShipmentType) => Promise<AxiosResponse<Shipment, any>>;
+  voidLabel: (shipment: ShipmentType) => Promise<AxiosResponse<OperationResponse, any>>;
+  updateShipment: (data: PartialShipmentMutationInput) => Promise<void>;
   discardCommodity: (id: string) => Promise<void>;
   discardCustoms: (id: string) => Promise<void>;
   discardParcel: (id: string) => Promise<void>;
@@ -50,7 +50,7 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
       .then(({ data }) => data)
   );
 
-  const updateShipment = (data: PartialShipmentUpdateInput) => (
+  const updateShipment = (data: PartialShipmentMutationInput) => (
     handleGraphQLRequest("partial_shipment_update", updateShipmentMutation)({ variables: { data } })
       .then(() => state?.loadShipment(state.shipment.id))
   );

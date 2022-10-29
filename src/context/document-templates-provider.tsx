@@ -44,7 +44,7 @@ const DocumentTemplatesProvider: React.FC<{ filter?: get_document_templatesVaria
       load,
       loadMore,
       templates: extract(query?.data?.document_templates?.edges),
-      next: query.data?.document_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
+      next: query.data?.document_templates?.page_info?.has_next_page ? (variables?.offset + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>

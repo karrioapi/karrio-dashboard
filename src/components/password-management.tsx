@@ -1,21 +1,20 @@
 import React, { FormEvent, useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { Loading } from '@/components/loader';
-import { ChangePasswordInput, change_password_change_password_errors } from 'karrio/graphql';
+import { ChangePasswordMutationInput, change_password_change_password_errors } from 'karrio/graphql';
 import ButtonField from '@/components/generic/button-field';
 import UserMutation from '@/context/user-mutation';
 import { isNone } from '@/lib/helper';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
-import logger from '@/lib/logger';
 
-const DEFAULT_VALUE: Partial<ChangePasswordInput> = {
+const DEFAULT_VALUE: Partial<ChangePasswordMutationInput> = {
   old_password: "",
   new_password1: "",
   new_password2: "",
 };
 
-function reducer(state: Partial<ChangePasswordInput>, { name, value }: { name: string, value: string | object }) {
+function reducer(state: Partial<ChangePasswordMutationInput>, { name, value }: { name: string, value: string | object }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -42,7 +41,7 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
     e.preventDefault();
     try {
       setLoading(true);
-      await changePassword(data as ChangePasswordInput);
+      await changePassword(data as ChangePasswordMutationInput);
 
       dispatch({ name: 'full', value: DEFAULT_VALUE });
       notify({ type: NotificationType.success, message: `Password changed successfully.` });
@@ -51,10 +50,10 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
     }
     setLoading(false);
   };
-  const isDisabled = (data: Partial<ChangePasswordInput>) => {
+  const isDisabled = (data: Partial<ChangePasswordMutationInput>) => {
     return (Object
-      .keys(data) as (keyof ChangePasswordInput)[])
-      .filter(key => key !== 'clientMutationId' && !isNone(data[key]) && (data[key] || '').length > 0)
+      .keys(data) as (keyof ChangePasswordMutationInput)[])
+      .filter(key => !isNone(data[key]) && (data[key] || '').length > 0)
       .length !== 3;
   }
 

@@ -20,10 +20,10 @@ export default function LogsPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { previewLog } = useContext(LogPreviewContext);
     const { loading, called, logs, next, previous, variables, load, loadMore } = useContext(LogsContext);
-    const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [filters, setFilters] = React.useState<any>(variables);
     const [initialized, setInitialized] = React.useState(false);
 
-    const fetchLogs = (extra: Partial<typeof variables> = {}) => {
+    const fetchLogs = (extra: any = {}) => {
       const query = {
         ...filters,
         ...getURLSearchParams(),
@@ -80,7 +80,7 @@ export default function LogsPage(pageProps: any) {
 
               {logs.map((log) => (
 
-                <tr key={log.id} className="items is-clickable" onClick={() => previewLog(log.id)}>
+                <tr key={log.id} className="items is-clickable" onClick={() => previewLog(log.id as any)}>
                   <td className="status"><StatusCode code={log.status_code as number} /></td>
                   <td className="description">{`${log.method} ${log.path}`}</td>
                   <td className="date has-text-right">

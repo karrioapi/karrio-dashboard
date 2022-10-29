@@ -26,7 +26,7 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
   const { insertUrlParam } = useLocation();
   const { testMode } = useContext(AppMode);
   const { ORDERS_MANAGEMENT } = useContext(APIReference);
-  const [initialLoad, query] = useLazyQuery<get_orders, OrdersFilterType>(GET_ORDERS, {
+  const [initialLoad, query] = useLazyQuery<get_orders, any>(GET_ORDERS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
@@ -41,7 +41,7 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
         ...acc,
         [key]: (
           ["status", "option_key"].includes(key)
-            ? [].concat(options[key as keyof OrdersFilterType]).reduce(
+            ? [].concat((options as any)[key]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )
             : options[key as keyof OrdersFilterType]
@@ -74,7 +74,7 @@ const OrdersProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
       loadMore,
       variables,
       orders: extract(query?.data?.orders?.edges),
-      next: query.data?.orders?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      next: query.data?.orders?.page_info?.has_next_page ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
     }}>
       {children}

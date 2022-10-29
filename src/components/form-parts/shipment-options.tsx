@@ -37,8 +37,8 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onSubmi
 
   const computeDisable = (shipment: ShipmentType, options: any, metadata: any, reference?: string | null) => {
     return (
-      (deepEqual(shipment.options, options) || (options === {} && shipment.options === {}))
-      && (deepEqual(shipment.metadata, metadata) || (metadata === {} && shipment.metadata === {}))
+      (deepEqual(shipment.options, options) || (options === ({} as any) && shipment.options === ({} as any)))
+      && (deepEqual(shipment.metadata, metadata) || (metadata === ({} as any) && shipment.metadata === ({} as any)))
       && shipment.reference === reference
     )
   }

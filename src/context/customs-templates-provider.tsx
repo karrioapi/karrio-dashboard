@@ -39,7 +39,7 @@ const CustomInfoTemplatesProvider: React.FC = ({ children }) => {
     <CustomInfoTemplates.Provider value={{
       load, loadMore,
       templates: extract(query?.data?.customs_templates?.edges),
-      next: query.data?.customs_templates?.pageInfo?.hasNextPage ? (variables?.offset + PAGE_SIZE) : null,
+      next: query.data?.customs_templates?.page_info?.has_next_page ? (variables?.offset + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (variables?.offset - PAGE_SIZE) : null,
       ...query
     }}>

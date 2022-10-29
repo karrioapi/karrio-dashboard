@@ -1,13 +1,13 @@
 import React from 'react';
 import { Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
-import { PartialShipmentUpdateInput } from 'karrio/graphql';
 import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { errorToMessages, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import { PartialShipmentMutationInput } from '@karrio/graphql';
 
 type LabelMutationContext = {
   addParcel: (data: ParcelType) => Promise<void>;
@@ -101,12 +101,12 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const hasCustomsChanges = !isNone(changes.customs);
     const hasParcelsChanges = !isNone(changes.parcels);
     const customsExists = !isNone(shipment.customs);
-    
+
     let skip = !requireCustoms;
     if (!requireCustoms && customsExists) skip = false;
     if (requireCustoms && hasCustomsChanges) skip = true;
     if (requireCustoms && !hasCustomsChanges && hasParcelsChanges) skip = false;
-    
+
     if (skip) return changes;
     if (isDocument) return { ...changes, customs: null };
     if (!isIntl) return { ...changes, customs: undefined };
@@ -146,7 +146,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       return await label.updateShipment(changes);
     } else {
       return await mutation.updateShipment(
-        { id: shipment.id, ...changes } as PartialShipmentUpdateInput
+        { id: shipment.id, ...changes } as PartialShipmentMutationInput
       );
     }
   };
@@ -190,11 +190,11 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         ...shipment.parcels[parcel_index],
         items: [
           ...(shipment.parcels[parcel_index].items || []).map((item, index) => {
-              const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
-              return ((_ref && Object.keys(item_collection).includes(_ref))
-                  ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
-                  : item
-              )
+            const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
+            return ((_ref && Object.keys(item_collection).includes(_ref))
+              ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
+              : item
+            )
           }),
           ...items.filter((item, index) => !indexes.has(item.parent_id || item.sku || item.hs_code || `${ts}${index}`))
         ]
@@ -261,7 +261,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const { messages, rates, ...data } = shipment;
     try {
       loader.setLoading(true);
-      const { rates, messages } = await mutation.fetchRates(data as ShipmentType);
+      const { data: { rates, messages } } = await mutation.fetchRates(data as ShipmentType);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (error: any) {
       updateShipment({ rates: [], messages: errorToMessages(error) } as Partial<ShipmentType>);
@@ -276,14 +276,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     } : { selected_rate_id: rate.id };
     try {
       loader.setLoading(true);
-      const { id } = await mutation.buyLabel({
-        ...data,
-        ...selection
-      } as ShipmentType);
-      notifier.notify({
-        type: NotificationType.success,
-        message: 'Label successfully purchased!'
-      });
+      const { data: { id } } = await mutation.buyLabel({ ...data, ...selection } as ShipmentType);
+      notifier.notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
       router.push(`${basePath}/shipments/${id}`);
     } catch (error: any) {
       updateShipment({ messages: errorToMessages(error) } as Partial<ShipmentType>);

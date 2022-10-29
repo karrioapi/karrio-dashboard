@@ -128,7 +128,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
                     <CheckBoxField
                       name="is_default"
                       onChange={e => setTemplate({ ...template, is_default: e.target.checked })}
-                      defaultChecked={template?.is_default}
+                      defaultChecked={template?.is_default as boolean}
                       fieldClass="column mb-0 px-2 pt-3 pb-0">
                       <span>Set as default parcel</span>
                     </CheckBoxField>

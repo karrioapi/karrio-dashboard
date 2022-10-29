@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { CARRIER_IMAGES, CARRIER_THEMES } from '@/lib/types';
-import { CarrierSettingsCarrierNameEnum } from 'karrio/rest/index';
+import { CarrierNameEnum } from 'karrio/rest/index';
 import React, { useContext } from 'react';
 import { APIReference } from '@/context/references-provider';
 import { formatCarrierSlug, isNone, p } from '@/lib/helper';
 
 
 interface CarrierBadgeComponent extends React.AllHTMLAttributes<HTMLDivElement> {
-  carrier?: CarrierSettingsCarrierNameEnum | string;
+  carrier?: CarrierNameEnum | string;
   custom_name?: string;
   short?: boolean;
   textOnly?: boolean;

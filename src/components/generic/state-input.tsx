@@ -1,6 +1,6 @@
-import { isNone, isNoneOrEmpty } from '@/lib/helper';
+import { isNoneOrEmpty } from '@/lib/helper';
 import { Collection } from '@/lib/types';
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext } from 'react';
 import { APIReference } from '@/context/references-provider';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
 

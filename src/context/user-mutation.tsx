@@ -1,17 +1,17 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { GetUser_user, UPDATE_USER, update_userVariables, UpdateUserInput, REGISTER_USER, register_userVariables, register_user_register_user, RegisterUserInput, ConfirmPasswordResetInput, confirm_password_reset_confirm_password_reset, confirm_password_resetVariables, CONFIRM_PASSWORD_RESET, ChangePasswordInput, CHANGE_PASSWORD, change_password_change_password, change_passwordVariables, update_user, register_user, confirm_password_reset, change_password, update_user_update_user, request_email_change, request_email_changeVariables, REQUEST_EMAIL_CHANGE, RequestEmailChangeInput, request_email_change_request_email_change, confirm_email_change, confirm_email_changeVariables, CONFIRM_EMAIL_CHANGE, confirm_email_change_confirm_email_change, ConfirmEmailChangeInput } from 'karrio/graphql';
+import { GetUser_user, UPDATE_USER, update_userVariables, UpdateUserInput, REGISTER_USER, register_userVariables, register_user_register_user, confirm_password_reset_confirm_password_reset, confirm_password_resetVariables, CONFIRM_PASSWORD_RESET, CHANGE_PASSWORD, change_password_change_password, change_passwordVariables, update_user, register_user, confirm_password_reset, change_password, update_user_update_user, request_email_change, request_email_changeVariables, REQUEST_EMAIL_CHANGE, request_email_change_request_email_change, confirm_email_change, confirm_email_changeVariables, CONFIRM_EMAIL_CHANGE, confirm_email_change_confirm_email_change, RegisterUserMutationInput, RequestEmailChangeMutationInput, ConfirmEmailChangeMutationInput, ConfirmPasswordResetMutationInput, ChangePasswordMutationInput } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 
 export type UserMutator<T> = T & {
   updateUser: (data: UpdateUserInput) => Promise<update_user_update_user | null>;
   closeAccount: () => Promise<update_user_update_user | null>;
-  registerUser: (data: RegisterUserInput) => Promise<register_user_register_user | null>;
-  requestEmailChange: (data: RequestEmailChangeInput) => Promise<request_email_change_request_email_change | null>;
-  confirmEmailChange: (data: ConfirmEmailChangeInput) => Promise<confirm_email_change_confirm_email_change | null>;
-  confirmPasswordReset: (data: ConfirmPasswordResetInput) => Promise<confirm_password_reset_confirm_password_reset | null>;
-  changePassword: (data: ChangePasswordInput) => Promise<change_password_change_password | null>;
+  registerUser: (data: RegisterUserMutationInput) => Promise<register_user_register_user | null>;
+  requestEmailChange: (data: RequestEmailChangeMutationInput) => Promise<request_email_change_request_email_change | null>;
+  confirmEmailChange: (data: ConfirmEmailChangeMutationInput) => Promise<confirm_email_change_confirm_email_change | null>;
+  confirmPasswordReset: (data: ConfirmPasswordResetMutationInput) => Promise<confirm_password_reset_confirm_password_reset | null>;
+  changePassword: (data: ChangePasswordMutationInput) => Promise<change_password_change_password | null>;
 };
 
 export const UserMutationContext = React.createContext<UserMutator<{}>>({} as UserMutator<{}>);
@@ -30,19 +30,19 @@ export const UserMutationProvider: React.FC = ({ children }) => {
   const closeAccount = () => (
     handleGraphQLRequest("update_user", updateMutation)({ variables: { data: { is_active: false } } })
   );
-  const registerUser = (data: RegisterUserInput) => (
+  const registerUser = (data: RegisterUserMutationInput) => (
     handleGraphQLRequest("register_user", registerMutation)({ variables: { data } })
   );
-  const requestEmailChange = (data: RequestEmailChangeInput) => (
+  const requestEmailChange = (data: RequestEmailChangeMutationInput) => (
     handleGraphQLRequest("request_email_change", changeEmailMutation)({ variables: { data } })
   );
-  const confirmEmailChange = (data: ConfirmEmailChangeInput) => (
+  const confirmEmailChange = (data: ConfirmEmailChangeMutationInput) => (
     handleGraphQLRequest("confirm_email_change", confirmEmailMutation)({ variables: { data } })
   );
-  const confirmPasswordReset = (data: ConfirmPasswordResetInput) => (
+  const confirmPasswordReset = (data: ConfirmPasswordResetMutationInput) => (
     handleGraphQLRequest("confirm_password_reset", confirmResetMutation)({ variables: { data } })
   );
-  const changePassword = (data: ChangePasswordInput) => (
+  const changePassword = (data: ChangePasswordMutationInput) => (
     handleGraphQLRequest("change_password", changePasswordMutation)({ variables: { data } })
   );
 

@@ -2,7 +2,7 @@ import { NotificationType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
 import { UserData, UserType } from '@/context/user-provider';
 import UserMutation from '@/context/user-mutation';
-import { Notify } from './notifier';
+import { Notify } from '@/components/notifier';
 
 interface ProfileUpdateInputComponent {
   label: string;

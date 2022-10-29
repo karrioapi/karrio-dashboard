@@ -16,13 +16,13 @@ const WebhookMutation = <T extends {}>(Component: React.FC<WebhookMutator<T>>) =
     const karrio = useContext(RestContext);
 
     const addWebhook = async (data: WebhookData) => handleFailure(
-      karrio!.webhooks.create({ data })
+      karrio!.webhooks.create({ webhookData: data })
     );
     const updateWebhook = async ({ id, ...data }: Partial<Webhook>) => handleFailure(
-      karrio!.webhooks.update({ id: id as string, data: data as any })
+      karrio!.webhooks.update({ id: id as string, patchedWebhookData: data as any })
     );
     const testWebhook = async (id: string, payload: object) => handleFailure(
-      karrio!.webhooks.test({ id, data: { payload } })
+      karrio!.webhooks.test({ id, webhookTestRequest: { payload } })
     );
     const removeWebhook = async (id: string) => handleFailure(
       karrio!.webhooks.remove({ id })

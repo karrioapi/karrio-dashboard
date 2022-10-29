@@ -32,14 +32,14 @@ export default function TrackersPage(pageProps: any) {
     const { removeTracker } = useContext(TrackerMutationContext);
     const { addTracker } = useContext(TrackerModalContext);
     const { loading, called, trackers, next, previous, variables, load, loadMore } = useContext(TrackersContext);
-    const [filters, setFilters] = React.useState<typeof variables>(variables);
+    const [filters, setFilters] = React.useState<any>(variables);
     const [initialized, setInitialized] = React.useState(false);
 
     const remove = (id?: string) => async () => {
       await removeTracker(id as string);
       fetchTrackers();
     };
-    const fetchTrackers = (extra: Partial<typeof variables> = {}) => {
+    const fetchTrackers = (extra: Partial<any> = {}) => {
       const query = {
         ...filters,
         ...getURLSearchParams(),

@@ -1,12 +1,12 @@
-import { TrackingStatus } from 'karrio/rest/index';
+import { CarrierNameEnum, TrackingStatus } from 'karrio/rest/index';
 import { handleFailure } from '@/lib/helper';
 import { RestContext } from '@/client/context';
 import React, { useContext } from 'react';
 
 
 type TrackerMutator = {
-  createTracker: (tracking_number: string, carrier_name: string) => Promise<TrackingStatus>;
-  removeTracker: (idOrTrackingNumber: string) => Promise<TrackingStatus>;
+  createTracker: (tracking_number: string, carrier_name: string) => Promise<AxiosResponse<TrackingStatus, any>>;
+  removeTracker: (idOrTrackingNumber: string) => Promise<AxiosResponse<TrackingStatus, any>>;
 };
 
 export const TrackerMutationContext = React.createContext<TrackerMutator>({} as TrackerMutator);

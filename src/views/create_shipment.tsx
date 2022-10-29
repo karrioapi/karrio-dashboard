@@ -202,9 +202,11 @@ export default function CreateShipmentPage(pageProps: any) {
     }, [order_id]);
     useEffect(() => {
       if (!orders.called && !orders.loading && !isNoneOrEmpty(order_id) && orders.load) orders.load({
-        first: 20,
-        status: ['unfulfilled', 'partial'],
-        ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
+        filter: {
+          first: 20,
+          status: ['unfulfilled', 'partial'] as any,
+          ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
+        }
       });
     }, []);
     useEffect(() => {

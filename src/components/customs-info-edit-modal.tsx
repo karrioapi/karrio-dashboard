@@ -133,7 +133,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
                   <CheckBoxField
                     name="is_default"
                     onChange={handleChange}
-                    defaultChecked={template?.is_default}
+                    defaultChecked={template?.is_default as boolean}
                     fieldClass="column mb-0 px-2 pt-3 pb-2">
                     <span>Set as default customs info</span>
                   </CheckBoxField>

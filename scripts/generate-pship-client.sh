@@ -2,7 +2,7 @@
 branch="${1:=main}"
 
 docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
-  -i "https://raw.githubusercontent.com/karrioapi/karrio/${branch}/server/schemas/openapi.json" \
+  -i "https://raw.githubusercontent.com/karrioapi/karrio/${branch}/server/schemas/openapi.yml" \
   -g typescript-axios \
   -o /local/karrio/rest/generated \
   --additional-properties=typescriptThreePlus=true \

@@ -7,7 +7,7 @@ import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
 
-export interface EventsFilterType extends get_eventsVariables { };
+export interface EventsFilterType extends get_eventsVariables { }
 type Edges = (get_events_events_edges | null)[];
 
 type EventsType = LazyQueryResult<get_events, any> & {
@@ -22,7 +22,7 @@ export const EventsContext = React.createContext<EventsType>({} as EventsType);
 
 const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, setVariablesToURL = true }) => {
   const { insertUrlParam } = useLocation();
-  const [initialLoad, query] = useLazyQuery<get_events, EventsFilterType>(GET_EVENTS, {
+  const [initialLoad, query] = useLazyQuery<get_events, any>(GET_EVENTS, {
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
@@ -37,7 +37,7 @@ const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
         ...acc,
         [key]: (
           ["type"].includes(key)
-            ? [].concat(options[key as keyof EventsFilterType]).reduce(
+            ? [].concat((options as any)[key]).reduce(
               (acc, item: string) => [].concat(acc, item.split(',') as any), []
             )
             : options[key as keyof EventsFilterType]
@@ -68,7 +68,7 @@ const EventsProvider: React.FC<{ setVariablesToURL?: boolean }> = ({ children, s
       loadMore,
       variables,
       events: extract(query?.data?.events?.edges),
-      next: query.data?.events?.pageInfo?.hasNextPage ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
+      next: query.data?.events?.page_info?.has_next_page ? (parseInt(variables.offset + '') + PAGE_SIZE) : null,
       previous: variables.offset > 0 ? (parseInt(variables.offset + '') - PAGE_SIZE) : null,
     } as EventsType}>
       {children}

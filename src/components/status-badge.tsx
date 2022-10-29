@@ -1,9 +1,9 @@
 import { formatRef } from '@/lib/helper';
-import { ShipmentStatusEnum } from 'karrio/rest/index';
+import { ShipmentStatus } from 'karrio/rest/index';
 import React from 'react';
 
 interface StatusBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> {
-  status?: string | ShipmentStatusEnum;
+  status?: string | ShipmentStatus;
 }
 
 const StatusBadge: React.FC<StatusBadgeComponent> = ({ status, className, ...props }) => {
