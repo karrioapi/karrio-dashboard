@@ -3,7 +3,6 @@ import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { KARRIO_API } from "@/client/context";
 import { getSession } from "next-auth/react";
-import { Response } from "node-fetch";
 import logger from "@/lib/logger";
 import axios from "axios";
 

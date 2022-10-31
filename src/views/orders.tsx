@@ -1,7 +1,6 @@
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
-import ModeIndicator from "@/components/mode-indicator";
 import Spinner from "@/components/spinner";
 import StatusBadge from "@/components/status-badge";
 import OrdersProvider from "@/context/orders-provider";

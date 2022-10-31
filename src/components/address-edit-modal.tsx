@@ -4,7 +4,6 @@ import { isNone, useLocation } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types';
-import { useAddressTemplateMutation } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -16,10 +15,10 @@ const DEFAULT_TEMPLATE_CONTENT = {
 
 type OperationType = {
   addressTemplate?: AddressTemplateType;
-  onConfirm: () => Promise<any>;
+  onConfirm?: () => Promise<any>;
 };
 type AddressEditContextType = {
-  editAddress: (operation: OperationType) => void,
+  editAddress: (operation?: OperationType) => void,
 };
 
 export const AddressEditContext = React.createContext<AddressEditContextType>({} as AddressEditContextType);
@@ -37,7 +36,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
   const [template, setTemplate] = useState<AddressTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
 
-  const editAddress = (operation: OperationType) => {
+  const editAddress = (operation: OperationType = {}) => {
     const template = operation.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setOperation(operation);

@@ -1,12 +1,13 @@
-import { BASE_PATH, KARRIO_API } from "@/client/context";
 import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
-import { FetchResult, MutationFunctionOptions } from "@apollo/client";
+import { DocumentNode, FetchResult, MutationFunctionOptions } from "@apollo/client";
+import { BASE_PATH, KARRIO_API } from "@/client/context";
+import React from "react";
 import axios from "axios";
 import moment from "moment";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import React from "react";
+import { useSession } from "next-auth/react";
 
 
 export function formatRef(s?: string): string {
@@ -296,6 +297,10 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
     .replace('//', '/');
 }
 
+export function gqlstr(node: DocumentNode): string {
+  return (node.loc && node.loc.source.body) || "";
+}
+
 export function useLocation() {
   const router = useRouter();
 
@@ -463,23 +468,27 @@ export function getSessionHeader(session: SessionType | Session | any) {
   return { ...orgHeader, ...testHeader, ...authHeader };
 }
 
-type requestArgs<T> = {
-  query: string;
-  variables: T;
-  url?: string;
-  config?: any;
-};
 
-export async function request<T, R>(args: requestArgs<T>) {
-  const { url, query, variables, config } = args;
+export function useSessionHeader() {
+  const { data } = useSession();
+  return () => ({ headers: getSessionHeader(data) })
+}
+
+export type dataT<T> = { data?: T }
+type requestArgs = { data?: Record<string, any>; url?: string; } & Record<string, any>;
+
+export async function request<T>(query: string, args?: requestArgs): Promise<T | undefined> {
+  const { url, data, ...config } = args || {};
   try {
-    const { data } = await axios.post<R>(url || `${KARRIO_API}/graphql`, { query, variables }, config);
+    const { data: response } = await axios.post<{ data?: T, errors?: any }>(
+      url || `${KARRIO_API}/graphql/`, { query, variables: { data } }, config
+    );
 
-    if ((data as any).errors) {
-      throw new RequestError({ errors: (data as any).errors });
+    if (response.errors) {
+      throw new RequestError({ errors: response.errors });
     }
 
-    return data;
+    return response.data || (response as T);
   } catch (error: any) {
     throw new RequestError(error.response?.data || error.data || error);
   }
