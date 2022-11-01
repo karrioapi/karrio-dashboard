@@ -99,33 +99,42 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const isDocument = parcels.every(p => p.is_document);
     const requireCustoms = isIntl && !isDocument;
 
-    const shouldChange = (
-      (!isNone(changes.customs)) ||
-      (!requireCustoms && !isNone(shipment.customs)) ||
-      (requireCustoms && isNone(shipment.customs)) ||
-      (requireCustoms && !isNone(changes.parcels))
+    const skip = ( // if
+      (
+        (
+          requireCustoms && // require customs def
+          !isNone(changes.customs) // customs def provided
+        ) ||
+        (
+          requireCustoms && // require customs def
+          isNone(changes.customs) && // customs def not provided
+          isNone(changes.parcels) // parcels has not changed
+        )
+      ) ||
+      (
+        !requireCustoms && // don't require customs def
+        !isNone(shipment.customs) // customs is already defined
+      )
     );
 
-    if (!shouldChange) return changes;
+    if (skip) return changes;
     if (isDocument) return { ...changes, customs: null };
     if (!isIntl) return { ...changes, customs: undefined };
 
     const options = changes.options || shipment.options;
     const currency = (shipment.customs?.duty?.currency || options?.currency);
     const paid_by = (shipment.customs?.duty?.paid_by || shipment.payment?.paid_by);
-    const incoterm = (shipment.customs?.incoterm || shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU');
+    const incoterm = (shipment.customs?.incoterm || (paid_by == 'sender' ? 'DDP' : 'DDU'));
     const declared_value = (options?.declared_value || shipment.customs?.duty?.declared_value);
     const account_number = (shipment.customs?.duty?.account_number || shipment.payment?.account_number);
     const commodities = isNone(changes.parcels) ? shipment.customs?.commodities : getShipmentCommodities({ parcels } as any);
 
     const customs: any = {
-      ...DEFAULT_CUSTOMS_CONTENT,
-      ...(shipment.customs || {}),
+      ...(shipment.customs || DEFAULT_CUSTOMS_CONTENT),
       ...(incoterm ? { incoterm } : {}),
       commodities,
       duty: {
-        ...DEFAULT_CUSTOMS_CONTENT.duty,
-        ...(shipment.customs?.duty || {}),
+        ...(shipment.customs?.duty || DEFAULT_CUSTOMS_CONTENT.duty),
         ...(paid_by ? { paid_by } : {}),
         ...(currency ? { currency } : {}),
         ...(declared_value ? { declared_value } : {}),
@@ -139,6 +148,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   // updates
   const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
     if (shouldFetchRates(changes as any)) { setUpdateRate(true); }
+
     changes = { ...syncOptionsChanges(changes) };
     changes = { ...syncCustomsChanges(changes) };
 
@@ -152,7 +162,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
   const addParcel = async (data: ParcelType) => {
     if (isDraft(shipment.id)) {
-      const update = { ...shipment, parcels: [...shipment.parcels, data] };
+      const update = { parcels: [...shipment.parcels, data] };
       await updateShipment(update);
     } else {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
@@ -166,7 +176,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
 
     if (isDraft(shipment.id)) {
       const update = {
-        ...shipment, parcels: shipment.parcels.map(
+        parcels: shipment.parcels.map(
           (parcel, index) => index === parcel_index ? data : parcel
         )
       } as ShipmentType;
@@ -216,7 +226,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   const removeParcel = (parcel_index: number, parcel_id?: string) => async () => {
     if (isDraft(shipment.id)) {
       const update = {
-        ...shipment, parcels: shipment.parcels.filter(
+        parcels: shipment.parcels.filter(
           (_, index) => index !== parcel_index
         )
       } as ShipmentType;
@@ -240,7 +250,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
   const updateCustoms = (customs_id?: string) => async (data: CustomsType | null) => {
     if (isDraft(shipment.id)) {
-      const update = { ...shipment, customs: data } as ShipmentType;
+      const update = { customs: data } as ShipmentType;
       updateShipment(update);
     } else if (data === null) {
       await mutation.discardCustoms(customs_id as string);
