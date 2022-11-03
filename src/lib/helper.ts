@@ -9,6 +9,8 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
+export const isEqual = require('lodash.isequal');
+export const snakeCase = require('lodash.snakecase');
 
 export function formatRef(s?: string): string {
   return (s || "").split('_').join(' ').toLocaleUpperCase();
@@ -428,10 +430,6 @@ export function isListEqual<T>(list1: T[], list2: T[]) {
   return list1.length === list2.length && list1.every((item, index) => item === list2[index]);
 }
 
-export const isEqual = require('lodash.isequal');
-export const snakeCase = require('lodash.snakecase');
-
-
 export function toSingleItem(collection: CommodityType[]) {
   return collection
     .reduce((acc, item) => {
@@ -468,20 +466,25 @@ export function getSessionHeader(session: SessionType | Session | any) {
   return { ...orgHeader, ...testHeader, ...authHeader };
 }
 
-
 export function useSessionHeader() {
   const { data } = useSession();
   return () => ({ headers: getSessionHeader(data) })
 }
 
 export type dataT<T> = { data?: T }
-type requestArgs = { data?: Record<string, any>; url?: string; } & Record<string, any>;
+type requestArgs = {
+  variables?: Record<string, any>;
+  data?: Record<string, any>;
+  operationName?: string;
+  url?: string;
+} & Record<string, any>;
 
 export async function request<T>(query: string, args?: requestArgs): Promise<T | undefined> {
-  const { url, data, ...config } = args || {};
+  const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
+    const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
-      url || `${KARRIO_API}/graphql/`, { query, variables: { data } }, config
+      url || `${KARRIO_API}/graphql/`, { query, operationName, variables }, config,
     );
 
     if (response.errors) {
@@ -500,4 +503,14 @@ export function errorToMessages(error: ErrorType | Error | any) {
     error.data?.messages ||
     [error.data?.message || error.message]
   );
+}
+
+export function onError(error: any) {
+  const response = error.response?.data || error.data || error;
+
+  const authExpiredError = (response.errors || []).find(
+    (err: any) => (err.code === "authentication_required" || err.status_code === 401)
+  );
+
+  if (authExpiredError) { window.location.reload(); }
 }

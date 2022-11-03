@@ -1,6 +1,6 @@
 import React from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { CreateParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATED_PARCEL_TEMPLATE, UpdateParcelTemplateInput, update_parcel_templateVariables } from 'karrio/graphql';
+import { CreateParcelTemplateInput, CREATE_PARCEL_TEMPLATE, create_parcel_templateVariables, DELETE_TEMPLATE, delete_templateVariables, UPDATE_PARCEL_TEMPLATE, UpdateParcelTemplateInput, update_parcel_templateVariables } from 'karrio/graphql';
 import { ParcelType } from '@/lib/types';
 
 export type ParcelTemplateInput = (CreateParcelTemplateInput | UpdateParcelTemplateInput) & {
@@ -19,7 +19,7 @@ export const ParcelMutationContext = React.createContext<TemplateMutator>({} as 
 
 const ParcelMutationProvider: React.FC<{}> = ({ children }) => {
   const [createMutation] = useMutation<CreateParcelTemplateInput, create_parcel_templateVariables>(CREATE_PARCEL_TEMPLATE);
-  const [updateMutation] = useMutation<UpdateParcelTemplateInput, update_parcel_templateVariables>(UPDATED_PARCEL_TEMPLATE);
+  const [updateMutation] = useMutation<UpdateParcelTemplateInput, update_parcel_templateVariables>(UPDATE_PARCEL_TEMPLATE);
   const [deleteMutation] = useMutation<{ id: string }, delete_templateVariables>(DELETE_TEMPLATE);
 
   const createParcelTemplate = (data: CreateParcelTemplateInput) => createMutation({ variables: { data } });

@@ -7,7 +7,6 @@ import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { deepEqual } from '@/lib/helper';
 import CustomsInfoForm from '@/components/form-parts/customs-info-form';
-import AddressTemplatesProvider from '@/context/address-templates-provider';
 import ParcelTemplatesProvider from '@/context/parcel-templates-provider';
 import CustomInfoTemplatesProvider from '@/context/customs-templates-provider';
 
@@ -33,14 +32,12 @@ export const AddressModalEditor: React.FC<ModalFormProps<AddressModalEditorProps
         </div>
         <div className="p-3 my-4"></div>
 
-        <AddressTemplatesProvider>
-          <AddressForm
-            name="template"
-            value={address}
-            shipment={shipment}
-            onSubmit={async (data) => { await onSubmit(data); close(); }}
-          />
-        </AddressTemplatesProvider>
+        <AddressForm
+          name="template"
+          value={address}
+          shipment={shipment}
+          onSubmit={async (data) => { await onSubmit(data); close(); }}
+        />
       </section>
     )
   };

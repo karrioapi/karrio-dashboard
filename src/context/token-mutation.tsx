@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FetchResult, useMutation } from '@apollo/client';
-import { GetToken, mutate_token, MUTATE_TOKEN, mutate_tokenVariables, TokenMutationInput } from 'karrio/graphql';
+import { GetToken, mutate_token, MUTATE_API_TOKEN, mutate_tokenVariables, TokenMutationInput } from 'karrio/graphql';
 import { TokenData } from '@/context/token-provider';
 import { handleGraphQLRequest } from '@/lib/helper';
 
@@ -12,7 +12,7 @@ export type TokenUpdateType = (data: TokenMutationInput) => Promise<FetchResult<
 
 const TokenMutation = <T extends {}>(Component: React.FC<TemplateMutator<T>>) => (
   function TokenMutationWrapper({ children, ...props }: any) {
-    const [mutateToken] = useMutation<mutate_token, mutate_tokenVariables>(MUTATE_TOKEN);
+    const [mutateToken] = useMutation<mutate_token, mutate_tokenVariables>(MUTATE_API_TOKEN);
     const { load } = useContext(TokenData);
 
     const updateToken = (data: TokenMutationInput) => (
