@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
-import { CreateCustomsTemplateInput, CREATE_CUSTOMS_TEMPLATE, create_customs_templateVariables, DELETE_TEMPLATE, delete_templateVariables, DISCARD_COMMODITY, UPDATED_CUSTOMS_TEMPLATE, UpdateCustomsTemplateInput, update_customs_templateVariables, create_customs_template, update_customs_template, delete_template, discard_commodity, discard_commodityVariables, create_customs_template_create_customs_template, update_customs_template_update_customs_template, delete_template_delete_template, discard_commodity_discard_commodity } from 'karrio/graphql';
+import { CreateCustomsTemplateInput, CREATE_CUSTOMS_TEMPLATE, create_customs_templateVariables, DELETE_TEMPLATE, delete_templateVariables, DISCARD_COMMODITY, UPDATE_CUSTOMS_TEMPLATE, UpdateCustomsTemplateInput, update_customs_templateVariables, create_customs_template, update_customs_template, delete_template, discard_commodity, discard_commodityVariables, create_customs_template_create_customs_template, update_customs_template_update_customs_template, delete_template_delete_template, discard_commodity_discard_commodity } from 'karrio/graphql';
 import { handleGraphQLRequest } from '@/lib/helper';
 
 
@@ -15,7 +15,7 @@ export const CustomsMutationContext = React.createContext<TemplateMutator>({} as
 
 const CustomsMutationProvider: React.FC<{}> = ({ children }) => {
   const [createMutation] = useMutation<create_customs_template, create_customs_templateVariables>(CREATE_CUSTOMS_TEMPLATE);
-  const [updateMutation] = useMutation<update_customs_template, update_customs_templateVariables>(UPDATED_CUSTOMS_TEMPLATE);
+  const [updateMutation] = useMutation<update_customs_template, update_customs_templateVariables>(UPDATE_CUSTOMS_TEMPLATE);
   const [deleteMutation] = useMutation<delete_template, delete_templateVariables>(DELETE_TEMPLATE);
   const [commodityDeleteMutation] = useMutation<discard_commodity, discard_commodityVariables>(DISCARD_COMMODITY);
 
