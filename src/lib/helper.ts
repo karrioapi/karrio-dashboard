@@ -368,7 +368,7 @@ export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (opti
       onError: (error) => error
     });
 
-    if (data && (data[operation] as any).errors) {
+    if (data && (data[operation] as any)?.errors) {
       const errors = (data[operation] as any).errors
         .map((error: { field: string, messages: string[] }) => (
           new ErrorType(error.field, error.messages)
