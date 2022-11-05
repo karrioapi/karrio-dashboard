@@ -289,7 +289,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       });
       router.push(`${basePath}/shipments/${id}`);
     } catch (message: any) {
-      console.error(message)
       updateShipment({ messages: [message] } as Partial<ShipmentType>);
     } finally {
       loader.setLoading(false);
