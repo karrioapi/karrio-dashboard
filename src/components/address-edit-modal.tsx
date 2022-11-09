@@ -7,7 +7,6 @@ import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types'
 import { useAddressTemplateMutation } from '@/context/address-template-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { CreateAddressTemplateInput, UpdateAddressTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',
@@ -72,11 +71,11 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
     try {
       setLoading(true);
       if (isNew) {
-        await createAddressTemplate.mutateAsync(payload as CreateAddressTemplateInput);
+        await createAddressTemplate.mutateAsync(payload);
         notify({ type: NotificationType.success, message: 'Address successfully added!' });
       }
       else {
-        await updateAddressTemplate.mutateAsync(payload as UpdateAddressTemplateInput);
+        await updateAddressTemplate.mutateAsync(payload);
         notify({ type: NotificationType.success, message: 'Address successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 2000);
