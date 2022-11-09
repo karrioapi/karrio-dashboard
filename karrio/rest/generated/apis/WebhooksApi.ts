@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.8.6`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail.  
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.8.7`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail.  
  *
- * The version of the OpenAPI document: 2022.8.6
+ * The version of the OpenAPI document: 2022.8.7
  * Contact: 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -14,23 +14,25 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  ErrorResponse,
+  Operation,
+  Webhook,
+  WebhookData,
+  WebhookList,
+  WebhookTestRequest,
+} from '../models';
 import {
-    ErrorResponse,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
-    Operation,
     OperationFromJSON,
     OperationToJSON,
-    Webhook,
     WebhookFromJSON,
     WebhookToJSON,
-    WebhookData,
     WebhookDataFromJSON,
     WebhookDataToJSON,
-    WebhookList,
     WebhookListFromJSON,
     WebhookListToJSON,
-    WebhookTestRequest,
     WebhookTestRequestFromJSON,
     WebhookTestRequestToJSON,
 } from '../models';
@@ -71,7 +73,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Create a new webhook.
      * Create a webhook
      */
-    async createRaw(requestParameters: CreateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Webhook>> {
+    async createRaw(requestParameters: CreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Webhook>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling create.');
         }
@@ -105,7 +107,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Create a new webhook.
      * Create a webhook
      */
-    async create(requestParameters: CreateRequest, initOverrides?: RequestInit): Promise<Webhook> {
+    async create(requestParameters: CreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Webhook> {
         const response = await this.createRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -114,7 +116,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Retrieve all webhooks.
      * List all webhooks
      */
-    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<WebhookList>> {
+    async listRaw(requestParameters: ListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebhookList>> {
         const queryParameters: any = {};
 
         if (requestParameters.limit !== undefined) {
@@ -149,7 +151,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Retrieve all webhooks.
      * List all webhooks
      */
-    async list(requestParameters: ListRequest = {}, initOverrides?: RequestInit): Promise<WebhookList> {
+    async list(requestParameters: ListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebhookList> {
         const response = await this.listRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -158,7 +160,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Remove a webhook.
      * Remove a webhook
      */
-    async removeRaw(requestParameters: RemoveRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Operation>> {
+    async removeRaw(requestParameters: RemoveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Operation>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling remove.');
         }
@@ -189,7 +191,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Remove a webhook.
      * Remove a webhook
      */
-    async remove(requestParameters: RemoveRequest, initOverrides?: RequestInit): Promise<Operation> {
+    async remove(requestParameters: RemoveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Operation> {
         const response = await this.removeRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -198,7 +200,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Retrieve a webhook.
      * Retrieve a webhook
      */
-    async retrieveRaw(requestParameters: RetrieveRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Webhook>> {
+    async retrieveRaw(requestParameters: RetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Webhook>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling retrieve.');
         }
@@ -229,7 +231,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * Retrieve a webhook.
      * Retrieve a webhook
      */
-    async retrieve(requestParameters: RetrieveRequest, initOverrides?: RequestInit): Promise<Webhook> {
+    async retrieve(requestParameters: RetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Webhook> {
         const response = await this.retrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -238,7 +240,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * test a webhook.
      * Test a webhook
      */
-    async testRaw(requestParameters: TestRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Operation>> {
+    async testRaw(requestParameters: TestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Operation>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling test.');
         }
@@ -276,7 +278,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * test a webhook.
      * Test a webhook
      */
-    async test(requestParameters: TestRequest, initOverrides?: RequestInit): Promise<Operation> {
+    async test(requestParameters: TestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Operation> {
         const response = await this.testRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -285,7 +287,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * update a webhook.
      * Update a webhook
      */
-    async updateRaw(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Webhook>> {
+    async updateRaw(requestParameters: UpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Webhook>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling update.');
         }
@@ -323,7 +325,7 @@ export class WebhooksApi extends runtime.BaseAPI {
      * update a webhook.
      * Update a webhook
      */
-    async update(requestParameters: UpdateRequest, initOverrides?: RequestInit): Promise<Webhook> {
+    async update(requestParameters: UpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Webhook> {
         const response = await this.updateRaw(requestParameters, initOverrides);
         return await response.value();
     }

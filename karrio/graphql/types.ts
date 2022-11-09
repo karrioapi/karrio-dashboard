@@ -688,8 +688,8 @@ export interface get_shipment_shipment_parcels_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -726,8 +726,8 @@ export interface get_shipment_shipment_customs_commodities {
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -909,8 +909,8 @@ export interface get_shipments_shipments_edges_node_parcels_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -947,8 +947,8 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -1138,8 +1138,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment_parcel
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -1176,8 +1176,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
 }
 
@@ -1190,8 +1190,8 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
   parent: partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent | null;
@@ -1676,36 +1676,6 @@ export interface mutate_system_connectionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: create_address_template
-// ====================================================
-
-export interface create_address_template_create_address_template_template {
-  id: string;  // The ID of the object.
-}
-
-export interface create_address_template_create_address_template_errors {
-  field: string;
-  messages: string[];
-}
-
-export interface create_address_template_create_address_template {
-  template: create_address_template_create_address_template_template | null;
-  errors: (create_address_template_create_address_template_errors | null)[] | null;  // May contain more than one error for same field.
-}
-
-export interface create_address_template {
-  create_address_template: create_address_template_create_address_template | null;
-}
-
-export interface create_address_templateVariables {
-  data: CreateAddressTemplateInput;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: create_customs_template
 // ====================================================
 
@@ -1729,66 +1699,6 @@ export interface create_customs_template {
 
 export interface create_customs_templateVariables {
   data: CreateCustomsTemplateInput;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: create_parcel_template
-// ====================================================
-
-export interface create_parcel_template_create_parcel_template_template {
-  id: string;  // The ID of the object.
-}
-
-export interface create_parcel_template_create_parcel_template_errors {
-  field: string;
-  messages: string[];
-}
-
-export interface create_parcel_template_create_parcel_template {
-  template: create_parcel_template_create_parcel_template_template | null;
-  errors: (create_parcel_template_create_parcel_template_errors | null)[] | null;  // May contain more than one error for same field.
-}
-
-export interface create_parcel_template {
-  create_parcel_template: create_parcel_template_create_parcel_template | null;
-}
-
-export interface create_parcel_templateVariables {
-  data: CreateParcelTemplateInput;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: update_address_template
-// ====================================================
-
-export interface update_address_template_update_address_template_template {
-  id: string;  // The ID of the object.
-}
-
-export interface update_address_template_update_address_template_errors {
-  field: string;
-  messages: string[];
-}
-
-export interface update_address_template_update_address_template {
-  template: update_address_template_update_address_template_template | null;
-  errors: (update_address_template_update_address_template_errors | null)[] | null;  // May contain more than one error for same field.
-}
-
-export interface update_address_template {
-  update_address_template: update_address_template_update_address_template | null;
-}
-
-export interface update_address_templateVariables {
-  data: UpdateAddressTemplateInput;
 }
 
 
@@ -1826,6 +1736,56 @@ export interface update_customs_templateVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: delete_template
+// ====================================================
+
+export interface delete_template_delete_template {
+  id: string | null;
+}
+
+export interface delete_template {
+  delete_template: delete_template_delete_template | null;
+}
+
+export interface delete_templateVariables {
+  data: DeleteTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: create_parcel_template
+// ====================================================
+
+export interface create_parcel_template_create_parcel_template_template {
+  id: string;  // The ID of the object.
+}
+
+export interface create_parcel_template_create_parcel_template_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface create_parcel_template_create_parcel_template {
+  template: create_parcel_template_create_parcel_template_template | null;
+  errors: (create_parcel_template_create_parcel_template_errors | null)[] | null;  // May contain more than one error for same field.
+}
+
+export interface create_parcel_template {
+  create_parcel_template: create_parcel_template_create_parcel_template | null;
+}
+
+export interface create_parcel_templateVariables {
+  data: CreateParcelTemplateInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: update_parcel_template
 // ====================================================
 
@@ -1849,26 +1809,6 @@ export interface update_parcel_template {
 
 export interface update_parcel_templateVariables {
   data: UpdateParcelTemplateInput;
-}
-
-
-/* tslint:disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: delete_template
-// ====================================================
-
-export interface delete_template_delete_template {
-  id: string | null;
-}
-
-export interface delete_template {
-  delete_template: delete_template_delete_template | null;
-}
-
-export interface delete_templateVariables {
-  data: DeleteTemplateInput;
 }
 
 
@@ -2014,7 +1954,7 @@ export interface get_user_connections_user_connections_AramexSettings {
   account_pin: string;
   account_entity: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2067,7 +2007,7 @@ export interface get_user_connections_user_connections_ChronopostSettings {
   active: boolean;         // Disable/Hide carrier from clients
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2081,7 +2021,7 @@ export interface get_user_connections_user_connections_DHLExpressSettings {
   site_id: string;
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2201,7 +2141,7 @@ export interface get_user_connections_user_connections_FedexSettings {
   password: string;
   meter_number: string;
   user_key: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -2279,7 +2219,7 @@ export interface get_user_connections_user_connections_TNTSettings {
   username: string;
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2294,7 +2234,7 @@ export interface get_user_connections_user_connections_UPSSettings {
   password: string;
   access_license_number: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -2310,7 +2250,7 @@ export interface get_user_connections_user_connections_UPSFreightSettings {
   password: string;
   access_license_number: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -2409,7 +2349,7 @@ export interface get_user_connections_with_generics_user_connections_AramexSetti
   account_pin: string;
   account_entity: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2462,7 +2402,7 @@ export interface get_user_connections_with_generics_user_connections_ChronopostS
   active: boolean;         // Disable/Hide carrier from clients
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2476,7 +2416,7 @@ export interface get_user_connections_with_generics_user_connections_DHLExpressS
   site_id: string;
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2608,7 +2548,7 @@ export interface get_user_connections_with_generics_user_connections_FedexSettin
   password: string;
   meter_number: string;
   user_key: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -2664,7 +2604,7 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
   account_number: string;
   test_mode: boolean;           // Toggle carrier connection mode
   active: boolean;              // Disable/Hide carrier from clients
-  account_country_code: string;
+  account_country_code: string | null;
   services: get_user_connections_with_generics_user_connections_GenericSettings_services[] | null;
   label_template: get_user_connections_with_generics_user_connections_GenericSettings_label_template | null;
   metadata: any | null;
@@ -2732,7 +2672,7 @@ export interface get_user_connections_with_generics_user_connections_TNTSettings
   username: string;
   password: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
 
@@ -2747,7 +2687,7 @@ export interface get_user_connections_with_generics_user_connections_UPSSettings
   password: string;
   access_license_number: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -2763,7 +2703,7 @@ export interface get_user_connections_with_generics_user_connections_UPSFreightS
   password: string;
   access_license_number: string;
   account_number: string;
-  account_country_code: string;
+  account_country_code: string | null;
   metadata: any | null;
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
 }
@@ -3209,8 +3149,8 @@ export interface get_order_order_line_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -3272,8 +3212,8 @@ export interface get_order_order_shipments_parcels_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -3310,8 +3250,8 @@ export interface get_order_order_shipments_customs_commodities {
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -3522,8 +3462,8 @@ export interface get_orders_orders_edges_node_line_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -3585,8 +3525,8 @@ export interface get_orders_orders_edges_node_shipments_parcels_items {
   hs_code: string | null;
   value_amount: number | null;
   weight_unit: WeightUnitEnum | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -3623,8 +3563,8 @@ export interface get_orders_orders_edges_node_shipments_customs_commodities {
   sku: string | null;
   hs_code: string | null;
   value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
+  value_currency: string | null;
+  origin_country: string | null;
   metadata: any | null;
   parent_id: string | null;
 }
@@ -4974,7 +4914,7 @@ export interface CreateAmazonMwsSettings {
 // null
 export interface CreateAramexSettings {
   id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id: string;
   test_mode?: boolean | null;
   active?: boolean | null;
@@ -5237,7 +5177,7 @@ export interface CreateSFExpressSettings {
 // null
 export interface CreateTNTSettings {
   id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id: string;
   test_mode?: boolean | null;
   active?: boolean | null;
@@ -5374,7 +5314,7 @@ export interface UpdateAmazonMwsSettings {
 // null
 export interface UpdateAramexSettings {
   id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id?: string | null;
   test_mode?: boolean | null;
   active?: boolean | null;
@@ -5639,7 +5579,7 @@ export interface UpdateSFExpressSettings {
 // null
 export interface UpdateTNTSettings {
   id?: string | null;
-  account_country_code: string;
+  account_country_code?: string | null;
   carrier_id?: string | null;
   test_mode?: boolean | null;
   active?: boolean | null;
@@ -5892,33 +5832,6 @@ export interface SystemCarrierMutationInput {
 }
 
 // null
-export interface CreateAddressTemplateInput {
-  address: CreateAddressTemplate;
-  label: string;
-  is_default?: boolean | null;
-  clientMutationId?: string | null;
-}
-
-// null
-export interface CreateAddressTemplate {
-  country_code: CountryCodeEnum;
-  postal_code?: string | null;
-  city?: string | null;
-  federal_tax_id?: string | null;
-  state_tax_id?: string | null;
-  person_name?: string | null;
-  company_name?: string | null;
-  email?: string | null;
-  phone_number?: string | null;
-  state_code?: string | null;
-  suburb?: string | null;
-  residential?: boolean | null;
-  address_line1?: string | null;
-  address_line2?: string | null;
-  validate_location?: boolean | null;
-}
-
-// null
 export interface CreateCustomsTemplateInput {
   customs: CreateCustomsTemplate;
   label: string;
@@ -5958,6 +5871,37 @@ export interface Commodity {
 }
 
 // null
+export interface UpdateCustomsTemplateInput {
+  id: string;
+  customs?: UpdateCustomsTemplate | null;
+  label?: string | null;
+  is_default?: boolean | null;
+  clientMutationId?: string | null;
+}
+
+// null
+export interface UpdateCustomsTemplate {
+  id?: string | null;
+  incoterm?: IncotermCodeEnum | null;
+  commodities?: (PartialCommodity | null)[] | null;
+  certify?: boolean | null;
+  commercial_invoice?: boolean | null;
+  content_type?: CustomsContentTypeEnum | null;
+  content_description?: string | null;
+  invoice?: string | null;
+  invoice_date?: any | null;
+  signer?: string | null;
+  duty?: PartialDuty | null;
+  options?: any | null;
+}
+
+// null
+export interface DeleteTemplateInput {
+  id: string;
+  clientMutationId?: string | null;
+}
+
+// null
 export interface CreateParcelTemplateInput {
   parcel: CreateParcelTemplate;
   label: string;
@@ -5982,60 +5926,6 @@ export interface CreateParcelTemplate {
   freight_class?: string | null;
   options?: any | null;
   items?: (Commodity | null)[] | null;
-}
-
-// null
-export interface UpdateAddressTemplateInput {
-  id: string;
-  address?: UpdateAddressTemplate | null;
-  label?: string | null;
-  is_default?: boolean | null;
-  clientMutationId?: string | null;
-}
-
-// null
-export interface UpdateAddressTemplate {
-  id?: string | null;
-  country_code?: CountryCodeEnum | null;
-  postal_code?: string | null;
-  city?: string | null;
-  federal_tax_id?: string | null;
-  state_tax_id?: string | null;
-  person_name?: string | null;
-  company_name?: string | null;
-  email?: string | null;
-  phone_number?: string | null;
-  state_code?: string | null;
-  suburb?: string | null;
-  residential?: boolean | null;
-  address_line1?: string | null;
-  address_line2?: string | null;
-  validate_location?: boolean | null;
-}
-
-// null
-export interface UpdateCustomsTemplateInput {
-  id: string;
-  customs?: UpdateCustomsTemplate | null;
-  label?: string | null;
-  is_default?: boolean | null;
-  clientMutationId?: string | null;
-}
-
-// null
-export interface UpdateCustomsTemplate {
-  id?: string | null;
-  incoterm?: IncotermCodeEnum | null;
-  commodities?: (PartialCommodity | null)[] | null;
-  certify?: boolean | null;
-  commercial_invoice?: boolean | null;
-  content_type?: CustomsContentTypeEnum | null;
-  content_description?: string | null;
-  invoice?: string | null;
-  invoice_date?: any | null;
-  signer?: string | null;
-  duty?: PartialDuty | null;
-  options?: any | null;
 }
 
 // null
@@ -6065,12 +5955,6 @@ export interface UpdateParcelTemplate {
   freight_class?: string | null;
   options?: any | null;
   items?: (PartialCommodity | null)[] | null;
-}
-
-// null
-export interface DeleteTemplateInput {
-  id: string;
-  clientMutationId?: string | null;
 }
 
 // null

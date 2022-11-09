@@ -9,8 +9,8 @@ import AddressTemplatesProvider, { AddressTemplates } from "@/context/address-te
 import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import Head from "next/head";
 import React, { useContext, useEffect } from "react";
-import AddressMutationProvider, { AddressMutationContext } from "@/context/address-template-mutation";
 import { useRouter } from "next/dist/client/router";
+import { useAddressTemplateMutation } from "@/context/address-template-mutation";
 
 export { getServerSideProps } from '@/lib/middleware';
 
@@ -21,13 +21,13 @@ export default function AddressPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { editAddress } = useContext(AddressEditContext);
-    const { deleteAddressTemplate } = useContext(AddressMutationContext);
+    const { deleteAddressTemplate } = useAddressTemplateMutation();
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(AddressTemplates);
     const [initialized, setInitialized] = React.useState(false);
 
     const update = async (_?: React.MouseEvent) => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteAddressTemplate(id);
+      await deleteAddressTemplate.mutateAsync({ id });
       update();
     };
 
@@ -133,15 +133,13 @@ export default function AddressPage(pageProps: any) {
       <GoogleGeocodingScript />
       <Head><title>Address Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <AddressTemplatesProvider>
-        <AddressMutationProvider>
-          <ConfirmModal>
-            <AddressEditModal>
+        <ConfirmModal>
+          <AddressEditModal>
 
-              <Component />
+            <Component />
 
-            </AddressEditModal>
-          </ConfirmModal>
-        </AddressMutationProvider>
+          </AddressEditModal>
+        </ConfirmModal>
       </AddressTemplatesProvider>
     </DashboardLayout>
   ), pageProps);

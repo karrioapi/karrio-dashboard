@@ -166,7 +166,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       await updateShipment(update);
     } else {
       const update = { id: shipment.id, parcels: [...shipment.parcels, data] };
-      await mutation.updateShipment(update);
+      await mutation.updateShipment(update as any);
     }
   };
   const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
@@ -183,7 +183,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       updateShipment(update);
     } else {
       const update = { id: shipment.id, parcels: [{ id: parcel_id || id, ...data }] };
-      await mutation.updateShipment(update);
+      await mutation.updateShipment(update as any);
     }
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
@@ -256,7 +256,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       await mutation.discardCustoms(customs_id as string);
     } else {
       const update = { id: shipment.id, customs: { ...data, id: customs_id || data.id } };
-      await mutation.updateShipment(update);
+      await mutation.updateShipment(update as any);
     }
   };
 
