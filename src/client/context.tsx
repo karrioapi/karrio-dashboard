@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import logger from "@/lib/logger";
 import { SessionType } from "@/lib/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ApolloLink } from "@apollo/client";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -34,11 +35,9 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   const [graphqlCli] = React.useState<apollo.ApolloClient<any> | undefined>(createGrapQLContext(sessionState));
   const [restCli] = React.useState<KarrioClient | undefined>(createRestContext(sessionState));
 
-  useEffect(() => {
-    if (!isNone(session?.accessToken)) {
-      sessionState.next(session);
-    }
-  }, [session?.accessToken, session?.testMode, session?.orgId]);
+  sessionState.subscribe(_ => logger.debug('session updated'));
+
+  useEffect(() => { sessionState.next(session) }, [session]);
 
   if (authenticated && !graphqlCli) return <></>;
 
@@ -72,19 +71,21 @@ function createGrapQLContext(session: BehaviorSubject<SessionType | null>): apol
     uri: `${KARRIO_API || ''}/graphql`,
   });
 
-  const authLink = setContext((_, { headers }) => {
-    const orgHeader = session.value?.orgId ? { 'x-org-id': session.value?.orgId } : {};
-    const testHeader = session.value?.testMode ? { 'x-test-mode': session.value?.testMode } : {};
-    const authHeader = session.value?.accessToken ? { 'authorization': `Bearer ${session.value?.accessToken}` } : {};
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    const orgHeader = session?.value?.orgId ? { 'x-org-id': session?.value?.orgId } : {};
+    const testHeader = session?.value?.testMode ? { 'x-test-mode': session?.value?.testMode } : {};
+    const authHeader = session?.value?.accessToken ? { 'authorization': `Bearer ${session?.value?.accessToken}` } : {};
 
-    return {
+    operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
         ...orgHeader,
         ...testHeader,
         ...authHeader,
       }
-    }
+    }));
+
+    return forward(operation);
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -103,7 +104,7 @@ function createGrapQLContext(session: BehaviorSubject<SessionType | null>): apol
   ];
 
   return new apollo.ApolloClient({
-    link: apollo.from([errorLink, authLink.concat(httpLink)]),
+    link: apollo.from([errorLink, authMiddleware, httpLink]),
     cache: new apollo.InMemoryCache({
       addTypename: false,
       typePolicies: {
