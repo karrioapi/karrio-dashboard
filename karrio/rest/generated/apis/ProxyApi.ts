@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.8.6`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail.  
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2022.8.7`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail.  
  *
- * The version of the OpenAPI document: 2022.8.6
+ * The version of the OpenAPI document: 2022.8.7
  * Contact: 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -14,44 +14,46 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  ErrorMessages,
+  ErrorResponse,
+  OperationResponse,
+  PickupCancelRequest,
+  PickupRequest,
+  PickupResponse,
+  PickupUpdateRequest,
+  RateRequest,
+  RateResponse,
+  ShipmentCancelRequest,
+  ShippingRequest,
+  ShippingResponse,
+  TrackingResponse,
+} from '../models';
 import {
-    ErrorMessages,
     ErrorMessagesFromJSON,
     ErrorMessagesToJSON,
-    ErrorResponse,
     ErrorResponseFromJSON,
     ErrorResponseToJSON,
-    OperationResponse,
     OperationResponseFromJSON,
     OperationResponseToJSON,
-    PickupCancelRequest,
     PickupCancelRequestFromJSON,
     PickupCancelRequestToJSON,
-    PickupRequest,
     PickupRequestFromJSON,
     PickupRequestToJSON,
-    PickupResponse,
     PickupResponseFromJSON,
     PickupResponseToJSON,
-    PickupUpdateRequest,
     PickupUpdateRequestFromJSON,
     PickupUpdateRequestToJSON,
-    RateRequest,
     RateRequestFromJSON,
     RateRequestToJSON,
-    RateResponse,
     RateResponseFromJSON,
     RateResponseToJSON,
-    ShipmentCancelRequest,
     ShipmentCancelRequestFromJSON,
     ShipmentCancelRequestToJSON,
-    ShippingRequest,
     ShippingRequestFromJSON,
     ShippingRequestToJSON,
-    ShippingResponse,
     ShippingResponseFromJSON,
     ShippingResponseToJSON,
-    TrackingResponse,
     TrackingResponseFromJSON,
     TrackingResponseToJSON,
 } from '../models';
@@ -99,7 +101,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Once the shipping rates are retrieved, provide the required info to submit the shipment by specifying your preferred rate.
      * Buy a shipment label
      */
-    async buyLabelRaw(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<ShippingResponse>> {
+    async buyLabelRaw(requestParameters: BuyLabelRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShippingResponse>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling buyLabel.');
         }
@@ -133,7 +135,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Once the shipping rates are retrieved, provide the required info to submit the shipment by specifying your preferred rate.
      * Buy a shipment label
      */
-    async buyLabel(requestParameters: BuyLabelRequest, initOverrides?: RequestInit): Promise<ShippingResponse> {
+    async buyLabel(requestParameters: BuyLabelRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShippingResponse> {
         const response = await this.buyLabelRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -142,7 +144,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Cancel a pickup previously scheduled
      * Cancel a pickup
      */
-    async cancelPickupRaw(requestParameters: CancelPickupRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<OperationResponse>> {
+    async cancelPickupRaw(requestParameters: CancelPickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OperationResponse>> {
         if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
             throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling cancelPickup.');
         }
@@ -180,7 +182,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Cancel a pickup previously scheduled
      * Cancel a pickup
      */
-    async cancelPickup(requestParameters: CancelPickupRequest, initOverrides?: RequestInit): Promise<OperationResponse> {
+    async cancelPickup(requestParameters: CancelPickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OperationResponse> {
         const response = await this.cancelPickupRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -189,7 +191,7 @@ export class ProxyApi extends runtime.BaseAPI {
      *  The Shipping process begins by fetching rates for your shipment. Use this service to fetch a shipping rates available. 
      * Fetch shipment rates
      */
-    async fetchRatesRaw(requestParameters: FetchRatesRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<RateResponse>> {
+    async fetchRatesRaw(requestParameters: FetchRatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RateResponse>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling fetchRates.');
         }
@@ -223,7 +225,7 @@ export class ProxyApi extends runtime.BaseAPI {
      *  The Shipping process begins by fetching rates for your shipment. Use this service to fetch a shipping rates available. 
      * Fetch shipment rates
      */
-    async fetchRates(requestParameters: FetchRatesRequest, initOverrides?: RequestInit): Promise<RateResponse> {
+    async fetchRates(requestParameters: FetchRatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RateResponse> {
         const response = await this.fetchRatesRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -232,7 +234,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Schedule one or many parcels pickup
      * Schedule a pickup
      */
-    async schedulePickupRaw(requestParameters: SchedulePickupRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PickupResponse>> {
+    async schedulePickupRaw(requestParameters: SchedulePickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PickupResponse>> {
         if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
             throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling schedulePickup.');
         }
@@ -270,7 +272,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Schedule one or many parcels pickup
      * Schedule a pickup
      */
-    async schedulePickup(requestParameters: SchedulePickupRequest, initOverrides?: RequestInit): Promise<PickupResponse> {
+    async schedulePickup(requestParameters: SchedulePickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PickupResponse> {
         const response = await this.schedulePickupRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -279,7 +281,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * You can track a shipment by specifying the carrier and the shipment tracking number.
      * Track a shipment
      */
-    async trackShipmentRaw(requestParameters: TrackShipmentRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TrackingResponse>> {
+    async trackShipmentRaw(requestParameters: TrackShipmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TrackingResponse>> {
         if (requestParameters.trackingNumber === null || requestParameters.trackingNumber === undefined) {
             throw new runtime.RequiredError('trackingNumber','Required parameter requestParameters.trackingNumber was null or undefined when calling trackShipment.');
         }
@@ -318,7 +320,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * You can track a shipment by specifying the carrier and the shipment tracking number.
      * Track a shipment
      */
-    async trackShipment(requestParameters: TrackShipmentRequest, initOverrides?: RequestInit): Promise<TrackingResponse> {
+    async trackShipment(requestParameters: TrackShipmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TrackingResponse> {
         const response = await this.trackShipmentRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -327,7 +329,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Modify a scheduled pickup
      * Update a pickup
      */
-    async updatePickupRaw(requestParameters: UpdatePickupRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PickupResponse>> {
+    async updatePickupRaw(requestParameters: UpdatePickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PickupResponse>> {
         if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
             throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling updatePickup.');
         }
@@ -365,7 +367,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Modify a scheduled pickup
      * Update a pickup
      */
-    async updatePickup(requestParameters: UpdatePickupRequest, initOverrides?: RequestInit): Promise<PickupResponse> {
+    async updatePickup(requestParameters: UpdatePickupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PickupResponse> {
         const response = await this.updatePickupRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -374,7 +376,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Cancel a shipment and the label previously created
      * Void a shipment label
      */
-    async voidLabelRaw(requestParameters: VoidLabelRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<OperationResponse>> {
+    async voidLabelRaw(requestParameters: VoidLabelRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OperationResponse>> {
         if (requestParameters.carrierName === null || requestParameters.carrierName === undefined) {
             throw new runtime.RequiredError('carrierName','Required parameter requestParameters.carrierName was null or undefined when calling voidLabel.');
         }
@@ -412,7 +414,7 @@ export class ProxyApi extends runtime.BaseAPI {
      * Cancel a shipment and the label previously created
      * Void a shipment label
      */
-    async voidLabel(requestParameters: VoidLabelRequest, initOverrides?: RequestInit): Promise<OperationResponse> {
+    async voidLabel(requestParameters: VoidLabelRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OperationResponse> {
         const response = await this.voidLabelRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -420,164 +422,164 @@ export class ProxyApi extends runtime.BaseAPI {
 }
 
 /**
-    * @export
-    * @enum {string}
-    */
-export enum CancelPickupCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
+ * @export
+ */
+export const CancelPickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type CancelPickupCarrierNameEnum = typeof CancelPickupCarrierNameEnum[keyof typeof CancelPickupCarrierNameEnum];
 /**
-    * @export
-    * @enum {string}
-    */
-export enum SchedulePickupCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
+ * @export
+ */
+export const SchedulePickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type SchedulePickupCarrierNameEnum = typeof SchedulePickupCarrierNameEnum[keyof typeof SchedulePickupCarrierNameEnum];
 /**
-    * @export
-    * @enum {string}
-    */
-export enum TrackShipmentCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Fedex = 'fedex',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
+ * @export
+ */
+export const TrackShipmentCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Fedex: 'fedex',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type TrackShipmentCarrierNameEnum = typeof TrackShipmentCarrierNameEnum[keyof typeof TrackShipmentCarrierNameEnum];
 /**
-    * @export
-    * @enum {string}
-    */
-export enum UpdatePickupCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
+ * @export
+ */
+export const UpdatePickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type UpdatePickupCarrierNameEnum = typeof UpdatePickupCarrierNameEnum[keyof typeof UpdatePickupCarrierNameEnum];
 /**
-    * @export
-    * @enum {string}
-    */
-export enum VoidLabelCarrierNameEnum {
-    AmazonMws = 'amazon_mws',
-    Aramex = 'aramex',
-    Australiapost = 'australiapost',
-    Canadapost = 'canadapost',
-    Canpar = 'canpar',
-    Chronopost = 'chronopost',
-    DhlExpress = 'dhl_express',
-    DhlPoland = 'dhl_poland',
-    DhlUniversal = 'dhl_universal',
-    Dicom = 'dicom',
-    Dpdhl = 'dpdhl',
-    Easypost = 'easypost',
-    Eshipper = 'eshipper',
-    Fedex = 'fedex',
-    Freightcom = 'freightcom',
-    Generic = 'generic',
-    Purolator = 'purolator',
-    Royalmail = 'royalmail',
-    Sendle = 'sendle',
-    SfExpress = 'sf_express',
-    Tnt = 'tnt',
-    Ups = 'ups',
-    UpsFreight = 'ups_freight',
-    Usps = 'usps',
-    UspsInternational = 'usps_international',
-    Yanwen = 'yanwen',
-    Yunexpress = 'yunexpress'
-}
+ * @export
+ */
+export const VoidLabelCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type VoidLabelCarrierNameEnum = typeof VoidLabelCarrierNameEnum[keyof typeof VoidLabelCarrierNameEnum];
