@@ -1,17 +1,17 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
-import { Loading } from "@/components/loader";
 import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
-import CustomsMutationProvider, { CustomsMutationContext } from "@/context/customs-template-mutation";
+import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
+import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
+import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import { isNone, isNoneOrEmpty } from "@/lib/helper";
+import { useRouter } from "next/dist/client/router";
+import { Loading } from "@/components/loader";
+import { useContext, useEffect } from "react";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
-import { useContext, useEffect } from "react";
-import { useRouter } from "next/dist/client/router";
 import React from "react";
+import { useCustomsTemplateMutation } from "@/context/data/customs";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -22,13 +22,13 @@ export default function CustomsInfoPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
-    const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
+    const mutation = useCustomsTemplateMutation();
     const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(CustomInfoTemplates);
     const [initialized, setInitialized] = React.useState(false);
 
     const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteCustomsTemplate(id);
+      await mutation.deleteCustomsTemplate.mutateAsync({ id });
       update();
     };
 
@@ -135,15 +135,13 @@ export default function CustomsInfoPage(pageProps: any) {
     <DashboardLayout>
       <Head><title>Customs Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <CustomInfoTemplatesProvider>
-        <CustomsMutationProvider>
-          <ConfirmModal>
-            <CustomsInfoEditModal>
+        <ConfirmModal>
+          <CustomsInfoEditModal>
 
-              <Component />
+            <Component />
 
-            </CustomsInfoEditModal>
-          </ConfirmModal>
-        </CustomsMutationProvider>
+          </CustomsInfoEditModal>
+        </ConfirmModal>
       </CustomInfoTemplatesProvider>
     </DashboardLayout>
   ), pageProps);

@@ -1,13 +1,13 @@
+import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
+import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
+import { useCustomsTemplateMutation } from '@/context/data/customs';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
 import React, { useContext, useState } from 'react';
 import { isNone, useLocation } from '@/lib/helper';
-import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
-import InputField from '@/components/generic/input-field';
-import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
-import CheckBoxField from '@/components/generic/checkbox-field';
-import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { CustomsMutationContext } from '@/context/customs-template-mutation';
-import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',
@@ -32,7 +32,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { createCustomsTemplate, updateCustomsTemplate } = useContext(CustomsMutationContext);
+  const mutation = useCustomsTemplateMutation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`customs-info-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
@@ -73,11 +73,11 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
     try {
       setLoading(true);
       if (isNew) {
-        await createCustomsTemplate(payload as CreateCustomsTemplateInput);
+        await mutation.createCustomsTemplate.mutateAsync(payload as CreateCustomsTemplateInput);
         notify({ type: NotificationType.success, message: 'Customs info successfully added!' });
       }
       else {
-        await updateCustomsTemplate(payload as UpdateCustomsTemplateInput);
+        await mutation.updateCustomsTemplate.mutateAsync(payload as UpdateCustomsTemplateInput);
         notify({ type: NotificationType.success, message: 'Customs info successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 2000);

@@ -1,7 +1,9 @@
-import { CreateCarrierConnectionMutationInput, CREATE_CARRIER_CONNECTION, DELETE_CARRIER_CONNECTION, get_user_connections, GET_USER_CONNECTIONS, UpdateCarrierConnectionMutationInput, UPDATE_CARRIER_CONNECTION } from "@karrio/graphql";
+import { CreateCarrierConnectionMutationInput, CREATE_CARRIER_CONNECTION, DELETE_CARRIER_CONNECTION, get_user_connections, GET_USER_CONNECTIONS, get_user_connections_user_connections, UpdateCarrierConnectionMutationInput, UPDATE_CARRIER_CONNECTION } from "@karrio/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { gqlstr, onError, request, useSessionHeader } from "@/lib/helper";
 
+
+export type CarrierConnectionType = get_user_connections_user_connections;
 
 export function useCarrierConnections() {
   const headers = useSessionHeader();

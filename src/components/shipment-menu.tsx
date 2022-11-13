@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext } from 'react';
 import { DocumentTemplateType, ShipmentType } from '@/lib/types';
 import { ShipmentsContext } from '@/context/shipments-provider';
 import { isNone } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
+import { AppMode } from '@/context/data/mode-context';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentMutationContext } from '@/context/shipment-mutation';
 import { ShipmentStatusEnum } from 'karrio/graphql';

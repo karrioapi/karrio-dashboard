@@ -27,7 +27,7 @@ import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-edi
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import MessagesDescription from '@/components/descriptions/messages-description';
-import { useAppMode } from '@/context/app-mode-provider';
+import { useAppMode } from '@/context/data/mode-context';
 import { useNotifier } from '@/components/notifier';
 import { bundleContexts } from '@/context/utils';
 import CommodityDescription from '@/components/descriptions/commodity-description';

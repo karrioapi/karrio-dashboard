@@ -4,7 +4,7 @@ import UserProvider from '@/context/user-provider';
 import OrganizationsProvider from '@/context/organizations-provider';
 import APIReferenceProvider from '@/context/references-provider';
 import { ClientsProvider } from '@/client/context';
-import AppModeProvider from '@/context/app-mode-provider';
+import AppModeProvider from '@/context/data/mode-context';
 import LoadingProvider from '@/components/loader';
 import TokenProvider from '@/context/token-provider';
 import Notifier from '@/components/notifier';
