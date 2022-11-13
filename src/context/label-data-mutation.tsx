@@ -2,7 +2,7 @@ import React from 'react';
 import { Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from '@/lib/types';
 import { useShipmentMutation } from '@/context/shipment-mutation';
 import { useLabelData } from '@/context/label-data-provider';
-import { useAppMode } from '@/context/app-mode-provider';
+import { useAppMode } from '@/context/data/mode-context';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import { errorToMessages, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';

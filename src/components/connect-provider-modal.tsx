@@ -1,33 +1,32 @@
-import React, { useContext, useState } from 'react';
-import InputField from '@/components/generic/input-field';
-import SelectField from '@/components/generic/select-field';
+import { deepEqual, isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/data/user-connection';
 import { Collection, NoneEnum, NotificationType, References, ServiceLevelType } from '@/lib/types';
-import { APIReference } from '@/context/references-provider';
-import { ConnectionMutationContext } from '@/context/connection-mutation';
-import { UserConnectionType } from '@/context/user-connections-provider';
-import Notifier, { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
-import { isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
-import CountryInput from '@/components/generic/country-input';
-import CarrierServiceEditor from '@/components/carrier-services-editor';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
+import CarrierServiceEditor from '@/components/carrier-services-editor';
+import CountryInput from '@/components/generic/country-input';
+import { APIReference } from '@/context/references-provider';
+import SelectField from '@/components/generic/select-field';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
+import { AppMode } from '@/context/data/mode-context';
 import { MetadataObjectType } from 'karrio/graphql';
+import React, { useContext, useState } from 'react';
 import { CarrierNameEnum } from '@karrio/rest';
+import { Loading } from '@/components/loader';
 
 type CarrierNameType = CarrierNameEnum | NoneEnum;
 type OperationType = {
-  connection?: UserConnectionType;
+  connection?: CarrierConnectionType;
   onConfirm?: () => Promise<any>;
 };
 type ConnectProviderModalContextType = {
-  editConnection: (operation: OperationType) => void,
+  editConnection: (operation?: OperationType) => void,
 };
 
 export const ConnectProviderModalContext = React.createContext<ConnectProviderModalContextType>({} as ConnectProviderModalContextType);
 
 interface ConnectProviderModalComponent {
-  connection?: UserConnectionType;
+  connection?: CarrierConnectionType;
 }
 
 function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
@@ -46,11 +45,11 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
   const { carriers, service_levels } = useContext(APIReference) as References & { service_levels: Record<string, ServiceLevelType[]> };
   const { notify } = useContext(Notify);
+  const mutation = useCarrierConnectionMutation();
   const { loading, setLoading } = useContext(Loading);
   const { testMode } = useContext(AppMode);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { updateConnection, createConnection } = useContext(ConnectionMutationContext);
-  const DEFAULT_STATE = (): Partial<UserConnectionType> => ({ carrier_name: NoneEnum.none, test_mode: testMode });
+  const DEFAULT_STATE = (): Partial<CarrierConnectionType> => ({ carrier_name: NoneEnum.none, test_mode: testMode });
   const [key, setKey] = useState<string>(`connection-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [payload, dispatch] = useReducer(reducer, DEFAULT_STATE());
@@ -60,16 +59,12 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
 
-  const editConnection = (operation: OperationType): void => {
+  const editConnection = (operation: OperationType = {}): void => {
     const connection = operation.connection || DEFAULT_STATE();
     const connection_carrier: CarrierNameType = (
       connection.carrier_name === NoneEnum.none || Object.values(CarrierNameEnum).includes(connection.carrier_name as any)
         ? connection.carrier_name as CarrierNameEnum
-        : CarrierNameEnum.Generic
     );
-
-    setIsActive(true);
-    setIsDisabled(true);
     setCarrierName(connection_carrier)
     setIsNew(isNone(operation.connection));
     setOperation(operation);
@@ -106,12 +101,12 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     evt.preventDefault();
     setLoading(true);
     try {
-      const { carrier_name: _, __typename, id, capabilities, display_name, ...content } = payload;
+      const { carrier_name: _, __typename, capabilities, display_name, ...content } = payload;
       const data = { [carrier_name]: carrier_name.includes('generic') ? { ...content, display_name } : content };
       if (isNew) {
-        await createConnection(data);
+        await mutation.createCarrierConnection.mutateAsync(data);
       } else {
-        await updateConnection({ id, ...data } as any);
+        await mutation.updateCarrierConnection.mutateAsync(data);
         dispatch({ name: "partial", value: payload });
       }
       notify({

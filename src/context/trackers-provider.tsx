@@ -3,7 +3,7 @@ import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_trackers, GET_TRACKERS, get_trackers_trackers_edges, get_trackersVariables } from 'karrio/graphql';
 import { TrackerType } from '@/lib/types';
 import { isNoneOrEmpty, useLocation } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
+import { AppMode } from '@/context/data/mode-context';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };

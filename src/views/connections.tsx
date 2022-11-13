@@ -1,19 +1,17 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import ConfirmModal from "@/components/confirm-modal";
 import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/connect-provider-modal";
-import DashboardLayout from "@/layouts/dashboard-layout";
 import Tabs, { TabStateContext, TabStateProvider } from "@/components/generic/tabs";
-import { Loading } from "@/components/loader";
-import SystemConnectionsProvider, { SystemConnections } from "@/context/system-connections-provider";
-import UserConnectionsProvider, { UserConnections } from "@/context/user-connections-provider";
-import Head from "next/head";
-import { useContext, useEffect } from "react";
+import LabelTemplateEditModalProvider from "@/components/label-template-edit-modal";
+import { useSystemConnections } from "@/context/data/system-connection";
+import { useCarrierConnections } from "@/context/data/user-connection";
 import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
-import ConnectionMutationProvider from "@/context/connection-mutation";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import ConfirmModal from "@/components/confirm-modal";
 import { useRouter } from "next/dist/client/router";
-import SystemConnectionsMutationProvider from "@/context/system-connection-mutation";
-import LabelTemplateEditModalProvider from "@/components/label-template-edit-modal";
+import { Loading } from "@/components/loader";
+import { useContext, useEffect } from "react";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -27,21 +25,13 @@ export default function ConnectionsPage(pageProps: any) {
     const { setLoading } = useContext(Loading);
     const { selectTab } = useContext(TabStateContext);
     const { editConnection } = useContext(ConnectProviderModalContext);
-    const { refetch, ...user_connections } = useContext(UserConnections);
-    const system_connections = useContext(SystemConnections);
+    const { query: carrierQuery } = useCarrierConnections();
+    const { query: systemQuery } = useSystemConnections();
 
-    const onChange = async () => refetch && await refetch();
-
-    useEffect(() => {
-      (!user_connections.loading && user_connections.load) && user_connections.load();
-      (!system_connections.loading && system_connections.load) && system_connections.load();
-    }, []);
-    useEffect(() => { setLoading(user_connections?.loading || system_connections?.loading); });
+    useEffect(() => { setLoading(carrierQuery.isFetching || systemQuery.isFetching); });
     useEffect(() => {
       if (modal === 'new') {
-        editConnection({
-          onConfirm: async () => { await onChange(); selectTab(tabs[0]); }
-        });
+        editConnection({ onConfirm: async () => { selectTab(tabs[0]); } });
       }
     }, [modal]);
 
@@ -49,7 +39,7 @@ export default function ConnectionsPage(pageProps: any) {
       <>
         <header className="px-0 py-6">
           <span className="title is-4">Carriers</span>
-          <button className="button is-primary is-small is-pulled-right" onClick={() => editConnection({ onConfirm: onChange })}>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editConnection()}>
             <span>Register a carrier</span>
           </button>
         </header>
@@ -74,23 +64,15 @@ export default function ConnectionsPage(pageProps: any) {
     <DashboardLayout showModeIndicator={true}>
       <Head><title>Carrier Connections - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ConfirmModal>
-        <ConnectionMutationProvider>
-          <SystemConnectionsMutationProvider>
-            <ConnectProviderModal>
-              <SystemConnectionsProvider>
-                <UserConnectionsProvider>
-                  <LabelTemplateEditModalProvider>
+        <ConnectProviderModal>
+          <LabelTemplateEditModalProvider>
 
-                    <TabStateProvider tabs={tabs} setSelectedToURL={true}>
-                      <Component />
-                    </TabStateProvider>
+            <TabStateProvider tabs={tabs} setSelectedToURL={true}>
+              <Component />
+            </TabStateProvider>
 
-                  </LabelTemplateEditModalProvider>
-                </UserConnectionsProvider>
-              </SystemConnectionsProvider>
-            </ConnectProviderModal>
-          </SystemConnectionsMutationProvider>
-        </ConnectionMutationProvider>
+          </LabelTemplateEditModalProvider>
+        </ConnectProviderModal>
       </ConfirmModal>
     </DashboardLayout>
   ), pageProps);

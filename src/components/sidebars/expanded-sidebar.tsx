@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import Image from 'next/image';
-import { AppMode } from '@/context/app-mode-provider';
+import { AppMode } from '@/context/data/mode-context';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
 import AppLink from '@/components/app-link';
 import { APIReference } from '@/context/references-provider';

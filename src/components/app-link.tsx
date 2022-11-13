@@ -1,7 +1,7 @@
-import { AppMode } from '@/context/app-mode-provider';
-import { p } from '@/lib/helper';
+import { AppMode } from '@/context/data/mode-context';
 import Link, { LinkProps } from 'next/link';
 import React, { useContext } from 'react';
+import { p } from '@/lib/helper';
 
 interface AppLinkProps extends LinkProps {
   href: string;

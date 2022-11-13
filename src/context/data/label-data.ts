@@ -6,7 +6,7 @@ import moment from "moment";
 import { useLoader } from "@/components/loader";
 import { useQuery } from "@tanstack/react-query";
 import { useNotifier } from "@/components/notifier";
-import { useAppMode } from "@/context/app-mode-provider";
+import { useAppMode } from "@/context/data/mode-context";
 import { useShipmentMutation } from "@/context/data/shipment";
 import { DEFAULT_CUSTOMS_CONTENT } from "@/components/form-parts/customs-info-form";
 

@@ -3,7 +3,7 @@ import { WebhookList } from 'karrio/rest/index';
 import { RestContext } from '@/client/context';
 import { RequestError } from '@/lib/types';
 import { getCursorPagination } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
+import { AppMode } from '@/context/data/mode-context';
 
 const DEFAULT_PAGINATED_RESULT = { results: [] };
 

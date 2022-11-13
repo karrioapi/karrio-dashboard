@@ -28,7 +28,7 @@ import CustomsInfoDescription from '@/components/descriptions/customs-info-descr
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import MessagesDescription from '@/components/descriptions/messages-description';
 import { useNotifier } from '@/components/notifier';
-import { useAppMode } from '@/context/app-mode-provider';
+import { useAppMode } from '@/context/data/mode-context';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
 import { bundleContexts } from '@/context/utils';

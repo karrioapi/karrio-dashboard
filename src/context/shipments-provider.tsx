@@ -3,7 +3,7 @@ import { LazyQueryResult, useLazyQuery } from '@apollo/client';
 import { get_shipments, GET_SHIPMENTS, get_shipments_shipments_edges, get_shipmentsVariables } from 'karrio/graphql';
 import { ShipmentType } from '@/lib/types';
 import { isNoneOrEmpty, useLocation } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
+import { AppMode } from '@/context/data/mode-context';
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
