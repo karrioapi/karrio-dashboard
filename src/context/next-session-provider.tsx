@@ -1,7 +1,5 @@
-import { restClient } from '@/client/context';
-import { isNoneOrEmpty } from '@/lib/helper';
-import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import React from 'react';
 
 export const NextSession = React.createContext<Session | null | undefined>(undefined);
@@ -13,13 +11,6 @@ const NextSessionProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     // set session state if session is not null, has no error and has a new access token
     if (session?.error !== sessionState?.error || session?.accessToken !== sessionState?.accessToken || session === null) {
-      if (
-        session?.accessToken &&
-        !isNoneOrEmpty(restClient.value.config.apiKey) &&
-        !(restClient.value.config.apiKey as string).includes(session?.accessToken as string)
-      ) {
-        window.location.reload();
-      }
       setSessionState(session as Session);
     }
   }, [session, sessionState]);

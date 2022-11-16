@@ -267,8 +267,13 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       loader.setLoading(true);
       const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
-    } catch (message: any) {
-      updateShipment({ rates: [], messages: [message] } as Partial<ShipmentType>);
+    } catch (error: any) {
+      const messages = (
+        error.data?.errors ||
+        error.data?.messages ||
+        [error.data?.message || error.message]
+      );
+      updateShipment({ rates: [], messages } as Partial<ShipmentType>);
     }
     loader.setLoading(false);
   };

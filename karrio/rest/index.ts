@@ -1,17 +1,19 @@
-import { AddressesApi } from './generated/apis/AddressesApi';
-import { APIApi } from './generated/apis/APIApi';
-import { CarriersApi } from './generated/apis/CarriersApi';
-import { CustomsApi } from './generated/apis/CustomsApi';
-import { ParcelsApi } from './generated/apis/ParcelsApi';
-import { PickupsApi } from './generated/apis/PickupsApi';
-import { ProxyApi } from './generated/apis/ProxyApi';
-import { ShipmentsApi } from './generated/apis/ShipmentsApi';
-import { TrackersApi } from './generated/apis/TrackersApi';
-import { WebhooksApi } from './generated/apis/WebhooksApi';
-import { Configuration, ConfigurationParameters } from './generated/runtime';
+export * from './generated/api';
+import axios, { AxiosInstance, AxiosRequestHeaders } from 'axios';
+import { Configuration, ConfigurationParameters } from './generated/configuration';
+import {
+  AddressesApi,
+  APIApi,
+  CarriersApi,
+  CustomsApi,
+  ParcelsApi,
+  PickupsApi,
+  ProxyApi,
+  ShipmentsApi,
+  TrackersApi,
+  WebhooksApi,
+} from './generated/api';
 
-export * from './generated/runtime';
-export * from './generated/models';
 
 export interface KarrioClientInterface {
   API: APIApi;
@@ -39,20 +41,23 @@ export class KarrioClient implements KarrioClientInterface {
   trackers: TrackersApi;
   webhooks: WebhooksApi;
   config: ConfigurationParameters;
+  axios: AxiosInstance;
 
-  constructor(clientConfig: ConfigurationParameters) {
+  constructor({ headers, ...clientConfig }: ConfigurationParameters & { headers?: AxiosRequestHeaders }) {
     const config = new Configuration(clientConfig);
+    const axiosInstance = axios.create({ baseURL: config.basePath, headers });
 
+    this.axios = axiosInstance;
     this.config = clientConfig;
-    this.API = new APIApi(config);
-    this.addresses = new AddressesApi(config);
-    this.carriers = new CarriersApi(config);
-    this.customs = new CustomsApi(config);
-    this.parcels = new ParcelsApi(config);
-    this.pickups = new PickupsApi(config);
-    this.proxy = new ProxyApi(config);
-    this.shipments = new ShipmentsApi(config);
-    this.trackers = new TrackersApi(config);
-    this.webhooks = new WebhooksApi(config);
+    this.API = new APIApi(config, config.basePath, axiosInstance);
+    this.addresses = new AddressesApi(config, config.basePath, axiosInstance);
+    this.carriers = new CarriersApi(config, config.basePath, axiosInstance);
+    this.customs = new CustomsApi(config, config.basePath, axiosInstance);
+    this.parcels = new ParcelsApi(config, config.basePath, axiosInstance);
+    this.pickups = new PickupsApi(config, config.basePath, axiosInstance);
+    this.proxy = new ProxyApi(config, config.basePath, axiosInstance);
+    this.shipments = new ShipmentsApi(config, config.basePath, axiosInstance);
+    this.trackers = new TrackersApi(config, config.basePath, axiosInstance);
+    this.webhooks = new WebhooksApi(config, config.basePath, axiosInstance);
   }
 }

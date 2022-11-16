@@ -12,86 +12,60 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { Customs } from './Customs';
-import {
-    CustomsFromJSON,
-    CustomsFromJSONTyped,
-    CustomsToJSON,
-} from './Customs';
+
+import { Configuration } from "./configuration";
+// Some imports not used depending on template conditions
+// @ts-ignore
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+
+export const BASE_PATH = "https://app.karrio.io".replace(/\/+$/, "");
 
 /**
- * 
+ *
  * @export
- * @interface CustomsList
  */
-export interface CustomsList {
-    /**
-     * 
-     * @type {number}
-     * @memberof CustomsList
-     */
-    count?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof CustomsList
-     */
-    next?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof CustomsList
-     */
-    previous?: string | null;
-    /**
-     * 
-     * @type {Array<Customs>}
-     * @memberof CustomsList
-     */
-    results: Array<Customs>;
+export const COLLECTION_FORMATS = {
+    csv: ",",
+    ssv: " ",
+    tsv: "\t",
+    pipes: "|",
+};
+
+/**
+ *
+ * @export
+ * @interface RequestArgs
+ */
+export interface RequestArgs {
+    url: string;
+    options: AxiosRequestConfig;
 }
 
 /**
- * Check if a given object implements the CustomsList interface.
+ *
+ * @export
+ * @class BaseAPI
  */
-export function instanceOfCustomsList(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "results" in value;
+export class BaseAPI {
+    protected configuration: Configuration | undefined;
 
-    return isInstance;
-}
-
-export function CustomsListFromJSON(json: any): CustomsList {
-    return CustomsListFromJSONTyped(json, false);
-}
-
-export function CustomsListFromJSONTyped(json: any, ignoreDiscriminator: boolean): CustomsList {
-    if ((json === undefined) || (json === null)) {
-        return json;
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected axios: AxiosInstance = globalAxios) {
+        if (configuration) {
+            this.configuration = configuration;
+            this.basePath = configuration.basePath || this.basePath;
+        }
     }
-    return {
-        
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(CustomsFromJSON)),
-    };
-}
+};
 
-export function CustomsListToJSON(value?: CustomsList | null): any {
-    if (value === undefined) {
-        return undefined;
+/**
+ *
+ * @export
+ * @class RequiredError
+ * @extends {Error}
+ */
+export class RequiredError extends Error {
+    name: "RequiredError" = "RequiredError";
+    constructor(public field: string, msg?: string) {
+        super(msg);
     }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(CustomsToJSON)),
-    };
 }
-

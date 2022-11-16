@@ -1,6 +1,6 @@
-import React from 'react';
 import { MessageType, RequestError } from '@/lib/types';
 import { formatMessage } from '@/components/notifier';
+import React from 'react';
 
 interface MessagesDescriptionComponent {
   messages?: RequestError | MessageType[];

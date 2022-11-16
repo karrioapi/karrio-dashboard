@@ -65,6 +65,7 @@ export function formatMessage(msg: Notification['message']) {
 
     return (msg as any).message;
   } catch (e) {
+    console.error(e);
     return 'Uh Oh! An uncaught error occured...';
   }
 };
@@ -90,22 +91,32 @@ function renderError(msg: any, _: number) {
     });
   }
 
-  else {
+  else if (typeof error?.details == 'object') {
     const render = ([field, msg]: [string, string | FieldError], index: number) => {
+      let text = formatMessageObject(msg);
       return (<React.Fragment key={index}>
-        <span className="is-size-7">{field} {(msg as any).message && `- ${(msg as any).message}`}</span>
+        <span className="is-size-7">
+          {field} {formatMessageObject(msg).length > 0 && ` - ${text}`}
+        </span>
         {!(msg as any).message && <ul className='pl-1'>
           <li className="is-size-7">
-            {Array.isArray(msg) && msg.map((m, i) => render(["", m], i))}
             {!Array.isArray(msg) && typeof msg === 'object' && !msg.message &&
               Object.entries(msg).map(render as any)}
           </li>
         </ul>}
       </React.Fragment>);
     }
-    return Object.entries(error?.details as FieldError)
-      .map(render as any);
+    return Object.entries(error?.details as FieldError).map(render as any);
   }
+
+  return formatMessageObject(error);
+}
+
+function formatMessageObject(msg: any) {
+  if (msg.message) return msg.message;
+  if (typeof msg === 'string') return msg;
+  if (Array.isArray(msg) && typeof msg[0] === 'string') return msg.join(' ');
+  if (typeof msg === 'object') return "";
 }
 
 export function useNotifier() {

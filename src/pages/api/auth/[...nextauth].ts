@@ -7,6 +7,7 @@ import logger from '@/lib/logger';
 import { authenticate, computeTestMode, getCurrentOrg, refreshToken } from '@/lib/auth';
 import { withSentry } from '@sentry/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next';
+import moment from 'moment';
 
 const { serverRuntimeConfig } = getConfig();
 const secret = serverRuntimeConfig?.JWT_SECRET;
@@ -62,7 +63,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         }
 
         // Return previous token if the access token has not expired yet
-        if (Date.now() < (token.expiration as number) * 1000) {
+        if (moment().subtract(13, 'm').toDate().getTime() < (token.expiration as number) * 1000) {
           return token;
         }
 

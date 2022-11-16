@@ -12,86 +12,90 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { Order } from './Order';
-import {
-    OrderFromJSON,
-    OrderFromJSONTyped,
-    OrderToJSON,
-} from './Order';
 
-/**
- * 
- * @export
- * @interface OrderList
- */
-export interface OrderList {
+export interface ConfigurationParameters {
+    apiKey?: string | Promise<string> | ((name: string) => string) | ((name: string) => Promise<string>);
+    username?: string;
+    password?: string;
+    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
+    basePath?: string;
+    baseOptions?: any;
+    formDataCtor?: new () => any;
+}
+
+export class Configuration {
     /**
-     * 
-     * @type {number}
-     * @memberof OrderList
+     * parameter for apiKey security
+     * @param name security name
+     * @memberof Configuration
      */
-    count?: number | null;
+    apiKey?: string | Promise<string> | ((name: string) => string) | ((name: string) => Promise<string>);
     /**
-     * 
+     * parameter for basic security
+     *
      * @type {string}
-     * @memberof OrderList
+     * @memberof Configuration
      */
-    next?: string | null;
+    username?: string;
     /**
-     * 
+     * parameter for basic security
+     *
      * @type {string}
-     * @memberof OrderList
+     * @memberof Configuration
      */
-    previous?: string | null;
+    password?: string;
     /**
-     * 
-     * @type {Array<Order>}
-     * @memberof OrderList
+     * parameter for oauth2 security
+     * @param name security name
+     * @param scopes oauth2 scope
+     * @memberof Configuration
      */
-    results: Array<Order>;
-}
+    accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
+    /**
+     * override base path
+     *
+     * @type {string}
+     * @memberof Configuration
+     */
+    basePath?: string;
+    /**
+     * base options for axios calls
+     *
+     * @type {any}
+     * @memberof Configuration
+     */
+    baseOptions?: any;
+    /**
+     * The FormData constructor that will be used to create multipart form data
+     * requests. You can inject this here so that execution environments that
+     * do not support the FormData class can still run the generated client.
+     *
+     * @type {new () => FormData}
+     */
+    formDataCtor?: new () => any;
 
-/**
- * Check if a given object implements the OrderList interface.
- */
-export function instanceOfOrderList(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "results" in value;
-
-    return isInstance;
-}
-
-export function OrderListFromJSON(json: any): OrderList {
-    return OrderListFromJSONTyped(json, false);
-}
-
-export function OrderListFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderList {
-    if ((json === undefined) || (json === null)) {
-        return json;
+    constructor(param: ConfigurationParameters = {}) {
+        this.apiKey = param.apiKey;
+        this.username = param.username;
+        this.password = param.password;
+        this.accessToken = param.accessToken;
+        this.basePath = param.basePath;
+        this.baseOptions = param.baseOptions;
+        this.formDataCtor = param.formDataCtor;
     }
-    return {
-        
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': ((json['results'] as Array<any>).map(OrderFromJSON)),
-    };
-}
 
-export function OrderListToJSON(value?: OrderList | null): any {
-    if (value === undefined) {
-        return undefined;
+    /**
+     * Check if the given MIME is a JSON MIME.
+     * JSON MIME examples:
+     *   application/json
+     *   application/json; charset=UTF8
+     *   APPLICATION/JSON
+     *   application/vnd.company+json
+     * @param mime - MIME (Multipurpose Internet Mail Extensions)
+     * @return True if the given MIME is JSON, false otherwise.
+     */
+    public isJsonMime(mime: string): boolean {
+        const jsonMime: RegExp = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$', 'i');
+        return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
     }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': ((value.results as Array<any>).map(OrderToJSON)),
-    };
 }
-

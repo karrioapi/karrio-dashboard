@@ -226,10 +226,17 @@ export async function handleFailure<T>(request: Promise<T>): Promise<T> {
   } catch (err: any) {
     if (err.message === 'Failed to fetch') {
       throw new Error('Oups! Looks like you are offline');
+    } else if (
+      ['404', '405', '500', '402'].includes(`${err.response?.status}`)
+      && typeof err.response?.data === "string"
+    ) {
+      throw err;
     } else if (err instanceof Response) {
       throw new RequestError(await err.json());
+    } else if (err.response) {
+      throw new RequestError(err.response?.data || err.response);
     }
-    throw err
+    throw err;
   }
 }
 
