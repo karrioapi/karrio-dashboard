@@ -470,3 +470,11 @@ export async function request<T, R>(args: requestArgs<T>) {
     throw new RequestError(error.response?.data || error.data || error);
   }
 }
+
+export function errorToMessages(error: ErrorType | Error | any) {
+  return (
+    error.data?.errors ||
+    error.data?.messages ||
+    [error.data?.message || error.message]
+  );
+}

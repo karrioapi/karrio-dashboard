@@ -6,7 +6,7 @@ import { useLabelData } from '@/context/label-data-provider';
 import { useAppMode } from '@/context/app-mode-provider';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { errorToMessages, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 
 type LabelMutationContext = {
@@ -268,12 +268,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
       const { rates, messages } = await mutation.fetchRates(shipment);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (error: any) {
-      const messages = (
-        error.data?.errors ||
-        error.data?.messages ||
-        [error.data?.message || error.message]
-      );
-      updateShipment({ rates: [], messages } as Partial<ShipmentType>);
+      updateShipment({ rates: [], messages: errorToMessages(error) } as Partial<ShipmentType>);
     }
     loader.setLoading(false);
   };
@@ -293,8 +288,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         message: 'Label successfully purchased!'
       });
       router.push(`${basePath}/shipments/${id}`);
-    } catch (message: any) {
-      updateShipment({ messages: [message] } as Partial<ShipmentType>);
+    } catch (error: any) {
+      updateShipment({ messages: errorToMessages(error) } as Partial<ShipmentType>);
     } finally {
       loader.setLoading(false);
     }

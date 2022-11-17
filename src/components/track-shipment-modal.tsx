@@ -9,7 +9,7 @@ import { TrackerMutationContext } from '@/context/tracker-mutation';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { AppMode } from '@/context/app-mode-provider';
-import { removeUrlParam } from '@/lib/helper';
+import { errorToMessages, removeUrlParam } from '@/lib/helper';
 
 type Connection = UserConnectionType | SystemConnectionType;
 type OperationType = {
@@ -57,8 +57,8 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
       await createTracker(trackingNumber as string, carrier?.carrier_name as string);
       notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
       close({ updated: true });
-    } catch (message: any) {
-      notify({ type: NotificationType.error, message });
+    } catch (error: any) {
+      notify({ type: NotificationType.error, message: errorToMessages(error) });
     }
     setLoading(false);
   };
