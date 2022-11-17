@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from 'karrio/graphql';
 import { OperationResponse, RateResponse, Shipment } from 'karrio/rest/index';
 import { handleFailure, handleGraphQLRequest } from '@/lib/helper';
 import { LabelContext } from '@/context/label-data-provider';
 import { RestContext } from '@/client/context';
 import { useMutation } from '@apollo/client';
-import { discard_commodity, DISCARD_COMMODITY, discard_commodityVariables, discard_customs, DISCARD_CUSTOMS, discard_customsVariables, discard_parcel, DISCARD_PARCEL, discard_parcelVariables, GET_SHIPMENT, PartialShipmentUpdateInput, partial_shipment_update, partial_shipment_updateVariables, PARTIAL_UPDATE_SHIPMENT } from 'karrio/graphql';
 import { ShipmentType } from '@/lib/types';
+import React, { useContext } from 'react';
 
 
 export type ShipmentMutator = {
@@ -30,18 +30,24 @@ const ShipmentMutationProvider: React.FC<{}> = ({ children }) => {
   const [discardParcelMutation] = useMutation<discard_parcel, discard_parcelVariables>(DISCARD_PARCEL);
 
   const fetchRates = async (shipment: ShipmentType) => handleFailure(
-    karrio!.proxy.fetchRates({ data: (shipment as any) }),
+    karrio!.proxy
+      .fetchRates({ data: (shipment as any) })
+      .then(({ data }) => data)
   );
   const buyLabel = async (shipment: ShipmentType) => handleFailure(
-    shipment.id !== undefined ?
-      karrio!.shipments.purchase({
+    shipment.id !== undefined
+      ? karrio!.shipments.purchase({
         id: shipment.id as string,
         data: { selected_rate_id: shipment.selected_rate_id as string },
-      }) :
-      karrio!.shipments.create({ data: shipment as any })
+      }).then(({ data }) => data)
+      : karrio!.shipments.create({
+        data: shipment as any
+      }).then(({ data }) => data)
   );
   const voidLabel = async (shipment: ShipmentType) => handleFailure(
-    karrio!.shipments.cancel({ id: shipment.id as string })
+    karrio!.shipments
+      .cancel({ id: shipment.id as string })
+      .then(({ data }) => data)
   );
 
   const updateShipment = (data: PartialShipmentUpdateInput) => (

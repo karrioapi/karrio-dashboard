@@ -102,7 +102,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
                       </button>
 
                       {/* Menu items */}
-                      <div className="dropdown-content">
+                      <div className="dropdown-content is-menu">
                         <a
                           className="dropdown-item"
                           onClick={() => confirm({

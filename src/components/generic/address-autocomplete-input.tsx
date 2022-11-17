@@ -92,7 +92,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
             {...Props}
           />
           <div className="dropdown-menu py-0" id={`dropdown-input-${key}`} role="menu" style={{ right: 0, left: 0 }}>
-            <div className="dropdown-content py-0">
+            <div className="dropdown-content is-menu py-0">
               <nav className="panel dropped-panel">
                 {(predictions || [])
                   .map((prediction) => (

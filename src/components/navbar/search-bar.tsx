@@ -52,7 +52,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
       </div>
 
       {/* Dropdown content */}
-      <div className="dropdown-content menu-inner p-0"
+      <div className="dropdown-content is-menu menu-inner p-0"
         style={{ maxHeight: '325px', minWidth: '20em', maxWidth: '25em' }}
         onClick={e => closeDropdown(e.target)}>
         <div className="options-items p-0">
