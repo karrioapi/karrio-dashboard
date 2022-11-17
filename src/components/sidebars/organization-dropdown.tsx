@@ -97,7 +97,7 @@ const OrganizationDropdown: React.FC = () => {
           </div>
 
           <div className="dropdown-menu" id="dropdown-menu" role="menu" style={{ width: '100%' }}>
-            <div className="dropdown-content">
+            <div className="dropdown-content is-menu">
               {/* Organization list */}
               {(organizations || []).map(org => (
                 <a

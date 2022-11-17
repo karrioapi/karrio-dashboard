@@ -391,12 +391,11 @@ td>div.dropdown.is-active .dropdown-menu {
 .dropdown-content {
   border: 1px solid #ddd;
   border-top: none;
-  max-height: 240px;
   overflow: hidden;
-}
 
-.dropdown-panel {
-  max-height: 190px;
+  &.is-menu {
+    max-height: 240px;
+  }
 }
 
 .label-container {
