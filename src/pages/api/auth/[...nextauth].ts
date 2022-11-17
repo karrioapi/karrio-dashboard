@@ -63,7 +63,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         }
 
         // Return previous token if the access token has not expired yet
-        if (moment().subtract(13, 'm').toDate().getTime() < (token.expiration as number) * 1000) {
+        if (moment().subtract(3, 'm').toDate().getTime() < (token.expiration as number) * 1000) {
           return token;
         }
 

@@ -55,7 +55,7 @@ export function formatMessage(msg: Notification['message']) {
 
     // Process Rest Request errors
     if (Array.isArray(msg) && msg.length > 0) {
-      return msg.map(renderError);
+      return renderError(msg, 0);
     }
 
     // Process API errors
@@ -104,6 +104,7 @@ function renderError(msg: any, _: number) {
               Object.entries(msg).map(render as any)}
           </li>
         </ul>}
+        <br />
       </React.Fragment>);
     }
     return Object.entries(error?.details as FieldError).map(render as any);
