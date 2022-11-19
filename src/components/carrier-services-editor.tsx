@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ServiceLevelCurrency } from 'karrio/graphql';
 import SelectField from './generic/select-field';
 import { CURRENCY_OPTIONS, ServiceLevelType } from '@/lib/types';
-import InputField from './generic/input-field';
-import { snakeCase } from '@/lib/helper';
+import { isNone, snakeCase } from '@/lib/helper';
 
 interface CarrierServiceEditorProps {
   carrierName: string;
@@ -11,18 +10,20 @@ interface CarrierServiceEditorProps {
   onChange: (services: ServiceLevelType[]) => void;
 }
 
+function computeDefaultCurrency(defaultValue: ServiceLevelType[]): ServiceLevelCurrency {
+  const svc = (defaultValue || []).find(svc => !isNone(svc.currency))
+  return (svc?.currency || ServiceLevelCurrency.USD) as ServiceLevelCurrency
+}
+
 
 const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName, defaultValue, onChange }) => {
   const [expand, setExpand] = React.useState<boolean>(false);
-  const [currency, setCurrency] = React.useState<ServiceLevelCurrency>(
-    ((defaultValue || []).length > 0 && defaultValue[0].currency as ServiceLevelCurrency) || ServiceLevelCurrency.USD
-  );
   const [services, setServices] = React.useState<ServiceLevelType[]>(defaultValue);
+  const [currency, setCurrency] = React.useState<ServiceLevelCurrency>(computeDefaultCurrency(defaultValue));
 
-  const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
   const updateService = (index: number, data: any) => {
     const newServices = [...services];
-    newServices[index] = { ...newServices[index], ...data };
+    newServices[index] = { ...newServices[index], ...data, currency };
     setServices(newServices);
     onChange(newServices);
   };
@@ -32,6 +33,8 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
     setCurrency(currency);
     onChange(newServices);
   };
+
+  useEffect(() => { setCurrency(computeDefaultCurrency(defaultValue)); }, [defaultValue]);
 
   return (
     <article className="panel is-white is-shadowless mt-5" style={{ border: "1px #ddd solid" }}>
@@ -57,16 +60,16 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
 
         {(defaultValue || []).map((service_level: ServiceLevelType, index) => (
           <div key={index} className="panel-block is-justify-content-space-between">
-            <div className="field my-1" style={{ width: '60%'}}>
+            <div className="field my-1" style={{ width: '60%' }}>
               <p className="control">
                 <input
                   type='text'
                   className="input is-small"
                   defaultValue={service_level.service_name || 'Standard Service'}
-                  onClick={onClick}
                   onChange={e => updateService(index, {
+                    currency,
                     service_name: e.target.value,
-                    service_code: snakeCase(`${carrierName} ${e.target.value}`)
+                    service_code: snakeCase(`${carrierName} ${e.target.value}`),
                   })}
                 />
               </p>
@@ -78,8 +81,7 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
                   type="number" step="any" min="0"
                   className="input is-small"
                   defaultValue={service_level.cost || 0.0}
-                  onClick={onClick}
-                  onChange={e => updateService(index, {cost: Number.parseFloat(e.target.value || "0.0")})}
+                  onChange={e => updateService(index, { cost: Number.parseFloat(e.target.value || "0.0") })}
                 />
               </p>
               <p className="control">
@@ -92,6 +94,7 @@ const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName
         <div className="is-flex is-justify-content-space-between mt-2 p-2">
           <button type="button" className="button is-small is-info is-inverted p-2"
             onClick={() => updateService(services.length, {
+              currency,
               cost: 0.0,
               service_name: `Standard Service ${services.length}`,
               service_code: snakeCase(`${carrierName} Standard Service ${services.length}`)

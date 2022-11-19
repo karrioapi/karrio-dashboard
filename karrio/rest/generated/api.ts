@@ -4676,7 +4676,7 @@ export interface Rate {
      * @type {string}
      * @memberof Rate
      */
-    'currency': string;
+    'currency'?: string;
     /**
      * The carrier\'s rate (quote) service
      * @type {string}
