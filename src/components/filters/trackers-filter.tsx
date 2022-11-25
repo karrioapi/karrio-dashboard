@@ -1,18 +1,20 @@
-import React, { useReducer, useContext, useEffect } from 'react';
-import CheckBoxField from '@/components/generic/checkbox-field';
-import { isNone } from '@/lib/helper';
-import { TrackersContext } from '@/context/trackers-provider';
 import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
+import CheckBoxField from '@/components/generic/checkbox-field';
 import { CARRIER_NAMES, TRACKER_STATUSES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
+import React, { useReducer, useEffect } from 'react';
+import { useTrackers } from '@/context/tracker';
 import Spinner from '@/components/spinner';
+import { isNone } from '@/lib/helper';
 
 
-interface TrackersFilterComponent { }
+interface TrackersFilterComponent {
+  context: ReturnType<typeof useTrackers>;
+}
 
 
-const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
-  const { variables, loading, loadMore } = useContext(TrackersContext);
+const TrackersFilter: React.FC<TrackersFilterComponent> = ({ context }) => {
+  const { query, filter: variables, setFilter } = context;
   const [filters, dispatch] = useReducer((state: any, { name, checked, value }: { name: string, checked?: boolean, value?: string | boolean | object }) => {
     switch (name) {
       case 'clear':
@@ -41,6 +43,7 @@ const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
     }
   }, variables, () => variables);
   const [isReady, setIsReady] = React.useState(true);
+
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: any, value: object }>) => {
     const target = event.target;
     const name = target.name;
@@ -55,11 +58,11 @@ const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
     dispatch({ name: 'clear' });
     window.setTimeout(() => {
       setIsReady(true);
-    }, 500);
+    }, 200);
   };
   const handleApply = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    await loadMore({ ...filters, offset: 0 });
+    setFilter({ ...filters, offset: 0 });
     closeDropdown(event.target);
   };
 
@@ -84,8 +87,8 @@ const TrackersFilter: React.FC<TrackersFilterComponent> = ({ ...props }) => {
           <button className="button is-small is-default" onClick={handleClear}>Clear</button>
           <span className="is-size-6 has-text-weight-semibold p-1">Filters</span>
           <button
-            className={"button is-small is-info" + (loading ? " is-loading" : "")}
-            disabled={loading}
+            className={"button is-small is-info" + (query.isFetching ? " is-loading" : "")}
+            disabled={query.isFetching}
             onClick={handleApply}>Done</button>
         </p>
 

@@ -1,4 +1,3 @@
-import LogProvider from '@/context/log-provider';
 import { useLocation } from '@/lib/helper';
 import { LogComponent } from '@/views/log';
 import React, { useState } from 'react';
@@ -41,9 +40,7 @@ const LogPreview: React.FC<LogPreviewComponent> = ({ children }) => {
 
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
-            <LogProvider>
-              <LogComponent logId={logId} />
-            </LogProvider>
+            <LogComponent logId={logId} />
           </section>
         </div>}
 

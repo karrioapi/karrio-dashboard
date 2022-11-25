@@ -1,17 +1,17 @@
+import { SystemConnectionType, useSystemConnections } from '@/context/system-connection';
+import { CarrierConnectionType, useCarrierConnections } from '@/context/user-connection';
 import React, { useContext, useEffect, useState } from 'react';
-import InputField from '@/components/generic/input-field';
-import { NotificationType } from '@/lib/types';
-import SelectField from '@/components/generic/select-field';
-import { APIReference } from '@/context/references-provider';
-import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
-import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
-import { TrackerMutationContext } from '@/context/tracker-mutation';
-import Notifier, { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
-import { AppMode } from '@/context/app-mode-provider';
 import { errorToMessages, removeUrlParam } from '@/lib/helper';
+import SelectField from '@/components/generic/select-field';
+import { useTrackerMutation } from '@/context/tracker';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
+import { NotificationType } from '@/lib/types';
+import { Loading } from '@/components/loader';
+import { useAppMode } from '@/context/app-mode';
+import { useAPIReference } from '@/context/reference';
 
-type Connection = UserConnectionType | SystemConnectionType;
+type Connection = CarrierConnectionType | SystemConnectionType;
 type OperationType = {
   onChange?: () => void;
 };
@@ -22,30 +22,28 @@ interface TrackerModalInterface {
 export const TrackerModalContext = React.createContext<TrackerModalInterface>({} as TrackerModalInterface);
 
 const TrackerModalProvider: React.FC<{}> = ({ children }) => {
+  const { testMode } = useAppMode();
+  const mutation = useTrackerMutation();
   const { notify } = useContext(Notify);
-  const { carriers } = useContext(APIReference);
+  const { carriers } = useAPIReference();
   const { loading, setLoading } = useContext(Loading);
-  const { testMode } = useContext(AppMode);
-  const { createTracker } = useContext(TrackerMutationContext);
-  const { user_connections, ...user } = useContext(UserConnections);
-  const { system_connections, ...system } = useContext(SystemConnections);
+  const { query: { data: userQuery, ...user } } = useCarrierConnections();
+  const { query: { data: systemQuery, ...system } } = useSystemConnections();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`tracker-${Date.now()}`);
   const [carrier, setCarrier] = useState<Connection>();
-  const [trackingNumber, setTrackingNumber] = useState<string>();
+  const [trackingNumber, setTrackingNumber] = useState<string>('');
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
   const [carrierList, setCarrierList] = useState<Connection[]>([]);
 
   const addTracker = (operation?: OperationType) => {
-    if (!user.loading && user.load) user.load();
-    if (!system.loading && system.load) system.load();
     operation && setOperation(operation);
     setIsActive(true);
   };
   const close = ({ updated }: any | { updated?: boolean }) => {
     setIsActive(false);
     setCarrier(undefined);
-    setTrackingNumber(undefined);
+    setTrackingNumber('');
     setKey(`tracker-${Date.now()}`);
     (updated && operation?.onChange) && operation.onChange();
     removeUrlParam('modal');
@@ -54,7 +52,10 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
     evt.preventDefault();
     setLoading(true);
     try {
-      await createTracker(trackingNumber as string, carrier?.carrier_name as string);
+      await mutation.createTracker.mutateAsync({
+        tracking_number: trackingNumber,
+        carrier_name: carrier!.carrier_name,
+      });
       notify({ type: NotificationType.success, message: 'Tracker successfully added!' });
       close({ updated: true });
     } catch (error: any) {
@@ -69,8 +70,8 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
 
   useEffect(() => {
     const connections = [
-      ...(user_connections || []),
-      ...(system_connections || []),
+      ...(userQuery?.user_connections || []),
+      ...(systemQuery?.system_connections || []),
     ].filter(c => (
       c.active &&
       c.carrier_name in carriers &&
@@ -80,7 +81,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
     ));
 
     setCarrierList(connections);
-  }, [user_connections, system_connections]);
+  }, [userQuery?.user_connections, systemQuery?.system_connections]);
 
   return (
     <>
@@ -112,9 +113,10 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
                     ))}
                 </SelectField>}
 
-              {(!user.loading && !system.loading && carrierList.length === 0) && <div className="notification is-warning">
-                No {testMode ? 'carrier (Sandbox)' : 'carrier'} connections available to process tracking requests.
-              </div>}
+              {(user.isFetched && system.isFetched && carrierList.length === 0) &&
+                <div className="notification is-warning">
+                  No {testMode ? 'carrier (Sandbox)' : 'carrier'} connections available to process tracking requests.
+                </div>}
 
               <div className="p-3 my-5"></div>
               <div className="form-floating-footer has-text-centered p-1">

@@ -479,12 +479,12 @@ type requestArgs = {
   url?: string;
 } & Record<string, any>;
 
-export async function request<T>(query: string, args?: requestArgs): Promise<T | undefined> {
+export async function request<T>(query: string, args?: requestArgs): Promise<T> {
   const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
     const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
-      url || `${KARRIO_API}/graphql/`, { query, operationName, variables }, config,
+      url || `${KARRIO_API || ''}/graphql`, { query, operationName, variables }, config,
     );
 
     if (response.errors) {
@@ -512,5 +512,5 @@ export function onError(error: any) {
     (err: any) => (err.code === "authentication_required" || err.status_code === 401)
   );
 
-  if (authExpiredError) { window.location.reload(); }
+  if (authExpiredError) { window.location.pathname = window.location.pathname; }
 }

@@ -1558,6 +1558,7 @@ export interface get_webhook_webhook {
   disabled: boolean | null;
   description: string | null;
   last_event_at: any | null;
+  secret: string | null;
 }
 
 export interface get_webhook {
@@ -1599,6 +1600,7 @@ export interface get_webhooks_webhooks_edges_node {
   disabled: boolean | null;
   description: string | null;
   last_event_at: any | null;
+  secret: string | null;
 }
 
 export interface get_webhooks_webhooks_edges {

@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { InputFieldComponent } from '@/components/generic/input-field';
-import { Address } from 'karrio/rest/index';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
+import { InputFieldComponent } from '@/components/generic/input-field';
+import { useAPIReference } from '@/context/reference';
 import { Subject } from 'rxjs/internal/Subject';
-import { APIReference } from '@/context/references-provider';
+import { Address } from 'karrio/rest/index';
 import { isNone } from '@/lib/helper';
 
 interface AddressAutocompleteInputComponent extends InputFieldComponent {
@@ -20,7 +20,7 @@ const AddressAutocompleteInput: React.FC<AddressAutocompleteInputComponent> = ({
     ...props,
     ...(Object.keys(props).includes('value') ? { value: props.value || "" } : {}),
   };
-  const { ADDRESS_AUTO_COMPLETE } = useContext(APIReference) as { ADDRESS_AUTO_COMPLETE: any };
+  const { ADDRESS_AUTO_COMPLETE } = useAPIReference() as { ADDRESS_AUTO_COMPLETE: any };
   const container = useRef<HTMLDivElement | null>(null);
   const [key] = useState<string>(`predictions_${Date.now()}`);
   const [isActive, setIsActive] = useState<boolean>(false);

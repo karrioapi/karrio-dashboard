@@ -1,11 +1,11 @@
+import { useOrganizationInvitation } from '@/context/organization';
 import React, { useContext, useState } from 'react';
 import { NotificationType } from '@/lib/types';
 import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { removeUrlParam } from '@/lib/helper';
 import { useRouter } from 'next/router';
-import { useOrganizationInvitation } from '@/context/organization-invitation-provider';
-import { useUser } from '@/context/user-provider';
+import { useUser } from '@/context/user';
 
 type OperationType = { onChange?: (orgId: string) => void; };
 interface AcceptInvitationInterface {
@@ -16,17 +16,16 @@ export const AcceptInvitationContext = React.createContext<AcceptInvitationInter
 
 const AcceptInvitationProvider: React.FC = ({ children }) => {
   const router = useRouter();
-  const user = useUser();
-  const { accept_invitation } = router.query as { accept_invitation: string };
+  const { query: { data: { user } = {} } } = useUser();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`invite-${Date.now()}`);
+  const { accept_invitation } = router.query as { accept_invitation: string };
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
-  const { load, accept, error, invitation } = useOrganizationInvitation();
+  const { query: { error, data: { organization_invitation } = {} }, ...mutation } = useOrganizationInvitation(accept_invitation);
 
   const acceptInvitation = (operation?: OperationType) => {
-    load(accept_invitation);
     setKey(`invite-${Date.now()}`);
     operation && setOperation(operation);
     setIsActive(true);
@@ -41,8 +40,8 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
     evt.preventDefault();
     setLoading(true);
     try {
-      const { data } = await accept(accept_invitation);
-      const orgId = data?.accept_organization_invitation?.organization?.id
+      const data = await mutation.acceptInvitation.mutateAsync({ guid: accept_invitation });
+      const orgId = data?.accept_organization_invitation.organization?.id
       setTimeout(() => close({ updated: true, orgId }), 500);
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
@@ -71,14 +70,14 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
                   Error, invalid or expired organization invitation token!
                 </p>}
 
-              {!error && invitation?.invitee_identifier !== user?.email &&
+              {!error && organization_invitation?.invitee_identifier !== user?.email &&
                 <p className="is-size-6 has-text-centered">
                   The invitation is not for this account.
                 </p>}
 
-              {invitation?.invitee_identifier === user?.email &&
+              {organization_invitation?.invitee_identifier === user?.email &&
                 <p className="is-size-6 has-text-centered">
-                  Click Confirm to accept the invitation to <strong>{invitation?.organization_name}</strong>.
+                  Click Confirm to accept the invitation to <strong>{organization_invitation?.organization_name}</strong>.
                 </p>}
 
               <div className="p-3 my-5"></div>
@@ -86,7 +85,7 @@ const AcceptInvitationProvider: React.FC = ({ children }) => {
                 <button className="button is-default m-1 is-small" onClick={close}>
                   <span>Dismiss</span>
                 </button>
-                {invitation?.invitee_identifier === user?.email &&
+                {organization_invitation?.invitee_identifier === user?.email &&
                   <button className="button is-primary m-1 is-small" type="submit" disabled={loading}>
                     <span>Confirm</span>
                   </button>}

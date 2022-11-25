@@ -1,14 +1,14 @@
+import { request_password_reset, REQUEST_PASSWORD_RESET } from "karrio/graphql";
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/layouts/section-layout";
-import LoadingProvider from "@/components/loader";
-import { request_password_reset, REQUEST_PASSWORD_RESET } from "karrio/graphql";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
+import LoadingProvider from "@/components/loader";
+import React, { FormEvent, useRef } from "react";
+import { useMutation } from "@apollo/client";
+import { Metadata } from "@/lib/types";
+import { p } from "@/lib/helper";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useRef } from "react";
-import { p } from "@/lib/helper";
-import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 

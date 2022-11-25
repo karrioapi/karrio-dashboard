@@ -1,6 +1,6 @@
-import React from 'react';
 import { formatCustomsLabel, formatRef, isNone, isNoneOrEmpty } from '@/lib/helper';
 import { CustomsType } from '@/lib/types';
+import React from 'react';
 
 interface CustomsInfoDescriptionComponent {
   customs: CustomsType;

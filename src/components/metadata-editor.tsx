@@ -1,14 +1,14 @@
-import React from 'react';
-import { MetadataObjectType } from 'karrio/graphql';
-import MetadataStateProvider, { MetadataStateContext } from '@/context/metadata-state';
-import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
+import InputField from '@/components/generic/input-field';
+import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { Loading } from '@/components/loader';
+import React from 'react';
+import MetadataStateProvider, { MetadataStateContext } from '@/context/metadata';
 
 interface MetadataEditorProps {
   id?: string;
   metadata?: {};
-  object_type: MetadataObjectType;
+  object_type: MetadataObjectTypeEnum;
   onChange?: (metadata: any) => void;
 }
 interface MetadataEditorInterface {

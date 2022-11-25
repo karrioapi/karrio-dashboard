@@ -1,6 +1,6 @@
-import React from 'react';
 import { formatParcelLabel, formatDimension, formatWeight, isNoneOrEmpty } from '@/lib/helper';
 import { ParcelType } from '@/lib/types';
+import React from 'react';
 
 interface ParcelDescriptionComponent {
   parcel?: ParcelType;

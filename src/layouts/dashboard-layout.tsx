@@ -1,8 +1,8 @@
-import React from 'react';
+import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
 import Navbar from '@/components/navbar/navbar';
 import Notifier from '@/components/notifier';
-import ExpandedSidebar from '@/components/sidebars/expanded-sidebar';
 import Footer from '@/components/footer';
+import React from 'react';
 
 
 const DashboardLayout: React.FC<{ showModeIndicator?: boolean }> = ({ children, ...props }) => {

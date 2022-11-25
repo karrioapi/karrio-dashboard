@@ -1,14 +1,14 @@
+import { ConfirmPasswordResetMutationInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
+import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
+import LoadingProvider, { Loading } from "@/components/loader";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
-import LoadingProvider, { Loading } from "@/components/loader";
-import UserMutation from "@/context/user-mutation";
-import { ConfirmPasswordResetMutationInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
 import { useRouter } from "next/dist/client/router";
+import { Metadata } from "@/lib/types";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
-import { Metadata } from "@/lib/types";
+import { useUserMutation } from "@/context/user";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -28,8 +28,9 @@ function reducer(state: Partial<ConfirmPasswordResetMutationInput>, { name, valu
   }
 }
 
-const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
+const Component: React.FC<{}> = () => {
   const router = useRouter();
+  const mutation = useUserMutation();
   const { uidb64, token } = router.query;
   const { loading, setLoading } = useContext(Loading);
   const [data, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
@@ -45,7 +46,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await confirmPasswordReset(data as ConfirmPasswordResetMutationInput);
+      await mutation.confirmPasswordReset.mutateAsync(data as ConfirmPasswordResetMutationInput);
       router.push('/password/reset/done');
     } catch (error: any) {
       setErrors(Array.isArray(error) ? error : [error]);
@@ -106,7 +107,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
       </div>
     </>
   )
-});
+};
 
 export default function Page({ metadata }: { metadata: Metadata }) {
   return (

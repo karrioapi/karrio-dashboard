@@ -1,6 +1,6 @@
-import React from 'react';
 import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
 import AppLink from '@/components/app-link';
+import React from 'react';
 
 
 interface ShortcutDropdownComponent { }

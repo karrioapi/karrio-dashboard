@@ -1,9 +1,9 @@
-import React from 'react';
-import { p, ServerError } from '@/lib/helper';
 import { Metadata, SessionType } from '@/lib/types';
-import { SessionProvider } from 'next-auth/react';
 import { ClientsProvider } from '@/client/context';
+import { SessionProvider } from 'next-auth/react';
 import MainLayout from '@/layouts/main-layout';
+import { p, ServerError } from '@/lib/helper';
+import React from 'react';
 
 type SectionLayoutProps = {
   metadata?: Metadata,

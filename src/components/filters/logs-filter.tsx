@@ -1,18 +1,20 @@
-import React, { useReducer, useContext, useEffect } from 'react';
-import CheckBoxField from '@/components/generic/checkbox-field';
-import { isNone } from '@/lib/helper';
-import { LogsContext } from '@/context/logs-provider';
 import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
+import CheckBoxField from '@/components/generic/checkbox-field';
 import { HTTP_METHODS, HTTP_STATUS_CODES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
+import React, { useReducer, useEffect } from 'react';
 import Spinner from '@/components/spinner';
+import { useLogs } from '@/context/log';
+import { isNone } from '@/lib/helper';
 
 
-interface LogsFilterComponent { }
+interface LogsFilterComponent {
+  context: ReturnType<typeof useLogs>;
+}
 
 
-const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
-  const { variables, loading, loadMore } = useContext(LogsContext);
+const LogsFilter: React.FC<LogsFilterComponent> = ({ context }) => {
+  const { query, filter: variables, setFilter } = context;
   const [filters, dispatch] = useReducer((state: any, { name, checked, value }: { name: string, checked?: boolean, value?: string | boolean | object }) => {
     switch (name) {
       case 'clear':
@@ -45,6 +47,7 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
     }
   }, variables, () => variables);
   const [isReady, setIsReady] = React.useState(true);
+
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: any, value: object }>) => {
     const target = event.target;
     const name = target.name;
@@ -63,7 +66,7 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
   };
   const handleApply = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    await loadMore({ ...filters, offset: 0 });
+    setFilter({ ...filters, offset: 0 });
     closeDropdown(event.target);
   };
 
@@ -88,8 +91,8 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ ...props }) => {
           <button className="button is-small is-default" onClick={handleClear}>Clear</button>
           <span className="is-size-6 has-text-weight-semibold p-1">Filters</span>
           <button
-            className={"button is-small is-info" + (loading ? " is-loading" : "")}
-            disabled={loading}
+            className={"button is-small is-info" + (query.isFetching ? " is-loading" : "")}
+            disabled={query.isFetching}
             onClick={handleApply}>Done</button>
         </p>
 

@@ -1,50 +1,41 @@
+import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
+import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
 import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
-import React, { useContext, useEffect, useState } from 'react';
-import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
-import { DefaultTemplatesData } from '@/context/default-templates-provider';
-import Spinner from '@/components/spinner';
-import Head from 'next/head';
-import DashboardLayout from '@/layouts/dashboard-layout';
-import AuthenticatedPage from '@/layouts/authenticated-page';
-import TemplatesProvider from '@/context/default-templates-provider';
-import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
-import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
+import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
+import { LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
+import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
+import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
+import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import CommodityDescription from '@/components/descriptions/commodity-description';
+import MessagesDescription from '@/components/descriptions/messages-description';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
-import RateDescription from '@/components/descriptions/rate-description';
-import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
-import LineItemSelector from '@/components/line-item-selector';
-import InputField from '@/components/generic/input-field';
-import ButtonField from '@/components/generic/button-field';
-import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import ModalProvider from '@/components/generic/modal';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
-import LabelMutationProvider, { useLabelMutation } from '@/context/label-data-mutation';
-import ShipmentMutationProvider from '@/context/shipment-mutation';
-import { useLoader } from '@/components/loader';
-import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
-import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
-import MessagesDescription from '@/components/descriptions/messages-description';
-import { useNotifier } from '@/components/notifier';
-import { useAppMode } from '@/context/data/mode-context';
+import GoogleGeocodingScript from '@/components/google-geocoding-script';
+import RateDescription from '@/components/descriptions/rate-description';
+import { useDefaultTemplates } from '@/context/default-template';
 import CheckBoxField from '@/components/generic/checkbox-field';
+import LineItemSelector from '@/components/line-item-selector';
+import AuthenticatedPage from '@/layouts/authenticated-page';
+import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
+import { useLabelDataMutation } from '@/context/label-data';
+import InputField from '@/components/generic/input-field';
+import DashboardLayout from '@/layouts/dashboard-layout';
+import ModalProvider from '@/components/generic/modal';
+import { useNotifier } from '@/components/notifier';
+import React, { useEffect, useState } from 'react';
 import { bundleContexts } from '@/context/utils';
-import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
-import CommodityDescription from '@/components/descriptions/commodity-description';
+import { useAppMode } from '@/context/app-mode';
+import { useOrders } from '@/context/order';
+import Spinner from '@/components/spinner';
+import Head from 'next/head';
 import CarrierImage from '@/components/carrier-image';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 const ContextProviders = bundleContexts([
   CommodityEditModalProvider,
-  OrdersProvider,
-  TemplatesProvider,
-  LabelMutationProvider,
-  ShipmentMutationProvider,
-  LabelDataProvider,
   ModalProvider,
 ]);
 
@@ -52,18 +43,15 @@ export default function CreateLabelPage(pageProps: any) {
   const { ORDERS_MANAGEMENT } = pageProps?.metadata || {};
 
   const Component: React.FC = () => {
-    const loader = useLoader();
     const notifier = useNotifier();
     const { basePath } = useAppMode();
-    const mutation = useLabelMutation();
-    const orders = useContext(OrdersContext);
     const { addUrlParam, ...router } = useLocation();
-    const { shipment, called, ...label } = useLabelData();
-    const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
+    const { query: templates } = useDefaultTemplates();
     const { shipment_id = 'new' } = router.query as { shipment_id: string };
-    const [ready, setReady] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { state: { shipment, query }, ...mutation } = useLabelDataMutation(shipment_id);
+    const { query: orders } = useOrders({ first: 100, status: ['unfulfilled', 'partial'] as any });
     const [key, setKey] = useState<string>(`${shipment_id}-${Date.now()}`);
+    const [ready, setReady] = useState<boolean>(false);
     const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
       shipment?.selected_rate_id ? { id: shipment?.selected_rate_id } as any : undefined
     );
@@ -73,7 +61,7 @@ export default function CreateLabelPage(pageProps: any) {
         shipment.recipient.address_line1 === undefined ||
         shipment.shipper.address_line1 === undefined ||
         shipment.parcels.length === 0 ||
-        loading === true
+        query.isFetching === true
       );
     };
     const isInternational = (shipment: ShipmentType) => {
@@ -84,16 +72,17 @@ export default function CreateLabelPage(pageProps: any) {
       );
     };
     const getItems = () => {
-      return orders.orders
-        .map(({ line_items }) => line_items).flat();
+      return (orders.data?.orders.edges || [])
+        .map(({ node: { line_items } }) => line_items).flat();
     }
     const getParent = (id: string | null) => {
       return getItems()
         .find((item) => item.id === id);
     };
     const getOrder = (item_id?: string | null) => {
-      return orders.orders
-        .find((order) => order.line_items.find((item) => item.id === item_id));
+      return (orders.data?.orders.edges || [])
+        .find(({ node: order }) => order.line_items.find((item) => item.id === item_id))
+        ?.node;
     };
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
       const parent_quantity = getParent(item.parent_id)?.unfulfilled_quantity || 0;
@@ -107,8 +96,8 @@ export default function CreateLabelPage(pageProps: any) {
       return parent_quantity - packed_quantity;
     };
     const setInitialData = () => {
-      const shipper = default_address || {};
-      const parcel = { ...(default_parcel || DEFAULT_PARCEL_CONTENT) };
+      const shipper = templates.data?.default_templates.default_address?.address || {};
+      const parcel = { ...(templates.data?.default_templates.default_parcel?.parcel || DEFAULT_PARCEL_CONTENT) };
 
       onChange({
         ...(shipper ? { shipper: (shipper as typeof shipment['shipper']) } : {}),
@@ -125,50 +114,35 @@ export default function CreateLabelPage(pageProps: any) {
     };
 
     useEffect(() => {
-      if (!called && !loading && label.loadShipment) { label.loadShipment(shipment_id); }
-    }, []);
-    useEffect(() => {
-      if (!template.called && !template.loading && template.load) template.load();
-    }, []);
-    useEffect(() => { setLoading(label.loading || loader.loading); }, [label.loading, loader.loading]);
-    useEffect(() => {
       if (shipment.status && shipment.status !== ShipmentStatusEnum.draft) {
         notifier.notify({ type: NotificationType.info, message: 'Label already purchased! redirecting...' });
         setTimeout(() => router.push(basePath), 2000);
       }
     }, [shipment]);
     useEffect(() => {
-      if (!orders.called && !orders.loading && orders.load) orders.load({
-        filter: {
-          first: 100,
-          status: ['unfulfilled', 'partial'] as any,
-        }
-      });
-    }, []);
-    useEffect(() => {
-      const orders_called = (ORDERS_MANAGEMENT && orders.called) || true;
+      const orders_called = (ORDERS_MANAGEMENT && orders.isFetched) || true;
       if (
-        !ready && called &&
-        template.data &&
+        !ready && query.isFetched &&
+        templates.isFetched &&
         shipment_id === 'new' &&
         orders_called
       ) {
         setTimeout(() => setInitialData(), 1000);
       }
       if (
-        !ready && called &&
+        !ready && query.isFetched &&
         !isNoneOrEmpty(shipment_id) &&
         shipment_id !== 'new' &&
         orders_called
       ) {
         setReady(true);
       }
-    }, [template.data, orders.called, called]);
+    }, [templates.isFetched, orders.isFetched, query.isFetched]);
 
 
     return (
       <>
-        <header className="px-0 py-3 is-flex is-justify-content-space-between">
+        <header className="px-0 py-6 is-flex is-justify-content-space-between">
           <span className="title is-4">
             Create label
           </span>
@@ -196,7 +170,7 @@ export default function CreateLabelPage(pageProps: any) {
                       address={shipment.recipient}
                       onSubmit={(address) => onChange({ recipient: address })}
                       trigger={
-                        <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                        <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
                           Edit recipient address
                         </button>
                       }
@@ -225,7 +199,7 @@ export default function CreateLabelPage(pageProps: any) {
                       address={shipment.shipper}
                       onSubmit={(address) => onChange({ shipper: address })}
                       trigger={
-                        <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                        <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
                           Edit shipper address
                         </button>
                       }
@@ -255,7 +229,7 @@ export default function CreateLabelPage(pageProps: any) {
                     shipment={shipment}
                     onSubmit={mutation.addParcel}
                     trigger={
-                      <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                      <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
                         Add package
                       </button>
                     }
@@ -284,13 +258,13 @@ export default function CreateLabelPage(pageProps: any) {
                           parcel={pkg}
                           shipment={shipment}
                           trigger={
-                            <button type="button" className="button is-small is-white" disabled={loading}>
+                            <button type="button" className="button is-small is-white" disabled={query.isFetching}>
                               <span className="icon is-small"><i className="fas fa-pen"></i></span>
                             </button>
                           }
                         />
                         <button type="button" className="button is-small is-white"
-                          disabled={loading || shipment.parcels.length === 1}
+                          disabled={query.isFetching || shipment.parcels.length === 1}
                           onClick={mutation.removeParcel(pkg_index, pkg.id)}>
                           <span className="icon is-small"><i className="fas fa-times"></i></span>
                         </button>
@@ -371,7 +345,7 @@ export default function CreateLabelPage(pageProps: any) {
                     <div className="is-flex is-justify-content-space-between mt-4">
                       <CommodityStateContext.Consumer>{({ editCommodity }) => (
                         <button type="button" className="button is-small is-info is-inverted p-2"
-                          disabled={loading}
+                          disabled={query.isFetching}
                           onClick={() => editCommodity({
                             onSubmit: _ => mutation.addItems(pkg_index, pkg.id)([_] as any)
                           })}>
@@ -552,7 +526,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <InputField label="Reference"
                   name="reference"
                   defaultValue={shipment.reference as string}
-                  onChange={e => label.updateShipment({ reference: e.target.value })}
+                  onChange={e => mutation.updateShipment({ reference: e.target.value })}
                   placeholder="shipment reference"
                   className="is-small"
                   autoComplete="off"
@@ -573,7 +547,7 @@ export default function CreateLabelPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.sender}
-                      onChange={() => label.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
+                      onChange={() => mutation.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
                   </label>
@@ -583,7 +557,7 @@ export default function CreateLabelPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.recipient}
-                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
+                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
                   </label>
@@ -593,7 +567,7 @@ export default function CreateLabelPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.third_party}
-                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
+                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.third_party.toString())}</span>
                   </label>
@@ -607,7 +581,7 @@ export default function CreateLabelPage(pageProps: any) {
                       className="is-small"
                       fieldClass="column"
                       defaultValue={shipment?.payment?.account_number as string}
-                      onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
+                      onChange={e => mutation.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
                     />
                   </div>}
 
@@ -637,7 +611,7 @@ export default function CreateLabelPage(pageProps: any) {
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
-                      <button className="button is-small is-info is-text is-inverted p-1" disabled={loading}>
+                      <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
                         Edit customs info
                       </button>
                     }
@@ -700,13 +674,13 @@ export default function CreateLabelPage(pageProps: any) {
                 {/* Live rates section */}
                 <div className="p-3">
 
-                  {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+                  {(query.isFetching && (shipment.rates || []).length === 0) && <Spinner className="my-1 p-1 has-text-centered" />}
 
-                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default p-2 is-size-7">
+                  {(query.isFetched && (shipment.rates || []).length === 0) && <div className="notification is-default p-2 is-size-7">
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 
-                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-1 rates-list-box" style={{ maxHeight: '20em' }}>
+                  {(query.isFetched && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
                     {(shipment.rates || []).map(rate => (
                       <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
                         className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
@@ -758,18 +732,18 @@ export default function CreateLabelPage(pageProps: any) {
                   onClick={() => mutation.buyLabel(selected_rate as any)}
                   fieldClass="has-text-centered p-3"
                   className={`is-success`}
-                  disabled={(shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0 || loading}>
+                  disabled={(shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0 || query.isFetching}>
                   <span className="px-6">Buy shipping label</span>
                 </ButtonField>
 
-              </div>
+              </div >
 
               {/* Metadata section */}
-              <div className="card px-0 mt-5">
+              < div className="card px-0 mt-5" >
 
                 <div className="p-1 pb-4">
                   <MetadataEditor
-                    object_type={MetadataObjectType.shipment}
+                    object_type={MetadataObjectTypeEnum.shipment}
                     metadata={shipment.metadata}
                     onChange={(metadata) => onChange({ metadata })}
                   >
@@ -792,11 +766,11 @@ export default function CreateLabelPage(pageProps: any) {
                   </MetadataEditor>
                 </div>
 
-              </div>
+              </div >
 
-            </div>
-          </div>
-        </div>}
+            </div >
+          </div >
+        </div >}
 
       </>
     )

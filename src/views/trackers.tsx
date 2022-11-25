@@ -1,74 +1,67 @@
-import { TrackingEvent } from "karrio/rest";
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
-import DashboardLayout from "@/layouts/dashboard-layout";
 import TrackingPreview, { TrackingPreviewContext } from "@/components/descriptions/tracking-preview";
-import { Loading } from "@/components/loader";
-import Spinner from "@/components/spinner";
-import StatusBadge from "@/components/status-badge";
 import TrackerModalProvider, { TrackerModalContext } from "@/components/track-shipment-modal";
-import SystemConnectionsProvider from "@/context/system-connections-provider";
-import { TrackerMutationContext } from "@/context/tracker-mutation";
-import TrackersProvider, { TrackersContext } from "@/context/trackers-provider";
-import UserConnectionsProvider from "@/context/user-connections-provider";
-import { getURLSearchParams, isNone, isNoneOrEmpty, p } from "@/lib/helper";
-import Head from "next/head";
-import React, { useContext, useEffect } from "react";
-import TrackerMutationProvider from "@/context/tracker-mutation";
-import { useRouter } from "next/dist/client/router";
+import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
+import { getURLSearchParams, isNone, isNoneOrEmpty } from "@/lib/helper";
+import { useTrackerMutation, useTrackers } from "@/context/tracker";
 import TrackersFilter from "@/components/filters/trackers-filter";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import CarrierBadge from "@/components/carrier-badge";
+import React, { useContext, useEffect } from "react";
+import StatusBadge from "@/components/status-badge";
+import { useRouter } from "next/dist/client/router";
+import { useLoader } from "@/components/loader";
+import { TrackingEvent } from "karrio/rest";
+import Spinner from "@/components/spinner";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function TrackersPage(pageProps: any) {
-  const Component: React.FC<any> = () => {
+  const Component: React.FC = () => {
     const router = useRouter();
     const { modal } = router.query;
-    const { setLoading } = useContext(Loading);
+    const { setLoading } = useLoader();
+    const mutation = useTrackerMutation();
+    const { addTracker } = useContext(TrackerModalContext);
     const { previewTracker } = useContext(TrackingPreviewContext);
     const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
-    const { removeTracker } = useContext(TrackerMutationContext);
-    const { addTracker } = useContext(TrackerModalContext);
-    const { loading, called, trackers, next, previous, variables, load, loadMore } = useContext(TrackersContext);
-    const [filters, setFilters] = React.useState<any>(variables);
     const [initialized, setInitialized] = React.useState(false);
+    const context = useTrackers({ setVariablesToURL: true });
+    const { query: { data: { trackers } = {}, ...query }, filter, setFilter } = context;
 
-    const remove = (id?: string) => async () => {
-      await removeTracker(id as string);
-      fetchTrackers();
+    const remove = (id: string) => async () => {
+      await mutation.deleteTracker.mutateAsync({ idOrTrackingNumber: id });
     };
-    const fetchTrackers = (extra: Partial<any> = {}) => {
+    const updateFilter = (extra: Partial<any> = {}) => {
       const query = {
-        ...filters,
+        ...filter,
         ...getURLSearchParams(),
-        ...extra
+        ...extra,
       };
 
-      setFilters(query);
-      (!loading) && (called ? loadMore : load)(query);
+      setFilter(query);
     }
 
-    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
-    useEffect(() => { fetchTrackers(); }, [router.query]);
-    useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => { updateFilter(); }, [router.query]);
+    useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
     useEffect(() => {
-      if (called && !initialized && !isNoneOrEmpty(modal)) {
-        const tracker = trackers.find(t => t.id === modal);
-        (modal === 'new') && addTracker({ onChange: fetchTrackers });
+      if (query.isFetching && !initialized && !isNoneOrEmpty(modal)) {
+        const tracker = (trackers?.edges || []).find(t => t.node.id === modal)?.node;
+        (modal === 'new') && addTracker({ onChange: updateFilter });
         tracker && previewTracker(tracker);
         setInitialized(true);
       }
-    }, [modal, called]);
+    }, [modal, query.isFetched]);
 
     return (
       <>
-        <header className="px-0 py-4 is-flex is-justify-content-space-between">
+        <header className="px-0 pb-3 pt-6 is-flex is-justify-content-space-between">
           <span className="title is-4">Trackers</span>
           <div>
-            <TrackersFilter />
-            <button className="button is-small is-primary ml-1" onClick={() => addTracker({ onChange: fetchTrackers })}>
+            <TrackersFilter context={context} />
+            <button className="button is-small is-primary ml-1" onClick={() => addTracker({ onChange: updateFilter })}>
               <span>Track a Shipment</span>
             </button>
           </div>
@@ -76,24 +69,24 @@ export default function TrackersPage(pageProps: any) {
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
-              <a onClick={() => !isNone(filters?.status) && fetchTrackers({ status: null, offset: 0 })}>all</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isNone(filter?.status) ? 'is-active' : ''}`}>
+              <a onClick={() => !isNone(filter?.status) && updateFilter({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('in_transit') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('in_transit') && fetchTrackers({ status: ['in_transit'], offset: 0 })}>in-transit</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('in_transit') ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('in_transit') && updateFilter({ status: ['in_transit'], offset: 0 })}>in-transit</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('pending') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('pending') && fetchTrackers({ status: ['pending'], offset: 0 })}>pending</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('pending') ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('pending') && updateFilter({ status: ['pending'], offset: 0 })}>pending</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('delivered') ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('pedeliverednding') && fetchTrackers({ status: ['delivered'], offset: 0 })}>delivered</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivered') ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('pedeliverednding') && updateFilter({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
           </ul>
         </div>
 
-        {loading && <Spinner />}
+        {(!query.isFetched && query.isFetching) && <Spinner />}
 
-        {(!loading && trackers.length > 0) && <>
+        {(query.isFetched && (trackers?.edges || []).length > 0) && <>
           <div className="table-container pb-3">
             <table className="trackers-table table is-fullwidth">
 
@@ -107,7 +100,7 @@ export default function TrackersPage(pageProps: any) {
                   <td className="action"></td>
                 </tr>
 
-                {trackers.map(tracker => (
+                {(trackers?.edges || []).map(({ node: tracker }) => (
                   <tr key={tracker.id} className="items" onClick={() => previewTracker(tracker)}>
                     <td className="carrier is-vcentered has-text-centered p-2">
                       <CarrierBadge
@@ -154,16 +147,24 @@ export default function TrackersPage(pageProps: any) {
           </div>
 
           <div className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{trackers.length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">{(trackers?.edges || []).length} results</span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number - 20) })}
+                disabled={filter.offset == 0}>
+                Previous
+              </button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number + 20) })}
+                disabled={!trackers?.page_info.has_next_page}>
+                Next
+              </button>
             </div>
           </div>
         </>}
 
-        {(!loading && trackers.length == 0) && <div className="card my-6">
+        {(query.isFetched && (trackers?.edges || []).length == 0) && <div className="card my-6">
 
           <div className="card-content has-text-centered">
             <p>No shipment trackers found.</p>
@@ -179,23 +180,15 @@ export default function TrackersPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
       <Head><title>Trackers - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <UserConnectionsProvider>
-        <SystemConnectionsProvider>
-          <TrackerMutationProvider>
-            <TrackerModalProvider>
-              <TrackersProvider>
-                <TrackingPreview>
-                  <ConfirmModal>
+      <TrackerModalProvider>
+        <TrackingPreview>
+          <ConfirmModal>
 
-                    <Component />
+            <Component />
 
-                  </ConfirmModal>
-                </TrackingPreview>
-              </TrackersProvider>
-            </TrackerModalProvider>
-          </TrackerMutationProvider>
-        </SystemConnectionsProvider>
-      </UserConnectionsProvider>
+          </ConfirmModal>
+        </TrackingPreview>
+      </TrackerModalProvider>
     </DashboardLayout>
   ), pageProps)
 }

@@ -1,7 +1,7 @@
 import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
 import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
-import { useCustomsTemplateMutation } from '@/context/data/customs';
+import { useCustomsTemplateMutation } from '@/context/customs';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
@@ -18,10 +18,10 @@ const DEFAULT_TEMPLATE_CONTENT = {
 
 type OperationType = {
   customsTemplate?: CustomsTemplateType;
-  onConfirm: () => Promise<any>;
+  onConfirm?: () => Promise<any>;
 };
 type CustomsInfoEditContextType = {
-  editCustomsInfo: (operation: OperationType) => void,
+  editCustomsInfo: (operation?: OperationType) => void,
 };
 
 export const CustomsInfoEditContext = React.createContext<CustomsInfoEditContextType>({} as CustomsInfoEditContextType);
@@ -39,11 +39,11 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const [template, setTemplate] = useState<CustomsTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
 
-  const editCustomsInfo = (operation: OperationType) => {
-    const template = operation.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
+  const editCustomsInfo = (operation?: OperationType) => {
+    const template = operation?.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setOperation(operation);
-    setIsNew(isNone(operation.customsTemplate));
+    setIsNew(isNone(template));
     setTemplate({ ...template });
 
     setIsActive(true);

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { OrdersContext } from '@/context/orders-provider';
 import { CommodityType, OrderType, ShipmentType } from '@/lib/types';
 import { isNone, isNoneOrEmpty } from '@/lib/helper';
+import React, { useEffect, useState } from 'react';
+import { useOrders } from '@/context/order';
 
 interface LineItemSelectorComponent {
   title?: string;
@@ -10,12 +10,12 @@ interface LineItemSelectorComponent {
 }
 
 const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment, onChange }) => {
-  const { loading, called, ...context } = useContext(OrdersContext);
+  const { query } = useOrders();
+  const [search, setSearch] = useState<string>("");
+  const [orders, setOrders] = useState<OrderType[]>([]);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [selection, setSelection] = useState<string[]>([]);
-  const [orders, setOrders] = useState<OrderType[]>([]);
   const [lineItems, setLineItems] = useState<CommodityType[]>([]);
-  const [search, setSearch] = useState<string>("");
 
   const selectItems = (_: React.MouseEvent) => {
     setIsActive(true);
@@ -55,9 +55,9 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
   };
 
   useEffect(() => {
-    if (called && !isNone(context.orders)) {
-      const filteredOrders = context.orders
-        .map(order => ({
+    if (query.isFetched && !isNone(query.data?.orders)) {
+      const filteredOrders = (query.data?.orders.edges || [])
+        .map(({ node: order }) => ({
           ...order,
           line_items: order.line_items
             .map(({ unfulfilled_quantity: quantity, ...item }) => ({
@@ -71,7 +71,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
       setOrders(filteredOrders as any);
       setLineItems(filteredOrders.map(order => order.line_items).flat());
     }
-  }, [called, context.orders, isActive]);
+  }, [query.isFetched, query.data?.orders, isActive]);
 
   return (
     <>
@@ -144,11 +144,11 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
 
             <div className="p-3 my-5"></div>
             <div className="form-floating-footer has-text-centered p-1">
-              <button className="button is-default m-1 is-small" onClick={close} disabled={loading}>
+              <button className="button is-default m-1 is-small" onClick={close} disabled={query.isFetching}>
                 <span>Cancel</span>
               </button>
-              <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
-                disabled={loading || selection.length === 0} type="button" onClick={handleSubmit}>
+              <button className={`button is-primary ${query.isFetching ? 'is-loading' : ''} m-1 is-small`}
+                disabled={query.isFetching || selection.length === 0} type="button" onClick={handleSubmit}>
                 <span>Add selection</span>
               </button>
             </div>

@@ -1,19 +1,20 @@
-import React, { useState, useRef, useContext } from 'react';
-import { UserData } from '@/context/user-provider';
-import { signOut } from 'next-auth/react';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
+import React, { useState, useRef } from 'react';
 import AppLink from '@/components/app-link';
+import { signOut } from 'next-auth/react';
+import { useUser } from '@/context/user';
 
 
 interface AccountDropdownComponent { }
 
 
 const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
-  const { user } = useContext(UserData);
-  const { ADMIN } = useContext(APIReference);
-  const [isActive, setIsActive] = useState(false);
-  const btn = useRef<HTMLButtonElement>(null);
+  const { ADMIN } = useAPIReference();
   const menu = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  const [isActive, setIsActive] = useState(false);
+  const { query: { data: { user } = {} } } = useUser();
+
   const handleOnClick = (e: React.MouseEvent) => {
     setIsActive(!isActive);
     if (!isActive) document.addEventListener('click', onBodyClick);

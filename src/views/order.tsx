@@ -1,50 +1,40 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import CopiableLink from "@/components/copiable-link";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import StatusBadge from "@/components/status-badge";
-import OrderProvider, { Order } from "@/context/order-provider";
 import { formatAddressLocation, formatDateTime, formatRef, isNone } from "@/lib/helper";
-import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import React, { useContext, useEffect } from "react";
-import AppLink from "@/components/app-link";
-import { MetadataObjectType } from "karrio/graphql";
-import MetadataMutationProvider from "@/context/metadata-mutation";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
-import Spinner from "@/components/spinner";
-import EventsProvider, { EventsContext } from "@/context/events-provider";
-import LogsProvider, { LogsContext } from "@/context/logs-provider";
-import StatusCode from "@/components/status-code-badge";
 import CommodityDescription from "@/components/descriptions/commodity-description";
 import AddressDescription from "@/components/descriptions/address-description";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import StatusCode from "@/components/status-code-badge";
+import CopiableLink from "@/components/copiable-link";
+import StatusBadge from "@/components/status-badge";
+import { useRouter } from "next/dist/client/router";
+import { MetadataObjectTypeEnum } from "karrio/graphql";
+import { useLoader } from "@/components/loader";
+import AppLink from "@/components/app-link";
+import { useEvents } from "@/context/event";
+import { useOrder } from "@/context/order";
+import Spinner from "@/components/spinner";
+import { useLogs } from "@/context/log";
+import Head from "next/head";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
   const router = useRouter();
-  const logs = useContext(LogsContext);
-  const events = useContext(EventsContext);
-  const { setLoading } = useContext(Loading);
-  const { order, loading, called, loadOrder } = useContext(Order);
-  const { id } = router.query;
+  const { setLoading } = useLoader();
+  const entity_id = orderId || router.query.id as string;
+  const { query: logs } = useLogs({ entity_id });
+  const { query: events } = useEvents({ entity_id });
+  const { query: { data: { order } = {}, ...query } } = useOrder(entity_id);
 
-  useEffect(() => { setLoading(loading); });
-  useEffect(() => {
-    (!loading && loadOrder) && loadOrder((id || orderId) as string);
-  }, [id || orderId]);
-  useEffect(() => {
-    if (called && !isNone(order)) {
-      (!logs.called && !logs.loading && logs.load) && logs.load({ entity_id: order?.id } as any);
-      (!events.called && !events.loading && events.load) && events.load({ entity_id: order?.id } as any);
-    }
-  }, [called, order]);
+  React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
 
   return (
     <>
 
-      {!called && loading && <Spinner />}
+      {!query.isFetched && query.isFetching && <Spinner />}
 
       {order && <>
 
@@ -53,16 +43,16 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
           <div className="column is-6">
             <span className="subtitle is-size-7 has-text-weight-semibold">ORDER</span>
             <br />
-            <span className="title is-4 mr-2">{order.order_id}</span>
-            <StatusBadge status={order.status} />
+            <span className="title is-4 mr-2">{order?.order_id}</span>
+            <StatusBadge status={order?.status} />
           </div>
 
           <div className="column is-6 has-text-right pb-0">
-            <CopiableLink text={order.id as string} title="Copy ID" />
+            <CopiableLink text={order?.id as string} title="Copy ID" />
             <br />
-            {["unfulfilled", "partial"].includes(order.status) &&
+            {["unfulfilled", "partial"].includes(order?.status) &&
               <AppLink className="button is-default is-small mx-1"
-                href={`/orders/create_shipment?shipment_id=new&order_id=${order.id}`}>
+                href={`/orders/create_shipment?shipment_id=new&order_id=${order?.id}`}>
                 <span>Create shipment</span>
               </AppLink>}
             {!isNone(orderId) &&
@@ -81,14 +71,16 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
         <div className="columns mb-4">
           <div className="p-4 mr-4">
             <span className="subtitle is-size-7 my-4">Date</span><br />
-            <span className="subtitle is-size-7 mt-1 has-text-weight-semibold">{formatDateTime(order.created_at)}</span>
+            <span className="subtitle is-size-7 mt-1 has-text-weight-semibold">
+              {formatDateTime(order?.created_at)}
+            </span>
           </div>
 
-          {!isNone(order.source) && <>
+          {!isNone(order?.source) && <>
             <div className="my-2" style={{ width: '1px', backgroundColor: '#ddd' }}></div>
             <div className="p-4 mr-4">
               <span className="subtitle is-size-7 my-4">Source</span><br />
-              <span className="subtitle is-size-7 has-text-weight-semibold">{order.source}</span>
+              <span className="subtitle is-size-7 has-text-weight-semibold">{order?.source}</span>
             </div>
           </>}
         </div>
@@ -105,24 +97,24 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ADDRESS</p>
 
-              <p className="is-size-6 my-1">{order.shipping_to.person_name}</p>
-              <p className="is-size-6 my-1">{order.shipping_to.company_name}</p>
-              <p className="is-size-6 my-1 has-text-info">{order.shipping_to.email}</p>
-              <p className="is-size-6 my-1 has-text-info">{order.shipping_to.phone_number}</p>
+              <p className="is-size-6 my-1">{order?.shipping_to.person_name}</p>
+              <p className="is-size-6 my-1">{order?.shipping_to.company_name}</p>
+              <p className="is-size-6 my-1 has-text-info">{order?.shipping_to.email}</p>
+              <p className="is-size-6 my-1 has-text-info">{order?.shipping_to.phone_number}</p>
               <p className="is-size-6 my-1">
-                <span>{order.shipping_to.address_line1}</span>
-                {!isNone(order.shipping_to.address_line2) && <span>{order.shipping_to.address_line2}</span>}
+                <span>{order?.shipping_to.address_line1}</span>
+                {!isNone(order?.shipping_to.address_line2) && <span>{order?.shipping_to.address_line2}</span>}
               </p>
-              <p className="is-size-6 my-1">{formatAddressLocation(order.shipping_to)}</p>
+              <p className="is-size-6 my-1">{formatAddressLocation(order?.shipping_to)}</p>
             </div>
 
             {/* Line Items section */}
             <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">
-                LINE ITEMS ({order.line_items.reduce((_, { quantity }) => _ + (quantity || 1), 0)})
+                LINE ITEMS ({order?.line_items.reduce((_, { quantity }) => _ + (quantity || 1), 0)})
               </p>
 
-              {order.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
+              {order?.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
                 <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                 <CommodityDescription commodity={item} />
               </React.Fragment>)}
@@ -131,10 +123,10 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
           {/* Options section */}
           <div className="columns mt-6 mb-0 is-multiline">
-            {(Object.values(order.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
+            {(Object.values(order?.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">ORDER OPTIONS</p>
 
-              {Object.entries(order.options).map(([key, value]: any, index) => <React.Fragment key={index + "item-info"}>
+              {Object.entries(order?.options).map(([key, value]: any, index) => <React.Fragment key={index + "item-info"}>
                 <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                   <span>{formatRef(key).toLowerCase()}: <strong>{String(value)}</strong></span>
                 </p>
@@ -145,10 +137,10 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
           {/* Billing address section */}
           <div className="columns mt-6 mb-0 is-multiline">
-            {order.billing_address && <div className="column is-6 is-size-6 py-1">
+            {order?.billing_address && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">BILL TO</p>
 
-              <AddressDescription address={order.billing_address} />
+              <AddressDescription address={order?.billing_address} />
 
             </div>}
           </div>
@@ -157,10 +149,9 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         {/* Metadata section */}
         <MetadataEditor
-          id={order.id}
-          object_type={MetadataObjectType.order}
-          metadata={order.metadata}
-          onChange={() => loadOrder(order.id)}
+          id={order?.id}
+          object_type={MetadataObjectTypeEnum.order}
+          metadata={order?.metadata}
         >
           <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
 
@@ -189,12 +180,12 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
         {/* Shipments section */}
         <h2 className="title is-5 my-4">Shipments</h2>
 
-        {(order.shipments || []).length == 0 && <div>No shipments</div>}
+        {(order?.shipments || []).length == 0 && <div>No shipments</div>}
 
-        {(order.shipments || []).length > 0 && <div className="table-container">
+        {(order?.shipments || []).length > 0 && <div className="table-container">
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
-              {(order.shipments || []).map(shipment => (
+              {(order?.shipments || []).map(shipment => (
                 <tr key={shipment.id} className="items is-clickable">
                   <td className="status is-vcentered p-0">
                     <AppLink href={`/shipments/${shipment.id}`} className="pr-2">
@@ -203,7 +194,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                   </td>
                   <td className="description is-vcentered p-0">
                     <AppLink href={`/shipments/${shipment.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
-                      {shipment.id}{' '}{shipment.tracking_number && <strong> - {shipment.tracking_number}</strong>}
+                      {shipment.id}{shipment.tracking_number && ` - ${shipment.tracking_number}`}
                     </AppLink>
                   </td>
                   <td className="date is-vcentered p-0">
@@ -222,14 +213,14 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
         {/* Logs section */}
         <h2 className="title is-5 my-4">Logs</h2>
 
-        {logs.loading && <Spinner />}
+        {logs.isFetching && <Spinner />}
 
-        {!logs.loading && (logs.logs || []).length == 0 && <div>No logs</div>}
+        {logs.isFetched && (logs.data?.logs.edges || []).length == 0 && <div>No logs</div>}
 
-        {!logs.loading && (logs.logs || []).length > 0 && <div className="table-container">
+        {logs.isFetched && (logs.data?.logs.edges || []).length > 0 && <div className="table-container">
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
-              {(logs.logs || []).map(log => (
+              {(logs.data?.logs.edges || []).map(({ node: log }) => (
                 <tr key={log.id} className="items is-clickable">
                   <td className="status is-vcentered p-0">
                     <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
@@ -257,14 +248,14 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
         {/* Events section */}
         <h2 className="title is-5 my-4">Events</h2>
 
-        {events.loading && <Spinner />}
+        {events.isFetching && <Spinner />}
 
-        {!events.loading && (events.events || []).length == 0 && <div>No events</div>}
+        {events.isFetched && (events.data?.events.edges || []).length == 0 && <div>No events</div>}
 
-        {!events.loading && (events.events || []).length > 0 && <div className="table-container">
+        {events.isFetched && (events.data?.events.edges || []).length > 0 && <div className="table-container">
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
-              {(events.events || []).map(event => (
+              {(events.data?.events.edges || []).map(({ node: event }) => (
                 <tr key={event.id} className="items is-clickable">
                   <td className="description is-vcentered p-0">
                     <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
@@ -284,7 +275,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
       </>}
 
-      {called && !loading && isNone(order) && <div className="card my-6">
+      {query.isFetched && isNone(order) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>
@@ -300,17 +291,9 @@ export default function OrderPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Order - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <OrderProvider>
-        <EventsProvider setVariablesToURL={false}>
-          <LogsProvider setVariablesToURL={false}>
-            <MetadataMutationProvider>
 
-              <OrderComponent />
+      <OrderComponent />
 
-            </MetadataMutationProvider>
-          </LogsProvider>
-        </EventsProvider>
-      </OrderProvider>
-    </DashboardLayout>
+    </DashboardLayout >
   ), pageProps);
 }

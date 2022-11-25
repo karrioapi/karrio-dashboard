@@ -1,62 +1,47 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import CopiableLink from "@/components/copiable-link";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import StatusBadge from "@/components/status-badge";
-import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
-import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import React, { useContext, useEffect } from "react";
-import AppLink from "@/components/app-link";
-import { MetadataObjectType } from "karrio/graphql";
-import MetadataMutationProvider from "@/context/metadata-mutation";
-import { CustomsType, ParcelType } from "@/lib/types";
-import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
-import Spinner from "@/components/spinner";
-import EventsProvider, { EventsContext } from "@/context/events-provider";
-import LogsProvider, { LogsContext } from "@/context/logs-provider";
-import StatusCode from "@/components/status-code-badge";
-import CarrierBadge from "@/components/carrier-badge";
-import ParcelDescription from "@/components/descriptions/parcel-description";
-import ShipmentMenu from "@/components/shipment-menu";
-import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
-import AddressDescription from "@/components/descriptions/address-description";
-import CommodityDescription from "@/components/descriptions/commodity-description";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
-import ShipmentMutationProvider from "@/context/shipment-mutation";
+import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
+import CommodityDescription from "@/components/descriptions/commodity-description";
+import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
+import AddressDescription from "@/components/descriptions/address-description";
+import ParcelDescription from "@/components/descriptions/parcel-description";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import StatusCode from "@/components/status-code-badge";
+import CopiableLink from "@/components/copiable-link";
+import CarrierBadge from "@/components/carrier-badge";
+import ShipmentMenu from "@/components/shipment-menu";
 import ConfirmModal from "@/components/confirm-modal";
-import ShipmentsProvider from "@/context/shipments-provider";
+import { CustomsType, ParcelType } from "@/lib/types";
+import { MetadataObjectTypeEnum } from "karrio/graphql";
+import { useRouter } from "next/dist/client/router";
+import StatusBadge from "@/components/status-badge";
+import { useShipment } from "@/context/shipment";
+import { useLoader } from "@/components/loader";
+import { useEvents } from "@/context/event";
+import { useLogs } from "@/context/log";
+import AppLink from "@/components/app-link";
+import Spinner from "@/components/spinner";
+import Head from "next/head";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentId }) => {
   const router = useRouter();
-  const logs = useContext(LogsContext);
-  const events = useContext(EventsContext);
-  const { setLoading } = useContext(Loading);
-  const { templates } = useDocumentTemplates();
-  const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
-  const { id } = router.query;
+  const { setLoading } = useLoader();
+  const entity_id = shipmentId || router.query.id as string;
+  const { query: logs } = useLogs({ entity_id });
+  const { query: events } = useEvents({ entity_id });
+  const { query: { data: { shipment } = {}, ...query } } = useShipment(entity_id);
 
-  useEffect(() => { setLoading(loading); });
-  useEffect(() => {
-    if (!called && !loading && loadShipment) {
-      loadShipment((id || shipmentId) as string);
-    }
-  }, [called, loading, id || shipmentId]);
-  useEffect(() => {
-    if (called && !isNone(shipment)) {
-      (!logs.called && !logs.loading && logs.load) && logs.load({ filter: { first: 6, entity_id: shipment?.id } });
-      (!events.called && !events.loading && events.load) && events.load({ filter: { first: 6, entity_id: shipment?.id } });
-    }
-  }, [called, shipment]);
+
+  React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
 
   return (
     <>
 
-      {!called && loading && <Spinner />}
+      {!query.isFetched && query.isFetching && <Spinner />}
 
       {shipment && <>
 
@@ -84,7 +69,10 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </AppLink>}
 
               <div style={{ display: 'inline-flex' }}>
-                <ShipmentMenu shipment={shipment} templates={templates} isViewing />
+                <ShipmentMenu
+                  shipment={shipment as any}
+                  isViewing
+                />
               </div>
 
             </div>
@@ -106,7 +94,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <span className="subtitle is-size-7 my-4">Courier</span><br />
               <CarrierBadge
                 className="has-background-primary has-text-centered has-text-weight-bold has-text-white-bis is-size-7"
-                carrier={shipmentCarrier(shipment)}
+                carrier={shipmentCarrier(shipment as any)}
                 custom_name={(shipment as any).carrier_id as string}
                 style={{ minWidth: '90px' }}
                 short
@@ -298,7 +286,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         {/* Metadata section */}
         <MetadataEditor
           id={shipment.id}
-          object_type={MetadataObjectType.shipment}
+          object_type={MetadataObjectTypeEnum.shipment}
           metadata={shipment.metadata}
         >
           <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
@@ -328,14 +316,14 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         {/* Logs section */}
         <h2 className="title is-5 my-4">Logs</h2>
 
-        {logs.loading && <Spinner />}
+        {!logs.isFetched && logs.isFetching && <Spinner className="my-1 p-1 has-text-centered" size={6} />}
 
-        {!logs.loading && (logs.logs || []).length == 0 && <div>No logs</div>}
+        {logs.isFetched && (logs.data?.logs.edges || []).length == 0 && <div>No logs</div>}
 
-        {!logs.loading && (logs.logs || []).length > 0 && <div className="table-container">
+        {logs.isFetched && (logs.data?.logs.edges || []).length > 0 && <div className="table-container">
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
-              {(logs.logs || []).map(log => (
+              {(logs.data?.logs.edges || []).map(({ node: log }) => (
                 <tr key={log.id} className="items is-clickable">
                   <td className="status is-vcentered p-0">
                     <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
@@ -363,14 +351,14 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         {/* Events section */}
         <h2 className="title is-5 my-4">Events</h2>
 
-        {events.loading && <Spinner />}
+        {!events.isFetched && events.isFetching && <Spinner className="my-1 p-1 has-text-centered" size={6} />}
 
-        {!events.loading && (events.events || []).length == 0 && <div>No events</div>}
+        {events.isFetched && (events.data?.events.edges || []).length == 0 && <div>No events</div>}
 
-        {!events.loading && (events.events || []).length > 0 && <div className="table-container">
+        {events.isFetched && (events.data?.events.edges || []).length > 0 && <div className="table-container">
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
-              {(events.events || []).map(event => (
+              {(events.data?.events.edges || []).map(({ node: event }) => (
                 <tr key={event.id} className="items is-clickable">
                   <td className="description is-vcentered p-0">
                     <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
@@ -390,7 +378,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
       </>}
 
-      {called && !loading && isNone(shipment) && <div className="card my-6">
+      {query.isFetched && isNone(shipment) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>
@@ -406,25 +394,11 @@ export default function ShipmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <ShipmentProvider>
-        <ShipmentMutationProvider>
-          <ShipmentsProvider>
-            <DocumentTemplatesProvider filter={{ filter: { related_object: "shipment" as any } }}>
-              <EventsProvider setVariablesToURL={false}>
-                <LogsProvider setVariablesToURL={false}>
-                  <ConfirmModal>
-                    <MetadataMutationProvider>
+      <ConfirmModal>
 
-                      <ShipmentComponent />
+        <ShipmentComponent />
 
-                    </MetadataMutationProvider>
-                  </ConfirmModal>
-                </LogsProvider>
-              </EventsProvider>
-            </DocumentTemplatesProvider>
-          </ShipmentsProvider>
-        </ShipmentMutationProvider>
-      </ShipmentProvider>
+      </ConfirmModal>
     </DashboardLayout>
   ), pageProps);
 }

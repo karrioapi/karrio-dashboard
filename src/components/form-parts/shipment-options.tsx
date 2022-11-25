@@ -1,14 +1,14 @@
+import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
+import { CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
 import React, { FormEvent, useContext, useReducer, useState } from 'react';
-import ButtonField from '@/components/generic/button-field';
-import InputField from '@/components/generic/input-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
+import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
 import { cleanDict, deepEqual, isNone } from '@/lib/helper';
-import { CURRENCY_OPTIONS, NotificationType, ShipmentType } from '@/lib/types';
+import InputField from '@/components/generic/input-field';
+import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import MetadataEditor, { MetadataEditorContext } from '../metadata-editor';
-import { MetadataObjectType } from 'karrio/graphql';
 
 interface ShipmentOptionsComponent {
   shipment: ShipmentType;
@@ -163,7 +163,7 @@ const ShipmentOptions: React.FC<ShipmentOptionsComponent> = ({ shipment, onSubmi
       <hr className="column p-0 my-5" />
 
       <MetadataEditor
-        object_type={MetadataObjectType.shipment}
+        object_type={MetadataObjectTypeEnum.shipment}
         metadata={metadata}
         onChange={setMetadata}
       >

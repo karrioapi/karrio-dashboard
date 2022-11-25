@@ -1,6 +1,6 @@
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
-import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
   eventKey?: string;

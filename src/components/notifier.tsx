@@ -65,6 +65,7 @@ export function formatMessage(msg: Notification['message']) {
 
     return (msg as any).message;
   } catch (e) {
+    console.log('Failed to parse error');
     console.error(e);
     return 'Uh Oh! An uncaught error occured...';
   }

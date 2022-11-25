@@ -1,9 +1,5 @@
-import EventsProvider from '@/context/events-provider';
-import LogsProvider from '@/context/logs-provider';
-import MetadataMutationProvider from '@/context/metadata-mutation';
-import ShipmentProvider from '@/context/shipment-provider';
-import { useLocation } from '@/lib/helper';
 import { ShipmentComponent } from '@/views/shipment';
+import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 
 type ShipmentPreviewContextType = {
@@ -44,17 +40,9 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
 
         {(isActive && shipmentId) && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
-            <ShipmentProvider>
-              <EventsProvider setVariablesToURL={false}>
-                <LogsProvider setVariablesToURL={false}>
-                  <MetadataMutationProvider>
 
-                    <ShipmentComponent shipmentId={shipmentId} />
+            <ShipmentComponent shipmentId={shipmentId} />
 
-                  </MetadataMutationProvider>
-                </LogsProvider>
-              </EventsProvider>
-            </ShipmentProvider>
           </section>
         </div>}
 

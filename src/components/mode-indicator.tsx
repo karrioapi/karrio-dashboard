@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { AppMode } from '@/context/data/mode-context';
+import { useAppMode } from '@/context/app-mode';
+import React from 'react';
 
 const ModeIndicator: React.FC = () => {
-  const { testMode } = useContext(AppMode);
+  const { testMode } = useAppMode();
 
   return (
     <>

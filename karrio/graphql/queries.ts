@@ -1040,6 +1040,7 @@ export const GET_WEBHOOK = gql`query get_webhook($id: String!) {
     disabled
     description
     last_event_at
+    secret
   }
 }
 `;
@@ -1067,6 +1068,7 @@ export const GET_WEBHOOKS = gql`query get_webhooks($filter: WebhookFilter) {
         disabled
         description
         last_event_at
+        secret
       }
     }
   }

@@ -1,17 +1,17 @@
-import { formatRef, isNone } from '@/lib/helper';
-import { useRouter } from 'next/dist/client/router';
-import { CustomsType, PaymentType, ShipmentType } from '@/lib/types';
-import React, { useContext, useEffect, useState } from 'react';
-import AddressDescription from '@/components/descriptions/address-description';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
+import AddressDescription from '@/components/descriptions/address-description';
 import OptionsDescription from '@/components/descriptions/options-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
-import ButtonField from '@/components/generic/button-field';
-import InputField from '@/components/generic/input-field'
-import { Loading } from '@/components/loader';
 import RateDescription from '@/components/descriptions/rate-description';
+import { CustomsType, PaymentType, ShipmentType } from '@/lib/types';
+import React, { useContext, useEffect, useState } from 'react';
+import ButtonField from '@/components/generic/button-field';
 import { LabelTypeEnum, PaidByEnum } from 'karrio/graphql';
-import { useLabelMutation } from '@/context/label-data-mutation';
+import InputField from '@/components/generic/input-field';
+import { useRouter } from 'next/dist/client/router';
+import { formatRef, isNone } from '@/lib/helper';
+import { Loading } from '@/components/loader';
+import { useLabelDataMutation } from '@/context/label-data';
 
 interface LiveRatesComponent {
   shipment: ShipmentType;
@@ -20,9 +20,8 @@ interface LiveRatesComponent {
 const DEFAULT_PAYMENT: Partial<PaymentType> = { paid_by: PaidByEnum.sender };
 
 const LiveRates: React.FC<LiveRatesComponent> = ({ shipment }) => {
-  const router = useRouter();
   const { loading } = useContext(Loading);
-  const mutation = useLabelMutation();
+  const mutation = useLabelDataMutation(shipment.id);
   const [payment, setPayment] = useState<Partial<PaymentType>>(DEFAULT_PAYMENT);
   const [key, setKey] = useState<string>(`details-${Date.now()}`);
   const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(

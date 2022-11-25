@@ -1,7 +1,6 @@
-import { NotificationType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
-import { UserData, UserType } from '@/context/user-provider';
-import UserMutation from '@/context/user-mutation';
+import { UserType, useUser, useUserMutation } from '@/context/user';
+import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 
 interface ProfileUpdateInputComponent {
@@ -10,9 +9,10 @@ interface ProfileUpdateInputComponent {
   propertyKey: keyof UserType;
 }
 
-const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<ProfileUpdateInputComponent>(({ label, inputType, propertyKey, updateUser }) => {
-  const { user, refetch } = useContext(UserData);
+const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = ({ label, inputType, propertyKey }) => {
+  const mutation = useUserMutation();
   const { notify } = useContext(Notify);
+  const { query: { data: { user } = {} } } = useUser();
   const [key, setKey] = useState<string>(`${propertyKey}-${Date.now()}`);
   const [originalValue, _] = useState<string>(((user || {}) as any)[propertyKey] || "");
   const [propertyValue, setPropertyValue] = useState<string>("");
@@ -27,8 +27,7 @@ const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<P
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     try {
-      await updateUser({ [propertyKey]: propertyValue });
-      if (refetch !== undefined) refetch();
+      await mutation.updateUser.mutateAsync({ [propertyKey]: propertyValue });
       setHasChanged(false);
       notify({
         type: NotificationType.success, message: `${propertyValue} updated successfully!`
@@ -64,6 +63,6 @@ const ProfileUpdateInput: React.FC<ProfileUpdateInputComponent> = UserMutation<P
       </div>
     </form>
   )
-});
+};
 
 export default ProfileUpdateInput;

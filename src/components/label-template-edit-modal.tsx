@@ -1,15 +1,15 @@
-import React, { useContext, useReducer, useState } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-import { html } from '@codemirror/lang-html';
-import { jsonLanguage } from '@codemirror/lang-json';
-import { failsafe, isEqual, isNone, isNoneOrEmpty, validationMessage, validityCheck } from '@/lib/helper';
 import { get_user_connections_user_connections_GenericSettingsType, get_user_connections_user_connections_GenericSettingsType_label_template, LabelTemplateTypeEnum } from 'karrio/graphql';
-import Notifier from '@/components/notifier';
-import { Loading } from '@/components/loader';
+import { failsafe, isEqual, isNone, isNoneOrEmpty, validationMessage, validityCheck } from '@/lib/helper';
+import Tabs, { TabStateProvider } from '@/components/generic/tabs';
+import React, { useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_SVG_LABEL_TEMPLATE } from '@/lib/sample';
+import { jsonLanguage } from '@codemirror/lang-json';
+import CodeMirror from '@uiw/react-codemirror';
+import { html } from '@codemirror/lang-html';
+import Notifier from '@/components/notifier';
+import { Loading } from '@/components/loader';
 import { KARRIO_API } from '@/client/context';
-import Tabs, { TabStateProvider } from './generic/tabs';
 
 type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
 type ConnectionType = get_user_connections_user_connections_GenericSettingsType;

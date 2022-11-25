@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useContext, useEffect } from 'react';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
+import { useAddressTemplates } from '@/context/address';
 import { formatAddress, isNone } from '@/lib/helper';
 import { Address } from 'karrio/rest/index';
-import { useAddressTemplates } from '@/context/data/address';
+import React, { ChangeEvent } from 'react';
 
 interface NameInputComponent extends InputFieldComponent {
   onValueChange: (value: Partial<Address>, refresh?: boolean) => void;

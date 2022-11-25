@@ -1,19 +1,19 @@
-import { NotificationType } from '@/lib/types';
-import React, { useContext, useRef, useState } from 'react';
-import Notifier, { Notify } from '@/components/notifier';
-import { useLoader } from './loader';
-import { useUser } from '@/context/user-provider';
-import UserMutation from '@/context/user-mutation';
 import { request_email_change_request_email_change_errors } from 'karrio/graphql';
+import React, { useContext, useRef, useState } from 'react';
+import { useUser, useUserMutation } from '@/context/user';
+import Notifier, { Notify } from '@/components/notifier';
+import { useLoader } from '@/components/loader';
+import { NotificationType } from '@/lib/types';
 
 interface EmailManagementComponent { }
 
-const EmailManagement: React.FC<EmailManagementComponent> = UserMutation<EmailManagementComponent>(({ children, requestEmailChange }) => {
-  const password = useRef<HTMLInputElement>(null);
-  const email = useRef<HTMLInputElement>(null);
-  const user = useUser();
+const EmailManagement: React.FC<EmailManagementComponent> = ({ children }) => {
+  const mutation = useUserMutation();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useLoader();
+  const { query: { data: { user } = {} } } = useUser();
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [errors, setErrors] = useState<request_email_change_request_email_change_errors[]>([]);
 
@@ -21,7 +21,7 @@ const EmailManagement: React.FC<EmailManagementComponent> = UserMutation<EmailMa
     evt.preventDefault();
     try {
       setLoading(true);
-      await requestEmailChange({
+      await mutation.requestEmailChange.mutateAsync({
         email: email.current?.value as string,
         password: password.current?.value as string,
         redirect_url: `${location.origin}/email/change`,
@@ -43,7 +43,7 @@ const EmailManagement: React.FC<EmailManagementComponent> = UserMutation<EmailMa
       <Notifier>
         <div className="field">
           <label className="label">Email</label>
-          <p className="is-size-7 has-text-weight-semibold" style={{ maxWidth: "60%" }}>{user.email}</p>
+          <p className="is-size-7 has-text-weight-semibold" style={{ maxWidth: "60%" }}>{user?.email}</p>
           <a className="is-size-7 has-text-info" onClick={() => setIsActive(true)}>Change email</a>
         </div>
 
@@ -119,6 +119,6 @@ const EmailManagement: React.FC<EmailManagementComponent> = UserMutation<EmailMa
       </Notifier>
     </>
   )
-});
+};
 
 export default EmailManagement;
