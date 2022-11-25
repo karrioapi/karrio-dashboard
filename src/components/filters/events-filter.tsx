@@ -1,18 +1,21 @@
+import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
 import React, { useReducer, useContext, useEffect } from 'react';
 import CheckBoxField from '@/components/generic/checkbox-field';
-import { isNone } from '@/lib/helper';
-import { EventsContext } from '@/context/events-provider';
-import Dropdown, { closeDropdown } from '@/components/generic/dropdown';
-import { EVENT_TYPES } from '@/lib/types';
 import InputField from '@/components/generic/input-field';
+import { useEvents } from '@/context/event';
 import Spinner from '@/components/spinner';
+import { EVENT_TYPES } from '@/lib/types';
+import { isNone } from '@/lib/helper';
 
 
-interface EventsFilterComponent { }
+interface EventsFilterComponent {
+  context: ReturnType<typeof useEvents>;
+}
 
 
-const EventsFilter: React.FC<EventsFilterComponent> = ({ ...props }) => {
-  const { variables, loading, loadMore } = useContext(EventsContext);
+const EventsFilter: React.FC<EventsFilterComponent> = ({ context }) => {
+  const [isReady, setIsReady] = React.useState(true);
+  const { query, filter: variables, setFilter } = context;
   const [filters, dispatch] = useReducer((state: any, { name, checked, value }: { name: string, checked?: boolean, value?: string | boolean | object }) => {
     switch (name) {
       case 'clear':
@@ -36,7 +39,7 @@ const EventsFilter: React.FC<EventsFilterComponent> = ({ ...props }) => {
         return { ...state, [name]: value };
     }
   }, variables, () => variables);
-  const [isReady, setIsReady] = React.useState(true);
+
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: any, value: object }>) => {
     const target = event.target;
     const name = target.name;
@@ -51,11 +54,11 @@ const EventsFilter: React.FC<EventsFilterComponent> = ({ ...props }) => {
     dispatch({ name: 'clear' });
     window.setTimeout(() => {
       setIsReady(true);
-    }, 500);
+    }, 200);
   };
   const handleApply = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    await loadMore({ ...filters, offset: 0 });
+    setFilter({ ...filters, offset: 0 });
     closeDropdown(event.target);
   };
 
@@ -80,8 +83,8 @@ const EventsFilter: React.FC<EventsFilterComponent> = ({ ...props }) => {
           <button className="button is-small is-default" onClick={handleClear}>Clear</button>
           <span className="is-size-6 has-text-weight-semibold p-1">Filters</span>
           <button
-            className={"button is-small is-info" + (loading ? " is-loading" : "")}
-            disabled={loading}
+            className={"button is-small is-info" + (query.isFetching ? " is-loading" : "")}
+            disabled={query.isFetching}
             onClick={handleApply}>Done</button>
         </p>
 

@@ -1,13 +1,13 @@
+import GenerateAPIModal from "@/components/generate-api-dialog";
+import { useContext, useEffect, useRef, useState } from "react";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import GenerateAPIModal from "@/components/generate-api-dialog";
-import { Loading } from "@/components/loader";
-import { TokenData } from "@/context/token-provider";
-import Head from "next/head";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Metadata } from "@/lib/types";
-import { KARRIO_API } from "@/client/context";
 import CopiableLink from "@/components/copiable-link";
+import { useAPIToken } from "@/context/api-token";
+import { KARRIO_API } from "@/client/context";
+import { Loading } from "@/components/loader";
+import { Metadata } from "@/lib/types";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -17,21 +17,20 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
 
   const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
-    const { token, loading, load } = useContext(TokenData)
-    const [isRevealed, setIsRevealed] = useState<boolean>(false);
     const tokenInput = useRef<HTMLInputElement>(null);
+    const [isRevealed, setIsRevealed] = useState<boolean>(false);
+    const { query: { data: { token } = {}, ...query } } = useAPIToken();
 
     const copy = (_: React.MouseEvent) => {
       tokenInput.current?.select();
       document.execCommand("copy");
     };
 
-    useEffect(() => { (!loading && load) && load(); }, []);
-    useEffect(() => { setLoading(loading); });
+    useEffect(() => { setLoading(query.isRefetching); }, [query.isRefetching]);
 
     return (
       <>
-        <header className="px-1 py-3 mb-6 is-flex is-justify-content-space-between">
+        <header className="px-1 py-6 is-flex is-justify-content-space-between">
           <span className="title is-4">API</span>
         </header>
 
@@ -57,7 +56,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
           <div className="is-flex my-0 px-3">
             <div className="py-1" style={{ width: '40%' }}>GRAPHQL API</div>
             <div className="py-1" style={{ width: '40%' }}>
-              <CopiableLink className="button is-white py-2 px-1" text={`${KARRIO_API}/graphql/`} />
+              <CopiableLink className="button is-white py-2 px-1" text={`${KARRIO_API || ''}/graphql`} />
             </div>
           </div>
         </div>
@@ -133,7 +132,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>API Keys - {metadata?.APP_NAME}</title></Head>
       <Component />
     </DashboardLayout>

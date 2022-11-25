@@ -1,11 +1,11 @@
-import React, { useContext, useReducer, useState } from 'react';
-import { deepEqual, isNone } from '@/lib/helper';
-import Notifier, { useNotifier } from '@/components/notifier';
-import { useLoader } from '@/components/loader';
-import InputField from '@/components/generic/input-field';
-import { NotificationType } from '@/lib/types';
-import { useOrganizationMutation } from '@/context/organization-mutation';
+import { useOrganizationMutation } from '@/context/organization';
 import { CreateOrganizationMutationInput } from 'karrio/graphql';
+import React, { useContext, useReducer, useState } from 'react';
+import Notifier, { useNotifier } from '@/components/notifier';
+import InputField from '@/components/generic/input-field';
+import { deepEqual, isNone } from '@/lib/helper';
+import { useLoader } from '@/components/loader';
+import { NotificationType } from '@/lib/types';
 
 type OperationType = {
   onChange: (orgId: string) => Promise<any>;
@@ -62,9 +62,9 @@ const CreateOrganizationModalProvider: React.FC = ({ children }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await mutation.createOrganization(organization as CreateOrganizationMutationInput);
+      const response = await mutation.createOrganization.mutateAsync(organization as any);
       notify({ type: NotificationType.success, message: 'Organization created successfully!' });
-      operation?.onChange && operation?.onChange(response?.organization?.id as string);
+      operation?.onChange && operation?.onChange(response?.create_organization?.organization?.id as string);
       setTimeout(() => { setLoading(false); close(); }, 600);
     } catch (message: any) {
       notify({ type: NotificationType.error, message });

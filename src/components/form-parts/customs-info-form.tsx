@@ -1,19 +1,19 @@
+import { CommodityType, CURRENCY_OPTIONS, CustomsType, CUSTOMS_CONTENT_TYPES, DutyType, INCOTERMS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
+import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/components/commodity-list-editor';
 import React, { ChangeEvent, FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
-import InputField from '@/components/generic/input-field';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
+import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
-import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
-import { CommodityType, CURRENCY_OPTIONS, CustomsType, CUSTOMS_CONTENT_TYPES, DutyType, INCOTERMS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
-import { useUser } from '@/context/user-provider';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
+import InputField from '@/components/generic/input-field';
 import { Notify } from '@/components/notifier';
-import { DefaultTemplatesData } from '@/context/default-templates-provider';
 import { Loading } from '@/components/loader';
-import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '../commodity-list-editor';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
 import moment from 'moment';
+import { useUser } from '@/context/user';
+import { useShipmentMutation } from '@/context/shipment';
+import { useDefaultTemplates } from '@/context/default-template';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
@@ -40,17 +40,17 @@ interface CustomsInfoFormComponent {
 
 const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, shipment, isTemplate, onSubmit, onChange, onTemplateChange }) => {
   const form = useRef<any>(null);
-  const user = useUser();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
-  const { discardCustoms, discardCommodity } = useContext(ShipmentMutationContext);
-  const { default_customs } = useContext(DefaultTemplatesData);
+  const { query: { data: { user } = {} } } = useUser();
+  const { query: { data: { default_templates } = {} } } = useDefaultTemplates();
+  const { discardCustoms, discardCommodity } = useShipmentMutation(shipment?.id);
   const [customs, dispatch] = useReducer((state: any, { name, value }: { name: string, value: string | boolean | object | any }) => {
     switch (name) {
       case 'hasDuty':
         return { ...state, duty: value === true ? DEFAULT_DUTY : null };
       case 'optOut':
-        return value === true ? null : { ...(default_customs || DEFAULT_CUSTOMS_CONTENT) as CustomsType };
+        return value === true ? null : { ...(default_templates?.default_customs?.customs || DEFAULT_CUSTOMS_CONTENT) as CustomsType };
       case 'full':
         return { ...(value as object) };
       case 'commercial_invoice':
@@ -81,7 +81,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   const removeCustomsCommodity = async (id: string) => {
     setLoading(true);
     try {
-      await discardCommodity(id);
+      await discardCommodity.mutateAsync({ id });
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
@@ -116,7 +116,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     setLoading(true);
     try {
       if (!isNone(shipment?.id) && !isNone(shipment?.customs?.id)) {
-        await discardCustoms(shipment?.customs?.id as string);
+        await discardCustoms.mutateAsync({ id: shipment?.customs?.id as string });
         notify({ type: NotificationType.success, message: 'Customs declaration discarded successfully!' });
       } else {
         onSubmit(null);

@@ -1,13 +1,13 @@
 import SectionLayout from "@/layouts/section-layout";
-import Spinner from "@/components/spinner";
-import { CONFIRM_EMAIL } from "karrio/graphql";
-import { isNone } from "@/lib/helper";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import Link from "next/link";
+import { CONFIRM_EMAIL } from "karrio/graphql";
+import { useMutation } from "@apollo/client";
+import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
 import { Metadata } from "@/lib/types";
+import { isNone } from "@/lib/helper";
+import Head from "next/head";
+import Link from "next/link";
 
 export { getServerSideProps } from '@/lib/static/references';
 

@@ -1,24 +1,24 @@
-import { NotificationType } from '@/lib/types';
 import React, { useContext, useRef, useState } from 'react';
+import { useAPITokenMutation } from '@/context/api-token';
 import Notifier, { Notify } from '@/components/notifier';
-import TokenMutation from '@/context/token-mutation';
 import { useLoader } from '@/components/loader';
-import { useUser } from '@/context/user-provider';
+import { NotificationType } from '@/lib/types';
+import { useUser } from '@/context/user';
 
-interface GenerateAPIModalComponent { }
 
-const GenerateAPIModal: React.FC<GenerateAPIModalComponent> = TokenMutation<GenerateAPIModalComponent>(({ children, updateToken }) => {
-  const password = useRef<HTMLInputElement>(null);
-  const user = useUser();
+const GenerateAPIModal: React.FC = ({ children }) => {
   const { notify } = useContext(Notify);
+  const mutation = useAPITokenMutation();
   const { loading, setLoading } = useLoader();
+  const password = useRef<HTMLInputElement>(null);
+  const { query: { data: { user } = {} } } = useUser();
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     try {
       setLoading(true);
-      await updateToken({ refresh: true, password: password.current?.value });
+      await mutation.updateToken.mutateAsync({ refresh: true, password: password.current?.value });
       setLoading(false);
       setIsActive(false);
       notify({ type: NotificationType.success, message: "New token generated successfully!" });
@@ -64,7 +64,7 @@ const GenerateAPIModal: React.FC<GenerateAPIModalComponent> = TokenMutation<Gene
                   id="email"
                   name="name"
                   type="text"
-                  value={user.email}
+                  value={user?.email}
                   disabled
                 />
               </div>
@@ -98,6 +98,6 @@ const GenerateAPIModal: React.FC<GenerateAPIModalComponent> = TokenMutation<Gene
       </Notifier>
     </>
   )
-});
+};
 
 export default GenerateAPIModal;

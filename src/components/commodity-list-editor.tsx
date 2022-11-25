@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react';
-import { CommodityType } from '@/lib/types';
-import CommodityDescription from '@/components/descriptions/commodity-description';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
+import CommodityDescription from '@/components/descriptions/commodity-description';
 import LineItemSelector from '@/components/line-item-selector';
-import { Loading } from './loader';
+import React, { useContext, useEffect } from 'react';
+import { Loading } from '@/components/loader';
+import { CommodityType } from '@/lib/types';
 
 type CommodityCollection = Record<string, CommodityType>;
 interface CommodityCollectionEditorProps {

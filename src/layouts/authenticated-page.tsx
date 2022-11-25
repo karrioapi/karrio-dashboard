@@ -1,30 +1,25 @@
+import CreateOrganizationModalProvider from '@/components/create-organization-modal';
+import AcceptInvitationProvider from '@/components/accept-invitation-modal';
+import NextSessionProvider, { NextSession } from '@/context/session';
+import { OrganizationProvider } from '@/context/organization';
+import { ServerError, ServerErrorCode } from '@/lib/helper';
+import SubscriptionProvider from '@/context/subscription';
+import ErrorBoundary from '@/components/error-boudaries';
+import APIReferenceProvider from '@/context/reference';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
-import UserProvider from '@/context/user-provider';
-import OrganizationsProvider from '@/context/organizations-provider';
-import APIReferenceProvider from '@/context/references-provider';
 import { ClientsProvider } from '@/client/context';
-import AppModeProvider from '@/context/data/mode-context';
 import LoadingProvider from '@/components/loader';
-import TokenProvider from '@/context/token-provider';
+import AppModeProvider from '@/context/app-mode';
 import Notifier from '@/components/notifier';
-import NextSessionProvider, { NextSession } from '@/context/next-session-provider';
-import ErrorBoundary from '@/components/error-boudaries';
-import SubscriptionProvider from '@/context/subscription-provider';
-import AcceptInvitationProvider from '@/components/accept-invitation-modal';
-import CreateOrganizationModalProvider from '@/components/create-organization-modal';
-import { forceSignOut, ServerError, ServerErrorCode } from '@/lib/helper';
-import { getSession } from 'next-auth/react';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
-  OrganizationsProvider,
+  OrganizationProvider,
   SubscriptionProvider,
   APIReferenceProvider,
   AppModeProvider,
   LoadingProvider,
-  TokenProvider,
-  Notifier,
 ];
 
 
@@ -33,7 +28,7 @@ const ContextProviders: React.FC = ({ children, ...props }) => {
 
   return (
     <>
-      <UserProvider user={(props as any).user}>{NestedContexts}</UserProvider>
+      <Notifier>{NestedContexts}</Notifier>
     </>
   );
 };

@@ -1,9 +1,8 @@
-import React from 'react';
 import ShortcutDropdown from '@/components/navbar/shortcut-dropdown';
 import AccountDropdown from '@/components/navbar/account-dropdown';
-import SearchBar from '@/components/navbar/search-bar';
-import SearchProvider from '@/context/search-provider';
 import ModeIndicator from '@/components/mode-indicator';
+import SearchBar from '@/components/navbar/search-bar';
+import React from 'react';
 
 interface NavbarComponent {
   showModeIndicator?: boolean;
@@ -26,9 +25,7 @@ const Navbar: React.FC<NavbarComponent> = ({ showModeIndicator }) => {
             </button>
           </div>
 
-          <SearchProvider>
-            <SearchBar />
-          </SearchProvider>
+          <SearchBar />
 
         </div>
         <div className="nav-end">

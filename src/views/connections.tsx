@@ -1,8 +1,8 @@
 import ConnectProviderModal, { ConnectProviderModalContext } from "@/components/connect-provider-modal";
 import Tabs, { TabStateContext, TabStateProvider } from "@/components/generic/tabs";
 import LabelTemplateEditModalProvider from "@/components/label-template-edit-modal";
-import { useSystemConnections } from "@/context/data/system-connection";
-import { useCarrierConnections } from "@/context/data/user-connection";
+import { useSystemConnections } from "@/context/system-connection";
+import { useCarrierConnections } from "@/context/user-connection";
 import SystemConnectionList from "@/components/system-carrier-list";
 import UserConnectionList from "@/components/user-carrier-list";
 import AuthenticatedPage from "@/layouts/authenticated-page";

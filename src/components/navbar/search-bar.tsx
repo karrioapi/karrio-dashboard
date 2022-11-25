@@ -1,19 +1,18 @@
-import { SearchContext } from '@/context/search-provider';
-import React, { useContext, useEffect } from 'react';
 import Dropdown, { closeDropdown, openDropdown } from '@/components/generic/dropdown';
-import AppLink from '@/components/app-link';
 import { formatAddressShort, isNoneOrEmpty } from '@/lib/helper';
 import StatusBadge from '@/components/status-badge';
+import { useSearch } from '@/context/search';
+import AppLink from '@/components/app-link';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
-interface SearchBarComponent {
-}
 
-const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
+const SearchBar: React.FC = () => {
+  const { query, setFilter } = useSearch();
   const ref = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { searchResults, loading, search } = useContext(SearchContext);
-  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [searchValue, setSearchValue] = React.useState<string>();
+
   const clear = () => {
     setSearchValue("");
     if (inputRef.current) {
@@ -22,7 +21,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
   };
 
   useEffect(() => {
-    search(searchValue);
+    setFilter({ keyword: searchValue });
     openDropdown(ref.current as any);
   }, [searchValue])
 
@@ -40,7 +39,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
             ref={inputRef}
           />
           <span className="icon is-small is-left">
-            {loading
+            {query.isFetching
               ? <i className="fas fa-spinner fa-pulse"></i>
               : <i className="fas fa-search"></i>
             }
@@ -57,7 +56,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
         onClick={e => closeDropdown(e.target)}>
         <div className="options-items p-0">
 
-          {!isNoneOrEmpty(searchValue) && (searchResults || []).slice(0, 10).map((result, key) => (
+          {!isNoneOrEmpty(searchValue) && (query.data?.results || []).slice(0, 10).map((result, key) => (
             <React.Fragment key={key}>
               {(result as any).recipient && <AppLink
                 href={`/shipments/${result.id}`}
@@ -100,7 +99,7 @@ const SearchBar: React.FC<SearchBarComponent> = ({ ...props }) => {
             </React.Fragment>
           ))}
 
-          {(isNoneOrEmpty(searchValue) || (searchResults || []).length === 0) &&
+          {(isNoneOrEmpty(searchValue) || (query.data?.results || []).length === 0) &&
             <span className='options-item px-2 py-1 has-text-weight-semibold is-size-7'>No results...</span>}
 
         </div>

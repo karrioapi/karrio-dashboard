@@ -1,20 +1,19 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import Spinner from "@/components/spinner";
-import StatusBadge from "@/components/status-badge";
-import OrdersProvider from "@/context/orders-provider";
-import { OrdersContext } from "@/context/orders-provider";
 import { formatAddressLocationShort, formatAddressShort, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
-import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
+import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
+import { useDocumentTemplates } from "@/context/document-template";
 import React, { ChangeEvent, useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
-import { AddressType } from "@/lib/types";
-import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
-import AppLink from "@/components/app-link";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import StatusBadge from "@/components/status-badge";
+import { useRouter } from "next/dist/client/router";
+import { useLoader } from "@/components/loader";
 import { KARRIO_API } from "@/client/context";
-import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
+import { useOrders } from "@/context/order";
+import AppLink from "@/components/app-link";
+import Spinner from "@/components/spinner";
+import { AddressType } from "@/lib/types";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -22,17 +21,20 @@ export { getServerSideProps } from "@/lib/middleware";
 export default function OrdersPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
-    const { setLoading } = useContext(Loading);
+    const { setLoading } = useLoader();
+    const context = useOrders({ setVariablesToURL: true });
     const { previewOrder } = useContext(OrderPreviewContext);
-    const { templates } = useDocumentTemplates();
-    const { loading, called, orders, next, previous, variables, load, loadMore } = useContext(OrdersContext);
-    const [filters, setFilters] = React.useState<any>(variables);
+    const [allChecked, setAllChecked] = React.useState(false);
     const [initialized, setInitialized] = React.useState(false);
     const [selection, setSelection] = React.useState<string[]>([]);
-    const [allChecked, setAllChecked] = React.useState(false);
+    const { query: { data: { orders } = {}, ...query }, filter, setFilter } = context;
+    const { query: { data: { document_templates } = {} } } = useDocumentTemplates({
+      related_object: "order" as any
+    });
 
+    const preventPropagation = (e: React.MouseEvent) => e.stopPropagation();
     const updatedSelection = (selectedOrders: string[], current: typeof orders) => {
-      const order_ids = current.map(order => order.id);
+      const order_ids = (current?.edges || []).map(({ node: order }) => order.id);
       const selection = selectedOrders.filter(id => order_ids.includes(id));
       const selected = selection.length > 0 && selection.length === (order_ids || []).length;
       setAllChecked(selected);
@@ -40,73 +42,70 @@ export default function OrdersPage(pageProps: any) {
         setSelection(selection);
       }
     };
-    const fetchOrders = (extra: Partial<any> = {}) => {
+    const updateFilter = (extra: Partial<any> = {}) => {
       const query = {
-        ...filters,
+        ...filter,
         ...getURLSearchParams(),
         ...extra
       };
 
-      setFilters(query);
-      (!loading && load) && (called ? loadMore : load)(query);
+      setFilter(query);
     };
-    const preventPropagation = (e: React.MouseEvent) => e.stopPropagation();
     const handleSelection = (e: ChangeEvent) => {
       const { checked, name } = e.target as HTMLInputElement;
       if (name === "all") {
-        setSelection(!checked ? [] : (orders || []).map(({ id }) => id));
+        setSelection(!checked ? [] : (orders?.edges || []).map(({ node: { id } }) => id));
       } else {
         setSelection(checked ? [...selection, name] : selection.filter(id => id !== name));
       }
     };
     const unfulfilledSelection = (selection: string[]) => {
-      return orders.filter(order => (
+      return (orders?.edges || []).filter(({ node: order }) => (
         selection.includes(order.id) &&
         !["cancelled", "fulfilled"].includes(order.status)
       )).length === selection.length;
     };
 
-    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
-    useEffect(() => { fetchOrders(); }, [router.query]);
-    useEffect(() => { setFilters({ ...variables }); }, [variables]);
-    useEffect(() => { updatedSelection(selection, orders || []); }, [selection, orders]);
+    useEffect(() => { updateFilter(); }, [router.query]);
+    useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
+    useEffect(() => { updatedSelection(selection, orders); }, [selection, orders]);
     useEffect(() => {
-      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+      if (query.isFetched && !initialized && !isNoneOrEmpty(router.query.modal)) {
         previewOrder(router.query.modal as string);
         setInitialized(true);
       }
-    }, [router.query.modal, called]);
+    }, [router.query.modal, query.isFetched]);
 
     return (
       <>
 
-        <header className="px-0 py-4 is-flex is-justify-content-space-between">
+        <header className="px-0 pb-3 pt-6 is-flex is-justify-content-space-between">
           <span className="title is-4">Orders</span>
           <div>
-            <OrdersFilter />
+            <OrdersFilter context={context} />
           </div>
         </header>
 
         <div className="tabs">
           <ul>
-            <li className={`is-capitalized has-text-weight-semibold ${isNone(filters?.status) ? 'is-active' : ''}`}>
-              <a onClick={() => !isNone(filters?.status) && fetchOrders({ status: null, offset: 0 })}>all</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isNone(filter?.status) ? 'is-active' : ''}`}>
+              <a onClick={() => !isNone(filter?.status) && updateFilter({ status: null, offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['unfulfilled', 'partial']) ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('unfulfilled') && fetchOrders({ status: ['unfulfilled', 'partial'], offset: 0 })}>unfulfilled</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['unfulfilled', 'partial']) ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('unfulfilled' as any) && updateFilter({ status: ['unfulfilled', 'partial'], offset: 0 })}>unfulfilled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filters?.status || [], ['fulfilled', 'delivered']) ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('fulfilled') && fetchOrders({ status: ['fulfilled', 'delivered'], offset: 0 })}>fulfilled</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['fulfilled', 'delivered']) ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('fulfilled' as any) && updateFilter({ status: ['fulfilled', 'delivered'], offset: 0 })}>fulfilled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filters?.status?.includes('cancelled') && filters?.status?.length === 1 ? 'is-active' : ''}`}>
-              <a onClick={() => !filters?.status?.includes('cancelled') && fetchOrders({ status: ['cancelled'], offset: 0 })}>cancelled</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('cancelled' as any) && filter?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('cancelled' as any) && updateFilter({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
           </ul>
         </div>
 
-        {loading && <Spinner />}
+        {!query.isFetched && <Spinner />}
 
-        {(!loading && orders?.length > 0) && <>
+        {(query.isFetched && (orders?.edges || []).length > 0) && <>
           <div className="table-container pb-3">
             <table className="orders-table table is-fullwidth">
               <tbody>
@@ -129,7 +128,7 @@ export default function OrdersPage(pageProps: any) {
                       className={`button is-small is-default px-3 ${unfulfilledSelection(selection) ? '' : 'is-static'}`}>
                       <span className="has-text-weight-semibold">Create shipment</span>
                     </AppLink>
-                    {(templates || []).map(template =>
+                    {(document_templates?.edges || []).map(({ node: template }) =>
                       <a
                         key={template.id}
                         href={`${KARRIO_API}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
@@ -150,7 +149,7 @@ export default function OrdersPage(pageProps: any) {
                   </>}
                 </tr>
 
-                {orders?.map(order => (
+                {(orders?.edges || []).map(({ node: order }) => (
                   <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
                     <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
                       <label className="checkbox py-3 px-2">
@@ -203,39 +202,46 @@ export default function OrdersPage(pageProps: any) {
           </div>
 
           <div className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{(orders || []).length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">
+              {(orders?.edges || []).length} results
+            </span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number - 20) })}
+                disabled={filter.offset == 0}>
+                Previous
+              </button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number + 20) })}
+                disabled={!orders?.page_info.has_next_page}>
+                Next
+              </button>
             </div>
           </div>
         </>}
 
-        {(called && !loading && (orders || []).length == 0) && <div className="card my-6">
+        {(query.isFetched && (orders?.edges || []).length == 0) &&
+          <div className="card my-6">
 
-          <div className="card-content has-text-centered">
-            <p>No order found.</p>
-          </div>
+            <div className="card-content has-text-centered">
+              <p>No order found.</p>
+            </div>
 
-        </div>}
+          </div>}
 
       </>
     );
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <OrdersProvider setVariablesToURL>
-        <OrderPreview>
-          <DocumentTemplatesProvider filter={({ related_object: "order" } as any)}>
+      <OrderPreview>
 
-            <Component />
+        <Component />
 
-          </DocumentTemplatesProvider>
-        </OrderPreview>
-      </OrdersProvider>
+      </OrderPreview>
     </DashboardLayout>
   ), pageProps)
 };

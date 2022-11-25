@@ -1,27 +1,28 @@
-import { Organizations, OrganizationType } from '@/context/organizations-provider';
-import { TokenData } from '@/context/token-provider';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Loading } from '@/components/loader';
-import Image from 'next/image';
-import { isNone, isNoneOrEmpty, p } from '@/lib/helper';
-import { useRouter } from 'next/router';
-import { useAcceptInvitation } from '@/components/accept-invitation-modal';
+import { OrganizationType, useOrganizationMutation, useOrganizations } from '@/context/organization';
 import { useCreateOrganizationModal } from '@/components/create-organization-modal';
-import { APIReference } from '@/context/references-provider';
+import { useAcceptInvitation } from '@/components/accept-invitation-modal';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useAPIReference } from '@/context/reference';
+import { useAPIToken } from '@/context/api-token';
+import { isNoneOrEmpty, p } from '@/lib/helper';
+import { Loading } from '@/components/loader';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 
 const OrganizationDropdown: React.FC = () => {
   const trigger = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const { ALLOW_MULTI_ACCOUNT } = useContext(APIReference);
+  const { query } = useAPIToken();
+  const mutation = useOrganizationMutation();
+  const { setLoading } = useContext(Loading);
+  const { organizations, organization } = useOrganizations();
+  const { ALLOW_MULTI_ACCOUNT } = useAPIReference();
   const { acceptInvitation } = useAcceptInvitation();
   const { createOrganization } = useCreateOrganizationModal();
-  const { authenticateOrg, ...token } = useContext(TokenData);
-  const { load, organizations, organization, loading, called } = useContext(Organizations);
-  const { setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [initialized, setInitialized] = useState<boolean>(false);
   const [selected, setSelected] = useState<OrganizationType>();
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const handleOnClick = (e: React.MouseEvent) => {
     setIsActive(!isActive);
@@ -45,36 +46,28 @@ const OrganizationDropdown: React.FC = () => {
     if (org.id === selected?.id) return;
     setLoading(true);
     setSelected(org);
-    authenticateOrg(org.id).then(() => setLoading(false));
+    mutation.changeActiveOrganization(org.id).then(() => setLoading(false));
     setIsActive(false);
   };
   const create = async () => {
     createOrganization({
       onChange: (orgId: string) => {
         setIsActive(false);
-        return authenticateOrg(orgId);
+        return mutation.changeActiveOrganization(orgId);
       }
     });
   };
-  const checkTokenChange = useCallback((key?: string) => {
-    if (called && !isNone(key) && !token.loading && (selected?.token !== key)) {
-      load();
-    }
-  }, [called, selected, token, load]);
 
-  useEffect(() => {
-    setSelected(organization);
-  }, [organization]);
-  useEffect(() => { checkTokenChange(token?.token?.key) }, [token, checkTokenChange]);
+  useEffect(() => { setSelected(organization); }, [organization]);
   useEffect(() => {
     if (!initialized && !isNoneOrEmpty(router.query.accept_invitation)) {
-      acceptInvitation({ onChange: orgId => authenticateOrg(orgId) });
+      acceptInvitation({ onChange: orgId => mutation.changeActiveOrganization(orgId) });
       setInitialized(true);
     }
     if (router.query && isNoneOrEmpty(router.query.accept_invitation)) {
       setInitialized(true);
     }
-  }, [initialized, setInitialized, router.query, acceptInvitation, load]);
+  }, [initialized, router.query]);
 
   return (
     <>
@@ -120,7 +113,7 @@ const OrganizationDropdown: React.FC = () => {
           </div>
         </div>}
 
-      {(!loading && (organizations || []).length === 0) &&
+      {(query.isFetched && (organizations || []).length === 0) &&
         <Image src={p`/icon.svg`} className="mt-2" width="70" height="100" alt="logo" />}
     </>
   );

@@ -1,6 +1,6 @@
-import React from 'react';
 import { formatWeight, isNoneOrEmpty } from '@/lib/helper';
 import { CommodityType } from '@/lib/types';
+import React from 'react';
 
 interface CommodityDescriptionComponent {
   commodity: CommodityType;

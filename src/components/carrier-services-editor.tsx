@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { ServiceLevelCurrency } from 'karrio/graphql';
-import SelectField from './generic/select-field';
 import { CURRENCY_OPTIONS, ServiceLevelType } from '@/lib/types';
+import SelectField from '@/components/generic/select-field';
+import { CurrencyCodeEnum } from '@karrio/graphql';
 import { isNone, snakeCase } from '@/lib/helper';
+import React, { useEffect } from 'react';
 
 interface CarrierServiceEditorProps {
   carrierName: string;
@@ -10,16 +10,16 @@ interface CarrierServiceEditorProps {
   onChange: (services: ServiceLevelType[]) => void;
 }
 
-function computeDefaultCurrency(defaultValue: ServiceLevelType[]): ServiceLevelCurrency {
+function computeDefaultCurrency(defaultValue: ServiceLevelType[]): CurrencyCodeEnum {
   const svc = (defaultValue || []).find(svc => !isNone(svc.currency))
-  return (svc?.currency || ServiceLevelCurrency.USD) as ServiceLevelCurrency
+  return (svc?.currency || CurrencyCodeEnum.USD) as CurrencyCodeEnum
 }
 
 
 const CarrierServiceEditor: React.FC<CarrierServiceEditorProps> = ({ carrierName, defaultValue, onChange }) => {
   const [expand, setExpand] = React.useState<boolean>(false);
   const [services, setServices] = React.useState<ServiceLevelType[]>(defaultValue);
-  const [currency, setCurrency] = React.useState<ServiceLevelCurrency>(computeDefaultCurrency(defaultValue));
+  const [currency, setCurrency] = React.useState<CurrencyCodeEnum>(computeDefaultCurrency(defaultValue));
 
   const updateService = (index: number, data: any) => {
     const newServices = [...services];

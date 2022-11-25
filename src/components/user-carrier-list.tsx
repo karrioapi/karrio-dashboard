@@ -1,10 +1,10 @@
-import { useCarrierConnectionMutation, useCarrierConnections } from '@/context/data/user-connection';
+import { useCarrierConnectionMutation, useCarrierConnections } from '@/context/user-connection';
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
 import { useLabelTemplateModal } from '@/components/label-template-edit-modal';
 import { UpdateCarrierConnectionMutationInput } from '@karrio/graphql';
 import { ConfirmModalContext } from '@/components/confirm-modal';
+import CarrierNameBadge from '@/components/carrier-name-badge';
 import CopiableLink from '@/components/copiable-link';
-import CarrierBadge from '@/components/carrier-badge';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 import { Notify } from '@/components/notifier';

@@ -1,8 +1,7 @@
-import { NotificationType } from '@/lib/types';
+import { OrganizationType, useOrganizationMutation, useOrganizations } from '@/context/organization';
 import React, { useContext, useState } from 'react';
+import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
-import { OrganizationMutationContext } from '@/context/organization-mutation';
-import { Organizations, OrganizationType } from '@/context/organizations-provider';
 
 interface OrganizationUpdateInputComponent {
   label?: string;
@@ -12,8 +11,8 @@ interface OrganizationUpdateInputComponent {
 
 const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = ({ label, inputType, propertyKey }) => {
   const { notify } = useContext(Notify);
-  const { organization, load } = useContext(Organizations);
-  const { updateOrganization } = useContext(OrganizationMutationContext);
+  const mutation = useOrganizationMutation();
+  const { organization } = useOrganizations();
   const [hasChanged, setHasChanged] = useState<boolean>(false);
   const [propertyValue, setPropertyValue] = useState<string>("");
   const [key, setKey] = useState<string>(`${propertyKey}-${Date.now()}`);
@@ -28,8 +27,10 @@ const OrganizationUpdateInput: React.FC<OrganizationUpdateInputComponent> = ({ l
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     try {
-      await updateOrganization({ id: organization.id, [propertyKey]: propertyValue });
-      load();
+      await mutation.updateOrganization.mutateAsync({
+        id: organization!.id,
+        [propertyKey]: propertyValue
+      });
       setHasChanged(false);
       notify({
         type: NotificationType.success, message: `${propertyValue} updated successfully!`

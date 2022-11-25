@@ -1,18 +1,18 @@
 import { deepEqual, isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
-import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/data/user-connection';
+import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/user-connection';
 import { Collection, NoneEnum, NotificationType, References, ServiceLevelType } from '@/lib/types';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
 import CountryInput from '@/components/generic/country-input';
-import { APIReference } from '@/context/references-provider';
 import SelectField from '@/components/generic/select-field';
 import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
-import { AppMode } from '@/context/data/mode-context';
-import { MetadataObjectType } from 'karrio/graphql';
-import React, { useContext, useState } from 'react';
+import { MetadataObjectTypeEnum } from 'karrio/graphql';
+import React, { useContext, useReducer, useState } from 'react';
 import { CarrierNameEnum } from '@karrio/rest';
 import { Loading } from '@/components/loader';
+import { useAPIReference } from '@/context/reference';
+import { useAppMode } from '@/context/app-mode';
 
 type CarrierNameType = CarrierNameEnum | NoneEnum;
 type OperationType = {
@@ -43,11 +43,11 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
-  const { carriers, service_levels } = useContext(APIReference) as References & { service_levels: Record<string, ServiceLevelType[]> };
+  const { carriers, service_levels } = useAPIReference() as References & { service_levels: Record<string, ServiceLevelType[]> };
+  const { testMode } = useAppMode();
   const { notify } = useContext(Notify);
   const mutation = useCarrierConnectionMutation();
   const { loading, setLoading } = useContext(Loading);
-  const { testMode } = useContext(AppMode);
   const { addUrlParam, removeUrlParam } = useLocation();
   const DEFAULT_STATE = (): Partial<CarrierConnectionType> => ({ carrier_name: NoneEnum.none, test_mode: testMode });
   const [key, setKey] = useState<string>(`connection-${Date.now()}`);
@@ -64,6 +64,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     const connection_carrier: CarrierNameType = (
       connection.carrier_name === NoneEnum.none || Object.values(CarrierNameEnum).includes(connection.carrier_name as any)
         ? connection.carrier_name as CarrierNameEnum
+        : NoneEnum.none
     );
     setCarrierName(connection_carrier)
     setIsNew(isNone(operation.connection));
@@ -435,7 +436,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 <hr className="mt-1 my-3" style={{ height: '1px' }} />
 
                 <MetadataEditor
-                  object_type={MetadataObjectType.carrier}
+                  object_type={MetadataObjectTypeEnum.carrier}
                   metadata={payload.metadata}
                   onChange={directChange("metadata")}
                 >
@@ -474,11 +475,11 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 </div>
               </>
             }
-          </section>
-        </form>
+          </section >
+        </form >
         <button className="modal-close is-large has-background-dark" aria-label="" onClick={close}></button>
-      </div>
-    </Notifier>
+      </div >
+    </Notifier >
   )
 }
 

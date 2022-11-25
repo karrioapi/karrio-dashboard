@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
 import { formatAddressRegion, formatDayDate, isNone, useLocation } from '@/lib/helper';
 import { TrackerType, TrackingEventType } from '@/lib/types';
 import CarrierImage from '@/components/carrier-image';
-import AppLink from '@/components/app-link';
 import { TrackerStatusEnum } from '@karrio/graphql';
+import React, { useRef, useState } from 'react';
+import AppLink from '@/components/app-link';
 
 type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {

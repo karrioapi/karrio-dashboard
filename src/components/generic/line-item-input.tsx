@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DropdownInput, { DropdownInputComponent } from '@/components/generic/dropdown-input';
 import { formatOrderLineItem, isNone } from '@/lib/helper';
-import { OrdersContext } from '@/context/orders-provider';
 import { CommodityType } from '@/lib/types';
+import { useOrders } from '@/context/order';
 
 interface LineItemInputComponent extends Omit<DropdownInputComponent, 'items' | 'onChange' | 'onValueChange'> {
   onChange?: (value?: CommodityType) => void;
 }
 
 const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props }) => {
-  const { orders, called } = useContext(OrdersContext);
+  const { query } = useOrders();
   const [lineItems, setLineItems] = useState<CommodityType[]>();
   const [items, setItems] = useState<[string, string][]>([]);
 
@@ -19,17 +19,17 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
   };
 
   useEffect(() => {
-    if (called && !isNone(orders)) {
-      const allItems = orders.map(order => order.line_items).flat();
-      const dropdownItems = orders
-        .map((order) => order.line_items.map(
-          (item, index) => [item.id, formatOrderLineItem(order, item as any, index)] as [string, string]
+    if (query.isFetched && !isNone(query.data?.orders)) {
+      const allItems = (query.data?.orders.edges || []).map(({ node: order }) => order.line_items).flat();
+      const dropdownItems = (query.data?.orders.edges || [])
+        .map(({ node: order }) => order.line_items.map(
+          (item, index) => [item.id, formatOrderLineItem(order as any, item as any, index)] as [string, string]
         )).flat();
 
       setLineItems(allItems);
       setItems(dropdownItems);
     }
-  }, [called, orders]);
+  }, [query.isFetched]);
 
   return (
     <DropdownInput

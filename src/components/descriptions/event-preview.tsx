@@ -1,6 +1,5 @@
-import EventProvider from '@/context/event-provider';
-import { useLocation } from '@/lib/helper';
 import { EventComponent } from '@/views/event';
+import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 
 type EventPreviewContextType = {
@@ -41,9 +40,7 @@ const EventPreview: React.FC<EventPreviewComponent> = ({ children }) => {
 
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
-            <EventProvider>
-              <EventComponent eventId={eventId} />
-            </EventProvider>
+            <EventComponent eventId={eventId} />
           </section>
         </div>}
 

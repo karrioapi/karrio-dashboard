@@ -1,8 +1,8 @@
 import SectionLayout from "@/layouts/section-layout";
+import { Metadata } from "@/lib/types";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
-import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 

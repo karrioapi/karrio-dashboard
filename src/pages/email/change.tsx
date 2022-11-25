@@ -1,13 +1,13 @@
+import AuthenticatedPage from "@/layouts/authenticated-page";
 import SectionLayout from "@/layouts/section-layout";
-import Spinner from "@/components/spinner";
-import { isNone } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import Link from "next/link";
+import { useUserMutation } from "@/context/user";
+import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
 import { Metadata } from "@/lib/types";
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import { UserMutationProvider, useUserMutation } from "@/context/user-mutation";
+import { isNone } from "@/lib/helper";
+import Head from "next/head";
+import Link from "next/link";
 
 export { getServerSideProps } from '@/lib/middleware';
 
@@ -26,13 +26,12 @@ export default function Page(pageProps: { metadata: Metadata }) {
     const confirm = async () => {
       setLoading(true);
       try {
-        const data = await confirmEmailChange({ token: token as string });
-        const email = data?.user?.email;
+        const { confirm_email_change } = await confirmEmailChange.mutateAsync({ token: token as string });
+        const email = confirm_email_change.user?.email;
         setSuccess(!isNone(email));
         setEmail(email || '');
       } catch (e) {
         setSuccess(false);
-        console.error(e);
       }
       setLoading(false);
     };
@@ -67,9 +66,7 @@ export default function Page(pageProps: { metadata: Metadata }) {
     <SectionLayout metadata={metadata}>
       <Head><title>Email change confirmation - {metadata?.APP_NAME}</title></Head>
 
-      <UserMutationProvider>
-        <Component />
-      </UserMutationProvider>
+      <Component />
 
     </SectionLayout>
   ), pageProps);

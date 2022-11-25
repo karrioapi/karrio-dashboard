@@ -1,7 +1,7 @@
+import { SystemConnectionType } from '@/context/system-connection';
 import React, { useContext, useEffect } from 'react';
-import { APIReference } from '@/context/references-provider';
-import { SystemConnectionType } from '@/context/system-connections-provider';
 import { isNone } from '@/lib/helper';
+import { useAPIReference } from '@/context/reference';
 
 interface ConnectionDescriptionComponent {
   connection: SystemConnectionType;
@@ -22,9 +22,9 @@ const CAPABILITY_DETAILS: any = {
 };
 
 const ConnectionDescription: React.FC<ConnectionDescriptionComponent> = ({ connection }) => {
-  const [key] = React.useState<string>(`description-${connection.id}-${Date.now()}`);
-  const { carrier_capabilities } = useContext(APIReference);
+  const { carrier_capabilities } = useAPIReference();
   const [raw_capabilities, setRawCapabilities] = React.useState<string[]>([]);
+  const [key] = React.useState<string>(`description-${connection.id}-${Date.now()}`);
 
   useEffect(() => {
     if (isNone(carrier_capabilities)) return;

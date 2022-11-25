@@ -1,16 +1,16 @@
 import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
-import { COUNTRY_WITH_POSTAL_CODE, deepEqual, isNone } from '@/lib/helper';
 import AddressAutocompleteInput from '@/components/generic/address-autocomplete-input';
-import InputField from '@/components/generic/input-field';
-import ButtonField from '@/components/generic/button-field';
+import { COUNTRY_WITH_POSTAL_CODE, deepEqual, isNone } from '@/lib/helper';
+import { AddressType, NotificationType, ShipmentType } from '@/lib/types';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import CountryInput from '@/components/generic/country-input';
-import StateInput from '@/components/generic/state-input';
+import ButtonField from '@/components/generic/button-field';
 import PostalInput from '@/components/generic/postal-input';
+import InputField from '@/components/generic/input-field';
+import StateInput from '@/components/generic/state-input';
 import PhoneInput from '@/components/generic/phone-input';
 import NameInput from '@/components/generic/name-input';
-import { AddressType, NotificationType, ShipmentType } from '@/lib/types';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -42,9 +42,9 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 
 
 const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onSubmit, onTemplateChange, children }) => {
+  const { states } = useAPIReference();
   const { notify } = useContext(Notify);
   const form = useRef<HTMLFormElement>(null);
-  const { states } = useContext(APIReference);
   const { loading, setLoading } = useContext(Loading);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
   const [address, dispatch] = useReducer(reducer, value || DEFAULT_ADDRESS_CONTENT);

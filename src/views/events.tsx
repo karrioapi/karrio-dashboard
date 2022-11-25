@@ -1,58 +1,56 @@
+import EventPreview, { EventPreviewContext } from "@/components/descriptions/event-preview";
+import { formatDateTimeLong, getURLSearchParams, isNoneOrEmpty } from "@/lib/helper";
+import EventsFilter from "@/components/filters/events-filter";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import Spinner from "@/components/spinner";
-import EventsProvider, { EventsContext } from "@/context/events-provider";
-import { formatDateTimeLong, getURLSearchParams, isNone, isNoneOrEmpty } from "@/lib/helper";
-import Head from "next/head";
 import React, { useContext, useEffect } from "react";
-import EventsFilter from "@/components/filters/events-filter";
-import EventPreview, { EventPreviewContext } from "@/components/descriptions/event-preview";
 import { useRouter } from "next/dist/client/router";
+import { useLoader } from "@/components/loader";
+import { useEvents } from "@/context/event";
+import Spinner from "@/components/spinner";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 export default function EventsPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
-    const { setLoading } = useContext(Loading);
+    const context = useEvents();
+    const { setLoading } = useLoader();
     const { previewEvent } = useContext(EventPreviewContext);
-    const { loading, called, events, next, previous, variables, load, loadMore } = useContext(EventsContext);
-    const [filters, setFilters] = React.useState<typeof variables>(variables);
     const [initialized, setInitialized] = React.useState(false);
+    const { query: { data: { events } = {}, ...query }, filter, setFilter } = context;
 
-    const fetchEvents = (extra: Partial<typeof variables> = {}) => {
+    const updateFilter = (extra: Partial<typeof filter> = {}) => {
       const query = {
-        ...filters,
+        ...filter,
         ...getURLSearchParams(),
         ...extra
       };
 
-      setFilters(query);
-      (!loading) && (called ? loadMore : load)(query);
+      setFilter(query);
     }
 
-    useEffect(() => { window.setTimeout(() => setLoading(loading), 1000); });
-    useEffect(() => { fetchEvents(); }, [router.query]);
-    useEffect(() => { setFilters({ ...variables }); }, [variables]);
+    useEffect(() => { updateFilter(); }, [router.query]);
+    useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
     useEffect(() => {
-      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
+      if (query.isFetched && !initialized && !isNoneOrEmpty(router.query.modal)) {
         previewEvent(router.query.modal as string);
         setInitialized(true);
       }
-    }, [router.query.modal, called]);
+    }, [router.query.modal, query.isFetched]);
 
     return (
       <>
-        <header className="px-0 py-4 is-flex is-justify-content-space-between">
+        <header className="px-0 pb-3 pt-6 is-flex is-justify-content-space-between">
           <span className="title is-4">Events</span>
-          <EventsFilter />
+          <EventsFilter context={context} />
         </header>
 
-        {loading && <Spinner />}
+        {!query.isFetched && <Spinner />}
 
 
-        {(!loading && events.length > 0) && <div className="table-container">
+        {(query.isFetched && (events?.edges || []).length > 0) && <div className="table-container">
           <table className="events-table is-size-7 table is-fullwidth">
 
             <tbody className="events-table">
@@ -62,7 +60,7 @@ export default function EventsPage(pageProps: any) {
                 <td className="date has-text-right is-size-7"><span className="mr-2">DATE</span></td>
               </tr>
 
-              {events.map((event) => (
+              {(events?.edges || []).map(({ node: event }) => (
 
                 <tr key={event.id} className="items is-clickable" onClick={() => previewEvent(event.id)}>
                   <td className="description">{`${event.type}`}</td>
@@ -80,37 +78,46 @@ export default function EventsPage(pageProps: any) {
           </table>
 
           <footer className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{events.length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">
+              {(events?.edges || []).length} results
+            </span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: previous })} disabled={isNone(previous)}>Previous</button>
-              <button className="button is-small" onClick={() => loadMore({ ...filters, offset: next })} disabled={isNone(next)}>Next</button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number - 20) })}
+                disabled={filter.offset == 0}>
+                Previous
+              </button>
+              <button className="button is-small"
+                onClick={() => updateFilter({ offset: (filter.offset as number + 20) })}
+                disabled={!events?.page_info.has_next_page}>
+                Next
+              </button>
             </div>
           </footer>
 
         </div>}
 
 
-        {(!loading && events.length == 0) && <div className="card my-6">
+        {(query.isFetched && (events?.edges || []).length == 0) &&
+          <div className="card my-6">
 
-          <div className="card-content has-text-centered">
-            <p>No API events found.</p>
-          </div>
+            <div className="card-content has-text-centered">
+              <p>No API events found.</p>
+            </div>
 
-        </div>}
+          </div>}
 
       </>
     );
   };
 
   return AuthenticatedPage((
-    <DashboardLayout>
+    <DashboardLayout showModeIndicator={true}>
       <Head><title>Events - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <EventsProvider>
-        <EventPreview>
-          <Component />
-        </EventPreview>
-      </EventsProvider>
+      <EventPreview>
+        <Component />
+      </EventPreview>
     </DashboardLayout>
   ), pageProps)
 }

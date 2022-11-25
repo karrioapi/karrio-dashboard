@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
 import Script from 'next/script';
+import React from 'react';
 
 
 const GoogleGeocodingScript: React.FC = () => {
-  const { ADDRESS_AUTO_COMPLETE } = useContext(APIReference) as { ADDRESS_AUTO_COMPLETE: any };
+  const { ADDRESS_AUTO_COMPLETE } = useAPIReference() as { ADDRESS_AUTO_COMPLETE: any };
 
   return (
     <>

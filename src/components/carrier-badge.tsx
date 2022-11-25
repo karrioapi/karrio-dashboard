@@ -1,9 +1,7 @@
+import { CARRIER_IMAGES } from '@/lib/types';
+import { p } from '@/lib/helper';
 import Image from "next/image";
-import { CARRIER_IMAGES, CARRIER_THEMES } from '@/lib/types';
-import { CarrierNameEnum } from 'karrio/rest/index';
-import React, { useContext } from 'react';
-import { APIReference } from '@/context/references-provider';
-import { formatCarrierSlug, isNone, p } from '@/lib/helper';
+import React from 'react';
 
 
 interface CarrierBadgeComponent extends React.AllHTMLAttributes<HTMLDivElement> {

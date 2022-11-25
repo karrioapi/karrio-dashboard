@@ -1,6 +1,6 @@
-import React from 'react';
 import { formatRef, isNone } from '@/lib/helper';
 import { RateType } from '@/lib/types';
+import React from 'react';
 
 interface RateDescriptionComponent {
   rate: RateType;

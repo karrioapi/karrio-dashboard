@@ -1,4 +1,4 @@
-import { useSystemConnectionMutation, useSystemConnections } from '@/context/data/system-connection';
+import { useSystemConnectionMutation, useSystemConnections } from '@/context/system-connection';
 import ConnectionDescription from '@/components/descriptions/connection-description';
 import CarrierNameBadge from '@/components/carrier-name-badge';
 import { Notify } from '@/components/notifier';

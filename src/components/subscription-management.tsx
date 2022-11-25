@@ -1,19 +1,19 @@
-import React, { useContext } from 'react';
 import { NotificationType, PortalSessionType } from '@/lib/types';
-import { Notify } from '@/components/notifier';
-import axios from 'axios';
-import { KARRIO_API } from '@/client/context';
-import { Subscription } from '@/context/subscription-provider';
-import { Organizations } from '@/context/organizations-provider';
+import { useOrganizations } from '@/context/organization';
+import { useSubscription } from '@/context/subscription';
 import { useLoader } from '@/components/loader';
+import { Notify } from '@/components/notifier';
+import { KARRIO_API } from '@/client/context';
+import React, { useContext } from 'react';
+import axios from 'axios';
 
 interface SubscriptionManagementComponent { }
 
 const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => {
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useLoader();
-  const { organization } = useContext(Organizations);
-  const { subscription } = useContext(Subscription);
+  const { organization } = useOrganizations();
+  const { subscription } = useSubscription();
 
   const openPortal = async () => {
     setLoading(true);
@@ -24,8 +24,8 @@ const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => 
         { return_url },
         {
           headers: {
-            'x-org-id': organization.id,
-            'authorization': `Token ${organization.token}`,
+            'x-org-id': organization!.id,
+            'authorization': `Token ${organization!.token}`,
           } as any
         }).then(({ data }) => data);
 

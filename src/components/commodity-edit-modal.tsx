@@ -1,15 +1,15 @@
-import React, { useContext, useReducer, useState } from 'react';
+import { CurrencyCodeEnum, MetadataObjectTypeEnum, WeightUnitEnum } from 'karrio/graphql';
+import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { deepEqual, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import { CommodityType, CURRENCY_OPTIONS, WEIGHT_UNITS } from '@/lib/types';
-import { CurrencyCodeEnum, MetadataObjectType, WeightUnitEnum } from 'karrio/graphql';
-import Notifier from '@/components/notifier';
-import { Loading } from '@/components/loader';
-import InputField from '@/components/generic/input-field';
-import CountryInput from '@/components/generic/country-input';
-import TextAreaField from '@/components/generic/textarea-field';
-import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import { APIReference } from '@/context/references-provider';
 import LineItemInput from '@/components/generic/line-item-input';
+import React, { useContext, useReducer, useState } from 'react';
+import TextAreaField from '@/components/generic/textarea-field';
+import CountryInput from '@/components/generic/country-input';
+import InputField from '@/components/generic/input-field';
+import { useAPIReference } from '@/context/reference';
+import { Loading } from '@/components/loader';
+import Notifier from '@/components/notifier';
 
 export const DEFAULT_COMMODITY_CONTENT: Partial<CommodityType> = {
   weight: 1,
@@ -43,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
-  const { ORDERS_MANAGEMENT } = useContext(APIReference);
+  const { ORDERS_MANAGEMENT } = useAPIReference();
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);
@@ -282,7 +282,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
 
                 <MetadataEditor
                   id={commodity.id}
-                  object_type={MetadataObjectType.commodity}
+                  object_type={MetadataObjectTypeEnum.commodity}
                   metadata={commodity.metadata}
                   onChange={(value) => dispatch({ name: "metadata", value })}
                 >

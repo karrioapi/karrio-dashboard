@@ -1,20 +1,18 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import Head from 'next/head';
-import AuthenticatedPage from '@/layouts/authenticated-page';
-import DocumentTemplateMutationProvider, { useDocumentTemplateMutation } from '@/context/document-template-mutation';
-import CodeMirror from '@uiw/react-codemirror';
-import { html } from '@codemirror/lang-html';
-import InputField from '@/components/generic/input-field';
-import TextAreaField from '@/components/generic/textarea-field';
 import { DocumentTemplateType, DOCUMENT_RELATED_OBJECTS, NotificationType, TemplateType } from '@/lib/types';
+import { isEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { useDocumentTemplate, useDocumentTemplateMutation } from '@/context/document-template';
+import TextAreaField from '@/components/generic/textarea-field';
+import React, { useEffect, useReducer, useState } from 'react';
+import AuthenticatedPage from '@/layouts/authenticated-page';
+import InputField from '@/components/generic/input-field';
+import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
-import { isEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
-import DocumentTemplateProvider, { useDocumentTemplate } from '@/context/document-template-provider';
-import { bundleContexts } from '@/context/utils';
+import CodeMirror from '@uiw/react-codemirror';
 import { KARRIO_API } from '@/client/context';
+import { html } from '@codemirror/lang-html';
 import AppLink from '@/components/app-link';
-import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
+import Head from 'next/head';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -23,10 +21,6 @@ const DEFAULT_STATE = {
   related_object: 'order',
   template: DEFAULT_DOCUMENT_TEMPLATE,
 };
-const ContextProviders: React.FC = bundleContexts([
-  DocumentTemplateProvider,
-  DocumentTemplateMutationProvider,
-]);
 
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
@@ -41,11 +35,15 @@ export default function DocumentTemplatePage(pageProps: any) {
   const Component: React.FC = () => {
     const loader = useLoader();
     const router = useLocation();
+    const { id } = router.query;
     const notifier = useNotifier();
-    const query = useDocumentTemplate();
-    const mutation = useDocumentTemplateMutation();
     const [isNew, setIsNew] = useState<boolean>();
+    const mutation = useDocumentTemplateMutation();
     const [template, dispatch] = useReducer(reducer, DEFAULT_STATE, () => DEFAULT_STATE);
+    const { query: { data: { document_template } = {}, ...query }, docId, setDocId } = useDocumentTemplate({
+      setVariablesToURL: true,
+      id: id as string,
+    });
 
     const computeParams = (template: DocumentTemplateType) => {
       if (isNoneOrEmpty(template.related_object)) { return ''; }
@@ -67,22 +65,15 @@ export default function DocumentTemplatePage(pageProps: any) {
       loader.setLoading(true);
       try {
         if (isNew) {
-          const response = await mutation.createDocumentTemplate(template);
-          setTimeout(() => {
-            router.updateUrlParam('id', response?.template?.id as string);
-          }, 1000);
-          notifier.notify({
-            type: NotificationType.success,
-            message: `Document template created successfully`
-          });
+          const { create_document_template } = await mutation.createDocumentTemplate.mutateAsync(template);
+          notifier.notify({ type: NotificationType.success, message: `Document template created successfully` });
           loader.setLoading(false);
+
+          setDocId(create_document_template.template?.id as string);
         } else {
-          await mutation.updateDocumentTemplate(template);
+          await mutation.updateDocumentTemplate.mutateAsync(template);
           query.refetch();
-          notifier.notify({
-            type: NotificationType.success,
-            message: `Document template updated successfully`
-          });
+          notifier.notify({ type: NotificationType.success, message: `Document template updated successfully` });
           loader.setLoading(false);
         }
       } catch (message: any) {
@@ -91,17 +82,12 @@ export default function DocumentTemplatePage(pageProps: any) {
       }
     };
 
+    useEffect(() => { setIsNew(docId === 'new'); }, [docId]);
     useEffect(() => {
-      setIsNew(router.query.id === 'new');
-      if (router.query.id !== 'new') {
-        query.loadDocumentTemplate(router.query.id as string);
+      if (docId !== 'new') {
+        dispatch({ name: 'partial', value: document_template as any });
       }
-    }, [router.query.id]);
-    useEffect(() => {
-      if (router.query.id !== 'new') {
-        dispatch({ name: 'partial', value: query.template as any });
-      }
-    }, [query.template]);
+    }, [document_template]);
 
     return (
       <form onSubmit={handleSubmit} className="p-4">
@@ -124,7 +110,7 @@ export default function DocumentTemplatePage(pageProps: any) {
             <button
               type="submit"
               className="button is-small is-success"
-              disabled={loader.loading || isEqual(template, query.template || DEFAULT_STATE)}
+              disabled={loader.loading || isEqual(template, document_template || DEFAULT_STATE)}
             >
               Save Template
             </button>
@@ -227,11 +213,7 @@ export default function DocumentTemplatePage(pageProps: any) {
     <>
       <Head><title>Template - {(pageProps as any).metadata?.APP_NAME}</title></Head>
 
-      <ContextProviders>
-
-        <Component />
-
-      </ContextProviders>
+      <Component />
     </>
   ), pageProps);
 }

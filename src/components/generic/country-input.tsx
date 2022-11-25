@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
 import DropdownInput, { DropdownInputComponent } from '@/components/generic/dropdown-input';
-import { isNone } from '@/lib/helper';
+import { useAPIReference } from '@/context/reference';
+import React, { useEffect, useState } from 'react';
 import { Collection } from '@/lib/types';
-import { APIReference } from '@/context/references-provider';
+import { isNone } from '@/lib/helper';
 
 interface CountryInputComponent extends Omit<DropdownInputComponent, 'items'> { }
 
 const CountryInput: React.FC<CountryInputComponent> = ({ name, ...props }) => {
-  const { countries } = useContext(APIReference);
+  const { countries } = useAPIReference();
   const [items, setItems] = useState<[string, string][]>();
 
   useEffect(() => {

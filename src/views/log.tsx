@@ -1,15 +1,15 @@
+import { failsafe, formatDateTimeLong, isNone, jsonify, notEmptyJSON } from "@/lib/helper";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
 import StatusCode from "@/components/status-code-badge";
-import { failsafe, formatDateTimeLong, isNone, jsonify, notEmptyJSON, p } from "@/lib/helper";
-import Head from "next/head";
-import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/dist/client/router";
-import LogProvider, { Log } from "@/context/log-provider";
-import hljs from "highlight.js";
 import json from 'highlight.js/lib/languages/json';
+import { useLoader } from "@/components/loader";
 import AppLink from "@/components/app-link";
+import { useLog } from "@/context/log";
+import hljs from "highlight.js";
+import Head from "next/head";
+import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -18,20 +18,19 @@ hljs.registerLanguage('json', json);
 
 export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
   const router = useRouter();
-  const { setLoading } = useContext(Loading);
-  const { log, loading, loadLog } = useContext(Log);
-  const [query_params, setQueryParams] = useState<string>();
-  const [response, setResponse] = useState<string>();
-  const [data, setData] = useState<string>();
-  const { id } = router.query;
+  const { setLoading } = useLoader();
+  const entity_id = logId || router.query.id as string;
+  const [data, setData] = React.useState<string>();
+  const [response, setResponse] = React.useState<string>();
+  const [query_params, setQueryParams] = React.useState<string>();
+  const { query: { data: { log } = {}, ...query } } = useLog(entity_id);
 
-  useEffect(() => { setLoading(loading); });
-  useEffect(() => { (!isNone(loadLog) && !loading) && loadLog((id || logId) as string); }, [id || logId]);
-  useEffect(() => {
+  React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
+  React.useEffect(() => {
     if (log !== undefined) {
-      setQueryParams(failsafe(() => jsonify(log.query_params), '{}'));
-      setResponse(failsafe(() => jsonify(log.response), '{}'));
-      setData(failsafe(() => jsonify(log.data), '{}'));
+      setQueryParams(failsafe(() => jsonify(log?.query_params), '{}'));
+      setResponse(failsafe(() => jsonify(log?.response), '{}'));
+      setData(failsafe(() => jsonify(log?.data), '{}'));
     }
   });
 
@@ -43,7 +42,9 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           <div className="column is-10">
             <span className="subtitle is-size-7 has-text-weight-semibold">LOG</span>
             <br />
-            <span className="title is-5 mr-2">{log.method} {log.path} <StatusCode code={log.status_code as number} /></span>
+            <span className="title is-5 mr-2">
+              {log?.method} {log?.path} <StatusCode code={log?.status_code as number} />
+            </span>
           </div>
           {!isNone(logId) && <div className="column is-2 is-flex is-justify-content-end">
             <AppLink href={`/developers/logs/${logId}`} target="blank"
@@ -60,19 +61,19 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
         <div className="py-3">
           <div className="columns my-0">
             <div className="column is-3 py-1">ID</div>
-            <div className="column is-8 py-1">{log.id}</div>
+            <div className="column is-8 py-1">{log?.id}</div>
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">Date</div>
-            <div className="column is-8 py-1">{formatDateTimeLong(log.requested_at)}</div>
+            <div className="column is-8 py-1">{formatDateTimeLong(log?.requested_at)}</div>
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">Origin</div>
-            <div className="column is-8 py-1">{log.remote_addr}</div>
+            <div className="column is-8 py-1">{log?.remote_addr}</div>
           </div>
           <div className="columns my-0">
             <div className="column is-3 py-1">IP Address</div>
-            <div className="column is-8 py-1">{log.host}</div>
+            <div className="column is-8 py-1">{log?.host}</div>
           </div>
         </div>
 
@@ -141,9 +142,7 @@ export default function LogPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Log - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <LogProvider>
-        <LogComponent />
-      </LogProvider>
+      <LogComponent />
     </DashboardLayout>
   ), pageProps);
 }

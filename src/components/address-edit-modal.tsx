@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react';
 import AddressForm, { DEFAULT_ADDRESS_CONTENT } from '@/components/form-parts/address-form';
-import { isNone, useLocation } from '@/lib/helper';
-import InputField from '@/components/generic/input-field';
-import CheckBoxField from '@/components/generic/checkbox-field';
 import { AddressTemplateType, AddressType, NotificationType } from '@/lib/types';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import { useAddressTemplateMutation } from '@/context/address';
+import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
+import React, { useContext, useState } from 'react';
+import { isNone, useLocation } from '@/lib/helper';
 import { Loading } from '@/components/loader';
 
 const DEFAULT_TEMPLATE_CONTENT = {
@@ -28,13 +29,13 @@ interface AddressEditModalComponent { }
 const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
+  const mutation = useAddressTemplateMutation();
+  const [isNew, setIsNew] = useState<boolean>(true);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { createAddressTemplate, updateAddressTemplate } = useAddressTemplateMutation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`address-${Date.now()}`);
-  const [isNew, setIsNew] = useState<boolean>(true);
-  const [template, setTemplate] = useState<AddressTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
+  const [template, setTemplate] = useState<AddressTemplateType | undefined>();
 
   const editAddress = (operation: OperationType = {}) => {
     const template = operation.addressTemplate || DEFAULT_TEMPLATE_CONTENT;
@@ -70,11 +71,11 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
     try {
       setLoading(true);
       if (isNew) {
-        await createAddressTemplate.mutateAsync(payload);
+        await mutation.createAddressTemplate.mutateAsync(payload as any);
         notify({ type: NotificationType.success, message: 'Address successfully added!' });
       }
       else {
-        await updateAddressTemplate.mutateAsync(payload);
+        await mutation.updateAddressTemplate.mutateAsync(payload as any);
         notify({ type: NotificationType.success, message: 'Address successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 2000);

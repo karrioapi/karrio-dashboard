@@ -1,12 +1,12 @@
-import React, { FormEvent, useContext, useReducer, useState } from 'react';
-import InputField from '@/components/generic/input-field';
-import { Loading } from '@/components/loader';
 import { ChangePasswordMutationInput, change_password_change_password_errors } from 'karrio/graphql';
+import React, { FormEvent, useContext, useReducer, useState } from 'react';
 import ButtonField from '@/components/generic/button-field';
-import UserMutation from '@/context/user-mutation';
-import { isNone } from '@/lib/helper';
+import InputField from '@/components/generic/input-field';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
+import { Loading } from '@/components/loader';
+import { isNone } from '@/lib/helper';
+import { useUserMutation } from '@/context/user';
 
 const DEFAULT_VALUE: Partial<ChangePasswordMutationInput> = {
   old_password: "",
@@ -25,7 +25,8 @@ function reducer(state: Partial<ChangePasswordMutationInput>, { name, value }: {
   }
 }
 
-const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) => {
+const PasswordManagement: React.FC<{}> = () => {
+  const mutation = useUserMutation();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const [data, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
@@ -41,7 +42,7 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
     e.preventDefault();
     try {
       setLoading(true);
-      await changePassword(data as ChangePasswordMutationInput);
+      await mutation.changePassword.mutateAsync(data as ChangePasswordMutationInput);
 
       dispatch({ name: 'full', value: DEFAULT_VALUE });
       notify({ type: NotificationType.success, message: `Password changed successfully.` });
@@ -98,6 +99,6 @@ const PasswordManagement: React.FC<{}> = UserMutation<{}>(({ changePassword }) =
 
     </form>
   )
-});
+};
 
 export default PasswordManagement;

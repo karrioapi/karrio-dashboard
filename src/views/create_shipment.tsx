@@ -1,49 +1,41 @@
+import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
+import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
 import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
-import React, { useContext, useEffect, useState } from 'react';
-import LabelDataProvider, { useLabelData, } from '@/context/label-data-provider';
-import { DefaultTemplatesData } from '@/context/default-templates-provider';
-import Spinner from '@/components/spinner';
-import Head from 'next/head';
-import DashboardLayout from '@/layouts/dashboard-layout';
-import AuthenticatedPage from '@/layouts/authenticated-page';
-import TemplatesProvider from '@/context/default-templates-provider';
-import GoogleGeocodingScript from '@/components/google-geocoding-script';
-import { LabelTypeEnum, MetadataObjectType, PaidByEnum } from 'karrio/graphql';
-import OrdersProvider, { OrdersContext } from '@/context/orders-provider';
+import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
+import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
+import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import CommodityDescription from '@/components/descriptions/commodity-description';
+import MessagesDescription from '@/components/descriptions/messages-description';
+import { LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum } from 'karrio/graphql';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
-import RateDescription from '@/components/descriptions/rate-description';
-import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
-import LineItemSelector from '@/components/line-item-selector';
-import InputField from '@/components/generic/input-field';
-import ButtonField from '@/components/generic/button-field';
-import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import ModalProvider from '@/components/generic/modal';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
-import LabelMutationProvider, { useLabelMutation } from '@/context/label-data-mutation';
-import ShipmentMutationProvider from '@/context/shipment-mutation';
-import { useLoader } from '@/components/loader';
-import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
-import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
-import MessagesDescription from '@/components/descriptions/messages-description';
-import { useAppMode } from '@/context/data/mode-context';
-import { useNotifier } from '@/components/notifier';
-import { bundleContexts } from '@/context/utils';
-import CommodityDescription from '@/components/descriptions/commodity-description';
+import GoogleGeocodingScript from '@/components/google-geocoding-script';
+import RateDescription from '@/components/descriptions/rate-description';
+import { useDefaultTemplates } from '@/context/default-template';
 import CheckBoxField from '@/components/generic/checkbox-field';
+import LineItemSelector from '@/components/line-item-selector';
+import AuthenticatedPage from '@/layouts/authenticated-page';
+import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
+import { useLabelDataMutation } from '@/context/label-data';
+import InputField from '@/components/generic/input-field';
+import DashboardLayout from '@/layouts/dashboard-layout';
+import ModalProvider from '@/components/generic/modal';
+import { useNotifier } from '@/components/notifier';
+import React, { useEffect, useState } from 'react';
+import { bundleContexts } from '@/context/utils';
+import { useLoader } from '@/components/loader';
+import { useAppMode } from '@/context/app-mode';
+import { useOrders } from '@/context/order';
+import Spinner from '@/components/spinner';
+import Head from 'next/head';
 import moment from 'moment';
 import CarrierImage from '@/components/carrier-image';
 
 export { getServerSideProps } from "@/lib/middleware";
 
 const ContextProviders = bundleContexts([
-  OrdersProvider,
-  TemplatesProvider,
-  LabelMutationProvider,
-  ShipmentMutationProvider,
-  LabelDataProvider,
   ModalProvider,
 ]);
 
@@ -52,18 +44,21 @@ export default function CreateShipmentPage(pageProps: any) {
     const loader = useLoader();
     const notifier = useNotifier();
     const { basePath } = useAppMode();
-    const mutation = useLabelMutation();
-    const orders = useContext(OrdersContext);
+    const { query: templates } = useDefaultTemplates();
     const { addUrlParam, ...router } = useLocation();
-    const { shipment, called, ...label } = useLabelData();
-    const { default_address, default_parcel, ...template } = useContext(DefaultTemplatesData);
     const { shipment_id = 'new', order_id = "" } = router.query as { shipment_id: string, order_id: string };
-    const [ready, setReady] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { state: { shipment, query }, ...mutation } = useLabelDataMutation(shipment_id);
     const [key, setKey] = useState<string>(`${shipment_id}-${Date.now()}`);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [ready, setReady] = useState<boolean>(false);
     const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
       shipment?.selected_rate_id ? { id: shipment?.selected_rate_id } as any : undefined
     );
+    const { query: orders } = useOrders({
+      first: 20,
+      status: ['unfulfilled', 'partial'] as any,
+      ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
+    });
 
     const requireInfoForRating = (shipment: ShipmentType) => {
       return (
@@ -81,24 +76,25 @@ export default function CreateShipmentPage(pageProps: any) {
       );
     };
     const getMetadatas = (): any => {
-      return orders.orders
-        .reduce((acc, { metadata }) => ({ ...acc, ...(metadata || {}) }), {});
+      return (orders.data?.orders.edges || [])
+        .reduce((acc, { node: { metadata } }) => ({ ...acc, ...metadata }), {});
     };
     const getOptions = (): any => {
-      return orders.orders
-        .reduce((acc, { options }) => ({ ...acc, ...options }), {});
+      return (orders.data?.orders.edges || [])
+        .reduce((acc, { node: { options } }) => ({ ...acc, ...options }), {});
     };
     const getItems = () => {
-      return orders.orders
-        .map(({ line_items }) => line_items).flat();
+      return (orders.data?.orders.edges || [])
+        .map(({ node: { line_items } }) => line_items).flat();
     };
     const getParent = (id: string | null) => {
       return getItems()
         .find((item) => item.id === id);
     };
     const getOrder = (item_id?: string | null) => {
-      return orders.orders
-        .find((order) => order.line_items.find((item) => item.id === item_id));
+      return (orders.data?.orders.edges || [])
+        .find(({ node: order }) => order.line_items.find((item) => item.id === item_id))
+        ?.node;
     };
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
       const parent_quantity = getParent(item.parent_id)?.unfulfilled_quantity || 0;
@@ -112,9 +108,13 @@ export default function CreateShipmentPage(pageProps: any) {
       return parent_quantity - packed_quantity;
     };
     const setInitialData = () => {
-      const order_ids = orders.orders.map(({ order_id }) => order_id).join(',');
-      const { id: _, ...recipient } = orders.orders[0]?.shipping_to || {};
-      const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
+      const orderList = orders.data!.orders!.edges;
+      const default_parcel = templates.data?.default_templates.default_parcel?.parcel;
+      const default_address = templates.data?.default_templates.default_address?.address;
+
+      const order_ids = orderList.map(({ node: { order_id } }) => order_id).join(',');
+      const { id: _, ...recipient } = orderList[0].node.shipping_to || {};
+      const { id: __, ...shipper } = (orderList[0] as any)?.shipping_from || default_address || {};
       // Collect orders merged options
       const order_options = getOptions();
       const order_metadatas = getMetadatas()
@@ -154,7 +154,7 @@ export default function CreateShipmentPage(pageProps: any) {
       const customs = (isDocument ? null : {
         ...DEFAULT_CUSTOMS_CONTENT,
         commercial_invoice: true,
-        invoice: orders.orders[0].order_id,
+        invoice: orderList[0].node.order_id,
         invoice_date: order_options.invoice_date || moment().format('YYYY-MM-DD'),
         incoterm: payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
         commodities: getShipmentCommodities({ parcels } as any),
@@ -187,13 +187,7 @@ export default function CreateShipmentPage(pageProps: any) {
       setKey(`${shipment_id}-${Date.now()}`);
     };
 
-    useEffect(() => {
-      if (!called && !loading && label.loadShipment) { label.loadShipment(shipment_id); }
-    }, []);
-    useEffect(() => {
-      if (!template.called && !template.loading && template.load) template.load();
-    }, []);
-    useEffect(() => { setLoading(label.loading || loader.loading); }, [label.loading, loader.loading]);
+    useEffect(() => { setLoading(query.isFetching || loader.loading); }, [query.isFetching, loader.loading]);
     useEffect(() => {
       if (isNoneOrEmpty(order_id)) {
         notifier.notify({ type: NotificationType.info, message: 'Select order(s) first! redirecting...' });
@@ -201,34 +195,25 @@ export default function CreateShipmentPage(pageProps: any) {
       }
     }, [order_id]);
     useEffect(() => {
-      if (!orders.called && !orders.loading && !isNoneOrEmpty(order_id) && orders.load) orders.load({
-        filter: {
-          first: 20,
-          status: ['unfulfilled', 'partial'] as any,
-          ...(order_id ? { id: order_id.split(',').map(s => s.trim()) } : {})
-        }
-      });
-    }, []);
-    useEffect(() => {
       if (
-        !ready && called &&
-        template.data &&
-        orders.called &&
+        !ready && query.isFetched &&
+        templates.isFetched &&
+        orders.isFetched &&
         shipment_id === 'new' &&
-        orders.orders.length > 0
+        (orders.data?.orders.edges || []).length > 0
       ) {
         setTimeout(() => setInitialData(), 1000);
       }
-    }, [called, orders.called, orders.orders, template.data]);
+    }, [query.isFetched, orders.isFetched, templates.isFetched]);
 
     return (
       <>
-        <header className="px-0 py-3 is-flex is-justify-content-space-between">
+        <header className="px-0 py-6 is-flex is-justify-content-space-between">
           <div>
             <span className="title is-4 my-2">Create shipment</span>
             <br />
             {ready && <span className="has-text-weight-semibold is-size-7">
-              {(orders.orders || []).length > 1 ? `Multiple Orders` : `Order #${orders.orders[0].order_id}`}
+              {(orders.data?.orders.edges || [{}]).length > 1 ? `Multiple Orders` : `Order #${(orders.data?.orders.edges || [{}])[0]?.node?.order_id}`}
             </span>}
           </div>
         </header>
@@ -589,7 +574,7 @@ export default function CreateShipmentPage(pageProps: any) {
                 <InputField label="Reference"
                   name="reference"
                   defaultValue={shipment.reference as string}
-                  onChange={e => label.updateShipment({ reference: e.target.value })}
+                  onChange={e => mutation.updateShipment({ reference: e.target.value })}
                   placeholder="shipment reference"
                   className="is-small"
                   autoComplete="off"
@@ -610,7 +595,7 @@ export default function CreateShipmentPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.sender}
-                      onChange={() => label.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
+                      onChange={() => mutation.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
                   </label>
@@ -620,7 +605,7 @@ export default function CreateShipmentPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.recipient}
-                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
+                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
                   </label>
@@ -630,7 +615,7 @@ export default function CreateShipmentPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.third_party}
-                      onChange={() => label.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
+                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.third_party } })}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.third_party.toString())}</span>
                   </label>
@@ -643,21 +628,19 @@ export default function CreateShipmentPage(pageProps: any) {
                       label="account number"
                       className="is-small"
                       defaultValue={shipment?.payment?.account_number as string}
-                      onChange={e => label.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
+                      onChange={e => mutation.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
                     />
                   </div>}
               </div>
 
               {/* Billing address section */}
-              {(orders.orders || [{}])[0].billing_address && <>
+              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <>
                 <hr className='my-1' style={{ height: '1px' }} />
-              
-                <div className="p-3">
-                  <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
 
-                  <AddressDescription address={orders.orders[0].billing_address as any} />
+                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
 
-                </div>
+                <AddressDescription address={orders.data?.orders.edges[0].node.billing_address as any} />
+
               </>}
 
             </div>
@@ -674,7 +657,7 @@ export default function CreateShipmentPage(pageProps: any) {
                     customs={shipment?.customs as any || {
                       ...DEFAULT_CUSTOMS_CONTENT,
                       commercial_invoice: true,
-                      invoice: orders.orders[0].order_id,
+                      invoice: (orders.data?.orders.edges || [{}])[0]?.node?.order_id,
                       invoice_date: getOptions().invoice_date || moment().format('YYYY-MM-DD'),
                       incoterm: shipment.payment?.paid_by == 'sender' ? 'DDP' : 'DDU',
                       commodities: getShipmentCommodities(shipment),
@@ -821,7 +804,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 <div className="p-1 pb-4">
                   <MetadataEditor
-                    object_type={MetadataObjectType.shipment}
+                    object_type={MetadataObjectTypeEnum.shipment}
                     metadata={shipment.metadata}
                     onChange={(metadata) => onChange({ metadata })}
                   >
