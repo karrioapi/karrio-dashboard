@@ -20,7 +20,6 @@ export const Webhooks = React.createContext<ResultType>({} as ResultType);
 
 const WebhooksProvider: React.FC = ({ children }) => {
   const karrio = useContext(RestContext);
-  const { testMode } = useContext(AppMode);
   const [result, setValue] = useState<WebhookList>(DEFAULT_PAGINATED_RESULT);
   const [error, setError] = useState<RequestError>();
   const [called, setCalled] = useState<boolean>(false);
@@ -31,10 +30,12 @@ const WebhooksProvider: React.FC = ({ children }) => {
     setCursor(cursor || '');
     setLoading(true);
 
-    return (karrio as any)
-      .webhooks
-      .list({ ...getCursorPagination(cursor), testMode: testMode })
-      .then(setValue)
+    return (karrio)!.webhooks
+      .list({ ...getCursorPagination(cursor) })
+      .then(({ data }) => {
+        setValue(data as any)
+        return data;
+      })
       .catch(setError)
       .then(() => setLoading(false));
   };
