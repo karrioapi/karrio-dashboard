@@ -140,28 +140,15 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             <div className="columns my-0 py-1">
               <div className="column is-6 is-size-6">
                 <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Courier</div>
-                  <div className="column is-size-6 has-text-weight-semibold py-1">
-                    {formatRef((shipment.meta.rate_provider === 'generic' ? shipment.carrier_name : shipment.meta.rate_provider) as string)}
-                  </div>
-                </div>
-                <div className="columns my-0">
-                  <div className="column is-4 is-size-6 py-1">Tracking</div>
-                  <div className="column py-1">
-                    {shipment.tracker_id
-                      ? <a className="has-text-info p-0 m-0 is-size-6 has-text-weight-semibold"
-                        href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
-                        <span>{shipment.tracking_number as string}</span> {" "}
-                        <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
-                      </a>
-                      : <span>{shipment.tracking_number as string}</span>
-                    }
-                  </div>
-                </div>
-                <div className="columns my-0">
                   <div className="column is-4 is-size-6 py-1">Service</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
                     {formatRef(((shipment.meta as any)?.service_name || shipment.service) as string)}
+                  </div>
+                </div>
+                <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-1">Courier</div>
+                  <div className="column is-size-6 has-text-weight-semibold py-1">
+                    {formatRef((shipment.meta.rate_provider === 'generic' ? shipment.carrier_name : shipment.meta.rate_provider) as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
@@ -169,6 +156,25 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                   <div className="column is-size-6 py-1">
                     <span className="has-text-weight-semibold mr-1">{shipment.selected_rate?.total_charge}</span>
                     <span>{shipment.selected_rate?.currency}</span>
+                  </div>
+                </div>
+                <div className="columns my-0">
+                  <div className="column is-4 is-size-7 py-1">Rate Provider</div>
+                  <div className="column is-size-7 has-text-info has-text-weight-semibold py-1">
+                    {formatRef(shipment.carrier_name as string)}
+                  </div>
+                </div>
+                <div className="columns my-0">
+                  <div className="column is-4 is-size-7 py-1">Tracking Number</div>
+                  <div className="column py-1">
+                    {shipment.tracker_id
+                      ? <a className="has-text-info p-0 m-0 is-size-7 has-text-weight-semibold"
+                        href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
+                        <span>{shipment.tracking_number as string}</span> {" "}
+                        <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
+                      </a>
+                      : <span className="is-size-7 has-text-weight-semibold">{shipment.tracking_number as string}</span>
+                    }
                   </div>
                 </div>
               </div>
