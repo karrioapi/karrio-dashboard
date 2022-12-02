@@ -86,7 +86,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
               <td className="carrier pl-0">
                 <CarrierBadge
                   carrier={connection.carrier_name}
-                  custom_name={(connection as any).display_name}
+                  custom_name={(connection as any).carrier_id}
                   className="box has-text-weight-bold"
                   textOnly
                 />

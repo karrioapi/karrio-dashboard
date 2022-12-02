@@ -32,7 +32,7 @@ const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, t
         <div className={`${className} ${CARRIER_THEMES[name] || 'is-generic'}`} {...props}>
           {custom_name
             ? (short ? formatCarrierSlug(custom_name) : custom_name)
-            : carrier_name || "Not Selected"}
+            : carrier_name || carrier}
         </div>}
     </>
   );

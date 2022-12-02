@@ -8,13 +8,17 @@ interface RateDescriptionComponent {
 
 const RateDescription: React.FC<RateDescriptionComponent> = ({ rate }) => {
   return (
-    <div className="column px-1 py-0 is-size-7 has-text-weight-semibold">
-      <h6 className="has-text-weight-bold">
-        {((rate.meta as any)?.rate_provider !== rate.carrier_name) && <span>{formatRef(rate.carrier_name)} </span>}
+    <div className="column px-2 py-0 is-size-7 has-text-weight-semibold">
+      <h6 className="has-text-weight-bold text-ellipsis">
         {formatRef(((rate.meta as any)?.service_name || rate.service) as string)}
       </h6>
-      <span>{rate.total_charge} {rate.currency}</span>
-      {!isNone(rate.transit_days) && <span> - {rate.transit_days} Transit days</span>}
+      <p className="has-text-grey m-0 p-0 text-ellipsis">
+        <span>{rate.total_charge} {rate.currency}</span>
+        {!isNone(rate.transit_days) && <span> - {rate.transit_days} Transit days</span>}
+      </p>
+      <p className="has-text-info mt-1 p-0" style={{ fontSize: '0.8rem' }}>
+        <span>{rate.carrier_name}:{rate.carrier_id}</span>
+      </p>
     </div>
   );
 };

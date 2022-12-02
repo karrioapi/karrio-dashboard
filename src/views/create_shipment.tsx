@@ -34,6 +34,7 @@ import CommodityDescription from '@/components/descriptions/commodity-descriptio
 import CheckBoxField from '@/components/generic/checkbox-field';
 import SelectField from '@/components/generic/select-field';
 import moment from 'moment';
+import CarrierImage from '@/components/carrier-image';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -725,15 +726,13 @@ export default function CreateShipmentPage(pageProps: any) {
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 
-                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-1 rates-list-box" style={{ maxHeight: '20em' }}>
                     {(shipment.rates || []).map(rate => (
                       <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                        className={`columns m-0 p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                         onClick={() => setSelectedRate(rate)}>
 
-                        <span className={`icon is-medium ${rate.id === selected_rate?.id ? 'has-text-success' : ''}`}>
-                          {(rate.id === selected_rate?.id) ? <i className="fas fa-check-square"></i> : <i className="fas fa-square"></i>}
-                        </span>
+                        <CarrierImage carrier={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
                         <RateDescription rate={rate} />
 

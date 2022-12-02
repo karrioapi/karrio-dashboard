@@ -394,7 +394,7 @@ export const CARRIER_IMAGES: Collection = {
   'yanwen': 'yanwen',
   'boxknight': 'generic',
   'eshipper': 'eshipper',
-  'easypost': 'easypost',
+  'easypost': 'generic',
   'freightcom': 'freightcom',
   'generic': 'generic',
   'sf_express': 'sf_express',
@@ -402,3 +402,10 @@ export const CARRIER_IMAGES: Collection = {
   'usps_international': 'usps',
   'yunexpress': 'yunexpress',
 }
+
+export const IMAGES = (
+  Object
+    .entries(CARRIER_IMAGES)
+    .filter(([_, val]) => val !== 'generic')
+    .map(([key, _]) => key)
+);

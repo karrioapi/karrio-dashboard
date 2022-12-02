@@ -155,6 +155,15 @@ export function formatCarrierSlug(name?: string) {
   return short_name.toUpperCase();
 }
 
+export function getInitials(text: string) {
+  return text
+    .split("-").join(" ")
+    .split("_").join(" ")
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+}
+
 export function isNone(value: any): boolean {
   return value === null || value === undefined;
 }

@@ -74,7 +74,10 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
         {!isNone(tracker) && <div className="modal-card">
           <section className="modal-card-body">
             <div className="has-text-centered pb-4">
-              <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
+              <CarrierImage
+                carrier={(tracker?.meta as any)?.carrier || tracker?.carrier_name}
+                width={60} height={60}
+              />
             </div>
 
             <p className="subtitle has-text-centered is-6 my-3">
