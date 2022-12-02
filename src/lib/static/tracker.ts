@@ -1,6 +1,7 @@
 import { rest$ } from "@/client/context";
 import { checkAPI } from "@/lib/middleware";
 import { GetServerSideProps } from "next"
+import logger from "../logger";
 
 
 export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
@@ -11,8 +12,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res, params }) =>
 
     // Retrieve tracker by id
     const data = await rest$.value?.trackers.retrieves({ idOrTrackingNumber: id })
-      .then(tracker => ({ tracker: JSON.parse(JSON.stringify(tracker)) }))
-      .catch(() => ({ message: `No Tracker ID nor Tracking Number found for ${id}` }));
+      .then(({ data }) => ({ tracker: JSON.parse(JSON.stringify(data)) }))
+      .catch(_ => ({ message: `No Tracker ID nor Tracking Number found for ${id}` }));
 
     res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
 
