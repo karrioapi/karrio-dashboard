@@ -68,16 +68,19 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
   };
 
   useEffect(() => {
-    setCarrierList(
-      [...(user_connections || []), ...(system_connections || [])]
-        .filter(c => (
-          c.active &&
-          c.test_mode === testMode &&
-          c.carrier_name in carriers &&
-          c.capabilities.includes('tracking')
-        ))
-    );
-  }, [user_connections, system_connections, testMode]);
+    const connections = [
+      ...(user_connections || []),
+      ...(system_connections || []),
+    ].filter(c => (
+      c.active &&
+      c.carrier_name in carriers &&
+      c.carrier_name !== 'generic' &&
+      (c as any).enabled !== false &&
+      c.capabilities.includes('tracking')
+    ));
+
+    setCarrierList(connections);
+  }, [user_connections, system_connections]);
 
   return (
     <>
