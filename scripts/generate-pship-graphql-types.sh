@@ -3,7 +3,7 @@ branch="${1:=main}"
 
 curl https://raw.githubusercontent.com/karrioapi/karrio/${branch}/server/schemas/graphql.json --output graphql.json
 
-apollo-codegen generate "karrio/graphql/queries.ts" \
+npx apollo-codegen generate "karrio/graphql/queries.ts" \
   --schema "./graphql.json" \
   --target typescript \
   --output "karrio/graphql/types.ts"
