@@ -1,11 +1,11 @@
-import axios from "axios";
-import logger from "@/lib/logger";
-import { Response } from "node-fetch";
-import { getSession } from "next-auth/react";
-import { KARRIO_API } from "@/client/context";
+import { ContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType } from "@/lib/types";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { ContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType } from "@/lib/types";
+import { KARRIO_API } from "@/client/context";
+import { getSession } from "next-auth/react";
+import { Response } from "node-fetch";
+import logger from "@/lib/logger";
+import axios from "axios";
 
 const AUTH_HTTP_CODES = [401, 403, 407];
 const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
@@ -46,7 +46,7 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
-      logger.error(e.response);
+      logger.error(e.response?.data || e.response);
       const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
         ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
@@ -89,7 +89,7 @@ export async function loadContextData(session: SessionType): Promise<any> {
     return { metadata, references, ...data };
   } catch (e: any | Response) {
     logger.error(`Failed to fetch API data from (${KARRIO_API})`);
-    logger.error(e.response);
+    logger.error(e.response?.data || e.response);
     const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
       ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
 
@@ -129,7 +129,7 @@ export async function checkSubscription(session: SessionType | any, metadata?: M
       return { subscription };
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API subscription details from (${KARRIO_API})`);
-      logger.error(e.response);
+      logger.error(e.response?.data || e.response);
     }
   }
 
@@ -154,7 +154,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
       return { session_url: portal_session.url };
     } catch (e: any | Response) {
       logger.error(`Failed to create customer portal session from (${KARRIO_API})`);
-      logger.error(e.response.data);
+      logger.error(e.response?.data || e.response);
     }
   }
 

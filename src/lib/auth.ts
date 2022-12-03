@@ -3,6 +3,7 @@ import { TokenObtainPair } from "karrio/rest";
 import axios from "axios";
 import logger from '@/lib/logger';
 import { NextApiRequest } from "next";
+import { isNoneOrEmpty } from "./helper";
 
 
 export async function authenticate(data: TokenObtainPair) {
@@ -17,7 +18,11 @@ export async function authenticate(data: TokenObtainPair) {
 }
 
 export async function refreshToken(refresh: string) {
-  logger.debug("refreshing token...");
+  if (isNoneOrEmpty(refresh)) {
+    return Promise.reject("Missing refresh token!")
+  }
+
+  logger.debug("Send refresh token request...");
 
   return axios({
     url: KARRIO_API + '/api/token/refresh',
@@ -34,17 +39,17 @@ export async function getCurrentOrg(access: string, orgId?: string) {
 
   return axios({
     url: KARRIO_API + '/graphql',
-    headers: {
-      ...(orgId ? { 'x-org-id': orgId } : {}),
-      'authorization': `Bearer ${access}`,
-    },
-    data: { query: `{ organization { id } }` }
+    headers: { 'authorization': `Bearer ${access}` },
+    data: { query: `{ organizations { id } }` }
   })
     .then(({ data: { data } }) => {
-      return data?.organization
+      return (
+        (data?.organizations || []).find(({ id }: any) => id === orgId)
+        || (data?.organizations || { id: null })[0]
+      )
     })
-    .catch(err => {
-      logger.error(err)
+    .catch(({ data }) => {
+      logger.error(data)
       return { id: null };
     });
 }

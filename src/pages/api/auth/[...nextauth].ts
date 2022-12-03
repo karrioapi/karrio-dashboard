@@ -1,12 +1,12 @@
-import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
-import getConfig from 'next/config';
-import NextAuth from 'next-auth';
-import { JWT } from 'next-auth/jwt';
-import CredentialProvider from "next-auth/providers/credentials";
-import logger from '@/lib/logger';
 import { authenticate, computeTestMode, getCurrentOrg, refreshToken } from '@/lib/auth';
-import { withSentry } from '@sentry/nextjs';
+import CredentialProvider from "next-auth/providers/credentials";
 import { NextApiRequest, NextApiResponse } from 'next';
+import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
+import { withSentry } from '@sentry/nextjs';
+import getConfig from 'next/config';
+import { JWT } from 'next-auth/jwt';
+import logger from '@/lib/logger';
+import NextAuth from 'next-auth';
 import moment from 'moment';
 
 const { serverRuntimeConfig } = getConfig();
@@ -32,8 +32,8 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
             const testMode = req.headers.referer?.includes("/test");
 
             return { accessToken: token.access, refreshToken: token.refresh, orgId: org?.id, testMode };
-          } catch (err) {
-            logger.error(err);
+          } catch (e) {
+            logger.error(e);
           }
 
           // Return null if user data could not be retrieved
@@ -69,7 +69,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
 
         // Access token has expired, try to update it OR orgId has changed
         try {
-          logger.debug('Refreshing expired token...');
+          logger.info('Refreshing expired token...');
           const { access, refresh } = await refreshToken(token.refreshToken as string);
 
           return {
@@ -79,7 +79,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
             expiration: parseJwt(access).exp
           };
         } catch (error) {
-          logger.debug(error);
+          logger.error(error);
 
           return {
             error: "RefreshAccessTokenError",
@@ -87,10 +87,12 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         }
       },
       session: async ({ session, token }) => {
-        session.error = token.error;
-        session.orgId = token.orgId;
+        logger.debug([session, token, "current session"]);
+
         session.accessToken = token.accessToken;
         session.testMode = token.testMode;
+        session.error = token.error;
+        session.orgId = token.orgId;
 
         return session
       }
