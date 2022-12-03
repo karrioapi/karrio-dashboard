@@ -19,8 +19,8 @@ async function ImageFallback(req: NextApiRequest, res: NextApiResponse) {
     <g>
       ${path}
 
-      <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle" fill="#ddd" font-weight="bold"
-        font-size="${isIcon ? '20em' : '1.1em'}" style="text-transform: uppercase; ${isIcon ? 'border-radius: 40px;' : ''}">
+      <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle" fill="#ddd" font-weight="bold" font-family="arial"
+        font-size="${isIcon ? '18em' : '1.1em'}" style="text-transform: uppercase; ${isIcon ? 'border-radius: 40px;' : ''}">
         ${carrier_name}
       </text>
     </g>

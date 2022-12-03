@@ -103,7 +103,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ confirmPasswordReset }) => {
       </div>
 
       <div className="has-text-centered my-4 is-size-6">
-        <span>Return to <Link href="/login">Sign in</Link></span>
+        <span>Return to <Link legacyBehavior href="/login">Sign in</Link></span>
       </div>
     </>
   )

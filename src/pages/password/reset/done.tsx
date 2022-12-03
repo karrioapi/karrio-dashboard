@@ -24,7 +24,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
         </div>
 
         <div className="has-text-centered my-4 is-size-6">
-          <Link href="/login">Sign in</Link>
+          <Link legacyBehavior href="/login">Sign in</Link>
         </div>
 
       </SectionLayout>

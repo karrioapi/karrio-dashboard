@@ -82,7 +82,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
           {user_connections.map((connection) => (
 
-            <tr key={`${connection.id}-${Date.now()}`} style={{ display: 'table-row' }}>
+            <tr key={`${connection.id}-${Date.now()}`}>
               <td className="carrier pl-0">
                 <CarrierBadge
                   carrier={connection.carrier_name}

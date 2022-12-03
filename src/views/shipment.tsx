@@ -166,9 +166,9 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 </div>
                 <div className="columns my-0">
                   <div className="column is-4 is-size-7 py-1">Tracking Number</div>
-                  <div className="column py-1">
+                  <div className="column has-text-info py-1">
                     {shipment.tracker_id
-                      ? <a className="has-text-info p-0 m-0 is-size-7 has-text-weight-semibold"
+                      ? <a className="p-0 m-0 is-size-7 has-text-weight-semibold"
                         href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
                         <span>{shipment.tracking_number as string}</span> {" "}
                         <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>

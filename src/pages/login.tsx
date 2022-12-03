@@ -72,7 +72,7 @@ export default function LoginPage(pageProps: any) {
               <div className="field mt-5">
                 <label className="label level" htmlFor="id_password">
                   <span>Password</span>
-                  <Link href="/password/reset/request" passHref><a className="is-size-7" tabIndex={-1}>Forgot your password?</a></Link>
+                  <Link legacyBehavior href="/password/reset/request" passHref><a className="is-size-7" tabIndex={-1}>Forgot your password?</a></Link>
                 </label>
 
                 <div className="control">
@@ -96,7 +96,7 @@ export default function LoginPage(pageProps: any) {
         </div>
 
         {pageProps?.metadata?.ALLOW_SIGNUP && <div className="has-text-centered my-4 is-size-6">
-          Dont have an account? <Link href="/signup" passHref><a>Sign Up</a></Link>
+          Dont have an account? <Link legacyBehavior href="/signup" passHref><a>Sign Up</a></Link>
         </div>}
       </SectionLayout>
     </>

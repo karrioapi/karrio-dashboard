@@ -65,7 +65,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
         </div>
 
         {invitation.error && <div className="has-text-centered my-4 is-size-6">
-          <span>Return to <Link href="/login">Sign in</Link></span>
+          <span>Return to <Link legacyBehavior href="/login">Sign in</Link></span>
         </div>}
 
       </SectionLayout>

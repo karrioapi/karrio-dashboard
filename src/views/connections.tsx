@@ -47,7 +47,7 @@ export default function ConnectionsPage(pageProps: any) {
 
     return (
       <>
-        <header className="px-0 py-4">
+        <header className="px-0 py-6">
           <span className="title is-4">Carriers</span>
           <button className="button is-primary is-small is-pulled-right" onClick={() => editConnection({ onConfirm: onChange })}>
             <span>Register a carrier</span>

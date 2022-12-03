@@ -25,7 +25,7 @@ const CarrierBadge: React.FC<CarrierBadgeComponent> = ({ carrier, custom_name, t
     <>
       {hasImage &&
         <div className='mt-1'>
-          <Image src={p`/carriers/${CARRIER_IMAGES[carrier || 'generic']}_logo.svg`} height="25" width="100%" alt="carrier logo" />
+          <Image src={p`/carriers/${name || custom_name || carrier}_logo.svg`} height="25" width="100" alt="carrier logo" />
         </div>}
 
       {useText &&

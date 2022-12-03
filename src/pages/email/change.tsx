@@ -57,7 +57,7 @@ export default function Page(pageProps: { metadata: Metadata }) {
         </div>
 
         <div className="has-text-centered my-4 is-size-6">
-          <Link href="/">Return Home</Link>
+          <Link legacyBehavior href="/">Return Home</Link>
         </div>
       </>
     );

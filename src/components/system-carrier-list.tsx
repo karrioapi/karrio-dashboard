@@ -33,8 +33,7 @@ const SystemConnectionList: React.FC = () => {
 
         <tbody className="system-connections-table">
           <tr>
-            <td className="is-size-7" colSpan={3}>ACCOUNTS</td>
-            <td className="action">Active</td>
+            <td className="is-size-7" colSpan={4}>ACCOUNTS</td>
           </tr>
 
           {(system_connections || []).map((connection) => (

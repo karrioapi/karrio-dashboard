@@ -131,7 +131,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
       </div>
 
       <div className="has-text-centered my-4 is-size-6">
-        <span>Have an account? <Link href="/login">Sign in</Link></span>
+        <span>Have an account? <Link legacyBehavior href="/login">Sign in</Link></span>
       </div>
     </>
   )

@@ -1,7 +1,6 @@
 import AppLink from "@/components/app-link";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import CustomInvoicePrinter from "@/components/descriptions/custom-invoice-printer";
 import { Loading } from "@/components/loader";
 import ShipmentMenu from "@/components/shipment-menu";
 import Spinner from "@/components/spinner";
@@ -185,17 +184,15 @@ export default function ShipmentsPage(pageProps: any) {
       <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <ShipmentMutationProvider>
         <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
-          <CustomInvoicePrinter>
-            <ShipmentsProvider>
-              <ShipmentPreview>
-                <ConfirmModal>
+          <ShipmentsProvider>
+            <ShipmentPreview>
+              <ConfirmModal>
 
-                  <Component />
+                <Component />
 
-                </ConfirmModal>
-              </ShipmentPreview>
-            </ShipmentsProvider>
-          </CustomInvoicePrinter>
+              </ConfirmModal>
+            </ShipmentPreview>
+          </ShipmentsProvider>
         </DocumentTemplatesProvider>
       </ShipmentMutationProvider>
     </DashboardLayout>

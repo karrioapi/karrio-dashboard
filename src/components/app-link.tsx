@@ -14,7 +14,7 @@ const AppLink: React.FC<AppLinkProps> = ({ href, className, target, onClick, chi
   const { basePath } = useContext(AppMode);
 
   return (
-    <Link href={p`${basePath}${href}`} {...props}>
+    <Link legacyBehavior href={p`${basePath}${href}`} {...props}>
       <a
         {...(target ? { target } : {})}
         {...(onClick ? { onClick } : {})}
