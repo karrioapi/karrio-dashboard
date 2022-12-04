@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
 import CarrierBadge from '@/components/carrier-badge';
 import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/dist/client/router';
 import { isNoneOrEmpty } from '@/lib/helper';
 import CopiableLink from '@/components/copiable-link';
 import { useLabelTemplateModal } from './label-template-edit-modal';
+import CarrierNameBadge from './carrier-name-badge';
 
 type ConnectionUpdateType = Partial<UserConnectionType> & { id: string, __typename: string };
 interface UserConnectionListView { }
@@ -84,11 +85,10 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
             <tr key={`${connection.id}-${Date.now()}`}>
               <td className="carrier pl-0">
-                <CarrierBadge
-                  carrier={connection.carrier_name}
-                  custom_name={(connection as any).carrier_id}
+                <CarrierNameBadge
+                  carrier_name={connection.carrier_name}
+                  display_name={connection.display_name}
                   className="box has-text-weight-bold"
-                  textOnly
                 />
               </td>
               <td className="mode is-vcentered">

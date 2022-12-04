@@ -973,6 +973,12 @@ export interface CarrierSettings {
      */
     'carrier_id': string;
     /**
+     * The carrier verbose name.
+     * @type {string}
+     * @memberof CarrierSettings
+     */
+    'display_name'?: string;
+    /**
      *  The test flag indicates whether to use a carrier configured for test. 
      * @type {boolean}
      * @memberof CarrierSettings

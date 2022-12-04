@@ -1639,6 +1639,7 @@ export interface get_system_connections_system_connections {
   active: boolean;         // Disable/Hide carrier from clients
   capabilities: string[];  // Select the capabilities of the carrier that you want to enable
   carrier_name: string;
+  display_name: string | null;
   enabled: boolean;
 }
 
@@ -1933,6 +1934,7 @@ export interface get_user_connections_user_connections_AmazonMwsSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   seller_id: string;
@@ -1947,6 +1949,7 @@ export interface get_user_connections_user_connections_AramexSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -1963,6 +1966,7 @@ export interface get_user_connections_user_connections_AustraliaPostSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   api_key: string;
@@ -1976,6 +1980,7 @@ export interface get_user_connections_user_connections_CanadaPostSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -1991,6 +1996,7 @@ export interface get_user_connections_user_connections_CanparSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2003,6 +2009,7 @@ export interface get_user_connections_user_connections_ChronopostSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   password: string;
@@ -2016,6 +2023,7 @@ export interface get_user_connections_user_connections_DHLExpressSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   site_id: string;
@@ -2049,6 +2057,7 @@ export interface get_user_connections_user_connections_DHLPolandSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2063,6 +2072,7 @@ export interface get_user_connections_user_connections_DHLUniversalSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   consumer_key: string;
@@ -2075,6 +2085,7 @@ export interface get_user_connections_user_connections_DicomSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2107,6 +2118,7 @@ export interface get_user_connections_user_connections_DPDHLSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   app_id: string;
@@ -2123,6 +2135,7 @@ export interface get_user_connections_user_connections_EShipperSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2135,6 +2148,7 @@ export interface get_user_connections_user_connections_FedexSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   account_number: string;
@@ -2151,6 +2165,7 @@ export interface get_user_connections_user_connections_FreightcomSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2163,6 +2178,7 @@ export interface get_user_connections_user_connections_PurolatorSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2178,6 +2194,7 @@ export interface get_user_connections_user_connections_RoyalMailSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   client_id: string;
@@ -2190,6 +2207,7 @@ export interface get_user_connections_user_connections_SendleSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   sendle_id: string;
@@ -2202,6 +2220,7 @@ export interface get_user_connections_user_connections_SFExpressSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   partner_id: string;
@@ -2214,6 +2233,7 @@ export interface get_user_connections_user_connections_TNTSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2228,6 +2248,7 @@ export interface get_user_connections_user_connections_UPSSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2244,6 +2265,7 @@ export interface get_user_connections_user_connections_UPSFreightSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2260,6 +2282,7 @@ export interface get_user_connections_user_connections_USPSSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2275,6 +2298,7 @@ export interface get_user_connections_user_connections_USPSInternationalSettings
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2290,6 +2314,7 @@ export interface get_user_connections_user_connections_YanwenSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   customer_number: string;
@@ -2302,6 +2327,7 @@ export interface get_user_connections_user_connections_YunExpressSettings {
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   customer_number: string;
@@ -2328,6 +2354,7 @@ export interface get_user_connections_with_generics_user_connections_AmazonMwsSe
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   seller_id: string;
@@ -2342,6 +2369,7 @@ export interface get_user_connections_with_generics_user_connections_AramexSetti
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2358,6 +2386,7 @@ export interface get_user_connections_with_generics_user_connections_AustraliaPo
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   api_key: string;
@@ -2371,6 +2400,7 @@ export interface get_user_connections_with_generics_user_connections_CanadaPostS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2386,6 +2416,7 @@ export interface get_user_connections_with_generics_user_connections_CanparSetti
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2398,6 +2429,7 @@ export interface get_user_connections_with_generics_user_connections_ChronopostS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   password: string;
@@ -2411,6 +2443,7 @@ export interface get_user_connections_with_generics_user_connections_DHLExpressS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   site_id: string;
@@ -2444,6 +2477,7 @@ export interface get_user_connections_with_generics_user_connections_DHLPolandSe
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2458,6 +2492,7 @@ export interface get_user_connections_with_generics_user_connections_DHLUniversa
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   consumer_key: string;
@@ -2470,6 +2505,7 @@ export interface get_user_connections_with_generics_user_connections_DicomSettin
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2502,6 +2538,7 @@ export interface get_user_connections_with_generics_user_connections_DPDHLSettin
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   app_id: string;
@@ -2518,6 +2555,7 @@ export interface get_user_connections_with_generics_user_connections_EShipperSet
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2530,6 +2568,7 @@ export interface get_user_connections_with_generics_user_connections_EasyPostSet
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   api_key: string;
@@ -2542,6 +2581,7 @@ export interface get_user_connections_with_generics_user_connections_FedexSettin
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   account_number: string;
@@ -2558,6 +2598,7 @@ export interface get_user_connections_with_generics_user_connections_FreightcomS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2599,7 +2640,7 @@ export interface get_user_connections_with_generics_user_connections_GenericSett
   id: string;
   carrier_id: string;           // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
-  display_name: string;         // Carrier display name
+  display_name: string | null;
   custom_carrier_name: string;  // Unique carrier slug, lowercase alphanumeric characters and underscores only
   account_number: string;
   test_mode: boolean;           // Toggle carrier connection mode
@@ -2616,6 +2657,7 @@ export interface get_user_connections_with_generics_user_connections_PurolatorSe
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2631,6 +2673,7 @@ export interface get_user_connections_with_generics_user_connections_RoyalMailSe
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   client_id: string;
@@ -2643,6 +2686,7 @@ export interface get_user_connections_with_generics_user_connections_SendleSetti
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   sendle_id: string;
@@ -2655,6 +2699,7 @@ export interface get_user_connections_with_generics_user_connections_SFExpressSe
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   partner_id: string;
@@ -2667,6 +2712,7 @@ export interface get_user_connections_with_generics_user_connections_TNTSettings
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2681,6 +2727,7 @@ export interface get_user_connections_with_generics_user_connections_UPSSettings
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2697,6 +2744,7 @@ export interface get_user_connections_with_generics_user_connections_UPSFreightS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2713,6 +2761,7 @@ export interface get_user_connections_with_generics_user_connections_USPSSetting
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2728,6 +2777,7 @@ export interface get_user_connections_with_generics_user_connections_USPSInterna
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   username: string;
@@ -2743,6 +2793,7 @@ export interface get_user_connections_with_generics_user_connections_YanwenSetti
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   customer_number: string;
@@ -2755,6 +2806,7 @@ export interface get_user_connections_with_generics_user_connections_YunExpressS
   id: string;
   carrier_id: string;      // eg. canadapost, dhl_express, fedex, purolator_courrier, ups...
   carrier_name: string;
+  display_name: string | null;
   test_mode: boolean;      // Toggle carrier connection mode
   active: boolean;         // Disable/Hide carrier from clients
   customer_number: string;
