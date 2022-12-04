@@ -4,6 +4,7 @@ import { FetchResult, MutationFunctionOptions } from "@apollo/client";
 import axios from "axios";
 import moment from "moment";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -450,7 +451,11 @@ export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] 
   );
 }
 
-export function getSessionHeader(session: SessionType | Session) {
+export function forceSignOut() {
+  signOut({ callbackUrl: '/login?next=' + window.location.pathname + window.location.search });
+}
+
+export function getSessionHeader(session: SessionType | Session | any) {
   const orgHeader = session?.orgId ? { 'x-org-id': session?.orgId } : {};
   const testHeader = session?.testMode ? { 'x-test-mode': session?.testMode } : {};
   const authHeader = session?.accessToken ? { 'Authorization': `Bearer ${session?.accessToken}` } : {};

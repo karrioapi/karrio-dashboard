@@ -1,12 +1,12 @@
 import { CREATE_ADDRESS_TEMPLATE, UPDATED_ADDRESS_TEMPLATE, DELETE_ADDRESS_TEMPLATE } from 'karrio/graphql';
 import { getSessionHeader, request } from '@/lib/helper';
+import { useSyncedSession } from '@/context/session';
 import * as rQuery from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
 import { SessionType } from '@/lib/types';
 
 
 export function useAddressTemplateMutation() {
-  const { data: session } = useSession();
+  const { query: { data: session } } = useSyncedSession();
   const queryClient = rQuery.useQueryClient();
   const config = () => ({
     config: { headers: getSessionHeader(session as SessionType) }

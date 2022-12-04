@@ -13,8 +13,8 @@ import ErrorBoundary from '@/components/error-boudaries';
 import SubscriptionProvider from '@/context/subscription-provider';
 import AcceptInvitationProvider from '@/components/accept-invitation-modal';
 import CreateOrganizationModalProvider from '@/components/create-organization-modal';
-import { ServerError, ServerErrorCode } from '@/lib/helper';
-import { signOut } from 'next-auth/react';
+import { forceSignOut, ServerError, ServerErrorCode } from '@/lib/helper';
+import { getSession } from 'next-auth/react';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
@@ -44,11 +44,13 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
     const session = useContext(NextSession);
 
     useEffect(() => {
-      if (session === null || session?.error === "RefreshAccessTokenError") {
+      if (session === null || (session as any)?.error === "RefreshAccessTokenError") {
         router.push('/login?next=' + window.location.pathname + window.location.search);
       }
       if (error?.code === ServerErrorCode.API_AUTH_ERROR) {
-        signOut({ callbackUrl: '/login?next=' + window.location.pathname + window.location.search });
+        getSession()
+          .then(_session => { if (_session === null) forceSignOut(); })
+          .catch(_ => forceSignOut());
       }
     }, [session, error]);
 

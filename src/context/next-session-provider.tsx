@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/react';
+import { SessionType } from '@/lib/types';
 import { Session } from 'next-auth';
 import React from 'react';
 
@@ -10,8 +11,12 @@ const NextSessionProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     // set session state if session is not null, has no error and has a new access token
-    if (session?.error !== sessionState?.error || session?.accessToken !== sessionState?.accessToken || session === null) {
-      setSessionState(session as Session);
+    if (
+      (session as any)?.error !== (sessionState as any)?.error ||
+      (session as any)?.accessToken !== (sessionState as any)?.accessToken ||
+      session === null
+    ) {
+      setSessionState(session as SessionType);
     }
   }, [session, sessionState]);
 

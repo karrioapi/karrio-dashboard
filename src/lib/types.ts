@@ -215,7 +215,12 @@ export const HTTP_METHODS = [
 
 export enum NoneEnum { none = "none" };
 
-export type SessionType = Session & { accessToken: string, testMode?: boolean, orgId?: string };
+export type SessionType = Session & {
+  accessToken: string,
+  testMode?: boolean,
+  orgId?: string,
+  error?: string,
+};
 export type ContextDataType = {
   data: {
     user: GetUser_user,

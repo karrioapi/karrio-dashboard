@@ -2,7 +2,6 @@ import { authenticate, computeTestMode, getCurrentOrg, refreshToken } from '@/li
 import CredentialProvider from "next-auth/providers/credentials";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
-import { withSentry } from '@sentry/nextjs';
 import getConfig from 'next/config';
 import { JWT } from 'next-auth/jwt';
 import logger from '@/lib/logger';
@@ -25,13 +24,18 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
           email: { label: "Email", type: "email", placeholder: "email" },
           password: { label: "Password", type: "password" }
         },
-        async authorize({ orgId, ...credentials }: any) {
+        async authorize({ orgId, ...credentials }: any, _) {
           try {
             const token = await authenticate(credentials as any);
             const org = await getCurrentOrg(token.access, orgId);
             const testMode = req.headers.referer?.includes("/test");
 
-            return { accessToken: token.access, refreshToken: token.refresh, orgId: org?.id, testMode };
+            return {
+              accessToken: token.access,
+              refreshToken: token.refresh,
+              orgId: org?.id,
+              testMode
+            } as any;
           } catch (e) {
             logger.error(e);
           }
@@ -42,7 +46,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
       })
     ],
     callbacks: {
-      jwt: async ({ token, user }): Promise<JWT> => {
+      jwt: async ({ token, user }: any): Promise<JWT> => {
         if (user?.accessToken) {
           token.orgId = user.orgId;
           token.accessToken = user.accessToken;
@@ -70,6 +74,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         // Access token has expired, try to update it OR orgId has changed
         try {
           logger.info('Refreshing expired token...');
+          console.log("current token", token)
           const { access, refresh } = await refreshToken(token.refreshToken as string);
 
           return {
@@ -86,10 +91,9 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
           }
         }
       },
-      session: async ({ session, token }) => {
-        logger.debug([session, token, "current session"]);
-
+      session: async ({ session, token }: any) => {
         session.accessToken = token.accessToken;
+        session.expires = token.expiration;
         session.testMode = token.testMode;
         session.error = token.error;
         session.orgId = token.orgId;
@@ -100,4 +104,4 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
   })(req, res);
 }
 
-export default withSentry(AuthAPI);
+export default AuthAPI;

@@ -10,6 +10,7 @@ import React, { useEffect } from "react";
 import { isNone } from "@/lib/helper";
 import getConfig from 'next/config';
 import logger from "@/lib/logger";
+import { useSyncedSession } from "@/context/session";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -23,7 +24,6 @@ export const KARRIO_API = (
 
 logger.debug("API clients initialized for Server: " + KARRIO_API);
 
-const queryClient = new QueryClient();
 const session$ = new BehaviorSubject<SessionType | null>(null);
 export const rest$ = new BehaviorSubject<KarrioClient | undefined>(createRestContext(session$));
 export const RestContext = React.createContext<KarrioClient | undefined>(createRestContext(session$));
@@ -37,7 +37,7 @@ session$
 
 
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
-  const { data: session } = useSession() as (any & { data: SessionType });
+  const { query: { data: session } } = useSyncedSession() as (any & { query: { data: SessionType } });
   const [restCli] = React.useState<KarrioClient | undefined>(createRestContext(session$));
   const [graphqlCli] = React.useState<apollo.ApolloClient<any> | undefined>(createGrapQLContext(session$));
 
@@ -46,13 +46,11 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
   if (authenticated && !graphqlCli) return <></>;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <apollo.ApolloProvider client={graphqlCli as any}>
-        <RestContext.Provider value={restCli}>
-          {children}
-        </RestContext.Provider>
-      </apollo.ApolloProvider>
-    </QueryClientProvider>
+    <apollo.ApolloProvider client={graphqlCli as any}>
+      <RestContext.Provider value={restCli}>
+        {children}
+      </RestContext.Provider>
+    </apollo.ApolloProvider>
   );
 };
 
