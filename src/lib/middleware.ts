@@ -16,8 +16,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const data = await loadContextData(session as SessionType);
   const pathname = ctx.resolvedUrl;
-  const orgId = (session?.orgId as string) || null;
-  const testMode = (session?.testMode as boolean);
+  const orgId = ((session as any)?.orgId as string) || null;
+  const testMode = ((session as any)?.testMode as boolean);
   const subscription = await checkSubscription(session, data.metadata);
 
   await setSessionCookies(ctx, testMode, orgId);

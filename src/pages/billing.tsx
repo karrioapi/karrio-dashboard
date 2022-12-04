@@ -53,7 +53,7 @@ const Billing: NextPage<BillingPageProps> = ({ metadata, subscription, session_u
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
 
-  if (isNone(session?.accessToken)) {
+  if (isNone((session as any)?.accessToken)) {
     return {
       redirect: {
         permanent: false,
