@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { Notify } from '@/components/notifier';
-import { NotificationType } from '@/lib/types';
-import CarrierBadge from '@/components/carrier-badge';
-import ConnectionDescription from '@/components/descriptions/connection-description';
 import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
+import ConnectionDescription from '@/components/descriptions/connection-description';
 import { useSystemConnectionMutation } from '@/context/system-connection-mutation';
+import CarrierNameBadge from '@/components/carrier-name-badge';
+import { NotificationType } from '@/lib/types';
+import { Notify } from '@/components/notifier';
+import React, { useContext } from 'react';
 
 
 const SystemConnectionList: React.FC = () => {
@@ -40,11 +40,10 @@ const SystemConnectionList: React.FC = () => {
 
             <tr key={`connection-${connection.id}-${Date.now()}`}>
               <td className="carrier is-vcentered pl-0">
-                <CarrierBadge
-                  carrier={connection.carrier_name}
-                  custom_name={(connection as any).carrier_name}
+                <CarrierNameBadge
+                  carrier_name={connection.carrier_name}
+                  display_name={connection.display_name}
                   className="box has-text-weight-bold"
-                  textOnly
                 />
               </td>
               <td className="mode is-vcentered">

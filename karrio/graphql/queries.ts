@@ -1072,6 +1072,7 @@ export const GET_SYSTEM_CONNECTIONS = gql`query get_system_connections {
     active
     capabilities
     carrier_name
+    display_name
     enabled
   }
 }
@@ -1224,6 +1225,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       seller_id
@@ -1236,6 +1238,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1250,6 +1253,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       api_key
@@ -1261,6 +1265,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1274,6 +1279,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1284,6 +1290,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       password
@@ -1295,6 +1302,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       site_id
@@ -1307,6 +1315,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1336,6 +1345,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       consumer_key
@@ -1346,6 +1356,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1357,6 +1368,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       app_id
@@ -1388,6 +1400,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1398,6 +1411,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       account_number
@@ -1412,6 +1426,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1422,6 +1437,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1435,6 +1451,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       client_id
@@ -1445,6 +1462,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       sendle_id
@@ -1455,6 +1473,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       partner_id
@@ -1465,6 +1484,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1477,6 +1497,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1491,6 +1512,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1505,6 +1527,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1518,6 +1541,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1531,6 +1555,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       customer_number
@@ -1541,6 +1566,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       customer_number
@@ -1558,6 +1584,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       seller_id
@@ -1570,6 +1597,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1584,6 +1612,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       api_key
@@ -1595,6 +1624,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1608,6 +1638,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1618,6 +1649,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       password
@@ -1629,6 +1661,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       site_id
@@ -1641,6 +1674,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1670,6 +1704,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       consumer_key
@@ -1680,6 +1715,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1691,6 +1727,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       app_id
@@ -1722,6 +1759,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1732,6 +1770,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       api_key
@@ -1742,6 +1781,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       account_number
@@ -1756,6 +1796,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1806,6 +1847,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1819,6 +1861,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       client_id
@@ -1829,6 +1872,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       sendle_id
@@ -1839,6 +1883,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       partner_id
@@ -1849,6 +1894,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1861,6 +1907,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1875,6 +1922,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1889,6 +1937,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1902,6 +1951,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       username
@@ -1915,6 +1965,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       customer_number
@@ -1925,6 +1976,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       customer_number
