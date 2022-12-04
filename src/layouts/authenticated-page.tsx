@@ -48,9 +48,7 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
         router.push('/login?next=' + window.location.pathname + window.location.search);
       }
       if (error?.code === ServerErrorCode.API_AUTH_ERROR) {
-        getSession()
-          .then(_session => { if (_session === null) forceSignOut(); })
-          .catch(_ => forceSignOut());
+        forceSignOut();
       }
     }, [session, error]);
 
