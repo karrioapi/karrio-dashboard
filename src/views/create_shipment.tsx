@@ -737,7 +737,7 @@ export default function CreateShipmentPage(pageProps: any) {
                         className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                         onClick={() => setSelectedRate(rate)}>
 
-                        <CarrierImage carrier={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
+                        <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
                         <RateDescription rate={rate} />
 

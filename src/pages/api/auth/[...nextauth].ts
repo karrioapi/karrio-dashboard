@@ -74,7 +74,6 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         // Access token has expired, try to update it OR orgId has changed
         try {
           logger.info('Refreshing expired token...');
-          console.log("current token", token)
           const { access, refresh } = await refreshToken(token.refreshToken as string);
 
           return {

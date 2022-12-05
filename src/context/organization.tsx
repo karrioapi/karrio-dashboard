@@ -28,7 +28,9 @@ export const OrganizationProvider: React.FC<any> = ({ children, ...props }) => {
     () => request<get_organizations>(gqlstr(GET_ORGANIZATIONS), { ...headers() }).then(
       data => {
         setOrganizations(data?.organizations)
-        setOrganization(extractCurrent(data?.organizations, props.orgId));
+        const current = extractCurrent(data?.organizations, props.orgId);
+        setOrganization(current);
+        setCookie("orgId", current?.id);
         return data;
       }
     ),
