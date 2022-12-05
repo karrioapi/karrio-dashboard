@@ -86,7 +86,6 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
     }
   };
 
-
   React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
 
   return (
@@ -145,10 +144,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <span className="subtitle is-size-7 my-4">Courier</span><br />
               <CarrierBadge
                 className="has-background-primary has-text-centered has-text-weight-bold has-text-white-bis is-size-7"
-                carrier={shipmentCarrier(shipment as any)}
-                custom_name={(shipment as any).carrier_id as string}
-                style={{ minWidth: '90px' }}
-                short
+                carrier_name={shipment.carrier_name as string}
               />
             </div>
 

@@ -38,7 +38,7 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
               <div className="card-content">
 
                 <div className="pb-4 is-flex is-justify-content-center">
-                  <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
+                  <CarrierImage carrier_name={tracker!.carrier_name} width={60} height={60} />
                 </div>
 
 

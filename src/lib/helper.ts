@@ -264,20 +264,10 @@ export function createServerError(error: ServerError) {
   return error;
 }
 
-export function getCursorPagination(cursor?: string | null): { limit?: number; offset?: number; } {
-  const [_, queryString] = (cursor || '').split('?');
-  const params = (queryString || '').split('&');
-
-  const [_limit, limit] = (params.find(p => p.includes('limit')) || '').split('=');
-  const [_offset, offset] = (params.find(p => p.includes('offset')) || '').split('=');
-
-  return {
-    ...(limit === undefined ? {} : { limit: parseInt(limit) }),
-    ...(offset === undefined ? {} : { offset: parseInt(offset) })
-  };
-}
-
 export function shipmentCarrier(shipment: ShipmentType) {
+  if ((shipment.meta as any)?.rate_provider === 'generic') {
+    return shipment.carrier_name;
+  }
   return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
 }
 

@@ -1445,6 +1445,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       id
       carrier_id
       carrier_name
+      display_name
       test_mode
       active
       api_key

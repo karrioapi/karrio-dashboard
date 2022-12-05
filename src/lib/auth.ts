@@ -37,16 +37,17 @@ export async function refreshToken(refresh: string) {
 export async function getCurrentOrg(access: string, orgId?: string) {
   logger.debug("retrieving session org...");
 
-  return axios({
-    url: KARRIO_API + '/graphql',
-    headers: { 'authorization': `Bearer ${access}` },
-    data: { query: `{ organizations { id } }` }
-  })
+  return axios.post(
+    `${KARRIO_API || ''}/graphql`,
+    { query: `{ organization { id } }` },
+    {
+      headers: {
+        'authorization': `Bearer ${access}`,
+      },
+    })
     .then(({ data: { data } }) => {
-      return (
-        (data?.organizations || []).find(({ id }: any) => id === orgId)
-        || (data?.organizations || { id: null })[0]
-      )
+      console.log(data, "Hey!")
+      return data?.organization
     })
     .catch(({ data }) => {
       logger.error(data)

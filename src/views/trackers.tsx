@@ -105,8 +105,7 @@ export default function TrackersPage(pageProps: any) {
                     <td className="carrier is-vcentered has-text-centered p-2">
                       <CarrierBadge
                         className="has-background-primary has-text-weight-bold has-text-white-bis is-size-7"
-                        carrier={tracker.meta.carrier || tracker.carrier_name}
-                        custom_name={tracker.carrier_id}
+                        carrier_name={tracker.meta.carrier || tracker.carrier_name}
                       />
                     </td>
                     <td className="tracking-number is-vcentered p-1">

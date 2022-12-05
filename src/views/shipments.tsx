@@ -27,7 +27,7 @@ export default function ShipmentsPage(pageProps: any) {
     const [initialized, setInitialized] = React.useState(false);
     const { previewShipment } = useContext(ShipmentPreviewContext);
     const context = useShipments({
-      status: ['purchased', 'delivered', 'in_transit', 'cancelled'],
+      status: ['purchased', 'delivered', 'in_transit', 'cancelled'] as any,
       setVariablesToURL: true,
     });
     const { query: { data: { shipments } = {}, ...query }, filter, setFilter } = context;
@@ -71,14 +71,14 @@ export default function ShipmentsPage(pageProps: any) {
             <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['purchased', 'in_transit']) ? 'is-active' : ''}`}>
               <a onClick={() => updateFilter({ status: ['purchased', 'in_transit'], offset: 0 })}>purchased</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivered') && filter?.status?.length === 1 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivered' as any) && filter?.status?.length === 1 ? 'is-active' : ''}`}>
               <a onClick={() => updateFilter({ status: ['delivered'], offset: 0 })}>delivered</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('cancelled') && filter?.status?.length === 1 ? 'is-active' : ''}`}>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('cancelled' as any) && filter?.status?.length === 1 ? 'is-active' : ''}`}>
               <a onClick={() => updateFilter({ status: ['cancelled'], offset: 0 })}>cancelled</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('draft') && filter?.status?.length === 1 ? 'is-active' : ''}`}>
-              <a onClick={() => !filter?.status?.includes('draft') && updateFilter({ status: ['draft'], offset: 0 })}>draft</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('draft' as any) && filter?.status?.length === 1 ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('draft' as any) && updateFilter({ status: ['draft'], offset: 0 })}>draft</a>
             </li>
           </ul>
         </div>
@@ -106,9 +106,7 @@ export default function ShipmentsPage(pageProps: any) {
                       {!isNone(shipment.carrier_name) && <CarrierBadge
                         className="has-background-primary has-text-weight-bold has-text-white-bis"
                         style={{ fontSize: '0.6rem' }}
-                        carrier={shipmentCarrier(shipment as any)}
-                        custom_name={(shipment as any).carrier_name as string}
-                        short
+                        carrier_name={shipmentCarrier(shipment as any)}
                       />}
                       {isNone(shipment.carrier_name) && <AppBadge />}
                     </td>

@@ -2251,6 +2251,7 @@ export interface get_user_connections_user_connections_EasyPostSettingsType {
   id: string;
   carrier_id: string;
   carrier_name: string;
+  display_name: string;
   test_mode: boolean;
   active: boolean;
   api_key: string;
