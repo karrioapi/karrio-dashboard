@@ -77,10 +77,9 @@ export async function loadContextData(session: SessionType): Promise<any> {
     .get<References>(KARRIO_API + '/v1/references', { headers })
     .then(({ data }) => data);
   const getUserData = () => axios
-    .get<ContextDataType>(KARRIO_API + '/graphql', {
-      headers,
-      data: { query: dataQuery(metadata) }
-    })
+    .post<ContextDataType>(KARRIO_API + '/graphql', 
+    { query: dataQuery(metadata) }, 
+    { headers })
     .then(({ data }) => data);
 
   try {
