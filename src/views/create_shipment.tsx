@@ -80,6 +80,10 @@ export default function CreateShipmentPage(pageProps: any) {
         shipment.recipient.country_code !== shipment.shipper.country_code
       );
     };
+    const getMetadatas = (): any => {
+      return orders.orders
+        .reduce((acc, { metadata }) => ({ ...acc, ...(metadata || {}) }), {});
+    };
     const getOptions = (): any => {
       return orders.orders
         .reduce((acc, { options }) => ({ ...acc, ...options }), {});
@@ -113,6 +117,7 @@ export default function CreateShipmentPage(pageProps: any) {
       const { id: __, ...shipper } = (orders.orders[0] as any)?.shipping_from || default_address || {};
       // Collect orders merged options
       const order_options = getOptions();
+      const order_metadatas = getMetadatas()
       // Collect unfulfilled line items
       const line_items = (
         getItems()
@@ -133,6 +138,10 @@ export default function CreateShipmentPage(pageProps: any) {
         ...shipment.options,
         ...(order_options.currency ? { currency: order_options.currency } : {}),
         declared_value: parseFloat(`${declared_value}`).toFixed(2),
+      };
+      const metadata = {
+        order_ids,
+        ...order_metadatas,
       };
       const payment = {
         paid_by: order_options.paid_by as any || PaidByEnum.sender,
@@ -163,8 +172,8 @@ export default function CreateShipmentPage(pageProps: any) {
         options,
         payment,
         parcels,
+        metadata,
         label_type: LabelTypeEnum.PDF,
-        metadata: { order_ids },
         carrier_ids: order_options.carrier_ids || [],
         customs: (isIntl ? customs : undefined) as typeof shipment['customs'],
       });
@@ -688,7 +697,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                   Looks like you have an international shipment.
-                  You need to provide a customs declaration.
+                  You may need to provide a customs declaration unless you are shipping documents only.
                 </div>}
 
               </div>

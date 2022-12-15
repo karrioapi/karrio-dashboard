@@ -343,6 +343,16 @@ export default function CreateLabelPage(pageProps: any) {
                                 </p>
                               </div>
                             </div>
+                            <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                              <button type="button" className="button is-small is-white"
+                                disabled={loading || !isNone(item.parent_id)}
+                                onClick={() => editCommodity({
+                                  commodity: item,
+                                  onSubmit: _ => mutation.updateItem(pkg_index, item_index, pkg.id, item.id)(_)
+                                })}>
+                                <span className="icon is-small"><i className="fas fa-pen"></i></span>
+                              </button>
+                            )}</CommodityStateContext.Consumer>
                             <button type="button" className="button is-small is-white"
                               onClick={mutation.removeItem(pkg_index, item_index, item.id)}>
                               <span className="icon is-small"><i className="fas fa-times"></i></span>
@@ -655,7 +665,7 @@ export default function CreateLabelPage(pageProps: any) {
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                   Looks like you have an international shipment.
-                  You need to provide a customs declaration.
+                  You may need to provide a customs declaration unless you are shipping documents only.
                 </div>}
 
               </div>

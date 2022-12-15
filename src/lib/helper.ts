@@ -443,8 +443,8 @@ export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] 
     shipment?.parcels
       .map(parcel => parcel.items || [])
       .flat()
-      .reduce((acc, item) => {
-        const index: string = item.parent_id || item.id;
+      .reduce((acc, item, _index) => {
+        const index: string = item.parent_id || item.id || item.sku || item.hs_code || `${_index}`;
         acc[index] = { ...item, quantity: (acc[index]?.quantity || 0) + (item.quantity || 0) };
         return acc;
       }, {} as Collection<CommodityType>)
