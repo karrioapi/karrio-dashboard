@@ -688,7 +688,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                   Looks like you have an international shipment.
-                  You need to provide a customs declaration.
+                  You may need to provide a customs declaration unless you are shipping documents only.
                 </div>}
 
               </div>

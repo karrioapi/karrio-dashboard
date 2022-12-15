@@ -98,24 +98,14 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const parcels = changes.parcels || shipment.parcels;
     const isDocument = parcels.every(p => p.is_document);
     const requireCustoms = isIntl && !isDocument;
+    const hasCustomsChanges = !isNone(changes.customs);
+    const hasParcelsChanges = !isNone(changes.parcels);
+    const customsExists = !isNone(shipment.customs);
 
-    const skip = ( // if
-      (
-        (
-          requireCustoms && // require customs def
-          !isNone(changes.customs) // customs def provided
-        ) ||
-        (
-          requireCustoms && // require customs def
-          isNone(changes.customs) && // customs def not provided
-          isNone(changes.parcels) // parcels has not changed
-        )
-      ) ||
-      (
-        !requireCustoms && // don't require customs def
-        !isNone(shipment.customs) // customs is already defined
-      )
-    );
+    let skip = !requireCustoms;
+    if (!requireCustoms && customsExists) skip = false;
+    if (requireCustoms && hasCustomsChanges) skip = false;
+    if (requireCustoms && !hasCustomsChanges && hasParcelsChanges) skip = false;
 
     if (skip) return changes;
     if (isDocument) return { ...changes, customs: null };
@@ -141,6 +131,8 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         ...(account_number ? { account_number } : {}),
       },
     };
+
+    console.log(skip, isDocument, requireCustoms, changes.customs, customs, "<<<Point 2")
 
     return { ...changes, customs };
   };
@@ -188,20 +180,25 @@ const LabelMutationProvider: React.FC = ({ children }) => {
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
     if (isDraft(shipment.id)) {
-      const indexes = new Set((shipment.parcels[parcel_index].items || []).map(item => item.parent_id));
+      const ts = Date.now();
+      const indexes = new Set((shipment.parcels[parcel_index].items || []).map(
+        (item, index) => item.parent_id || item.id || item.sku || item.hs_code || `${index}`)
+      );
       const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
-        (acc, item) => ({ ...acc, [item.parent_id || item.id]: item }), {}
+        (acc, item, index) => ({ ...acc, [item.parent_id || item.id || item.sku || item.hs_code || `${ts}${index}`]: item }), {}
       )
 
       updateParcel(parcel_index)({
         ...shipment.parcels[parcel_index],
         items: [
-          ...(shipment.parcels[parcel_index].items || []).map(item => (
-            (item.parent_id && Object.keys(item_collection).includes(item.parent_id))
-              ? { ...item, quantity: (item.quantity || 0) + item_collection[item.parent_id].quantity }
-              : item
-          )),
-          ...items.filter(item => !indexes.has(item.parent_id))
+          ...(shipment.parcels[parcel_index].items || []).map((item, index) => {
+              const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
+              return ((_ref && Object.keys(item_collection).includes(_ref))
+                  ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
+                  : item
+              )
+          }),
+          ...items.filter((item, index) => !indexes.has(item.parent_id || item.sku || item.hs_code || `${ts}${index}`))
         ]
       });
     } else {
