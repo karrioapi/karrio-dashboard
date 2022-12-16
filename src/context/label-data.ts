@@ -31,7 +31,6 @@ export function useLabelData(id: string) {
       return request<get_shipment>(gqlstr(GET_SHIPMENT), { variables: { id }, ...headers() })
         .then(_ => { updateLabelData(_?.shipment as any); return _; })
     },
-    enabled: !!id,
     onError
   });
   const updateLabelData = (data: Partial<ShipmentType> = {}) => {
