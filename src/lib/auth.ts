@@ -46,7 +46,6 @@ export async function getCurrentOrg(access: string, orgId?: string) {
       },
     })
     .then(({ data: { data } }) => {
-      console.log(data, "Hey!")
       return data?.organization
     })
     .catch(({ data }) => {
