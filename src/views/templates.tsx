@@ -24,7 +24,7 @@ export default function TemplatesPage(pageProps: any) {
     return (
       <>
 
-        <header className="px-0 pb-4 pt-6">
+        <header className="px-0 py-6">
           <span className="title is-4">Templates</span>
           <AppLink className="button is-primary is-small is-pulled-right" href="/settings/template?id=new">
             <span>Create template</span>
