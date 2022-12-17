@@ -39,14 +39,15 @@ export async function getCurrentOrg(access: string, orgId?: string) {
 
   return axios.post(
     `${KARRIO_API || ''}/graphql`,
-    { query: `{ organization { id } }` },
+    { query: `{ organizations { id } }` },
     {
-      headers: {
-        'authorization': `Bearer ${access}`,
-      },
+      headers: { 'authorization': `Bearer ${access}` },
     })
     .then(({ data: { data } }) => {
-      return data?.organization
+      return (
+        (data?.organizations || []).find(({ id }: any) => id === orgId)
+        || (data?.organizations || { id: null })[0]
+      )
     })
     .catch(({ data }) => {
       logger.error(data)
