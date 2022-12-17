@@ -6,10 +6,10 @@ import InputField from '@/components/generic/input-field';
 import { DEFAULT_SVG_LABEL_TEMPLATE } from '@/lib/sample';
 import { jsonLanguage } from '@codemirror/lang-json';
 import CodeMirror from '@uiw/react-codemirror';
-import { html } from '@codemirror/lang-html';
-import Notifier from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { KARRIO_API } from '@/client/context';
+import { htmlLanguage } from '@codemirror/lang-html';
+import Notifier from '@/components/notifier';
 
 type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
 type ConnectionType = get_user_connections_user_connections_GenericSettingsType;
@@ -183,15 +183,15 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
                   <Tabs tabClass="is-size-7 has-text-weight-bold" style={{ position: 'relative' }}>
                     <div className="card" style={{ borderRadius: 0 }}>
                       <CodeMirror
-                        height="85vh"
-                        extensions={[html({})]}
+                        height="80vh"
+                        extensions={[htmlLanguage]}
                         value={template.template as string}
                         onChange={value => dispatch({ name: 'template', value })}
                       />
                     </div>
                     <div className="card" style={{ borderRadius: 0 }}>
                       <CodeMirror
-                        height="85vh"
+                        height="80vh"
                         extensions={[jsonLanguage]}
                         value={failsafe(() => JSON.stringify(template.shipment_sample, null, 2))}
                         onChange={value => dispatch({ name: 'shipment_sample', value })}

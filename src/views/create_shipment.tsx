@@ -46,11 +46,11 @@ export default function CreateShipmentPage(pageProps: any) {
     const { basePath } = useAppMode();
     const { query: templates } = useDefaultTemplates();
     const { addUrlParam, ...router } = useLocation();
+    const [ready, setReady] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const { shipment_id = 'new', order_id = "" } = router.query as { shipment_id: string, order_id: string };
     const { state: { shipment, query }, ...mutation } = useLabelDataMutation(shipment_id);
     const [key, setKey] = useState<string>(`${shipment_id}-${Date.now()}`);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [ready, setReady] = useState<boolean>(false);
     const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
       shipment?.selected_rate_id ? { id: shipment?.selected_rate_id } as any : undefined
     );
@@ -77,7 +77,7 @@ export default function CreateShipmentPage(pageProps: any) {
     };
     const getMetadatas = (): any => {
       return (orders.data?.orders.edges || [])
-        .reduce((acc, { node: { metadata } }) => ({ ...acc, ...metadata }), {});
+        .reduce((acc, { node: { metadata } }) => ({ ...acc, ...(metadata || {}) }), {});
     };
     const getOptions = (): any => {
       return (orders.data?.orders.edges || [])

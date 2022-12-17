@@ -23,6 +23,7 @@ import { useLabelDataMutation } from '@/context/label-data';
 import InputField from '@/components/generic/input-field';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import ModalProvider from '@/components/generic/modal';
+import CarrierImage from '@/components/carrier-image';
 import { useNotifier } from '@/components/notifier';
 import React, { useEffect, useState } from 'react';
 import { bundleContexts } from '@/context/utils';
@@ -30,7 +31,6 @@ import { useAppMode } from '@/context/app-mode';
 import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
-import CarrierImage from '@/components/carrier-image';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -321,7 +321,7 @@ export default function CreateLabelPage(pageProps: any) {
                             </div>
                             <CommodityStateContext.Consumer>{({ editCommodity }) => (
                               <button type="button" className="button is-small is-white"
-                                disabled={loading || !isNone(item.parent_id)}
+                                disabled={query.isFetching || !isNone(item.parent_id)}
                                 onClick={() => editCommodity({
                                   commodity: item,
                                   onSubmit: _ => mutation.updateItem(pkg_index, item_index, pkg.id, item.id)(_)
@@ -587,6 +587,15 @@ export default function CreateLabelPage(pageProps: any) {
 
               </div>
 
+              <hr className='my-1' style={{ height: '1px' }} />
+
+              {/* Billing address section */}
+              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <div className="p-3">
+                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+
+                <AddressDescription address={(orders.data?.orders.edges || [{}])[0].node!.billing_address as any} />
+              </div>}
+
             </div>
 
             {/* Customs declaration section */}
@@ -653,7 +662,6 @@ export default function CreateLabelPage(pageProps: any) {
           <div className="p-2"></div>
 
           <div className="column is-5 px-0 pb-6 is-relative">
-
             <div style={{ position: 'sticky', top: '8.5%', right: 0, left: 0 }}>
 
               <div className="card px-0">

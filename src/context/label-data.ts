@@ -135,7 +135,7 @@ export function useLabelDataMutation(id: string) {
 
     let skip = !requireCustoms;
     if (!requireCustoms && customsExists) skip = false;
-    if (requireCustoms && hasCustomsChanges) skip = false;
+    if (requireCustoms && hasCustomsChanges) skip = true;
     if (requireCustoms && !hasCustomsChanges && hasParcelsChanges) skip = false;
 
     if (skip) return changes;
@@ -208,20 +208,25 @@ export function useLabelDataMutation(id: string) {
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
     if (isDraft(state.shipment.id)) {
-      const indexes = new Set((state.shipment.parcels[parcel_index].items || []).map(item => item.parent_id));
+      const ts = Date.now();
+      const indexes = new Set((state.shipment.parcels[parcel_index].items || []).map(
+        (item, index) => item.parent_id || item.id || item.sku || item.hs_code || `${index}`)
+      );
       const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
-        (acc, item) => ({ ...acc, [item.parent_id || item.id]: item }), {}
+        (acc, item, index) => ({ ...acc, [item.parent_id || item.id || item.sku || item.hs_code || `${ts}${index}`]: item }), {}
       )
 
       updateParcel(parcel_index)({
         ...state.shipment.parcels[parcel_index],
         items: [
-          ...(state.shipment.parcels[parcel_index].items || []).map(item => (
-            (item.parent_id && Object.keys(item_collection).includes(item.parent_id))
-              ? { ...item, quantity: (item.quantity || 0) + item_collection[item.parent_id].quantity }
+          ...(state.shipment.parcels[parcel_index].items || []).map((item, index) => {
+            const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
+            return ((_ref && Object.keys(item_collection).includes(_ref))
+              ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
               : item
-          )),
-          ...items.filter(item => !indexes.has(item.parent_id))
+            )
+          }),
+          ...items.filter((item, index) => !indexes.has(item.parent_id || item.sku || item.hs_code || `${ts}${index}`))
         ]
       });
     } else {

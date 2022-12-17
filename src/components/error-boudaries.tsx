@@ -16,7 +16,7 @@ export default class ErrorBoundary extends React.Component<{}, { hasError: boole
     // You can also log the error to an error reporting service
     console.log("Error boundaries caught...")
     console.error(error);
-    console.error(errorInfo);
+    // console.error(errorInfo);
   }
 
   render() {

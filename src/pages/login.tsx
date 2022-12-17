@@ -1,20 +1,20 @@
 import SectionLayout from "@/layouts/section-layout";
 import { getCookie, isNone, p } from "@/lib/helper";
+import { useRouter } from "next/dist/client/router";
+import React, { FormEvent, useRef } from "react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useRef } from "react";
-import { useRouter } from "next/dist/client/router";
 
 export { getServerSideProps } from '@/lib/static/references';
 
 
 export default function LoginPage(pageProps: any) {
   const router = useRouter();
-  const [showError, setShowError] = React.useState<boolean>(false);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+  const [showError, setShowError] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,6 +69,7 @@ export default function LoginPage(pageProps: any) {
                   />
                 </div>
               </div>
+
               <div className="field mt-5">
                 <label className="label level" htmlFor="id_password">
                   <span>Password</span>

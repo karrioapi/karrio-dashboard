@@ -1,6 +1,7 @@
 import CreateOrganizationModalProvider from '@/components/create-organization-modal';
 import AcceptInvitationProvider from '@/components/accept-invitation-modal';
 import { forceSignOut, ServerError, ServerErrorCode } from '@/lib/helper';
+import NextSessionProvider, { NextSession } from '@/context/session';
 import { OrganizationProvider } from '@/context/organization';
 import SubscriptionProvider from '@/context/subscription';
 import ErrorBoundary from '@/components/error-boudaries';
@@ -10,7 +11,6 @@ import { useRouter } from 'next/dist/client/router';
 import { ClientsProvider } from '@/client/context';
 import LoadingProvider from '@/components/loader';
 import AppModeProvider from '@/context/app-mode';
-import NextSessionProvider, { NextSession } from '@/context/session';
 import Notifier from '@/components/notifier';
 
 
