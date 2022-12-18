@@ -587,14 +587,17 @@ export default function CreateLabelPage(pageProps: any) {
 
               </div>
 
-              <hr className='my-1' style={{ height: '1px' }} />
-
               {/* Billing address section */}
-              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <div className="p-3">
-                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <>
+                <hr className='my-1' style={{ height: '1px' }} />
 
-                <AddressDescription address={(orders.data?.orders.edges || [{}])[0].node!.billing_address as any} />
-              </div>}
+                <div className="p-3">
+                  <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+
+                  <AddressDescription address={(orders.data?.orders.edges || [{}])[0].node!.billing_address as any} />
+
+                </div>
+              </>}
 
             </div>
 
@@ -688,22 +691,23 @@ export default function CreateLabelPage(pageProps: any) {
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 
-                  {(query.isFetched && (shipment.rates || []).length > 0) && <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
-                    {(shipment.rates || []).map(rate => (
-                      <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
-                        onClick={() => setSelectedRate(rate)}>
+                  {(query.isFetched && (shipment.rates || []).length > 0) &&
+                    <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                      {(shipment.rates || []).map(rate => (
+                        <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                          className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                          onClick={() => setSelectedRate(rate)}>
 
-                        <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
+                          <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
-                        <RateDescription rate={rate} />
+                          <RateDescription rate={rate} />
 
-                        {rate.test_mode && <div className="has-text-warning p-1">
-                          <i className="fas fa-exclamation-circle"></i>
-                        </div>}
-                      </a>
-                    ))}
-                  </div>}
+                          {rate.test_mode && <div className="has-text-warning p-1">
+                            <i className="fas fa-exclamation-circle"></i>
+                          </div>}
+                        </a>
+                      ))}
+                    </div>}
 
                 </div>
 
@@ -744,10 +748,10 @@ export default function CreateLabelPage(pageProps: any) {
                   <span className="px-6">Buy shipping label</span>
                 </ButtonField>
 
-              </div >
+              </div>
 
               {/* Metadata section */}
-              < div className="card px-0 mt-5" >
+              <div className="card px-0 mt-5">
 
                 <div className="p-1 pb-4">
                   <MetadataEditor
@@ -774,11 +778,11 @@ export default function CreateLabelPage(pageProps: any) {
                   </MetadataEditor>
                 </div>
 
-              </div >
+              </div>
 
-            </div >
-          </div >
-        </div >}
+            </div>
+          </div>
+        </div>}
 
       </>
     )
