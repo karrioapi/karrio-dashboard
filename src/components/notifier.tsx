@@ -70,9 +70,9 @@ export function formatMessage(msg: Notification['message']) {
   }
 };
 
-function renderError(msg: any, _: number) {
+function renderError(msg: any, _: number): any {
   const error = msg.data?.errors || msg.data?.messages || msg;
-
+  console.log(error)
   if (error?.message !== undefined) {
     return error.message;
   }
@@ -86,8 +86,13 @@ function renderError(msg: any, _: number) {
 
   else if (Array.isArray(error) && error.length > 0) {
     return (error || []).map((msg: any, index: number) => {
-      const carrier_name = msg.carrier_name !== undefined ? `${msg.carrier_id} :` : '';
-      return <p key={index}>{carrier_name} {msg.message}</p>;
+      if (msg.details) {
+        return <>{renderError(msg, 0)}</>;
+      }
+      if (msg.carrier_name) {
+        return <p key={index}>{msg.carrier_name || msg.carrier_id || JSON.stringify(msg)} {msg.message}</p>;
+      }
+      return <p key={index}>{JSON.stringify(msg)}</p>;
     });
   }
 
