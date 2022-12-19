@@ -101,12 +101,12 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     const hasCustomsChanges = !isNone(changes.customs);
     const hasParcelsChanges = !isNone(changes.parcels);
     const customsExists = !isNone(shipment.customs);
-
+    
     let skip = !requireCustoms;
     if (!requireCustoms && customsExists) skip = false;
-    if (requireCustoms && hasCustomsChanges) skip = false;
+    if (requireCustoms && hasCustomsChanges) skip = true;
     if (requireCustoms && !hasCustomsChanges && hasParcelsChanges) skip = false;
-
+    
     if (skip) return changes;
     if (isDocument) return { ...changes, customs: null };
     if (!isIntl) return { ...changes, customs: undefined };
@@ -131,8 +131,6 @@ const LabelMutationProvider: React.FC = ({ children }) => {
         ...(account_number ? { account_number } : {}),
       },
     };
-
-    console.log(skip, isDocument, requireCustoms, changes.customs, customs, "<<<Point 2")
 
     return { ...changes, customs };
   };

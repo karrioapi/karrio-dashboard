@@ -636,15 +636,17 @@ export default function CreateShipmentPage(pageProps: any) {
                   </div>}
               </div>
 
-              <hr className='my-1' style={{ height: '1px' }} />
-
               {/* Billing address section */}
-              {(orders.orders || [{}])[0].billing_address && <div className="p-3">
-                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+              {(orders.orders || [{}])[0].billing_address && <>
+                <hr className='my-1' style={{ height: '1px' }} />
+              
+                <div className="p-3">
+                  <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
 
-                <AddressDescription address={orders.orders[0].billing_address as any} />
+                  <AddressDescription address={orders.orders[0].billing_address as any} />
 
-              </div>}
+                </div>
+              </>}
 
             </div>
 
