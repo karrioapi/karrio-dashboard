@@ -154,7 +154,7 @@ export default function OrdersPage(pageProps: any) {
 
                 {(orders?.edges || []).map(({ node: order }) => (
                   <tr key={order.id} className="items is-clickable">
-                    <td className="selector has-text-centered is-vcentered p-0" onClick={() => previewOrder(order.id)}>
+                    <td className="selector has-text-centered is-vcentered p-0">
                       <label className="checkbox py-3 px-2">
                         <input
                           type="checkbox"

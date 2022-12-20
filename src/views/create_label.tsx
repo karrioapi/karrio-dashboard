@@ -1,6 +1,6 @@
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
+import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 import { LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
@@ -547,7 +547,7 @@ export default function CreateLabelPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.sender}
-                      onChange={() => mutation.updateShipment({ payment: { paid_by: PaidByEnum.sender } } as any)}
+                      onChange={() => mutation.updateShipment({ payment: { paid_by: PaidByEnum.sender }, billing_address: null } as any)}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.sender.toString())}</span>
                   </label>
@@ -557,7 +557,7 @@ export default function CreateLabelPage(pageProps: any) {
                       type="radio"
                       name="paid_by"
                       defaultChecked={shipment.payment?.paid_by === PaidByEnum.recipient}
-                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient } })}
+                      onChange={() => mutation.updateShipment({ payment: { ...shipment.payment, paid_by: PaidByEnum.recipient }, billing_address: null })}
                     />
                     <span className="is-size-7 has-text-weight-bold">{formatRef(PaidByEnum.recipient.toString())}</span>
                   </label>
@@ -575,11 +575,10 @@ export default function CreateLabelPage(pageProps: any) {
                 </div>
 
                 {(shipment.payment?.paid_by && shipment.payment?.paid_by !== PaidByEnum.sender) &&
-                  <div className="columns ml-3 my-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
+                  <div className="columns m-1 px-2 py-0" style={{ borderLeft: "solid 2px #ddd" }}>
                     <InputField
                       label="account number"
                       className="is-small"
-                      fieldClass="column"
                       defaultValue={shipment?.payment?.account_number as string}
                       onChange={e => mutation.updateShipment({ payment: { ...shipment.payment, account_number: e.target.value } })}
                     />
@@ -588,13 +587,32 @@ export default function CreateLabelPage(pageProps: any) {
               </div>
 
               {/* Billing address section */}
-              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <>
+              {(shipment?.billing_address || shipment.payment?.paid_by === PaidByEnum.third_party) && <>
                 <hr className='my-1' style={{ height: '1px' }} />
 
                 <div className="p-3">
-                  <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                  <header className="is-flex is-justify-content-space-between">
+                    <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                    <div className="is-vcentered">
+                      <AddressModalEditor
+                        shipment={shipment}
+                        address={shipment.billing_address || {} as AddressType}
+                        onSubmit={(address) => onChange({ billing_address: address })}
+                        trigger={
+                          <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
+                            Edit billing address
+                          </button>
+                        }
+                      />
+                    </div>
+                  </header>
 
-                  <AddressDescription address={(orders.data?.orders.edges || [{}])[0].node!.billing_address as any} />
+                  {shipment?.billing_address &&
+                    <AddressDescription address={shipment!.billing_address as any} />}
+
+                  {isNone(shipment?.billing_address) && <div className="notification is-default p-2 is-size-7">
+                    Add shipment billing address. (optional)
+                  </div>}
 
                 </div>
               </>}
@@ -619,7 +637,8 @@ export default function CreateLabelPage(pageProps: any) {
                         paid_by: shipment.payment?.paid_by,
                         account_number: shipment.payment?.account_number
                       },
-                      commodities: getShipmentCommodities(shipment)
+                      duty_billing_address: shipment.billing_address,
+                      commodities: getShipmentCommodities(shipment),
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
@@ -641,7 +660,7 @@ export default function CreateLabelPage(pageProps: any) {
                   {/* Commodities section */}
                   <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
 
-                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "customs-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                     <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
                   </React.Fragment>)}
@@ -649,6 +668,41 @@ export default function CreateLabelPage(pageProps: any) {
                   {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                     You need to specify customs commodities.
                   </div>}
+
+                  {/* Duty Billing address section */}
+                  {(shipment.customs!.duty_billing_address || shipment.customs!.duty?.paid_by === PaidByEnum.third_party) && <>
+                    <hr className='my-1' style={{ height: '1px' }} />
+
+                    <div className="py-3">
+                      <header className="is-flex is-justify-content-space-between">
+                        <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                        <div className="is-vcentered">
+                          <AddressModalEditor
+                            address={shipment.customs?.duty_billing_address || {} as AddressType}
+                            onSubmit={(address) => mutation.updateShipment({
+                              customs: {
+                                ...shipment!.customs,
+                                duty_billing_address: address
+                              } as any
+                            })}
+                            trigger={
+                              <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
+                                Edit duty billing address
+                              </button>
+                            }
+                          />
+                        </div>
+                      </header>
+
+                      {shipment!.customs!.duty_billing_address &&
+                        <AddressDescription address={shipment!.customs!.duty_billing_address as any} />}
+
+                      {isNone(shipment!.customs!.duty_billing_address) && <div className="notification is-default p-2 is-size-7">
+                        Add customs duty billing address. (optional)
+                      </div>}
+
+                    </div>
+                  </>}
                 </>}
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">

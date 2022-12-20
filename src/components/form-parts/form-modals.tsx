@@ -12,7 +12,7 @@ import { deepEqual } from '@/lib/helper';
 type AddressModalEditorProps = {
   header?: string;
   shipment?: ShipmentType;
-  address: ShipmentType['recipient'] | ShipmentType['shipper'];
+  address: AddressType | ShipmentType['recipient'] | ShipmentType['shipper'];
   onSubmit: (address: AddressType) => Promise<any>;
 };
 

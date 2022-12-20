@@ -424,6 +424,24 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_tax_id
       validate_location
     }
+    billing_address {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
     parcels {
       id
       width
@@ -492,6 +510,24 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         origin_country
         metadata
         parent_id
+      }
+      duty_billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
       }
     }
     payment {
@@ -603,6 +639,24 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_tax_id
           validate_location
         }
+        billing_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
+        }
         parcels {
           id
           width
@@ -671,6 +725,24 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
             origin_country
             metadata
             parent_id
+          }
+          duty_billing_address {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            federal_tax_id
+            state_tax_id
+            validate_location
           }
         }
         payment {
@@ -775,6 +847,24 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_tax_id
         validate_location
       }
+      billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
       parcels {
         id
         width
@@ -856,6 +946,24 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
             origin_country
             metadata
           }
+        }
+        duty_billing_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
         }
       }
       payment {
@@ -1942,6 +2050,24 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_tax_id
         validate_location
       }
+      billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
       parcels {
         id
         width
@@ -2009,6 +2135,24 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           origin_country
           metadata
           parent_id
+        }
+        duty_billing_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
         }
       }
       payment {
@@ -2203,6 +2347,24 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_tax_id
             validate_location
           }
+          billing_address {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            federal_tax_id
+            state_tax_id
+            validate_location
+          }
           parcels {
             id
             width
@@ -2270,6 +2432,24 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
               origin_country
               metadata
               parent_id
+            }
+            duty_billing_address {
+              id
+              postal_code
+              city
+              person_name
+              company_name
+              country_code
+              email
+              phone_number
+              state_code
+              suburb
+              residential
+              address_line1
+              address_line2
+              federal_tax_id
+              state_tax_id
+              validate_location
             }
           }
           payment {

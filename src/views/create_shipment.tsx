@@ -1,6 +1,6 @@
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import { CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
+import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
@@ -115,9 +115,12 @@ export default function CreateShipmentPage(pageProps: any) {
       const order_ids = orderList.map(({ node: { order_id } }) => order_id).join(',');
       const { id: _, ...recipient } = orderList[0].node.shipping_to || {};
       const { id: __, ...shipper } = (orderList[0] as any)?.shipping_from || default_address || {};
+      const billing_address = (orderList[0] as any)?.billing_address ? (orderList[0] as any)?.billing_address : undefined;
+
       // Collect orders merged options
       const order_options = getOptions();
-      const order_metadatas = getMetadatas()
+      const order_metadatas = getMetadatas();
+
       // Collect unfulfilled line items
       const line_items = (
         getItems()
@@ -165,6 +168,7 @@ export default function CreateShipmentPage(pageProps: any) {
           account_number: order_options.duty_account_number || payment?.account_number,
           declared_value,
         },
+        duty_billing_address: billing_address,
       });
 
       onChange({
@@ -176,6 +180,7 @@ export default function CreateShipmentPage(pageProps: any) {
         metadata,
         label_type: LabelTypeEnum.PDF,
         carrier_ids: order_options.carrier_ids || [],
+        billing_address,
         customs: (isIntl ? customs : undefined) as typeof shipment['customs'],
       });
 
@@ -634,13 +639,34 @@ export default function CreateShipmentPage(pageProps: any) {
               </div>
 
               {/* Billing address section */}
-              {(orders.data?.orders.edges || [{}])[0].node?.billing_address && <>
+              {(shipment?.billing_address || shipment.payment?.paid_by === PaidByEnum.third_party) && <>
                 <hr className='my-1' style={{ height: '1px' }} />
 
-                <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                <div className="p-3">
+                  <header className="is-flex is-justify-content-space-between">
+                    <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                    <div className="is-vcentered">
+                      <AddressModalEditor
+                        shipment={shipment}
+                        address={shipment.billing_address || (orders.data?.orders.edges || [{}])[0].node?.billing_address || {} as AddressType}
+                        onSubmit={(address) => onChange({ billing_address: address })}
+                        trigger={
+                          <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
+                            Edit billing address
+                          </button>
+                        }
+                      />
+                    </div>
+                  </header>
 
-                <AddressDescription address={orders.data?.orders.edges[0].node.billing_address as any} />
+                  {shipment?.billing_address &&
+                    <AddressDescription address={shipment!.billing_address as any} />}
 
+                  {isNone(shipment?.billing_address) && <div className="notification is-default p-2 is-size-7">
+                    Add shipment billing address.
+                  </div>}
+
+                </div>
               </>}
 
             </div>
@@ -668,6 +694,7 @@ export default function CreateShipmentPage(pageProps: any) {
                         account_number: getOptions().duty_account_number || shipment.payment?.account_number,
                         declared_value: shipment.options?.declared_value,
                       },
+                      duty_billing_address: shipment.billing_address,
                     }}
                     onSubmit={mutation.updateCustoms(shipment?.customs?.id)}
                     trigger={
@@ -699,6 +726,41 @@ export default function CreateShipmentPage(pageProps: any) {
                   {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
                     You need to specify customs commodities.
                   </div>}
+
+                  {/* Duty Billing address section */}
+                  {(shipment.customs!.duty_billing_address || shipment.customs!.duty?.paid_by === PaidByEnum.third_party) && <>
+                    <hr className='my-1' style={{ height: '1px' }} />
+
+                    <div className="py-3">
+                      <header className="is-flex is-justify-content-space-between">
+                        <label className="label is-capitalized" style={{ fontSize: '0.8em' }}>Billing address</label>
+                        <div className="is-vcentered">
+                          <AddressModalEditor
+                            address={shipment.customs?.duty_billing_address || {} as AddressType}
+                            onSubmit={(address) => mutation.updateShipment({
+                              customs: {
+                                ...shipment!.customs,
+                                duty_billing_address: address
+                              } as any
+                            })}
+                            trigger={
+                              <button className="button is-small is-info is-text is-inverted p-1" disabled={query.isFetching}>
+                                Edit duty billing address
+                              </button>
+                            }
+                          />
+                        </div>
+                      </header>
+
+                      {shipment!.customs!.duty_billing_address &&
+                        <AddressDescription address={shipment!.customs!.duty_billing_address as any} />}
+
+                      {isNone(shipment!.customs!.duty_billing_address) && <div className="notification is-default p-2 is-size-7">
+                        Add customs duty billing address.
+                      </div>}
+
+                    </div>
+                  </>}
                 </>}
 
                 {isNone(shipment.customs) && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
