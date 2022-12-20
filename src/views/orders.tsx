@@ -5,9 +5,11 @@ import React, { ChangeEvent, useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import ConfirmModal from "@/components/confirm-modal";
 import StatusBadge from "@/components/status-badge";
 import { useRouter } from "next/dist/client/router";
 import { useLoader } from "@/components/loader";
+import OrderMenu from "@/components/order-menu";
 import { KARRIO_API } from "@/client/context";
 import { useOrders } from "@/context/order";
 import AppLink from "@/components/app-link";
@@ -145,13 +147,14 @@ export default function OrdersPage(pageProps: any) {
                     <td className="status"></td>
                     <td className="items is-size-7">ITEMS</td>
                     <td className="customer is-size-7">SHIP TO</td>
-                    <td className="date has-text-right is-size-7">DATE</td>
+                    <td className="date is-size-7">DATE</td>
+                    <td className="action"></td>
                   </>}
                 </tr>
 
                 {(orders?.edges || []).map(({ node: order }) => (
-                  <tr key={order.id} className="items is-clickable" onClick={() => previewOrder(order.id)}>
-                    <td className="selector has-text-centered is-vcentered p-0" onClick={preventPropagation}>
+                  <tr key={order.id} className="items is-clickable">
+                    <td className="selector has-text-centered is-vcentered p-0" onClick={() => previewOrder(order.id)}>
                       <label className="checkbox py-3 px-2">
                         <input
                           type="checkbox"
@@ -161,7 +164,7 @@ export default function OrdersPage(pageProps: any) {
                         />
                       </label>
                     </td>
-                    <td className="order is-vcentered">
+                    <td className="order is-vcentered" onClick={() => previewOrder(order.id)}>
                       <p className="is-size-7 has-text-weight-bold has-text-grey-dark">
                         {order.order_id}
                       </p>
@@ -169,10 +172,10 @@ export default function OrdersPage(pageProps: any) {
                         {order.source}
                       </p>
                     </td>
-                    <td className="status is-vcentered">
+                    <td className="status is-vcentered" onClick={() => previewOrder(order.id)}>
                       <StatusBadge status={order.status as string} style={{ width: '100%' }} />
                     </td>
-                    <td className="items is-vcentered">
+                    <td className="items is-vcentered" onClick={() => previewOrder(order.id)}>
                       <p className="is-size-7 has-text-weight-bold has-text-grey">
                         {((items: number): any => `${items} item${items === 1 ? '' : 's'}`)(
                           order.line_items.reduce((acc, item) => acc + (item.quantity as number) || 1, 0)
@@ -182,17 +185,21 @@ export default function OrdersPage(pageProps: any) {
                         {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
                       </p>
                     </td>
-                    <td className="customer is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis">
+                    <td className="customer is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
+                      onClick={() => previewOrder(order.id)}>
                       <span className="text-ellipsis" title={formatAddressShort(order.shipping_to as AddressType)}>
                         {formatAddressShort(order.shipping_to as AddressType)}
                       </span>
                       <br />
                       <span className="has-text-weight-medium">{formatAddressLocationShort(order.shipping_to as AddressType)}</span>
                     </td>
-                    <td className="date is-vcentered has-text-right">
+                    <td className="date is-vcentered px-1" onClick={() => previewOrder(order.id)}>
                       <p className="is-size-7 has-text-weight-semibold has-text-grey">
                         {formatDateTime(order.created_at)}
                       </p>
+                    </td>
+                    <td className="action is-vcentered px-0">
+                      <OrderMenu order={order as any} className="is-fullwidth" />
                     </td>
                   </tr>
                 ))}
@@ -238,9 +245,11 @@ export default function OrdersPage(pageProps: any) {
     <DashboardLayout showModeIndicator={true}>
       <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <OrderPreview>
+        <ConfirmModal>
 
-        <Component />
+          <Component />
 
+        </ConfirmModal>
       </OrderPreview>
     </DashboardLayout>
   ), pageProps)

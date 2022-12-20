@@ -1,6 +1,8 @@
-import { gqlstr, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
+import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
 import { OrderFilter, get_orders, GET_ORDERS, get_order, GET_ORDER } from "@karrio/graphql";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { RestContext } from "@/client/context";
+import { OrderType } from "@/lib/types";
 import React from "react";
 
 const PAGE_SIZE = 20;
@@ -75,5 +77,28 @@ export function useOrder(id: string) {
 
   return {
     query,
+  };
+}
+
+
+export function useOrderMutation(id?: string) {
+  const queryClient = useQueryClient();
+  const karrio = React.useContext(RestContext);
+  const invalidateCache = () => {
+    queryClient.invalidateQueries(['orders']);
+    queryClient.invalidateQueries(['orders', id]);
+  };
+
+  // Mutations
+  // REST requests
+  const cancelOrder = useMutation(
+    ({ id }: OrderType) => handleFailure(
+      karrio!.orders.cancel({ id }).then(({ data }) => data)
+    ),
+    { onSuccess: invalidateCache, onError }
+  );
+
+  return {
+    cancelOrder,
   };
 }
