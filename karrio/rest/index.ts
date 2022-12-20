@@ -11,6 +11,7 @@ import {
   ProxyApi,
   ShipmentsApi,
   TrackersApi,
+  OrdersApi,
   WebhooksApi,
 } from './generated/api';
 
@@ -25,6 +26,7 @@ export interface KarrioClientInterface {
   proxy: ProxyApi;
   shipments: ShipmentsApi;
   trackers: TrackersApi;
+  orders: OrdersApi;
   webhooks: WebhooksApi;
   config: ConfigurationParameters;
 }
@@ -39,6 +41,7 @@ export class KarrioClient implements KarrioClientInterface {
   proxy: ProxyApi;
   shipments: ShipmentsApi;
   trackers: TrackersApi;
+  orders: OrdersApi;
   webhooks: WebhooksApi;
   config: ConfigurationParameters;
   axios: AxiosInstance;
@@ -58,6 +61,7 @@ export class KarrioClient implements KarrioClientInterface {
     this.proxy = new ProxyApi(config, config.basePath, axiosInstance);
     this.shipments = new ShipmentsApi(config, config.basePath, axiosInstance);
     this.trackers = new TrackersApi(config, config.basePath, axiosInstance);
+    this.orders = new OrdersApi(config, config.basePath, axiosInstance);
     this.webhooks = new WebhooksApi(config, config.basePath, axiosInstance);
   }
 }

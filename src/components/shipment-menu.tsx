@@ -1,13 +1,13 @@
+import { useDocumentTemplates } from '@/context/document-template';
 import { DocumentTemplateType, ShipmentType } from '@/lib/types';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import React, { useState, useRef, useContext } from 'react';
+import { useShipmentMutation } from '@/context/shipment';
 import { useRouter } from 'next/dist/client/router';
 import { ShipmentStatusEnum } from 'karrio/graphql';
+import { useAppMode } from '@/context/app-mode';
 import { KARRIO_API } from '@/client/context';
 import { isNone } from '@/lib/helper';
-import { useAppMode } from '@/context/app-mode';
-import { useShipmentMutation } from '@/context/shipment';
-import { useDocumentTemplates } from '@/context/document-template';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -24,7 +24,9 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
   const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
-  const { query: { data: { document_templates } = {} } } = useDocumentTemplates({ related_object: "shipment" } as any);
+  const { query: { data: { document_templates } = {} } } = useDocumentTemplates({
+    related_object: "shipment"
+  } as any);
 
   const handleOnClick = (e: React.MouseEvent) => {
     setIsActive(!isActive);

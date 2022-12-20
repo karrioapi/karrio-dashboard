@@ -17,6 +17,7 @@ import Spinner from "@/components/spinner";
 import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
+import OrderMenu from "@/components/order-menu";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -40,6 +41,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         {/* Header section */}
         <div className="columns my-1">
+
           <div className="column is-6">
             <span className="subtitle is-size-7 has-text-weight-semibold">ORDER</span>
             <br />
@@ -47,22 +49,30 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
             <StatusBadge status={order?.status} />
           </div>
 
-          <div className="column is-6 has-text-right pb-0">
-            <CopiableLink text={order?.id as string} title="Copy ID" />
-            <br />
-            {["unfulfilled", "partial"].includes(order?.status) &&
-              <AppLink className="button is-default is-small mx-1"
-                href={`/orders/create_shipment?shipment_id=new&order_id=${order?.id}`}>
-                <span>Create shipment</span>
-              </AppLink>}
-            {!isNone(orderId) &&
-              <AppLink className="button is-white has-text-info is-small mx-1"
-                href={`/orders/${orderId}`} target="blank">
-                <span className="icon">
-                  <i className="fas fa-external-link-alt"></i>
-                </span>
-              </AppLink>}
+          <div className="column is-6 pb-0">
+            <div className="is-flex is-justify-content-right">
+              <CopiableLink text={order?.id as string} title="Copy ID" />
+            </div>
+            <div className="is-flex is-justify-content-right">
+
+              {!isNone(orderId) &&
+                <AppLink className="button is-white has-text-info is-small mx-1"
+                  href={`/orders/${orderId}`} target="blank">
+                  <span className="icon">
+                    <i className="fas fa-external-link-alt"></i>
+                  </span>
+                </AppLink>}
+
+              <div style={{ display: 'inline-flex' }}>
+                <OrderMenu
+                  order={order as any}
+                  isViewing
+                />
+              </div>
+
+            </div>
           </div>
+
         </div>
 
         {/* Reference and highlights section */}

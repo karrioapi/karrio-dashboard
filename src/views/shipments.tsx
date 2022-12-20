@@ -126,7 +126,8 @@ export default function ShipmentsPage(pageProps: any) {
                     <td className="status is-vcentered" onClick={() => previewShipment(shipment.id)}>
                       <StatusBadge status={shipment.status as string} style={{ width: '100%' }} />
                     </td>
-                    <td className="recipient is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis" onClick={() => previewShipment(shipment.id)}>
+                    <td className="recipient is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
+                      onClick={() => previewShipment(shipment.id)}>
                       <span className="text-ellipsis" title={formatAddressShort(shipment.recipient as AddressType)}>
                         {formatAddressShort(shipment.recipient as AddressType)}
                       </span>
