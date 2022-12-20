@@ -19,6 +19,7 @@ export type DutyType = get_shipment_shipment_customs_duty;
 export type CustomsType = get_shipment_shipment_customs & {
   commodities: CommodityType[];
   duty?: DutyType;
+  duty_billing_address?: AddressType | null;
   id?: string;
 };
 export type ParcelType = get_shipment_shipment_parcels & {
@@ -33,10 +34,11 @@ export type ChargeType = get_shipment_shipment_selected_rate_extra_charges;
 export type RateType = get_shipment_shipment_rates;
 export type PaymentType = get_shipment_shipment_payment;
 export type ShipmentType = get_shipment_shipment & {
-  customs?: CustomsType | null;
   parcels: ParcelType[];
   shipper: AddressType;
   recipient: AddressType;
+  billing_address?: AddressType | null;
+  customs?: CustomsType | null;
   rates?: RateType[];
   messages?: MessageType[];
   selected_rate?: RateType;

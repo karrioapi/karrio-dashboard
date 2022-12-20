@@ -746,6 +746,25 @@ export interface get_shipment_shipment_shipper {
   validate_location: boolean | null;
 }
 
+export interface get_shipment_shipment_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_shipment_shipment_parcels_items {
   id: string;
   weight: number;
@@ -799,6 +818,25 @@ export interface get_shipment_shipment_customs_commodities {
   parent_id: string | null;
 }
 
+export interface get_shipment_shipment_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_shipment_shipment_customs {
   id: string;
   certify: boolean | null;
@@ -812,6 +850,7 @@ export interface get_shipment_shipment_customs {
   duty: get_shipment_shipment_customs_duty | null;
   options: any | null;
   commodities: get_shipment_shipment_customs_commodities[];
+  duty_billing_address: get_shipment_shipment_customs_duty_billing_address | null;
 }
 
 export interface get_shipment_shipment_payment {
@@ -876,6 +915,7 @@ export interface get_shipment_shipment {
   status: ShipmentStatusEnum;
   recipient: get_shipment_shipment_recipient;
   shipper: get_shipment_shipment_shipper;
+  billing_address: get_shipment_shipment_billing_address | null;
   parcels: get_shipment_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
@@ -965,6 +1005,25 @@ export interface get_shipments_shipments_edges_node_shipper {
   validate_location: boolean | null;
 }
 
+export interface get_shipments_shipments_edges_node_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_shipments_shipments_edges_node_parcels_items {
   id: string;
   weight: number;
@@ -1018,6 +1077,25 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   parent_id: string | null;
 }
 
+export interface get_shipments_shipments_edges_node_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_shipments_shipments_edges_node_customs {
   id: string;
   certify: boolean | null;
@@ -1031,6 +1109,7 @@ export interface get_shipments_shipments_edges_node_customs {
   duty: get_shipments_shipments_edges_node_customs_duty | null;
   options: any | null;
   commodities: get_shipments_shipments_edges_node_customs_commodities[];
+  duty_billing_address: get_shipments_shipments_edges_node_customs_duty_billing_address | null;
 }
 
 export interface get_shipments_shipments_edges_node_payment {
@@ -1095,6 +1174,7 @@ export interface get_shipments_shipments_edges_node {
   status: ShipmentStatusEnum;
   recipient: get_shipments_shipments_edges_node_recipient;
   shipper: get_shipments_shipments_edges_node_shipper;
+  billing_address: get_shipments_shipments_edges_node_billing_address | null;
   parcels: get_shipments_shipments_edges_node_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
@@ -1186,6 +1266,25 @@ export interface partial_shipment_update_partial_shipment_update_shipment_shippe
   validate_location: boolean | null;
 }
 
+export interface partial_shipment_update_partial_shipment_update_shipment_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface partial_shipment_update_partial_shipment_update_shipment_parcels_items {
   id: string;
   weight: number;
@@ -1254,6 +1353,25 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   parent: partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent | null;
 }
 
+export interface partial_shipment_update_partial_shipment_update_shipment_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface partial_shipment_update_partial_shipment_update_shipment_customs {
   id: string;
   certify: boolean | null;
@@ -1267,6 +1385,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   duty: partial_shipment_update_partial_shipment_update_shipment_customs_duty | null;
   options: any | null;
   commodities: partial_shipment_update_partial_shipment_update_shipment_customs_commodities[];
+  duty_billing_address: partial_shipment_update_partial_shipment_update_shipment_customs_duty_billing_address | null;
 }
 
 export interface partial_shipment_update_partial_shipment_update_shipment_payment {
@@ -1329,6 +1448,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment {
   status: ShipmentStatusEnum;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
   shipper: partial_shipment_update_partial_shipment_update_shipment_shipper;
+  billing_address: partial_shipment_update_partial_shipment_update_shipment_billing_address | null;
   parcels: partial_shipment_update_partial_shipment_update_shipment_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
@@ -2963,6 +3083,25 @@ export interface get_order_order_shipments_shipper {
   validate_location: boolean | null;
 }
 
+export interface get_order_order_shipments_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_order_order_shipments_parcels_items {
   id: string;
   weight: number;
@@ -3016,6 +3155,25 @@ export interface get_order_order_shipments_customs_commodities {
   parent_id: string | null;
 }
 
+export interface get_order_order_shipments_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_order_order_shipments_customs {
   id: string;
   certify: boolean | null;
@@ -3029,6 +3187,7 @@ export interface get_order_order_shipments_customs {
   duty: get_order_order_shipments_customs_duty | null;
   options: any | null;
   commodities: get_order_order_shipments_customs_commodities[];
+  duty_billing_address: get_order_order_shipments_customs_duty_billing_address | null;
 }
 
 export interface get_order_order_shipments_payment {
@@ -3093,6 +3252,7 @@ export interface get_order_order_shipments {
   status: ShipmentStatusEnum;
   recipient: get_order_order_shipments_recipient;
   shipper: get_order_order_shipments_shipper;
+  billing_address: get_order_order_shipments_billing_address | null;
   parcels: get_order_order_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;
@@ -3276,6 +3436,25 @@ export interface get_orders_orders_edges_node_shipments_shipper {
   validate_location: boolean | null;
 }
 
+export interface get_orders_orders_edges_node_shipments_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_orders_orders_edges_node_shipments_parcels_items {
   id: string;
   weight: number;
@@ -3329,6 +3508,25 @@ export interface get_orders_orders_edges_node_shipments_customs_commodities {
   parent_id: string | null;
 }
 
+export interface get_orders_orders_edges_node_shipments_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
 export interface get_orders_orders_edges_node_shipments_customs {
   id: string;
   certify: boolean | null;
@@ -3342,6 +3540,7 @@ export interface get_orders_orders_edges_node_shipments_customs {
   duty: get_orders_orders_edges_node_shipments_customs_duty | null;
   options: any | null;
   commodities: get_orders_orders_edges_node_shipments_customs_commodities[];
+  duty_billing_address: get_orders_orders_edges_node_shipments_customs_duty_billing_address | null;
 }
 
 export interface get_orders_orders_edges_node_shipments_payment {
@@ -3406,6 +3605,7 @@ export interface get_orders_orders_edges_node_shipments {
   status: ShipmentStatusEnum;
   recipient: get_orders_orders_edges_node_shipments_recipient;
   shipper: get_orders_orders_edges_node_shipments_shipper;
+  billing_address: get_orders_orders_edges_node_shipments_billing_address | null;
   parcels: get_orders_orders_edges_node_shipments_parcels[];
   label_type: LabelTypeEnum | null;
   tracking_number: string | null;

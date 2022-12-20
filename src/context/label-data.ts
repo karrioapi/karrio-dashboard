@@ -287,9 +287,10 @@ export function useLabelDataMutation(id: string) {
 
   // requests
   const fetchRates = async () => {
+    const { messages, rates, ...data } = state.shipment;
     try {
       loader.setLoading(true);
-      const { rates, messages } = await mutation.fetchRates.mutateAsync(state.shipment);
+      const { rates, messages } = await mutation.fetchRates.mutateAsync(data as ShipmentType);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (error: any) {
       updateShipment({ rates: [], messages: errorToMessages(error) } as Partial<ShipmentType>);
@@ -297,7 +298,7 @@ export function useLabelDataMutation(id: string) {
     loader.setLoading(false);
   };
   const buyLabel = async (rate: ShipmentType['rates'][0]) => {
-    const { messages, ...data } = state.shipment;
+    const { messages, rates, ...data } = state.shipment;
     const selection = (
       isDraft(state.shipment.id)
         ? { service: rate.service, carrier_ids: [rate.carrier_id] }

@@ -3,17 +3,17 @@ import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/c
 import React, { ChangeEvent, FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
 import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
+import { useDefaultTemplates } from '@/context/default-template';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
 import InputField from '@/components/generic/input-field';
+import { useShipmentMutation } from '@/context/shipment';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import moment from 'moment';
 import { useUser } from '@/context/user';
-import { useShipmentMutation } from '@/context/shipment';
-import { useDefaultTemplates } from '@/context/default-template';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
