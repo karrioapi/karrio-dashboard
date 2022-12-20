@@ -1375,6 +1375,36 @@ export interface partial_shipment_updateVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: change_shipment_status
+// ====================================================
+
+export interface change_shipment_status_change_shipment_status_shipment {
+  id: string;
+}
+
+export interface change_shipment_status_change_shipment_status_errors {
+  field: string;
+  messages: string[];
+}
+
+export interface change_shipment_status_change_shipment_status {
+  shipment: change_shipment_status_change_shipment_status_shipment | null;
+  errors: change_shipment_status_change_shipment_status_errors[] | null;
+}
+
+export interface change_shipment_status {
+  change_shipment_status: change_shipment_status_change_shipment_status;
+}
+
+export interface change_shipment_statusVariables {
+  data: ChangeShipmentStatusMutationInput;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: get_tracker
 // ====================================================
 
@@ -4153,6 +4183,11 @@ export enum LabelTypeEnum {
   ZPL = "ZPL",
 }
 
+export enum ManualShipmentStatusEnum {
+  delivered = "delivered",
+  in_transit = "in_transit",
+}
+
 export enum TrackerStatusEnum {
   delivered = "delivered",
   in_transit = "in_transit",
@@ -5191,6 +5226,12 @@ export interface PaymentInput {
   account_number?: string | null;
   paid_by?: PaidByEnum | null;
   currency?: CurrencyCodeEnum | null;
+}
+
+// null
+export interface ChangeShipmentStatusMutationInput {
+  id: string;
+  status?: ManualShipmentStatusEnum | null;
 }
 
 // null

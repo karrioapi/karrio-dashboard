@@ -4,10 +4,11 @@ import { ConfirmModalContext } from '@/components/confirm-modal';
 import React, { useState, useRef, useContext } from 'react';
 import { useShipmentMutation } from '@/context/shipment';
 import { useRouter } from 'next/dist/client/router';
-import { ShipmentStatusEnum } from 'karrio/graphql';
+import { ManualShipmentStatusEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import { useAppMode } from '@/context/app-mode';
 import { KARRIO_API } from '@/client/context';
 import { isNone } from '@/lib/helper';
+import { useAPIReference } from '@/context/reference';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -20,6 +21,7 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) => {
   const router = useRouter();
   const { basePath } = useAppMode();
+  const references = useAPIReference();
   const mutation = useShipmentMutation();
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -47,6 +49,9 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
   };
   const cancelShipment = (shipment: ShipmentType) => async () => {
     await mutation.voidLabel.mutateAsync(shipment);
+  };
+  const changeStatus = ({ id }: ShipmentType, status: ManualShipmentStatusEnum) => async () => {
+    await mutation.changeStatus.mutateAsync({ id: shipment.id, status });
   };
 
   return (
@@ -85,6 +90,31 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
           {!isNone(shipment.invoice_url) &&
             <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}
               target="_blank" rel="noreferrer">Print Invoice</a>}
+
+          {(
+            shipment.carrier_name &&
+            !(shipment!.carrier_name in references.carriers) &&
+            ![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status as any)
+          ) && <>
+              <hr className="my-1" style={{ height: '1px' }} />
+
+              {(shipment.status === ShipmentStatusEnum.purchased) &&
+                <a className="dropdown-item" onClick={() => confirmCancellation({
+                  identifier: shipment.id as string,
+                  label: `Mark shipment as ${ManualShipmentStatusEnum.in_transit}`,
+                  action: 'Apply',
+                  onConfirm: changeStatus(shipment, ManualShipmentStatusEnum.in_transit),
+                })}>Mark as {ManualShipmentStatusEnum.in_transit}</a>}
+
+              {([ShipmentStatusEnum.purchased, ShipmentStatusEnum.in_transit].includes(shipment.status as any)) &&
+                <a className="dropdown-item" onClick={() => confirmCancellation({
+                  identifier: shipment.id as string,
+                  label: `Mark shipment as ${ManualShipmentStatusEnum.delivered}`,
+                  action: 'Save',
+                  onConfirm: changeStatus(shipment, ManualShipmentStatusEnum.delivered),
+                })}>Mark as {ManualShipmentStatusEnum.delivered}</a>}
+
+            </>}
 
           {(document_templates?.edges || []).length > 0 &&
             <hr className="my-1" style={{ height: '1px' }} />}
