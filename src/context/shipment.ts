@@ -1,4 +1,4 @@
-import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT } from "@karrio/graphql";
+import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT, ChangeShipmentStatusMutationInput, CHANGE_SHIPMENT_STATUS, change_shipment_status } from "@karrio/graphql";
 import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RestContext } from "@/client/context";
@@ -119,22 +119,35 @@ export function useShipmentMutation(id?: string) {
     { onSuccess: invalidateCache }
   );
   const discardCustoms = useMutation(
-    (data: { id: string }) => request<discard_customs>(gqlstr(DELETE_TEMPLATE), { data, ...headers() }),
+    (data: { id: string }) => request<discard_customs>(
+      gqlstr(DELETE_TEMPLATE), { data, ...headers() }
+    ),
     { onSuccess: invalidateCache, onError }
   );
   const discardCommodity = useMutation(
-    (data: { id: string }) => request<discard_commodity>(gqlstr(DISCARD_COMMODITY), { data, ...headers() }),
+    (data: { id: string }) => request<discard_commodity>(
+      gqlstr(DISCARD_COMMODITY), { data, ...headers() }
+    ),
     { onSuccess: invalidateCache, onError }
   );
   const discardParcel = useMutation(
-    (data: { id: string }) => request<discard_parcel>(gqlstr(DELETE_TEMPLATE), { data, ...headers() }),
+    (data: { id: string }) => request<discard_parcel>(
+      gqlstr(DELETE_TEMPLATE), { data, ...headers() }
+    ),
     { onSuccess: invalidateCache, onError }
+  );
+  const changeStatus = useMutation(
+    (data: ChangeShipmentStatusMutationInput) => request<change_shipment_status>(
+      gqlstr(CHANGE_SHIPMENT_STATUS), { data, ...headers() }
+    ),
+    { onSuccess: invalidateCache }
   );
 
   return {
     buyLabel,
     voidLabel,
     fetchRates,
+    changeStatus,
     updateShipment,
     discardCommodity,
     discardCustoms,

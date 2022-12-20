@@ -916,6 +916,19 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
 }
 `;
 
+export const CHANGE_SHIPMENT_STATUS = gql`mutation change_shipment_status($data: ChangeShipmentStatusMutationInput!) {
+  change_shipment_status(input: $data) {
+    shipment {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
 export const GET_TRACKER = gql`query get_tracker($id: String!) {
   tracker(id: $id) {
     id
