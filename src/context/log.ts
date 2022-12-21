@@ -68,7 +68,7 @@ export function useLog(id: string) {
   // Queries
   const query = useQuery({
     queryKey: ['logs', id],
-    queryFn: () => request<get_log>(gqlstr(GET_LOG), { variables: { id }, ...headers() }),
+    queryFn: () => request<get_log>(gqlstr(GET_LOG), { variables: { id: parseInt(id) }, ...headers() }),
     enabled: !!id,
     onError,
   });
