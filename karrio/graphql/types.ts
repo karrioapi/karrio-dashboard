@@ -627,6 +627,16 @@ export interface delete_organization_invitationVariables {
 // GraphQL query operation: get_log
 // ====================================================
 
+export interface get_log_log_records {
+  id: string | null;
+  key: string | null;
+  timestamp: number | null;
+  test_mode: boolean | null;
+  created_at: any | null;
+  meta: any | null;
+  record: any | null;
+}
+
 export interface get_log_log {
   id: number;
   requested_at: any | null;
@@ -639,10 +649,11 @@ export interface get_log_log {
   data: any | null;
   response: any | null;
   status_code: number | null;
+  records: get_log_log_records[];
 }
 
 export interface get_log {
-  log: get_log_log;
+  log: get_log_log | null;
 }
 
 export interface get_logVariables {
@@ -664,9 +675,20 @@ export interface get_logs_logs_page_info {
   end_cursor: string | null;
 }
 
+export interface get_logs_logs_edges_node_records {
+  id: string | null;
+  key: string | null;
+  timestamp: number | null;
+  test_mode: boolean | null;
+  created_at: any | null;
+  meta: any | null;
+  record: any | null;
+}
+
 export interface get_logs_logs_edges_node {
   id: number;
   path: string | null;
+  host: string | null;
   data: any | null;
   method: string | null;
   response_ms: number | null;
@@ -674,8 +696,8 @@ export interface get_logs_logs_edges_node {
   requested_at: any | null;
   status_code: number | null;
   query_params: any | null;
-  host: string | null;
   response: any | null;
+  records: get_logs_logs_edges_node_records[];
 }
 
 export interface get_logs_logs_edges {
@@ -940,7 +962,7 @@ export interface get_shipment_shipment {
 }
 
 export interface get_shipment {
-  shipment: get_shipment_shipment;
+  shipment: get_shipment_shipment | null;
 }
 
 export interface get_shipmentVariables {
@@ -1588,7 +1610,7 @@ export interface get_tracker_tracker {
 }
 
 export interface get_tracker {
-  tracker: get_tracker_tracker;
+  tracker: get_tracker_tracker | null;
 }
 
 export interface get_trackerVariables {

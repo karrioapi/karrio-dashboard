@@ -345,6 +345,15 @@ export const GET_LOG = gql`query get_log($id: Int!) {
     data
     response
     status_code
+    records {
+      id
+      key
+      timestamp
+      test_mode
+      created_at
+      meta
+      record
+    }
   }
 }
 `;
@@ -361,6 +370,7 @@ export const GET_LOGS = gql`query get_logs($filter: LogFilter) {
       node {
         id
         path
+        host
         data
         method
         response_ms
@@ -368,8 +378,16 @@ export const GET_LOGS = gql`query get_logs($filter: LogFilter) {
         requested_at
         status_code
         query_params
-        host
         response
+        records {
+          id
+          key
+          timestamp
+          test_mode
+          created_at
+          meta
+          record
+        }
       }
     }
   }

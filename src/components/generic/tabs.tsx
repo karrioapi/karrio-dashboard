@@ -71,7 +71,7 @@ const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, 
   return (
     <>
 
-      <div className={`tabs ${tabContainerClass}`}>
+      <div className={`tabs ${tabContainerClass || ''}`}>
         <ul>
 
           {(tabs || []).map((tab, index) => (
