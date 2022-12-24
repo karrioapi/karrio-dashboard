@@ -1,4 +1,5 @@
-import { failsafe, formatDateTimeLong, isNone, jsonify, notEmptyJSON } from "@/lib/helper";
+import { failsafe, formatDateTimeLong, groupBy, isNone, jsonify, notEmptyJSON } from "@/lib/helper";
+import Tabs, { TabStateProvider } from "@/components/generic/tabs";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import StatusCode from "@/components/status-code-badge";
@@ -10,6 +11,7 @@ import { useLog } from "@/context/log";
 import hljs from "highlight.js";
 import Head from "next/head";
 import React from "react";
+import moment from "moment";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -25,7 +27,10 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
   const [query_params, setQueryParams] = React.useState<string>();
   const { query: { data: { log } = {}, ...query } } = useLog(entity_id);
 
-  React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
+  React.useEffect(() => {
+    (window as any).moment = moment;
+    setLoading(query.isFetching);
+  }, [query.isFetching]);
   React.useEffect(() => {
     if (log !== undefined) {
       setQueryParams(failsafe(() => jsonify(log?.query_params), '{}'));
@@ -77,72 +82,146 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           </div>
         </div>
 
+        <TabStateProvider tabs={["API Request", "API Response", "Timeline"]}>
+          <Tabs tabContainerClass="mb-1">
 
-        {notEmptyJSON(response) && <>
+            <div>
+              {notEmptyJSON(query_params) && query_params !== data && <>
 
-          <h2 className="title is-5 my-4">Response body</h2>
-          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                <h2 className="title is-5 my-4">Request query params</h2>
 
-          <div className="py-3">
-            <pre className="code p-1">
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(response as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+                <div className="py-3">
+                  <pre className="code p-1">
+                    <code
+                      dangerouslySetInnerHTML={{
+                        __html: hljs.highlight(query_params as string, { language: 'json' }).value,
+                      }}
+                    />
+                  </pre>
+                </div>
 
-        </>}
+                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+              </>}
 
+              {notEmptyJSON(data) && <>
 
-        {notEmptyJSON(data) && <>
+                <h2 className="title is-5 my-4">Request {log?.method} body</h2>
 
-          <h2 className="title is-5 my-4">Request {log?.method} body</h2>
-          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                <div className="py-3">
+                  <pre className="code p-1">
+                    <code
+                      dangerouslySetInnerHTML={{
+                        __html: hljs.highlight(data as string, { language: 'json' }).value,
+                      }}
+                    />
+                  </pre>
+                </div>
 
-          <div className="py-3">
-            <pre className="code p-1">
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(data as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+              </>}
+            </div>
 
-        </>}
+            {notEmptyJSON(response) && <div>
 
+              <h2 className="title is-5 my-4">Response body</h2>
 
-        {notEmptyJSON(query_params) && query_params !== data && <>
+              <div className="py-3">
+                <pre className="code p-1">
+                  <code
+                    dangerouslySetInnerHTML={{
+                      __html: hljs.highlight(response as string, { language: 'json' }).value,
+                    }}
+                  />
+                </pre>
+              </div>
 
-          <h2 className="title is-5 my-4">Request query params</h2>
-          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+            </div>}
 
-          <div className="py-3">
-            <pre className="code p-1">
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: hljs.highlight(query_params as string, { language: 'json' }).value,
-                }}
-              />
-            </pre>
-          </div>
+            <div>
+              {(log?.records || []).length == 0 && <div className="notification is-default my-4 p-4 is-size-6">
+                No tracing records...
+              </div>}
+              {(log?.records || []).length > 0 && <>
 
-        </>}
+                {Object.values(groupBy(log!.records, (r: any) => r.record?.request_id)).map((records: any, key) => {
+                  const request = records.find((r: any) => r.key === "request");
+                  const response = records.find((r: any) => r.key !== "request");
+                  const request_data = parseRecordData(request?.record);
+                  const response_data = parseRecordData(response?.record);
+                  const tabs = [...(request ? ["request"] : []), ...(response ? [response.key] : [])];
+
+                  return (<div className="card mx-0 my-2" key={key}>
+                    <div className="p-3 is-size-7 has-text-weight-semibold has-text-grey">
+                      <p className="is-size-6 my-1">
+                        <span>Carrier: <strong>{(request || response)?.meta?.carrier_name}</strong></span>
+                      </p>
+                      <p className="my-1">
+                        <span>Connection: <strong>{(request || response)?.meta?.carrier_id}</strong></span>
+                      </p>
+                      <p className="my-1">
+                        <span>URL: <strong>{(request?.record || response?.record)?.url}</strong></span>
+                      </p>
+                      <p className="my-1">
+                        <span>Request ID: <strong>{(request?.record || response?.record)?.request_id}</strong></span>
+                      </p>
+                      {request?.timestamp && <p className="my-1">
+                        <span>Request Timestamp: <strong>{moment(request.timestamp * 1000).format('LTS')}</strong></span>
+                      </p>}
+                      {response?.timestamp && <p className="my-1">
+                        <span>Response Timestamp: <strong>{moment(response.timestamp * 1000).format('LTS')}</strong></span>
+                      </p>}
+                    </div>
+                    <TabStateProvider tabs={tabs}>
+                      <Tabs>
+
+                        {request && <pre className="code p-1" style={{ overflow: 'auto', maxHeight: '40vh' }}>
+                          <code style={{ whiteSpace: 'pre-wrap' }}
+                            dangerouslySetInnerHTML={{
+                              __html: hljs.highlight(request_data || request.record?.url || "", { language: request.record?.format || 'json' }).value,
+                            }}
+                          />
+                        </pre>}
+
+                        {response_data && <pre className="code p-1" style={{ overflow: 'auto', maxHeight: '40vh' }}>
+                          <code style={{ whiteSpace: 'pre-wrap' }}
+                            dangerouslySetInnerHTML={{
+                              __html: hljs.highlight(response_data.replaceAll("><", ">\n<"), { language: response.record?.format || 'json' }).value,
+                            }}
+                          />
+                        </pre>}
+
+                      </Tabs>
+                    </TabStateProvider>
+                  </div>);
+                })}
+
+              </>}
+            </div>
+
+          </Tabs>
+        </TabStateProvider>
 
       </>}
     </>
   );
 };
 
-
 export default function LogPage(pageProps: any) {
-
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Log - {(pageProps as any).metadata?.APP_NAME}</title></Head>
       <LogComponent />
     </DashboardLayout>
   ), pageProps);
+}
+
+function parseRecordData(record: any) {
+  if (!record) return null;
+  if (record?.format === 'xml') {
+    return (record.data || record.response);
+  }
+
+  return failsafe(
+    () => jsonify(record.data || record.response),
+    (record.data || record.response)
+  )
 }
