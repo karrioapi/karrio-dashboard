@@ -77,7 +77,12 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
         {notEmptyJSON(data) &&
-          <div className="py-3">
+          <div className="py-3 is-relative">
+            <CopiableLink text="COPY"
+              value={data}
+              style={{ position: 'absolute', right: 0, zIndex: 1 }}
+              className="button is-primary is-small m-1"
+            />
             <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{

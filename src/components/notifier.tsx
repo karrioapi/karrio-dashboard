@@ -87,11 +87,11 @@ function renderError(msg: any, _: number): any {
 
   else if (Array.isArray(error) && error.length > 0) {
     return (error || []).map((msg: any, index: number) => {
-      if (msg.details) {
-        return <>{renderError(msg, 0)}</>;
-      }
       if (msg.carrier_name) {
         return <p key={index}>{msg.carrier_name || msg.carrier_id || JSON.stringify(msg)} {msg.message}</p>;
+      }
+      if (msg.details) {
+        return <>{renderError(msg, 0)}</>;
       }
       return <p key={index}>{JSON.stringify(msg)}</p>;
     });
