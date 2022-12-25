@@ -597,6 +597,32 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       code
       details
     }
+    tracker {
+      id
+      tracking_number
+      carrier_id
+      carrier_name
+      status
+      events {
+        description
+        location
+        code
+        date
+        time
+      }
+      delivered
+      estimated_delivery
+      meta
+      metadata
+      messages {
+        carrier_name
+        carrier_id
+        message
+        code
+        details
+      }
+      updated_at
+    }
   }
 }
 `;
