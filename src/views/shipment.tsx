@@ -2,7 +2,7 @@ import CustomsInfoDescription from "@/components/descriptions/customs-info-descr
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import { useUploadRecordMutation, useUploadRecords } from "@/context/upload-record";
 import CommodityDescription from "@/components/descriptions/commodity-description";
-import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatDateTime, formatDayDate, formatRef, isNone } from "@/lib/helper";
 import AddressDescription from "@/components/descriptions/address-description";
 import ParcelDescription from "@/components/descriptions/parcel-description";
 import { CustomsType, NotificationType, ParcelType } from "@/lib/types";
@@ -16,7 +16,6 @@ import CopiableLink from "@/components/copiable-link";
 import CarrierBadge from "@/components/carrier-badge";
 import ShipmentMenu from "@/components/shipment-menu";
 import ConfirmModal from "@/components/confirm-modal";
-import { useAPIReference } from "@/context/reference";
 import { useRouter } from "next/dist/client/router";
 import StatusBadge from "@/components/status-badge";
 import { useNotifier } from "@/components/notifier";
@@ -29,6 +28,7 @@ import Spinner from "@/components/spinner";
 import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
+import { useAPIReference } from "@/context/reference";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -202,19 +202,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <div className="columns my-0">
                   <div className="column is-4 is-size-7 py-1">Tracking Number</div>
                   <div className="column has-text-info py-1">
-                    {shipment.tracker_id
-                      ? <a className="p-0 m-0 is-size-7 has-text-weight-semibold"
-                        href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
-                        <span>{shipment.tracking_number as string}</span> {" "}
-                        <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
-                      </a>
-                      : <span className="is-size-7 has-text-weight-semibold">{shipment.tracking_number as string}</span>
-                    }
+                    <span className="is-size-7 has-text-weight-semibold">{shipment.tracking_number as string}</span>
                   </div>
                 </div>
               </div>
 
-              {(shipment.selected_rate?.extra_charges || []).length > 0 &&
+              {(shipment.selected_rate?.extra_charges || []).length > 0 && <>
                 <div className="column is-6 is-size-6 py-1">
                   <p className="is-title is-size-6 my-2 has-text-weight-semibold">CHARGES</p>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
@@ -228,7 +221,57 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                       {!isNone(charge?.currency) && <span>{charge?.currency}</span>}
                     </div>
                   </div>)}
+                </div>
+              </>}
+
+            </div>
+          </div>
+
+        </>}
+
+        {!isNone(shipment.tracker) && <>
+
+          <h2 className="title is-5 my-4">
+            <span>Tracking Details</span>
+            <a className="p-0 mx-2 my-0 is-size-6 has-text-weight-semibold"
+              href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
+              <span><i className="fas fa-external-link-alt"></i></span>
+            </a>
+          </h2>
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+          <div className="mt-3 mb-6">
+            <div className="columns my-0 py-1">
+
+              <div className="column is-6 is-size-7">
+                {!isNone(shipment.tracker?.estimated_delivery) && <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-0">{shipment.tracker?.delivered ? 'Delivered' : 'Estimated Delivery'}</div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {formatDayDate(shipment.tracker!.estimated_delivery as string)}
+                  </div>
                 </div>}
+                <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-0">Last event</div>
+                  <div className="column has-text-weight-semibold py-1">
+                    <p className="is-capitalized">
+                      {formatDayDate((shipment.tracker?.events || [])[0]?.date as string)}
+                      {' '}
+                      <code>{(shipment.tracker?.events || [])[0]?.time}</code>
+                    </p>
+                  </div>
+                </div>
+                {!isNone((shipment.tracker?.events || [])[0]?.location) && <div className="columns my-0">
+                  <div className="column is-4"></div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {(shipment.tracker?.events || [])[0]?.location}
+                  </div>
+                </div>}
+                {!isNone((shipment.tracker?.events || [])[0]?.description) && <div className="columns my-0">
+                  <div className="column is-4"></div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {(shipment.tracker?.events || [])[0]?.description}
+                  </div>
+                </div>}
+              </div>
 
             </div>
           </div>

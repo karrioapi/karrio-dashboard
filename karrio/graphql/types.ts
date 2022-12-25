@@ -927,6 +927,37 @@ export interface get_shipment_shipment_messages {
   details: any | null;
 }
 
+export interface get_shipment_shipment_tracker_events {
+  description: string | null;
+  location: string | null;
+  code: string | null;
+  date: string | null;
+  time: string | null;
+}
+
+export interface get_shipment_shipment_tracker_messages {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  message: string | null;
+  code: string | null;
+  details: any | null;
+}
+
+export interface get_shipment_shipment_tracker {
+  id: string;
+  tracking_number: string;
+  carrier_id: string;
+  carrier_name: string;
+  status: TrackerStatusEnum;
+  events: get_shipment_shipment_tracker_events[];
+  delivered: boolean | null;
+  estimated_delivery: any | null;
+  meta: any | null;
+  metadata: any;
+  messages: get_shipment_shipment_tracker_messages[];
+  updated_at: any;
+}
+
 export interface get_shipment_shipment {
   id: string;
   carrier_id: string | null;
@@ -959,6 +990,7 @@ export interface get_shipment_shipment {
   metadata: any;
   meta: any | null;
   messages: get_shipment_shipment_messages[];
+  tracker: get_shipment_shipment_tracker | null;
 }
 
 export interface get_shipment {
@@ -4405,17 +4437,17 @@ export enum LabelTypeEnum {
   ZPL = "ZPL",
 }
 
-export enum ManualShipmentStatusEnum {
-  delivered = "delivered",
-  in_transit = "in_transit",
-}
-
 export enum TrackerStatusEnum {
   delivered = "delivered",
   in_transit = "in_transit",
   incident = "incident",
   pending = "pending",
   unknown = "unknown",
+}
+
+export enum ManualShipmentStatusEnum {
+  delivered = "delivered",
+  in_transit = "in_transit",
 }
 
 export enum EventTypes {
