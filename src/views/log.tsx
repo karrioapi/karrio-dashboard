@@ -12,6 +12,7 @@ import hljs from "highlight.js";
 import Head from "next/head";
 import React from "react";
 import moment from "moment";
+import CopiableLink from "@/components/copiable-link";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -82,8 +83,29 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
           </div>
         </div>
 
-        <TabStateProvider tabs={["API Request", "API Response", "Timeline"]}>
+        <TabStateProvider tabs={["API Response", "API Request", "Timeline"]}>
           <Tabs tabContainerClass="mb-1">
+
+            {notEmptyJSON(response) && <div>
+
+              <h2 className="title is-5 my-4">Response body</h2>
+
+              <div className="py-3 is-relative">
+                <CopiableLink text="COPY"
+                  value={response}
+                  style={{ position: 'absolute', right: 0, zIndex: 1 }}
+                  className="button is-primary is-small m-1"
+                />
+                <pre className="code p-1">
+                  <code
+                    dangerouslySetInnerHTML={{
+                      __html: hljs.highlight(response as string, { language: 'json' }).value,
+                    }}
+                  />
+                </pre>
+              </div>
+
+            </div>}
 
             <div>
               {notEmptyJSON(query_params) && query_params !== data && <>
@@ -107,7 +129,12 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
 
                 <h2 className="title is-5 my-4">Request {log?.method} body</h2>
 
-                <div className="py-3">
+                <div className="py-3 is-relative">
+                  <CopiableLink text="COPY"
+                    value={data}
+                    style={{ position: 'absolute', right: 0, zIndex: 1 }}
+                    className="button is-primary is-small m-1"
+                  />
                   <pre className="code p-1">
                     <code
                       dangerouslySetInnerHTML={{
@@ -119,22 +146,6 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
 
               </>}
             </div>
-
-            {notEmptyJSON(response) && <div>
-
-              <h2 className="title is-5 my-4">Response body</h2>
-
-              <div className="py-3">
-                <pre className="code p-1">
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: hljs.highlight(response as string, { language: 'json' }).value,
-                    }}
-                  />
-                </pre>
-              </div>
-
-            </div>}
 
             <div>
               {(log?.records || []).length == 0 && <div className="notification is-default my-4 p-4 is-size-6">
@@ -173,21 +184,41 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
                     <TabStateProvider tabs={tabs}>
                       <Tabs>
 
-                        {request && <pre className="code p-1" style={{ overflow: 'auto', maxHeight: '40vh' }}>
-                          <code style={{ whiteSpace: 'pre-wrap' }}
-                            dangerouslySetInnerHTML={{
-                              __html: hljs.highlight(request_data || request.record?.url || "", { language: request.record?.format || 'json' }).value,
-                            }}
+                        {request && <div className="p-0 is-relative">
+                          <CopiableLink text="COPY"
+                            value={request_data || request.record?.url || ""}
+                            style={{ position: 'absolute', right: 0, zIndex: 1 }}
+                            className="button is-primary is-small m-1"
                           />
-                        </pre>}
+                          <pre className="code p-1" style={{ overflow: 'auto', maxHeight: '40vh' }}>
+                            <code style={{ whiteSpace: 'pre-wrap' }}
+                              dangerouslySetInnerHTML={{
+                                __html: hljs.highlight(
+                                  request_data || request.record?.url || "",
+                                  { language: request.record?.format || 'json' }
+                                ).value,
+                              }}
+                            />
+                          </pre>
+                        </div>}
 
-                        {response_data && <pre className="code p-1" style={{ overflow: 'auto', maxHeight: '40vh' }}>
-                          <code style={{ whiteSpace: 'pre-wrap' }}
-                            dangerouslySetInnerHTML={{
-                              __html: hljs.highlight(response_data.replaceAll("><", ">\n<"), { language: response.record?.format || 'json' }).value,
-                            }}
+                        {response_data && <div className="p-0 is-relative">
+                          <CopiableLink text="COPY"
+                            value={response_data.replaceAll("><", ">\n<")}
+                            style={{ position: 'absolute', right: 0, zIndex: 1 }}
+                            className="button is-primary is-small m-1"
                           />
-                        </pre>}
+                          <pre className="code p-1 is-relative" style={{ overflow: 'auto', maxHeight: '40vh' }}>
+                            <code style={{ whiteSpace: 'pre-wrap' }}
+                              dangerouslySetInnerHTML={{
+                                __html: hljs.highlight(
+                                  response_data.replaceAll("><", ">\n<"),
+                                  { language: response.record?.format || 'json' }
+                                ).value
+                              }}
+                            />
+                          </pre>
+                        </div>}
 
                       </Tabs>
                     </TabStateProvider>

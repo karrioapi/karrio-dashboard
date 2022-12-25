@@ -2,12 +2,13 @@ import React from 'react';
 
 interface CopiableLinkComponent extends React.InputHTMLAttributes<HTMLAnchorElement> {
   text: string;
+  value?: string;
 }
 
-const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, className, ...props }) => {
+const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, value, className, style, ...props }) => {
   const copyText = (_: React.MouseEvent) => {
     var input = document.createElement('input');
-    input.setAttribute('value', text);
+    input.setAttribute('value', value || text);
     document.body.appendChild(input);
     input.select();
     document.execCommand('copy');
@@ -17,7 +18,7 @@ const CopiableLink: React.FC<CopiableLinkComponent> = ({ text, className, ...pro
   return (
     <a
       className={className || "button is-white is-small m-1"}
-      style={{ padding: '0', height: '20px' }}
+      style={style || { padding: '0', height: '20px' }}
       onClick={copyText}
       {...props}>
       <span>{text}</span>
