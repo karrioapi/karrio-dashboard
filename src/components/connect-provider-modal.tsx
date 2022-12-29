@@ -106,10 +106,13 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     evt.preventDefault();
     setLoading(true);
     try {
-      const { carrier_name: _, __typename, id, capabilities, ...content } = payload;
+      const { carrier_name: _, __typename, id, capabilities, display_name, ...content } = payload;
       const settingsName = `${carrier_name}settings`.replace('_', '');
-      const data = { [settingsName]: content };
-      if (isNew) {
+      const data = { 
+        [settingsName]: settingsName.includes('generic') ? {...content, display_name} : content 
+      };
+      
+        if (isNew) {
         await createConnection(data);
       } else {
         await updateConnection({ id, ...data });
