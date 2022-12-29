@@ -258,9 +258,10 @@ const LabelMutationProvider: React.FC = ({ children }) => {
 
   // requests
   const fetchRates = async () => {
+    const { messages, rates, ...data } = shipment;
     try {
       loader.setLoading(true);
-      const { rates, messages } = await mutation.fetchRates(shipment);
+      const { rates, messages } = await mutation.fetchRates(data as ShipmentType);
       updateShipment({ rates, messages } as Partial<ShipmentType>);
     } catch (error: any) {
       updateShipment({ rates: [], messages: errorToMessages(error) } as Partial<ShipmentType>);
@@ -268,7 +269,7 @@ const LabelMutationProvider: React.FC = ({ children }) => {
     loader.setLoading(false);
   };
   const buyLabel = async (rate: ShipmentType['rates'][0]) => {
-    const { messages, ...data } = shipment;
+    const { messages, rates, ...data } = shipment;
     const selection = isDraft(shipment.id) ? {
       service: rate.service,
       carrier_ids: [rate.carrier_id],
