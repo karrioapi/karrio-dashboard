@@ -245,6 +245,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 />}
 
                 {field("check_word").exists && <InputField label="Check Word" value={payload.check_word} 
+                  type="text"
                   name="check_word" 
                   onChange={handleChange} 
                   className="is-small" 
@@ -266,6 +267,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 />}
 
                 {field("password").exists && <InputField label="Password" value={payload.password} 
+                  type="text"
                   name="password" 
                   onChange={handleChange} 
                   className="is-small" 
@@ -273,6 +275,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 />}
 
                 {field("client_secret").exists && <InputField label="Client Secret" value={payload.client_secret} 
+                  type="text"
                   name="client_secret" 
                   onChange={handleChange} 
                   className="is-small" 
@@ -301,6 +304,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 />}
 
                 {field("consumer_secret").exists && <InputField label="Consumer Secret" value={payload.consumer_secret} 
+                  type="text"
                   name="consumer_secret" 
                   onChange={handleChange} 
                   className="is-small" 
@@ -315,6 +319,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                 />}
 
                 {field("api_secret").exists && <InputField label="API Secret" value={payload.api_secret} 
+                  type="text"
                   name="api_secret" 
                   onChange={handleChange} 
                   className="is-small" 
