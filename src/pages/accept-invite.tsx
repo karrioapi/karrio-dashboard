@@ -1,14 +1,13 @@
+import { useOrganizationInvitation } from "@/context/organization";
 import SectionLayout from "@/layouts/section-layout";
-import Spinner from "@/components/spinner";
-import { get_organization_invitation, GET_ORGANIZATION_INVITATION, get_organization_invitationVariables } from "karrio/graphql";
-import { isNone } from "@/lib/helper";
-import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
+import { useSession } from "next-auth/react";
+import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
 import { Metadata } from "@/lib/types";
-import { useSession } from "next-auth/react";
+import { isNone } from "@/lib/helper";
 import Link from "next/link";
+import Head from "next/head";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -17,16 +16,11 @@ export default function Page({ metadata }: { metadata: Metadata }) {
   const { data: session } = useSession();
   const router = useRouter();
   const { token } = router.query;
-  const [retrieve, invitation] = useLazyQuery<get_organization_invitation, get_organization_invitationVariables>(GET_ORGANIZATION_INVITATION);
+  const { query: { data: { organization_invitation } = {}, ...query } } = useOrganizationInvitation(token as string);
 
   useEffect(() => {
-    if (!invitation.called && !isNone(token) && retrieve) {
-      retrieve({ variables: { guid: token as any } });
-    }
-  }, [token, retrieve, invitation.called]);
-  useEffect(() => {
-    const called = invitation.called && !invitation.loading;
-    const invite = invitation.data?.organization_invitation;
+    const called = query.isFetched;
+    const invite = organization_invitation;
 
     // If there is no active session and invitee doesn't exist, redirect to the signup page
     if (called && isNone(session) && invite && !invite?.invitee) {
@@ -43,7 +37,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
       setTimeout(() => router.push(`/?accept_invitation=${token}`), 1000);
       return;
     }
-  }, [session, invitation.data?.organization_invitation, token, router]);
+  }, [session, organization_invitation, token, router]);
 
   return (
     <>
@@ -53,18 +47,17 @@ export default function Page({ metadata }: { metadata: Metadata }) {
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered ">
 
-            {invitation.loading && <Spinner />}
+            {!query.isFetched && query.isFetching && <Spinner />}
 
-            {invitation.error &&
+            {(query.isFetched && (query.error || !organization_invitation)) &&
               <p>Error, invalid or expired organization invitation token!</p>}
 
-            {invitation.data?.organization_invitation &&
-              <p>Redirecting...</p>}
+            {organization_invitation && <p>Redirecting...</p>}
 
           </div>
         </div>
 
-        {invitation.error && <div className="has-text-centered my-4 is-size-6">
+        {query.error && <div className="has-text-centered my-4 is-size-6">
           <span>Return to <Link legacyBehavior href="/login">Sign in</Link></span>
         </div>}
 
