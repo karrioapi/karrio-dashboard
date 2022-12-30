@@ -73,7 +73,7 @@ export function formatMessage(msg: Notification['message']) {
 
 function renderError(msg: any, _: number): any {
   const error = msg.data?.errors || msg.data?.messages || msg;
-  console.log(error)
+
   if (error?.message !== undefined) {
     return error.message;
   }
@@ -92,6 +92,9 @@ function renderError(msg: any, _: number): any {
       }
       if (msg.details) {
         return <>{renderError(msg, 0)}</>;
+      }
+      if (msg.message) {
+        return <p key={index}><strong>{msg.code}:</strong> {msg.message}</p>;
       }
       return <p key={index}>{JSON.stringify(msg)}</p>;
     });
