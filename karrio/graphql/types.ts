@@ -315,7 +315,7 @@ export interface get_organization_organization {
 }
 
 export interface get_organization {
-  organization: get_organization_organization;
+  organization: get_organization_organization | null;
 }
 
 export interface get_organizationVariables {
@@ -562,7 +562,7 @@ export interface get_organization_invitation_organization_invitation {
 }
 
 export interface get_organization_invitation {
-  organization_invitation: get_organization_invitation_organization_invitation;
+  organization_invitation: get_organization_invitation_organization_invitation | null;
 }
 
 export interface get_organization_invitationVariables {
@@ -5659,7 +5659,7 @@ export interface RequestPasswordResetMutationInput {
 
 // null
 export interface ConfirmPasswordResetMutationInput {
-  uuid: string;
+  uid: string;
   token: string;
   new_password1: string;
   new_password2: string;

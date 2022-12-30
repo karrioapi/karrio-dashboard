@@ -30,7 +30,7 @@ const PasswordManagement: React.FC<{}> = () => {
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useContext(Loading);
   const [data, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
-  const [errors, setErrors] = useState<change_password_change_password_errors[]>([]);
+  const { changePassword: { error, mutateAsync } } = useUserMutation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = event.target.value;
@@ -42,12 +42,12 @@ const PasswordManagement: React.FC<{}> = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await mutation.changePassword.mutateAsync(data as ChangePasswordMutationInput);
+      await mutateAsync(data as ChangePasswordMutationInput);
 
       dispatch({ name: 'full', value: DEFAULT_VALUE });
       notify({ type: NotificationType.success, message: `Password changed successfully.` });
     } catch (error: any) {
-      setErrors(Array.isArray(error) ? error : [error]);
+      console.log(error)
     }
     setLoading(false);
   };
@@ -57,6 +57,17 @@ const PasswordManagement: React.FC<{}> = () => {
       .filter(key => !isNone(data[key]) && (data[key] || '').length > 0)
       .length !== 3;
   }
+  const renderFieldError = (field: string, errorData: any) => {
+    const validation = (errorData?.data?.errors || [])[0]?.validation || {};
+    return (<>
+      {Object.entries(validation)
+        .filter(([key, _]) => key === field)
+        .map(([_, messages]: any) => (
+          messages.map((message: string, index: number) =>
+            <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
+        ))}
+    </>);
+  }
 
   return (
     <form method="post" onSubmit={onSubmit} className="column is-7">
@@ -65,9 +76,7 @@ const PasswordManagement: React.FC<{}> = () => {
         label="Current Password" name="old_password" type="password"
         placeholder="Current Password" className="is-small" fieldClass="mt-3"
         onChange={handleChange} value={data.old_password} style={{ maxWidth: "60%" }} required>
-        {errors.filter(error => error.field === 'old_password').map(({ messages }) => (
-          messages.map((message, index) => <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
-        ))}
+        {renderFieldError("old_password", error)}
       </InputField>
 
       <hr style={{ height: "1px", maxWidth: "60%" }} />
@@ -76,18 +85,14 @@ const PasswordManagement: React.FC<{}> = () => {
         label="New Password" name="new_password1" type="password"
         placeholder="New Password" className="is-small" fieldClass="mt-3"
         onChange={handleChange} value={data.new_password1} style={{ maxWidth: "60%" }} required>
-        {errors.filter(error => error.field === 'new_password1').map(({ messages }) => (
-          messages.map((message, index) => <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
-        ))}
+        {renderFieldError("new_password1", error)}
       </InputField>
 
       <InputField
         label="Confirm New Password" name="new_password2" type="password"
         placeholder="Confirm Password" className="is-small" fieldClass="mt-3"
         onChange={handleChange} value={data.new_password2} style={{ maxWidth: "60%" }} required>
-        {errors.filter(error => error.field === 'new_password2').map(({ messages }) => (
-          messages.map((message, index) => <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
-        ))}
+        {renderFieldError("new_password2", error)}
       </InputField>
 
 

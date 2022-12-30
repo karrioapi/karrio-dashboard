@@ -125,7 +125,7 @@ export function useOrganizationInvitation(guid?: string) {
   const query = useQuery({
     queryKey: ['invitation', guid],
     queryFn: () => request<get_organization_invitation>(
-      gqlstr(GET_ORGANIZATION_INVITATION), { data: { guid }, ...headers() }
+      gqlstr(GET_ORGANIZATION_INVITATION), { variables: { guid } }
     ),
     enabled: !!guid,
   });

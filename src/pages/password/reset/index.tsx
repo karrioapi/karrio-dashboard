@@ -5,10 +5,10 @@ import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
+import { useUserMutation } from "@/context/user";
 import { Metadata } from "@/lib/types";
 import Head from "next/head";
 import Link from "next/link";
-import { useUserMutation } from "@/context/user";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -30,11 +30,10 @@ function reducer(state: Partial<ConfirmPasswordResetMutationInput>, { name, valu
 
 const Component: React.FC<{}> = () => {
   const router = useRouter();
-  const mutation = useUserMutation();
   const { uidb64, token } = router.query;
   const { loading, setLoading } = useContext(Loading);
   const [data, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
-  const [errors, setErrors] = useState<confirm_password_reset_confirm_password_reset_errors[]>([]);
+  const { confirmPasswordReset: { error, mutateAsync } } = useUserMutation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = event.target.value;
@@ -46,13 +45,24 @@ const Component: React.FC<{}> = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await mutation.confirmPasswordReset.mutateAsync(data as ConfirmPasswordResetMutationInput);
+      await mutateAsync(data as ConfirmPasswordResetMutationInput);
       router.push('/password/reset/done');
     } catch (error: any) {
-      setErrors(Array.isArray(error) ? error : [error]);
+      console.log(error)
     }
     setLoading(false);
   };
+  const renderFieldError = (check: CallableFunction, errorData: any) => {
+    const validation = (errorData?.data?.errors || [])[0]?.validation || {};
+    return (<>
+      {Object.entries(validation)
+        .filter(([key, _]) => check(key))
+        .map(([_, messages]: any) => (
+          messages.map((message: string, index: number) =>
+            <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
+        ))}
+    </>);
+  }
 
   useEffect(() => { dispatch({ name: "partial", value: { uid: uidb64, token } }); }, [uidb64, token]);
 
@@ -63,11 +73,9 @@ const Component: React.FC<{}> = () => {
           <p className="subtitle has-text-centered mb-4">New Password</p>
           <p className="has-text-centered mb-4">Enter your new email and password.</p>
 
-          {errors
-            .filter(error => !['new_password1', 'new_password2'].includes(error.field))
-            .map(({ messages }) => (
-              messages.map((message, index) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
-            ))}
+          {((error as any)?.data?.errors || []).map((_: any, index: number) => (<>
+            <p key={index} className="has-text-danger is-size-7 my-1">{_.message}</p>
+          </>))}
 
           <form method="post" onSubmit={onSubmit}>
 
@@ -75,18 +83,14 @@ const Component: React.FC<{}> = () => {
               label="Password" name="new_password1" type="password"
               placeholder="New Password" fieldClass="mt-3"
               onChange={handleChange} value={data.new_password1} required>
-              {errors.filter(error => error.field === 'new_password1').map(({ messages }) => (
-                messages.map((message, index) => <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
-              ))}
+              {renderFieldError((_: string) => _ === 'new_password1', error)}
             </InputField>
 
             <InputField
               label="Confirm Password" name="new_password2" type="password"
               placeholder="Confirm Password" fieldClass="mt-3"
               onChange={handleChange} value={data.new_password2} required>
-              {errors.filter(error => error.field === 'new_password2').map(({ messages }) => (
-                messages.map((message, index) => <p key={index} className="has-text-danger is-size-7 my-1">{message}</p>)
-              ))}
+              {renderFieldError((_: string) => _ === 'new_password2', error)}
             </InputField>
 
 
