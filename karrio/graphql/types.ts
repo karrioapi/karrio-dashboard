@@ -1274,13 +1274,221 @@ export interface get_shipmentsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: partial_shipment_update
+// GraphQL query operation: get_shipment_data
 // ====================================================
 
-export interface partial_shipment_update_partial_shipment_update_shipment_created_by {
-  email: string;
-  full_name: string;
+export interface get_shipment_data_shipment_recipient {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
 }
+
+export interface get_shipment_data_shipment_shipper {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipment_data_shipment_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipment_data_shipment_parcels_items {
+  id: string;
+  weight: number;
+  description: string | null;
+  quantity: number;
+  sku: string | null;
+  hs_code: string | null;
+  value_amount: number | null;
+  weight_unit: WeightUnitEnum | null;
+  value_currency: CurrencyCodeEnum | null;
+  origin_country: CountryCodeEnum | null;
+  metadata: any;
+  parent_id: string | null;
+}
+
+export interface get_shipment_data_shipment_parcels {
+  id: string;
+  width: number | null;
+  height: number | null;
+  length: number | null;
+  is_document: boolean | null;
+  dimension_unit: DimensionUnitEnum | null;
+  weight: number | null;
+  weight_unit: WeightUnitEnum | null;
+  packaging_type: string | null;
+  package_preset: string | null;
+  freight_class: string | null;
+  reference_number: string | null;
+  items: get_shipment_data_shipment_parcels_items[];
+}
+
+export interface get_shipment_data_shipment_customs_duty {
+  paid_by: PaidByEnum | null;
+  currency: CurrencyCodeEnum | null;
+  account_number: string | null;
+  declared_value: number | null;
+}
+
+export interface get_shipment_data_shipment_customs_commodities {
+  id: string;
+  weight: number;
+  weight_unit: WeightUnitEnum | null;
+  description: string | null;
+  quantity: number;
+  sku: string | null;
+  hs_code: string | null;
+  value_amount: number | null;
+  value_currency: CurrencyCodeEnum | null;
+  origin_country: CountryCodeEnum | null;
+  metadata: any;
+  parent_id: string | null;
+}
+
+export interface get_shipment_data_shipment_customs_duty_billing_address {
+  id: string;
+  postal_code: string | null;
+  city: string | null;
+  person_name: string | null;
+  company_name: string | null;
+  country_code: CountryCodeEnum;
+  email: string | null;
+  phone_number: string | null;
+  state_code: string | null;
+  suburb: string | null;
+  residential: boolean | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  federal_tax_id: string | null;
+  state_tax_id: string | null;
+  validate_location: boolean | null;
+}
+
+export interface get_shipment_data_shipment_customs {
+  id: string;
+  certify: boolean | null;
+  commercial_invoice: boolean | null;
+  content_type: CustomsContentTypeEnum | null;
+  content_description: string | null;
+  incoterm: IncotermCodeEnum | null;
+  invoice: string | null;
+  invoice_date: any | null;
+  signer: string | null;
+  duty: get_shipment_data_shipment_customs_duty | null;
+  options: any | null;
+  commodities: get_shipment_data_shipment_customs_commodities[];
+  duty_billing_address: get_shipment_data_shipment_customs_duty_billing_address | null;
+}
+
+export interface get_shipment_data_shipment_payment {
+  paid_by: PaidByEnum | null;
+  currency: CurrencyCodeEnum | null;
+  account_number: string | null;
+}
+
+export interface get_shipment_data_shipment_rates_extra_charges {
+  name: string | null;
+  amount: number | null;
+  currency: CurrencyCodeEnum;
+}
+
+export interface get_shipment_data_shipment_rates {
+  id: string;
+  carrier_name: string;
+  carrier_id: string;
+  currency: CurrencyCodeEnum;
+  service: string;
+  transit_days: number | null;
+  total_charge: number;
+  extra_charges: get_shipment_data_shipment_rates_extra_charges[];
+  test_mode: boolean;
+  meta: any | null;
+}
+
+export interface get_shipment_data_shipment_messages {
+  carrier_name: string | null;
+  carrier_id: string | null;
+  message: string | null;
+  code: string | null;
+  details: any | null;
+}
+
+export interface get_shipment_data_shipment {
+  id: string;
+  status: ShipmentStatusEnum;
+  recipient: get_shipment_data_shipment_recipient;
+  shipper: get_shipment_data_shipment_shipper;
+  billing_address: get_shipment_data_shipment_billing_address | null;
+  parcels: get_shipment_data_shipment_parcels[];
+  label_type: LabelTypeEnum | null;
+  service: string | null;
+  reference: string | null;
+  customs: get_shipment_data_shipment_customs | null;
+  payment: get_shipment_data_shipment_payment | null;
+  carrier_ids: string[];
+  options: any;
+  metadata: any;
+  rates: get_shipment_data_shipment_rates[];
+  messages: get_shipment_data_shipment_messages[];
+}
+
+export interface get_shipment_data {
+  shipment: get_shipment_data_shipment | null;
+}
+
+export interface get_shipment_dataVariables {
+  id: string;
+}
+
+
+/* tslint:disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: partial_shipment_update
+// ====================================================
 
 export interface partial_shipment_update_partial_shipment_update_shipment_recipient {
   id: string;
@@ -1377,20 +1585,6 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   declared_value: number | null;
 }
 
-export interface partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent {
-  id: string;
-  weight: number;
-  weight_unit: WeightUnitEnum | null;
-  description: string | null;
-  quantity: number;
-  sku: string | null;
-  hs_code: string | null;
-  value_amount: number | null;
-  value_currency: CurrencyCodeEnum | null;
-  origin_country: CountryCodeEnum | null;
-  metadata: any;
-}
-
 export interface partial_shipment_update_partial_shipment_update_shipment_customs_commodities {
   id: string;
   weight: number;
@@ -1404,7 +1598,6 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   origin_country: CountryCodeEnum | null;
   metadata: any;
   parent_id: string | null;
-  parent: partial_shipment_update_partial_shipment_update_shipment_customs_commodities_parent | null;
 }
 
 export interface partial_shipment_update_partial_shipment_update_shipment_customs_duty_billing_address {
@@ -1448,25 +1641,6 @@ export interface partial_shipment_update_partial_shipment_update_shipment_paymen
   account_number: string | null;
 }
 
-export interface partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges {
-  name: string | null;
-  amount: number | null;
-  currency: CurrencyCodeEnum;
-}
-
-export interface partial_shipment_update_partial_shipment_update_shipment_selected_rate {
-  id: string;
-  carrier_name: string;
-  carrier_id: string;
-  currency: CurrencyCodeEnum;
-  service: string;
-  transit_days: number | null;
-  total_charge: number;
-  extra_charges: partial_shipment_update_partial_shipment_update_shipment_selected_rate_extra_charges[];
-  test_mode: boolean;
-  meta: any | null;
-}
-
 export interface partial_shipment_update_partial_shipment_update_shipment_rates_extra_charges {
   name: string | null;
   amount: number | null;
@@ -1496,33 +1670,20 @@ export interface partial_shipment_update_partial_shipment_update_shipment_messag
 
 export interface partial_shipment_update_partial_shipment_update_shipment {
   id: string;
-  carrier_id: string | null;
-  carrier_name: string | null;
-  created_by: partial_shipment_update_partial_shipment_update_shipment_created_by;
   status: ShipmentStatusEnum;
   recipient: partial_shipment_update_partial_shipment_update_shipment_recipient;
   shipper: partial_shipment_update_partial_shipment_update_shipment_shipper;
   billing_address: partial_shipment_update_partial_shipment_update_shipment_billing_address | null;
   parcels: partial_shipment_update_partial_shipment_update_shipment_parcels[];
   label_type: LabelTypeEnum | null;
-  tracking_number: string | null;
-  shipment_identifier: string | null;
-  label_url: string | null;
-  invoice_url: string | null;
-  tracking_url: string | null;
-  tracker_id: string | null;
-  test_mode: boolean;
   service: string | null;
   reference: string | null;
   customs: partial_shipment_update_partial_shipment_update_shipment_customs | null;
   payment: partial_shipment_update_partial_shipment_update_shipment_payment | null;
-  selected_rate_id: string | null;
-  selected_rate: partial_shipment_update_partial_shipment_update_shipment_selected_rate | null;
   carrier_ids: string[];
-  rates: partial_shipment_update_partial_shipment_update_shipment_rates[];
   options: any;
   metadata: any;
-  meta: any | null;
+  rates: partial_shipment_update_partial_shipment_update_shipment_rates[];
   messages: partial_shipment_update_partial_shipment_update_shipment_messages[];
 }
 

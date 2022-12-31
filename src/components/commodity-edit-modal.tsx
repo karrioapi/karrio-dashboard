@@ -30,7 +30,7 @@ export const CommodityStateContext = React.createContext<CommodityStateContextTy
 
 interface CommodityEditModalComponent { }
 
-function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
+function reducer(state: any, { name, value }: { name: string, value: stateValue | number | boolean }) {
   switch (name) {
     case 'partial':
       return isNone(value) ? undefined : { ...(state || {}), ...(value as CommodityType) };
@@ -74,7 +74,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
     let name: string = target.name;
     let value: stateValue = target.type === 'checkbox' ? target.checked : target.value;
 
-    dispatch({ name, value });
+    dispatch({ name, value: target.type === 'number' ? parseFloat(value as string) : value });
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

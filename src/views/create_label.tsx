@@ -299,7 +299,7 @@ export default function CreateLabelPage(pageProps: any) {
                                   <input
                                     min={1}
                                     type="number"
-                                    defaultValue={item.quantity as number}
+                                    value={item.quantity as number}
                                     onChange={e => {
                                       mutation.updateItem(pkg_index, item_index, pkg.id, item.id)({
                                         quantity: parseInt(e.target.value)
@@ -312,11 +312,11 @@ export default function CreateLabelPage(pageProps: any) {
                                     } : {})}
                                   />
                                 </p>
-                                <p className="control">
+                                {getParent(item.parent_id) && <p className="control">
                                   <a className="button is-static is-small">
                                     of {getParent(item.parent_id)?.unfulfilled_quantity || item.quantity}
                                   </a>
-                                </p>
+                                </p>}
                               </div>
                             </div>
                             <CommodityStateContext.Consumer>{({ editCommodity }) => (
@@ -411,7 +411,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <CheckBoxField name="signature_confirmation"
                   fieldClass="column mb-0 is-12 px-0 py-2"
                   defaultChecked={shipment.options?.signature_confirmation}
-                  onChange={e => onChange({ options: { ...shipment.options, signature_confirmation: e.target.checked } })}
+                  onChange={e => onChange({ options: { ...shipment.options, signature_confirmation: e.target.checked || null } })}
                 >
                   <span>Add signature confirmation</span>
                 </CheckBoxField>
@@ -796,11 +796,23 @@ export default function CreateLabelPage(pageProps: any) {
 
                 <ButtonField
                   onClick={() => mutation.buyLabel(selected_rate as any)}
-                  fieldClass="has-text-centered p-3"
-                  className={`is-success`}
+                  fieldClass="has-text-centered py-1 px-6 m-0"
+                  className="is-success is-fullwidth"
                   disabled={(shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0 || query.isFetching}>
                   <span className="px-6">Buy shipping label</span>
                 </ButtonField>
+
+                <div className="py-1"></div>
+
+                <ButtonField
+                  onClick={() => mutation.saveDraft()}
+                  fieldClass="has-text-centered py-1 px-6 m-0"
+                  className="is-default is-fullwidth"
+                  disabled={(!!shipment.id && shipment.id !== 'new') || query.isFetching}>
+                  <span className="px-6">Save draft</span>
+                </ButtonField>
+
+                <div className="py-2"></div>
 
               </div>
 

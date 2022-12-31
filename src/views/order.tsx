@@ -124,10 +124,12 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                 LINE ITEMS ({order?.line_items.reduce((_, { quantity }) => _ + (quantity || 1), 0)})
               </p>
 
-              {order?.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
-                <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                <CommodityDescription commodity={item} />
-              </React.Fragment>)}
+              <div className="menu-list py-2" style={{ maxHeight: '40em', overflow: 'auto' }}>
+                {order?.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
+                  <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                  <CommodityDescription commodity={item} />
+                </React.Fragment>)}
+              </div>
             </div>
           </div>
 
@@ -227,31 +229,32 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         {logs.isFetched && (logs.data?.logs.edges || []).length == 0 && <div>No logs</div>}
 
-        {logs.isFetched && (logs.data?.logs.edges || []).length > 0 && <div className="table-container">
-          <table className="related-item-table table is-hoverable is-fullwidth">
-            <tbody>
-              {(logs.data?.logs.edges || []).map(({ node: log }) => (
-                <tr key={log.id} className="items is-clickable">
-                  <td className="status is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
-                      <StatusCode code={log.status_code as number} />
-                    </AppLink>
-                  </td>
-                  <td className="description is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
-                      {`${log.method} ${log.path}`}
-                    </AppLink>
-                  </td>
-                  <td className="date is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTime(log.requested_at)}</span>
-                    </AppLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>}
+        {logs.isFetched && (logs.data?.logs.edges || []).length > 0 &&
+          <div className="table-container py-2" style={{ maxHeight: '20em', overflow: 'auto' }}>
+            <table className="related-item-table table is-hoverable is-fullwidth">
+              <tbody>
+                {(logs.data?.logs.edges || []).map(({ node: log }) => (
+                  <tr key={log.id} className="items is-clickable">
+                    <td className="status is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
+                        <StatusCode code={log.status_code as number} />
+                      </AppLink>
+                    </td>
+                    <td className="description is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                        {`${log.method} ${log.path}`}
+                      </AppLink>
+                    </td>
+                    <td className="date is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                        <span>{formatDateTime(log.requested_at)}</span>
+                      </AppLink>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
 
         <div className="my-6 pt-1"></div>
 
@@ -262,26 +265,27 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         {events.isFetched && (events.data?.events.edges || []).length == 0 && <div>No events</div>}
 
-        {events.isFetched && (events.data?.events.edges || []).length > 0 && <div className="table-container">
-          <table className="related-item-table table is-hoverable is-fullwidth">
-            <tbody>
-              {(events.data?.events.edges || []).map(({ node: event }) => (
-                <tr key={event.id} className="items is-clickable">
-                  <td className="description is-vcentered p-0">
-                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
-                      {`${event.type}`}
-                    </AppLink>
-                  </td>
-                  <td className="date is-vcentered p-0">
-                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTime(event.created_at)}</span>
-                    </AppLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>}
+        {events.isFetched && (events.data?.events.edges || []).length > 0 &&
+          <div className="table-container py-2" style={{ maxHeight: '20em', overflow: 'auto' }}>
+            <table className="related-item-table table is-hoverable is-fullwidth">
+              <tbody>
+                {(events.data?.events.edges || []).map(({ node: event }) => (
+                  <tr key={event.id} className="items is-clickable">
+                    <td className="description is-vcentered p-0">
+                      <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                        {`${event.type}`}
+                      </AppLink>
+                    </td>
+                    <td className="date is-vcentered p-0">
+                      <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                        <span>{formatDateTime(event.created_at)}</span>
+                      </AppLink>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
 
       </>}
 

@@ -489,10 +489,12 @@ export async function request<T>(query: string, args?: requestArgs): Promise<T> 
 }
 
 export function errorToMessages(error: ErrorType | Error | any) {
+  const data = error.data?.message || error.message;
+
   return (
     error.data?.errors ||
     error.data?.messages ||
-    [error.data?.message || error.message]
+    (data ? [data] : [error])
   );
 }
 

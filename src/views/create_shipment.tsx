@@ -1,12 +1,12 @@
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
-import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
 import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
+import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
 import CommodityDescription from '@/components/descriptions/commodity-description';
-import MessagesDescription from '@/components/descriptions/messages-description';
 import { LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum } from 'karrio/graphql';
+import MessagesDescription from '@/components/descriptions/messages-description';
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
@@ -22,6 +22,7 @@ import { useLabelDataMutation } from '@/context/label-data';
 import InputField from '@/components/generic/input-field';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import ModalProvider from '@/components/generic/modal';
+import CarrierImage from '@/components/carrier-image';
 import { useNotifier } from '@/components/notifier';
 import React, { useEffect, useState } from 'react';
 import { bundleContexts } from '@/context/utils';
@@ -31,7 +32,6 @@ import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
 import moment from 'moment';
-import CarrierImage from '@/components/carrier-image';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -843,11 +843,23 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 <ButtonField
                   onClick={() => mutation.buyLabel(selected_rate as any)}
-                  fieldClass="has-text-centered mt-3 p-3"
-                  className={`is-success`}
+                  fieldClass="has-text-centered py-1 px-6 m-0"
+                  className="is-success is-fullwidth"
                   disabled={(shipment.rates || []).filter(r => r.id === selected_rate?.id).length === 0 || loading}>
                   <span className="px-6">Buy shipping label</span>
                 </ButtonField>
+
+                <div className="py-1"></div>
+
+                <ButtonField
+                  onClick={() => mutation.saveDraft()}
+                  className="is-default is-fullwidth"
+                  fieldClass="has-text-centered py-1 px-6 m-0"
+                  disabled={(!!shipment.id && shipment.id !== 'new') || query.isFetching}>
+                  <span className="px-6">Save draft</span>
+                </ButtonField>
+
+                <div className="py-2"></div>
 
               </div>
 

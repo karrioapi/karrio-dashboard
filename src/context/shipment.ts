@@ -1,4 +1,4 @@
-import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT, ChangeShipmentStatusMutationInput, CHANGE_SHIPMENT_STATUS, change_shipment_status } from "@karrio/graphql";
+import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT, ChangeShipmentStatusMutationInput, CHANGE_SHIPMENT_STATUS, change_shipment_status, DISCARD_PARCEL } from "@karrio/graphql";
 import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RestContext } from "@/client/context";
@@ -71,7 +71,7 @@ export function useShipment(id: string) {
   const query = useQuery({
     queryKey: ['shipments', id],
     queryFn: () => request<get_shipment>(gqlstr(GET_SHIPMENT), { variables: { id }, ...headers() }),
-    enabled: !!id,
+    enabled: !!id && id !== 'new',
     onError,
   });
 
@@ -92,8 +92,9 @@ export function useShipmentMutation(id?: string) {
   // Mutations
   // REST requests
   const fetchRates = useMutation(
-    (data: ShipmentType) => handleFailure(
-      karrio!.proxy.fetchRates({ rateRequest: (data as any) }).then(({ data }) => data)
+    ({ id, ...data }: ShipmentType) => handleFailure((id !== undefined && id !== 'new')
+      ? karrio!.shipments.rates({ id, shipmentRateData: data as any }).then(({ data: { rates, messages } }) => ({ rates, messages }))
+      : karrio!.proxy.fetchRates({ rateRequest: (data as any) }).then(({ data: { rates, messages } }) => ({ rates, messages }))
     ),
     { onSuccess: invalidateCache, onError }
   );
@@ -107,6 +108,12 @@ export function useShipmentMutation(id?: string) {
   const voidLabel = useMutation(
     ({ id }: ShipmentType) => handleFailure(
       karrio!.shipments.cancel({ id }).then(({ data }) => data)
+    ),
+    { onSuccess: invalidateCache, onError }
+  );
+  const createShipment = useMutation(
+    (data: ShipmentType) => handleFailure(
+      karrio!.shipments.create({ shipmentData: (data as any) }).then(({ data }) => data)
     ),
     { onSuccess: invalidateCache, onError }
   );
@@ -132,7 +139,7 @@ export function useShipmentMutation(id?: string) {
   );
   const discardParcel = useMutation(
     (data: { id: string }) => request<discard_parcel>(
-      gqlstr(DELETE_TEMPLATE), { data, ...headers() }
+      gqlstr(DISCARD_PARCEL), { data, ...headers() }
     ),
     { onSuccess: invalidateCache, onError }
   );
@@ -148,6 +155,7 @@ export function useShipmentMutation(id?: string) {
     voidLabel,
     fetchRates,
     changeStatus,
+    createShipment,
     updateShipment,
     discardCommodity,
     discardCustoms,
