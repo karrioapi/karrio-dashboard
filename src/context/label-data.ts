@@ -1,12 +1,12 @@
-import { errorToMessages, getShipmentCommodities, gqlstr, isNone, isNoneOrEmpty, onError, request, useLocation, useSessionHeader } from "@/lib/helper";
-import { GET_SHIPMENT, get_shipment, get_shipment_shipment, LabelTypeEnum, PaidByEnum, PartialShipmentMutationInput } from "@karrio/graphql";
 import { AddressType, Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from "@/lib/types";
+import { errorToMessages, getShipmentCommodities, gqlstr, isEqual, isNone, isNoneOrEmpty, onError, request, useLocation, useSessionHeader } from "@/lib/helper";
+import { get_shipment_data, GET_SHIPMENT_DATA, LabelTypeEnum, PaidByEnum } from "@karrio/graphql";
 import { DEFAULT_CUSTOMS_CONTENT } from "@/components/form-parts/customs-info-form";
 import { useShipmentMutation } from "@/context/shipment";
 import { useNotifier } from "@/components/notifier";
-import { useQuery } from "@tanstack/react-query";
-import { useLoader } from "@/components/loader";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAppMode } from "@/context/app-mode";
+import { useLoader } from "@/components/loader";
 import moment from "moment";
 import React from "react";
 
@@ -19,36 +19,55 @@ const DEFAULT_SHIPMENT_DATA = {
   label_type: LabelTypeEnum.PDF
 } as ShipmentType;
 
+type ChangeType = {
+  deleted?: boolean,
+  created?: boolean,
+  manuallyUpdated?: boolean,
+};
+
+
+function reducer(state: any, { name, value }: { name: string, value: Partial<ShipmentType> | ShipmentType }): ShipmentType {
+  switch (name) {
+    case "full":
+      return { ...(value as ShipmentType) };
+    default:
+      let newState = { ...state, ...(value as Partial<ShipmentType>) } as ShipmentType;
+      Object.entries(value).forEach(([key, val]) => {
+        if (val === undefined) delete newState[key as keyof ShipmentType];
+      });
+      return { ...state, ...(newState as ShipmentType) };
+  }
+}
+
 
 export function useLabelData(id: string) {
   const headers = useSessionHeader();
-  const [shipment, setShipment] = React.useState<get_shipment_shipment>(DEFAULT_SHIPMENT_DATA);
+  const mutation = useShipmentMutation();
+  const [shipment, dispatch] = React.useReducer(reducer, DEFAULT_SHIPMENT_DATA);
 
   // Queries
-  const query = useQuery(['shipments', id], {
-    queryFn: () => {
-      if (id === 'new') return { shipment };
-      return request<get_shipment>(gqlstr(GET_SHIPMENT), { variables: { id }, ...headers() })
-        .then(_ => { updateLabelData(_?.shipment as any); return _; })
-    },
-    onError
+  const query = useQuery({
+    queryKey: ['label', id],
+    queryFn: () => (
+      id === 'new'
+        ? { shipment }
+        : request<get_shipment_data>(gqlstr(GET_SHIPMENT_DATA), { variables: { id }, ...headers() })
+    ),
+    enabled: !!id,
   });
   const updateLabelData = (data: Partial<ShipmentType> = {}) => {
-    return new Promise<ShipmentType>(resolve => {
-      setTimeout(() => {
-        let newState = { ...shipment, ...data } as ShipmentType;
-        Object.entries(data).forEach(([key, val]) => {
-          if (val === undefined) delete newState[key as keyof ShipmentType];
-        });
-        setShipment(newState);
-
-        resolve(newState);
-      })
-    });
+    dispatch({ name: "partial", value: data });
   };
+
+  React.useEffect(() => {
+    if (id !== 'new' && isEqual(shipment, DEFAULT_SHIPMENT_DATA) && !isNone(query.data?.shipment)) {
+      dispatch({ name: "full", value: query!.data!.shipment as ShipmentType })
+    }
+  }, [query.data?.shipment])
 
   return {
     query,
+    mutation,
     updateLabelData,
     shipment: shipment as ShipmentType,
   };
@@ -57,12 +76,11 @@ export function useLabelData(id: string) {
 
 export function useLabelDataMutation(id: string) {
   const loader = useLoader();
+  const router = useLocation();
   const notifier = useNotifier();
   const { basePath } = useAppMode();
-  const mutation = useShipmentMutation();
-  const { addUrlParam, ...router } = useLocation();
+  const { mutation, ...state } = useLabelData(id);
   const [updateRate, setUpdateRate] = React.useState<boolean>(false);
-  const state = useLabelData(id);
 
   // state checks
   const isDraft = (id?: string) => isNoneOrEmpty(id) || id === 'new';
@@ -167,127 +185,133 @@ export function useLabelDataMutation(id: string) {
   };
 
   // updates
-  const updateShipment = async ({ id, ...changes }: Partial<ShipmentType>) => {
+  const updateShipment = async (changes: Partial<ShipmentType>, change: ChangeType = { manuallyUpdated: false }) => {
     if (shouldFetchRates(changes as any)) { setUpdateRate(true); }
     changes = { ...syncOptionsChanges(changes) };
     changes = { ...syncCustomsChanges(changes) };
 
-    if (isDraft(id)) {
-      return await state.updateLabelData(changes);
-    } else {
-      return await mutation.updateShipment.mutateAsync(
-        { id: state.shipment.id, ...changes } as PartialShipmentMutationInput
-      );
+    if (
+      // always update local state if it is a new draft
+      isDraft(state.shipment.id) ||
+      // only update local state first if it is not a draft and no new object is created or deleted.
+      (!isDraft(state.shipment.id) && !change.created && !change.deleted && !change.manuallyUpdated)
+    ) {
+      console.log("local update", change)
+      state.updateLabelData({ ...state.shipment, ...changes });
+    }
+
+    // if it is not a draft and hasn't been manually updated already
+    if (!isDraft(state.shipment.id) && !change.manuallyUpdated) {
+      try {
+        const { status, rates, messages, service, carrier_ids, ...data } = changes;
+        if (Object.keys(data).length === 0) return; // abort if no data changes
+
+        console.log("server state update", change)
+        await mutation.updateShipment.mutateAsync({ id: state.shipment.id, ...data } as any)
+          .then(({ partial_shipment_update: { shipment } }) => {
+            if ((change.created || change.deleted) && shipment) {
+              const { messages, rates, ...value } = shipment;
+              state.updateLabelData(value as any);
+            }
+          });
+      } catch (error: any) {
+        updateShipment({ messages: errorToMessages(error) });
+      }
     }
   };
   const addParcel = async (data: ParcelType) => {
-    if (isDraft(state.shipment.id)) {
-      const update = { ...state.shipment, parcels: [...state.shipment.parcels, data] };
-      await updateShipment(update);
-    } else {
-      const update = { id: state.shipment.id, parcels: [...state.shipment.parcels, data] };
-      await mutation.updateShipment.mutateAsync(update as any);
-    }
+    const update = { parcels: [...state.shipment.parcels, data] };
+    updateShipment(update, { created: true });
   };
-  const updateParcel = (parcel_index: number, parcel_id?: string) => async ({ id, ...data }: ParcelType) => {
+  const updateParcel = (parcel_index: number, parcel_id?: string) => async (data: ParcelType, change?: ChangeType) => {
     if (parcelHasRateUpdateChanges(state.shipment.parcels[parcel_index], data)) {
       setUpdateRate(true);
     }
 
-    if (isDraft(state.shipment.id)) {
-      const update = {
-        ...state.shipment, parcels: state.shipment.parcels.map(
-          (parcel, index) => index === parcel_index ? data : parcel
-        )
-      } as ShipmentType;
-      updateShipment(update);
-    } else {
-      const update = { id: state.shipment.id, parcels: [{ id: parcel_id || id, ...data }] };
-      await mutation.updateShipment.mutateAsync(update as any);
-    }
+    const update = {
+      parcels: state.shipment.parcels.map((parcel, index) => (
+        (parcel.id === parcel_id || index === parcel_index) ? data : parcel
+      ))
+    };
+    updateShipment(update as any, change);
   };
   const addItems = (parcel_index: number, parcel_id?: string) => async (items: CommodityType[]) => {
-    if (isDraft(state.shipment.id)) {
-      const ts = Date.now();
-      const indexes = new Set((state.shipment.parcels[parcel_index].items || []).map(
-        (item, index) => item.parent_id || item.id || item.sku || item.hs_code || `${index}`)
-      );
-      const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
-        (acc, item, index) => ({ ...acc, [item.parent_id || item.id || item.sku || item.hs_code || `${ts}${index}`]: item }), {}
-      )
+    const ts = Date.now();
+    const parcel = (
+      state.shipment.parcels.find(({ id }) => id === parcel_id) || state.shipment.parcels[parcel_index]
+    );
+    const indexes = new Set((state.shipment.parcels[parcel_index].items || []).map(
+      (item, index) => item.parent_id || item.id || item.sku || item.hs_code || `${index}`)
+    );
+    const item_collection: Collection<CommodityType & { quantity: number }> = items.reduce(
+      (acc, item, index) => ({ ...acc, [item.parent_id || item.id || item.sku || item.hs_code || `${ts}${index}`]: item }), {}
+    )
+    const update = {
+      ...parcel, items: [
+        ...(parcel.items || []).map((item, index) => {
+          const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
+          return ((_ref && Object.keys(item_collection).includes(_ref))
+            ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
+            : item
+          )
+        }),
+        ...items.filter((item, index) => !indexes.has(item.parent_id || item.sku || item.hs_code || `${ts}${index}`))
+      ]
+    };
 
-      updateParcel(parcel_index)({
-        ...state.shipment.parcels[parcel_index],
-        items: [
-          ...(state.shipment.parcels[parcel_index].items || []).map((item, index) => {
-            const _ref = item.parent_id || item.sku || item.hs_code || `${index}`;
-            return ((_ref && Object.keys(item_collection).includes(_ref))
-              ? { ...item, quantity: (item.quantity || 0) + item_collection[_ref].quantity }
-              : item
-            )
-          }),
-          ...items.filter((item, index) => !indexes.has(item.parent_id || item.sku || item.hs_code || `${ts}${index}`))
-        ]
-      });
-    } else {
-      await updateParcel(parcel_index, parcel_id)({ items } as ParcelType);
-    }
+    updateParcel(parcel_index, parcel_id)(update, { created: true });
   };
   const updateItem = (parcel_index: number, item_index: number, parcel_id?: string, item_id?: string) =>
     async ({ id, ...data }: CommodityType) => {
-      if (isDraft(state.shipment.id)) {
-        updateParcel(parcel_index)({
-          ...state.shipment.parcels[parcel_index],
-          items: state.shipment.parcels[parcel_index].items.map(
-            (item, index) => (index !== item_index ? item : { ...item, ...data })
-          )
-        });
-      } else {
-        await updateParcel(parcel_index, parcel_id)({
-          items: [{ id: item_id || id, ...data }]
-        } as ParcelType);
-      }
+      const parcel = (
+        state.shipment.parcels.find(({ id }) => id === parcel_id) || state.shipment.parcels[parcel_index]
+      );
+      const update = {
+        ...parcel,
+        items: parcel.items.map(
+          (item, index) => (index !== item_index ? item : { ...item, ...data })
+        )
+      };
+
+      updateParcel(parcel_index, parcel_id)(update);
     };
   const removeParcel = (parcel_index: number, parcel_id?: string) => async () => {
-    if (isDraft(state.shipment.id)) {
-      const update = {
-        ...state.shipment, parcels: state.shipment.parcels.filter(
-          (_, index) => index !== parcel_index
-        )
-      } as ShipmentType;
-      updateShipment(update);
-    } else {
+    const update = {
+      parcels: state.shipment.parcels.filter((_, index) => index !== parcel_index)
+    };
+
+    if (!isDraft(state.shipment.id) && !!parcel_id) {
       await mutation.discardParcel.mutateAsync({ id: parcel_id as string });
     }
+
+    updateShipment(update, { deleted: true });
     setUpdateRate(true);
   };
   const removeItem = (parcel_index: number, item_index: number, item_id?: string) => async () => {
-    if (isDraft(state.shipment.id)) {
-      updateParcel(parcel_index)({
-        ...state.shipment.parcels[parcel_index],
-        items: state.shipment.parcels[parcel_index].items.filter(
-          (_, index) => index !== item_index
-        )
-      } as ParcelType);
-    } else {
+    const parcel = state.shipment.parcels[parcel_index];
+    const update = {
+      ...parcel,
+      items: parcel.items.filter((_, index) => index !== item_index)
+    };
+
+    if (!isDraft(state.shipment.id) && !!item_id) {
       await mutation.discardCommodity.mutateAsync({ id: item_id as string });
     }
+
+    updateParcel(parcel_index)(update as ParcelType, { deleted: true });
   };
   const updateCustoms = (customs_id?: string) => async (data: CustomsType | null) => {
-    if (isDraft(state.shipment.id)) {
-      const update = { ...state.shipment, customs: data } as ShipmentType;
-      updateShipment(update);
-    } else if (data === null) {
+    if (!isDraft(state.shipment.id) && !!customs_id && data === null) {
       await mutation.discardCustoms.mutateAsync({ id: customs_id as string });
-    } else {
-      const update = { id: state.shipment.id, customs: { ...data, id: customs_id || data.id } };
-      await mutation.updateShipment.mutateAsync(update as any);
     }
+
+    updateShipment({ customs: data });
   };
 
   // requests
   const fetchRates = async () => {
     const { messages, rates, ...data } = state.shipment;
+
     try {
       loader.setLoading(true);
       const { rates, messages } = await mutation.fetchRates.mutateAsync(data as ShipmentType);
@@ -304,16 +328,34 @@ export function useLabelDataMutation(id: string) {
         ? { service: rate.service, carrier_ids: [rate.carrier_id] }
         : { selected_rate_id: rate.id }
     );
+
     try {
       loader.setLoading(true);
-      const { id } = await mutation.buyLabel.mutateAsync({ ...data, ...selection } as ShipmentType);
+      const { id } = await mutation.buyLabel.mutateAsync({ ...data, ...selection } as any);
       notifier.notify({ type: NotificationType.success, message: 'Label successfully purchased!' });
       router.push(`${basePath}/shipments/${id}`);
     } catch (error: any) {
-      updateShipment({ messages: errorToMessages(error) } as Partial<ShipmentType>);
+      updateShipment({ messages: errorToMessages(error) }, { manuallyUpdated: true });
     } finally {
       loader.setLoading(false);
     }
+  };
+  const saveDraft = async () => {
+    const { ...data } = state.shipment;
+
+    try {
+      loader.setLoading(true);
+      const { id } = (
+        isDraft(state.shipment.id)
+          ? await mutation.createShipment.mutateAsync(data as ShipmentType)
+          : state.shipment
+      );
+      notifier.notify({ type: NotificationType.success, message: 'Draft successfully saved!' });
+      router.push(`${basePath}/create_label?shipment_id=${id}`);
+    } catch (error: any) {
+      updateShipment({ messages: errorToMessages(error) } as Partial<ShipmentType>);
+    }
+    loader.setLoading(false);
   };
 
   React.useEffect(() => {
@@ -325,15 +367,16 @@ export function useLabelDataMutation(id: string) {
 
   return {
     state,
-    updateShipment,
-    addParcel,
     addItems,
-    updateParcel,
+    addParcel,
+    buyLabel,
+    fetchRates,
     updateItem,
+    updateParcel,
+    updateShipment,
+    updateCustoms,
     removeParcel,
     removeItem,
-    updateCustoms,
-    fetchRates,
-    buyLabel,
+    saveDraft,
   };
 }

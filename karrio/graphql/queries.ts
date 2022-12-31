@@ -844,16 +844,184 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
 }
 `;
 
+export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
+  shipment(id: $id) {
+    id
+    status
+    recipient {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    shipper {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    billing_address {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    parcels {
+      id
+      width
+      height
+      length
+      is_document
+      dimension_unit
+      weight
+      weight_unit
+      packaging_type
+      package_preset
+      freight_class
+      reference_number
+      items {
+        id
+        weight
+        description
+        quantity
+        sku
+        hs_code
+        value_amount
+        weight_unit
+        value_currency
+        origin_country
+        metadata
+        parent_id
+      }
+    }
+    label_type
+    service
+    reference
+    customs {
+      id
+      certify
+      commercial_invoice
+      content_type
+      content_description
+      incoterm
+      invoice
+      invoice_date
+      signer
+      duty {
+        paid_by
+        currency
+        account_number
+        declared_value
+      }
+      options
+      commodities {
+        id
+        weight
+        weight_unit
+        description
+        quantity
+        sku
+        hs_code
+        value_amount
+        value_currency
+        origin_country
+        metadata
+        parent_id
+      }
+      duty_billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
+    }
+    payment {
+      paid_by
+      currency
+      account_number
+    }
+    carrier_ids
+    options
+    metadata
+    rates {
+      id
+      carrier_name
+      carrier_id
+      currency
+      service
+      transit_days
+      total_charge
+      extra_charges {
+        name
+        amount
+        currency
+      }
+      test_mode
+      meta
+    }
+    messages {
+      carrier_name
+      carrier_id
+      message
+      code
+      details
+    }
+  }
+}
+`;
+
 export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($data: PartialShipmentMutationInput!) {
   partial_shipment_update(input: $data) {
     shipment {
       id
-      carrier_id
-      carrier_name
-      created_by {
-        email
-        full_name
-      }
       status
       recipient {
         id
@@ -938,13 +1106,6 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         }
       }
       label_type
-      tracking_number
-      shipment_identifier
-      label_url
-      invoice_url
-      tracking_url
-      tracker_id
-      test_mode
       service
       reference
       customs {
@@ -977,19 +1138,6 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           origin_country
           metadata
           parent_id
-          parent {
-            id
-            weight
-            weight_unit
-            description
-            quantity
-            sku
-            hs_code
-            value_amount
-            value_currency
-            origin_country
-            metadata
-          }
         }
         duty_billing_address {
           id
@@ -1015,24 +1163,9 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         currency
         account_number
       }
-      selected_rate_id
-      selected_rate {
-        id
-        carrier_name
-        carrier_id
-        currency
-        service
-        transit_days
-        total_charge
-        extra_charges {
-          name
-          amount
-          currency
-        }
-        test_mode
-        meta
-      }
       carrier_ids
+      options
+      metadata
       rates {
         id
         carrier_name
@@ -1049,9 +1182,6 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         test_mode
         meta
       }
-      options
-      metadata
-      meta
       messages {
         carrier_name
         carrier_id

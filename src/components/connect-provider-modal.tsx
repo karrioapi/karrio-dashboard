@@ -56,7 +56,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   const [carrier_name, setCarrierName] = useState<CarrierNameType>(NoneEnum.none);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
 
   const editConnection = (operation: OperationType = {}): void => {
@@ -80,7 +79,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
       setCarrierName(NoneEnum.none);
     }
     setKey(`connection-${Date.now()}`);
-    setIsDisabled(true);
     setIsActive(false);
     removeUrlParam('modal');
   };
