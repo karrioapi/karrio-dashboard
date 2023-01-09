@@ -1,8 +1,8 @@
+import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, OrderType, ShipmentType } from '@/lib/types';
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
+import { get_orders_orders_edges, LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
-import { LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
@@ -11,6 +11,7 @@ import MessagesDescription from '@/components/descriptions/messages-description'
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
+import CommoditySummary from '@/components/descriptions/commodity-summary';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
@@ -49,7 +50,7 @@ export default function CreateLabelPage(pageProps: any) {
     const { query: templates } = useDefaultTemplates();
     const { shipment_id = 'new' } = router.query as { shipment_id: string };
     const { state: { shipment, query }, ...mutation } = useLabelDataMutation(shipment_id);
-    const { query: orders } = useOrders({ first: 100, status: ['unfulfilled', 'partial'] as any });
+    const { query: orders } = useOrders({ first: 10, status: ['unfulfilled', 'partial'] as any });
     const [key, setKey] = useState<string>(`${shipment_id}-${Date.now()}`);
     const [ready, setReady] = useState<boolean>(false);
     const [selected_rate, setSelectedRate] = useState<ShipmentType['rates'][0] | undefined>(
@@ -83,6 +84,30 @@ export default function CreateLabelPage(pageProps: any) {
       return (orders.data?.orders.edges || [])
         .find(({ node: order }) => order.line_items.find((item) => item.id === item_id))
         ?.node;
+    };
+    const getLinkedOrders = (orderList?: get_orders_orders_edges[], shipment?: ShipmentType) => {
+      if (shipment && orderList) {
+        const parents = Array.from(new Set(
+          getShipmentCommodities(shipment)
+            .filter(({ parent_id }) => !!parent_id)
+            .map(({ parent_id }) => parent_id)
+        ));
+        return (
+          (orderList || [])
+            .map(({ node }) => node)
+            .filter(({ line_items = [] }) => line_items.filter(({ id }) => parents.includes(id)).length > 0)
+        ) as OrderType[];
+      }
+
+      return []
+    }
+    const isPackedItem = (cdt: CommodityType, shipment: ShipmentType) => {
+      const item = getShipmentCommodities(shipment).find(item => (
+        (!!cdt.parent_id && cdt.parent_id === item.parent_id)
+        || (!!cdt.hs_code && cdt.hs_code === cdt.hs_code)
+        || (!!cdt.sku && cdt.sku === item.sku)
+      ));
+      return !!item;
     };
     const getAvailableQuantity = (shipment: ShipmentType, item: CommodityType, item_index: number) => {
       const parent_quantity = getParent(item.parent_id)?.unfulfilled_quantity || 0;
@@ -154,6 +179,7 @@ export default function CreateLabelPage(pageProps: any) {
 
         {!ready && <Spinner />}
 
+        {/* Shipment details section */}
         {ready && <div className="columns pb-6 m-0">
           <div className="column px-0" style={{ minHeight: '850px' }}>
 
@@ -301,7 +327,7 @@ export default function CreateLabelPage(pageProps: any) {
                                     type="number"
                                     value={item.quantity as number}
                                     onChange={e => {
-                                      mutation.updateItem(pkg_index, item_index, pkg.id, item.id)({
+                                      mutation.updateItem(pkg_index, item_index, pkg.id)({
                                         quantity: parseInt(e.target.value)
                                       } as CommodityType)
                                     }}
@@ -324,7 +350,7 @@ export default function CreateLabelPage(pageProps: any) {
                                 disabled={query.isFetching || !isNone(item.parent_id)}
                                 onClick={() => editCommodity({
                                   commodity: item,
-                                  onSubmit: _ => mutation.updateItem(pkg_index, item_index, pkg.id, item.id)(_)
+                                  onSubmit: _ => mutation.updateItem(pkg_index, item_index, pkg.id)(_)
                                 })}>
                                 <span className="icon is-small"><i className="fas fa-pen"></i></span>
                               </button>
@@ -356,7 +382,7 @@ export default function CreateLabelPage(pageProps: any) {
                         </button>
                       )}</CommodityStateContext.Consumer>
                       {ORDERS_MANAGEMENT && <LineItemSelector
-                        title='Add order items'
+                        title='Add items'
                         shipment={shipment}
                         onChange={_ => mutation.addItems(pkg_index, pkg.id)(_ as any)}
                       />}
@@ -420,7 +446,7 @@ export default function CreateLabelPage(pageProps: any) {
                 {/* insurance */}
                 <CheckBoxField name="addInsurance"
                   fieldClass="column mb-0 is-12 px-0 py-2"
-                  defaultChecked={!isNone(shipment.options?.insurance)}
+                  defaultChecked={!isNoneOrEmpty(shipment.options?.insurance)}
                   onChange={e => onChange({ options: { ...shipment.options, insurance: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add insurance coverage</span>
@@ -455,7 +481,7 @@ export default function CreateLabelPage(pageProps: any) {
                 {/* Cash on delivery */}
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
-                  defaultChecked={!isNone(shipment.options?.cash_on_delivery)}
+                  defaultChecked={!isNoneOrEmpty(shipment.options?.cash_on_delivery)}
                   onChange={e => onChange({ options: { ...shipment.options, cash_on_delivery: e.target.checked === true ? "" : null } })}
                 >
                   <span>Collect on delivery</span>
@@ -484,11 +510,10 @@ export default function CreateLabelPage(pageProps: any) {
 
                 </div>
 
-
                 {/* Declared value */}
                 <CheckBoxField name="addCOD"
                   fieldClass="column mb-0 is-12 px-0 py-2"
-                  defaultChecked={!isNone(shipment.options?.declared_value)}
+                  defaultChecked={!isNoneOrEmpty(shipment.options?.declared_value)}
                   onChange={e => onChange({ options: { ...shipment.options, declared_value: e.target.checked === true ? "" : null } })}
                 >
                   <span>Add package value</span>
@@ -662,12 +687,51 @@ export default function CreateLabelPage(pageProps: any) {
 
                   {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "customs-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                    <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                    <div className="is-flex is-justify-content-space-between is-vcentered">
+                      <CommodityDescription className="is-flex-grow-1 pr-2" commodity={commodity} prefix={`${index + 1} - `} />
+                      <div>
+                        <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                          <button type="button" className="button is-small is-white"
+                            disabled={isPackedItem(commodity, shipment) || query.isFetching}
+                            onClick={() => editCommodity({
+                              commodity,
+                              onSubmit: _ => mutation.updateCommodity(index, shipment.customs?.id)(_)
+                            })}>
+                            <span className="icon is-small"><i className="fas fa-pen"></i></span>
+                          </button>
+                        )}</CommodityStateContext.Consumer>
+                        <button type="button" className="button is-small is-white"
+                          disabled={query.isFetching || shipment.customs!.commodities.length === 1}
+                          onClick={() => mutation.removeCommodity(index, shipment.customs?.id)(commodity.id)}>
+                          <span className="icon is-small"><i className="fas fa-times"></i></span>
+                        </button>
+                      </div>
+                    </div>
                   </React.Fragment>)}
 
                   {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
-                    You need to specify customs commodities.
+                    You need provide commodity items for customs purpose. (required)
                   </div>}
+
+                  <div className="is-flex is-justify-content-space-between mt-4">
+                    <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                      <button type="button" className="button is-small is-info is-inverted p-2"
+                        disabled={query.isFetching}
+                        onClick={() => editCommodity({
+                          onSubmit: _ => mutation.addCommodities([_] as any)
+                        })}>
+                        <span className="icon is-small">
+                          <i className="fas fa-plus"></i>
+                        </span>
+                        <span>add commodity</span>
+                      </button>
+                    )}</CommodityStateContext.Consumer>
+                    {ORDERS_MANAGEMENT && <LineItemSelector
+                      title='Add commodities'
+                      shipment={shipment}
+                      onChange={_ => mutation.addCommodities(_ as any)}
+                    />}
+                  </div>
 
                   {/* Duty Billing address section */}
                   {(shipment.customs!.duty_billing_address || shipment.customs!.duty?.paid_by === PaidByEnum.third_party) && <>
@@ -718,9 +782,17 @@ export default function CreateLabelPage(pageProps: any) {
 
           <div className="p-2"></div>
 
+          {/* Shipment details section */}
           <div className="column is-5 px-0 pb-6 is-relative">
             <div style={{ position: 'sticky', top: '8.5%', right: 0, left: 0 }}>
 
+              <CommoditySummary
+                shipment={shipment as ShipmentType}
+                orders={getLinkedOrders(orders.data?.orders?.edges, shipment as ShipmentType)}
+                className="card px-0 mb-5"
+              />
+
+              {/* Purchase shipment section */}
               <div className="card px-0">
 
                 <header className="px-3 py-2 is-flex is-justify-content-space-between">
@@ -737,16 +809,18 @@ export default function CreateLabelPage(pageProps: any) {
                 <hr className='my-1' style={{ height: '1px' }} />
 
                 {/* Live rates section */}
-                <div className="p-3">
+                <div className="p-0 py-1">
 
-                  {(query.isFetching && (shipment.rates || []).length === 0) && <Spinner className="my-1 p-1 has-text-centered" />}
+                  {(!query.isFetched && query.isFetching && (shipment.rates || []).length === 0) &&
+                    <Spinner className="my-1 p-2 has-text-centered" />}
 
-                  {(query.isFetched && (shipment.rates || []).length === 0) && <div className="notification is-default p-2 is-size-7">
-                    Provide all shipping details to retrieve shipping rates.
-                  </div>}
+                  {(query.isFetched && !query.isFetching && (shipment.rates || []).length === 0) &&
+                    <div className="notification is-default m-3 p-2 is-size-7">
+                      Provide all shipping details to retrieve shipping rates.
+                    </div>}
 
                   {(query.isFetched && (shipment.rates || []).length > 0) &&
-                    <div className="menu-list py-2 rates-list-box" style={{ maxHeight: '20em' }}>
+                    <div className="menu-list px-3 rates-list-box" style={{ maxHeight: '16.8em' }}>
                       {(shipment.rates || []).map(rate => (
                         <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
                           className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
@@ -804,13 +878,14 @@ export default function CreateLabelPage(pageProps: any) {
 
                 <div className="py-1"></div>
 
-                <ButtonField
-                  onClick={() => mutation.saveDraft()}
-                  fieldClass="has-text-centered py-1 px-6 m-0"
-                  className="is-default is-fullwidth"
-                  disabled={(!!shipment.id && shipment.id !== 'new') || query.isFetching}>
-                  <span className="px-6">Save draft</span>
-                </ButtonField>
+                {!(!!shipment.id && shipment.id !== 'new') &&
+                  <ButtonField
+                    onClick={() => mutation.saveDraft()}
+                    fieldClass="has-text-centered py-1 px-6 m-0"
+                    className="is-default is-fullwidth"
+                    disabled={query.isFetching}>
+                    <span className="px-6">Save draft</span>
+                  </ButtonField>}
 
                 <div className="py-2"></div>
 

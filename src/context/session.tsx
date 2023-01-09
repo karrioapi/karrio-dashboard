@@ -34,7 +34,7 @@ const NextSessionProvider: React.FC = ({ children }) => {
 
   return (
     <NextSession.Provider value={sessionState}>
-      {sessionState !== undefined ? children : <>...</>}
+      {sessionState !== undefined ? children : <></>}
     </NextSession.Provider>
   );
 };
