@@ -10,7 +10,7 @@ interface CarrierImageComponent extends React.AllHTMLAttributes<HTMLImageElement
 
 const CarrierImage: React.FC<CarrierImageComponent> = ({ carrier_name, className, width, height, ...props }) => {
   return (
-    <div className='m-1'>
+    <div className='m-1' style={{ minWidth: '30px' }}>
       <Image
         src={p`/carriers/${carrier_name as string}_icon.svg`}
         width={width as number || 60} height={height as number || 60}
