@@ -63,15 +63,17 @@ export default function DocumentTemplatePage(pageProps: any) {
     const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
       evt.preventDefault();
       loader.setLoading(true);
+      const { updated_at, ...data } = template;
+
       try {
         if (isNew) {
-          const { create_document_template } = await mutation.createDocumentTemplate.mutateAsync(template);
+          const { create_document_template } = await mutation.createDocumentTemplate.mutateAsync(data);
           notifier.notify({ type: NotificationType.success, message: `Document template created successfully` });
           loader.setLoading(false);
 
           setDocId(create_document_template.template?.id as string);
         } else {
-          await mutation.updateDocumentTemplate.mutateAsync(template);
+          await mutation.updateDocumentTemplate.mutateAsync(data);
           query.refetch();
           notifier.notify({ type: NotificationType.success, message: `Document template updated successfully` });
           loader.setLoading(false);

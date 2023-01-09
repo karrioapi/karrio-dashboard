@@ -2701,6 +2701,8 @@ export const GET_DOCUMENT_TEMPLATE = gql`query get_document_template($id: String
     template
     description
     related_object
+    active
+    updated_at
   }
 }
 `;
@@ -2721,6 +2723,8 @@ export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($filter: 
         template
         description
         related_object
+        active
+        updated_at
       }
     }
   }

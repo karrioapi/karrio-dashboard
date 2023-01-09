@@ -7,18 +7,32 @@ import AppLink from "@/components/app-link";
 import { useContext } from "react";
 import Head from "next/head";
 import React from "react";
+import { DocumentTemplateType, NotificationType } from "@/lib/types";
+import { Notify } from "@/components/notifier";
 
 export { getServerSideProps } from "@/lib/middleware";
 
 
 export default function TemplatesPage(pageProps: any) {
   const Component: React.FC<any> = () => {
-    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
+    const { notify } = useContext(Notify);
     const mutation = useDocumentTemplateMutation();
+    const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { query: { data: { document_templates } = {}, ...query }, filter, setFilter } = useDocumentTemplates();
 
     const remove = (id: string) => async () => {
       await mutation.deleteDocumentTemplate.mutateAsync({ id });
+    };
+    const toggle = ({ active, id }: DocumentTemplateType) => async () => {
+      try {
+        await mutation.updateDocumentTemplate.mutateAsync({ id, active: !active });
+        notify({
+          type: NotificationType.success,
+          message: `template ${!active ? 'enabled' : 'disabled'}!`
+        });
+      } catch (message: any) {
+        notify({ type: NotificationType.error, message });
+      }
     };
 
     return (
@@ -48,6 +62,11 @@ export default function TemplatesPage(pageProps: any) {
                   </td>
                   <td className="action is-vcentered pr-0">
                     <div className="buttons is-justify-content-end">
+                      <button className="button is-white" onClick={toggle(template)}>
+                        <span className={`icon is-medium ${template.active ? 'has-text-success' : 'has-text-grey'}`}>
+                          <i className={`fas fa-${template.active ? 'toggle-on' : 'toggle-off'} fa-lg`}></i>
+                        </span>
+                      </button>
                       <AppLink className="button is-white" href={`/settings/template?id=${template.id}`}>
                         <span className="icon is-small">
                           <i className="fas fa-pen"></i>

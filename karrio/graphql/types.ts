@@ -3919,6 +3919,8 @@ export interface get_document_template_document_template {
   template: string;
   description: string | null;
   related_object: TemplateRelatedObject | null;
+  active: boolean;
+  updated_at: any | null;
 }
 
 export interface get_document_template {
@@ -3951,6 +3953,8 @@ export interface get_document_templates_document_templates_edges_node {
   template: string;
   description: string | null;
   related_object: TemplateRelatedObject | null;
+  active: boolean;
+  updated_at: any | null;
 }
 
 export interface get_document_templates_document_templates_edges {
@@ -5518,8 +5522,9 @@ export interface PartialShipmentMutationInput {
   parcels?: UpdateParcelInput[] | null;
   payment?: PaymentInput | null;
   billing_address?: UpdateAddressInput | null;
-  options?: any | null;
+  label_type?: LabelTypeEnum | null;
   metadata?: any | null;
+  options?: any | null;
   reference?: string | null;
 }
 
@@ -5564,8 +5569,9 @@ export interface UpdateCustomsInput {
 export interface UpdateCommodityInput {
   weight?: number | null;
   weight_unit?: WeightUnitEnum | null;
-  sku?: string | null;
   quantity?: number | null;
+  sku?: string | null;
+  hs_code?: string | null;
   description?: string | null;
   value_amount?: number | null;
   origin_country?: CountryCodeEnum | null;
@@ -5618,22 +5624,8 @@ export interface UpdateParcelInput {
   dimension_unit?: DimensionUnitEnum | null;
   reference_number?: string | null;
   freight_class?: string | null;
-  items?: CommodityInput[] | null;
+  items?: UpdateCommodityInput[] | null;
   id?: string | null;
-}
-
-// null
-export interface CommodityInput {
-  weight: number;
-  weight_unit: WeightUnitEnum;
-  sku?: string | null;
-  quantity?: number | null;
-  description?: string | null;
-  value_amount?: number | null;
-  origin_country?: CountryCodeEnum | null;
-  value_currency?: CurrencyCodeEnum | null;
-  metadata?: any | null;
-  parent_id?: string | null;
 }
 
 // null
@@ -5700,6 +5692,21 @@ export interface CustomsInput {
   duty?: DutyInput | null;
   duty_billing_address?: UpdateAddressInput | null;
   options?: any | null;
+}
+
+// null
+export interface CommodityInput {
+  weight: number;
+  weight_unit: WeightUnitEnum;
+  quantity?: number | null;
+  sku?: string | null;
+  hs_code?: string | null;
+  description?: string | null;
+  value_amount?: number | null;
+  origin_country?: CountryCodeEnum | null;
+  value_currency?: CurrencyCodeEnum | null;
+  metadata?: any | null;
+  parent_id?: string | null;
 }
 
 // null

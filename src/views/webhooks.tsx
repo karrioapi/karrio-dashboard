@@ -34,7 +34,7 @@ export default function WebhooksPage(pageProps: any) {
         await mutation.updateWebhook.mutateAsync({ id, disabled: !disabled });
         notify({
           type: NotificationType.success,
-          message: `webhook ${disabled ? 'activated' : 'deactivated'}!`
+          message: `webhook ${!disabled ? 'activated' : 'deactivated'}!`
         });
       } catch (message: any) {
         notify({ type: NotificationType.error, message });
