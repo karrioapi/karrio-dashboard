@@ -1,5 +1,5 @@
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
-import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, ShipmentType } from '@/lib/types';
+import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, OrderType, ShipmentType } from '@/lib/types';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
@@ -10,6 +10,7 @@ import MessagesDescription from '@/components/descriptions/messages-description'
 import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
+import CommoditySummary from '@/components/descriptions/commodity-summary';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
@@ -32,6 +33,7 @@ import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
 import moment from 'moment';
+import { CommodityStateContext } from '@/components/commodity-edit-modal';
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -106,6 +108,14 @@ export default function CreateShipmentPage(pageProps: any) {
         }, 0);
 
       return parent_quantity - packed_quantity;
+    };
+    const isPackedItem = (cdt: CommodityType, shipment: ShipmentType) => {
+      const item = getShipmentCommodities(shipment).find(item => (
+        (!!cdt.parent_id && cdt.parent_id === item.parent_id)
+        || (!!cdt.hs_code && cdt.hs_code === cdt.hs_code)
+        || (!!cdt.sku && cdt.sku === item.sku)
+      ));
+      return !!item;
     };
     const setInitialData = () => {
       const orderList = orders.data!.orders!.edges;
@@ -367,7 +377,7 @@ export default function CreateShipmentPage(pageProps: any) {
                                     defaultValue={item.quantity as number}
                                     max={getAvailableQuantity(shipment, item, item_index)}
                                     onChange={e => {
-                                      mutation.updateItem(pkg_index, item_index, pkg.id, item.id)({
+                                      mutation.updateItem(pkg_index, item_index, pkg.id)({
                                         quantity: parseInt(e.target.value)
                                       } as CommodityType)
                                     }}
@@ -653,7 +663,7 @@ export default function CreateShipmentPage(pageProps: any) {
                     <AddressDescription address={shipment!.billing_address as any} />}
 
                   {isNone(shipment?.billing_address) && <div className="notification is-default p-2 is-size-7">
-                    Add shipment billing address.
+                    Add shipment billing address. (optional)
                   </div>}
 
                 </div>
@@ -706,16 +716,48 @@ export default function CreateShipmentPage(pageProps: any) {
                   {/* Commodities section */}
                   <span className="is-size-7 mt-4 has-text-weight-semibold">COMMODITIES</span>
 
-                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "parcel-info"}>
+                  {(shipment.customs!.commodities || []).map((commodity, index) => <React.Fragment key={index + "customs-info"}>
                     <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                    <div className="px-1">
-                      <CommodityDescription commodity={commodity} prefix={`${index + 1} - `} />
+                    <div className="is-flex is-justify-content-space-between is-vcentered">
+                      <CommodityDescription className="is-flex-grow-1 pr-2" commodity={commodity} prefix={`${index + 1} - `} />
+                      <div>
+                        <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                          <button type="button" className="button is-small is-white"
+                            disabled={isPackedItem(commodity, shipment) || query.isFetching}
+                            onClick={() => editCommodity({
+                              commodity,
+                              onSubmit: _ => mutation.updateCommodity(index, shipment.customs?.id)(_)
+                            })}>
+                            <span className="icon is-small"><i className="fas fa-pen"></i></span>
+                          </button>
+                        )}</CommodityStateContext.Consumer>
+                        <button type="button" className="button is-small is-white"
+                          disabled={query.isFetching || shipment.customs!.commodities.length === 1}
+                          onClick={() => mutation.removeCommodity(index, shipment.customs?.id)(commodity.id)}>
+                          <span className="icon is-small"><i className="fas fa-times"></i></span>
+                        </button>
+                      </div>
                     </div>
                   </React.Fragment>)}
 
                   {(shipment.customs!.commodities || []).length === 0 && <div className="notification is-warning is-light my-2 py-2 px-4 is-size-7">
-                    You need to specify customs commodities.
+                    You need provide commodity items for customs purpose. (required)
                   </div>}
+
+                  <div className="is-flex is-justify-content-space-between mt-4">
+                    <CommodityStateContext.Consumer>{({ editCommodity }) => (
+                      <button type="button" className="button is-small is-info is-inverted p-2"
+                        disabled={query.isFetching}
+                        onClick={() => editCommodity({
+                          onSubmit: _ => mutation.addCommodities([_] as any)
+                        })}>
+                        <span className="icon is-small">
+                          <i className="fas fa-plus"></i>
+                        </span>
+                        <span>add commodity</span>
+                      </button>
+                    )}</CommodityStateContext.Consumer>
+                  </div>
 
                   {/* Duty Billing address section */}
                   {(shipment.customs!.duty_billing_address || shipment.customs!.duty?.paid_by === PaidByEnum.third_party) && <>
@@ -746,7 +788,7 @@ export default function CreateShipmentPage(pageProps: any) {
                         <AddressDescription address={shipment!.customs!.duty_billing_address as any} />}
 
                       {isNone(shipment!.customs!.duty_billing_address) && <div className="notification is-default p-2 is-size-7">
-                        Add customs duty billing address.
+                        Add customs duty billing address. (optional)
                       </div>}
 
                     </div>
@@ -769,6 +811,12 @@ export default function CreateShipmentPage(pageProps: any) {
           <div className="column is-5 px-0 pb-6 is-relative">
             <div style={{ position: 'sticky', top: '8.5%', right: 0, left: 0 }}>
 
+              <CommoditySummary
+                shipment={shipment as ShipmentType}
+                orders={orders.data?.orders?.edges.map(({ node }) => node) as OrderType[]}
+                className="card px-0 mb-5"
+              />
+
               {/* Shipping section */}
               <div className="card px-0">
 
@@ -785,30 +833,32 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 <hr className='my-1' style={{ height: '1px' }} />
 
-                <div className="p-3">
+                {/* Live rates section */}
+                <div className="p-0 py-1">
 
-                  {loading && <Spinner className="my-1 p-1 has-text-centered" />}
+                  {loading && <Spinner className="my-1 p-2 has-text-centered" />}
 
-                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification is-default is-size-7">
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification p-2 is-default is-size-7">
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 
-                  {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-1 rates-list-box" style={{ maxHeight: '20em' }}>
-                    {(shipment.rates || []).map(rate => (
-                      <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
-                        onClick={() => setSelectedRate(rate)}>
+                  {(!loading && (shipment.rates || []).length > 0) &&
+                    <div className="menu-list px-3 rates-list-box" style={{ maxHeight: '16.8em' }}>
+                      {(shipment.rates || []).map(rate => (
+                        <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
+                          className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                          onClick={() => setSelectedRate(rate)}>
 
-                        <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
+                          <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
-                        <RateDescription rate={rate} />
+                          <RateDescription rate={rate} />
 
-                        {rate.test_mode && <div className="has-text-warning p-1">
-                          <i className="fas fa-exclamation-circle"></i>
-                        </div>}
-                      </a>
-                    ))}
-                  </div>}
+                          {rate.test_mode && <div className="has-text-warning p-1">
+                            <i className="fas fa-exclamation-circle"></i>
+                          </div>}
+                        </a>
+                      ))}
+                    </div>}
 
                 </div>
 
@@ -851,13 +901,14 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 <div className="py-1"></div>
 
-                <ButtonField
-                  onClick={() => mutation.saveDraft()}
-                  className="is-default is-fullwidth"
-                  fieldClass="has-text-centered py-1 px-6 m-0"
-                  disabled={(!!shipment.id && shipment.id !== 'new') || query.isFetching}>
-                  <span className="px-6">Save draft</span>
-                </ButtonField>
+                {!(!!shipment.id && shipment.id !== 'new') &&
+                  <ButtonField
+                    onClick={() => mutation.saveDraft()}
+                    fieldClass="has-text-centered py-1 px-6 m-0"
+                    className="is-default is-fullwidth"
+                    disabled={query.isFetching}>
+                    <span className="px-6">Save draft</span>
+                  </ButtonField>}
 
                 <div className="py-2"></div>
 

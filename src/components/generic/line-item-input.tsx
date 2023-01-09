@@ -6,10 +6,11 @@ import { useOrders } from '@/context/order';
 
 interface LineItemInputComponent extends Omit<DropdownInputComponent, 'items' | 'onChange' | 'onValueChange'> {
   onChange?: (value?: CommodityType) => void;
+  onReady?: (value?: CommodityType) => void;
 }
 
-const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props }) => {
-  const { query } = useOrders();
+const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, onReady, ...props }) => {
+  const { query } = useOrders({ first: 10, status: ["partial", "unfulfilled"] as any });
   const [lineItems, setLineItems] = useState<CommodityType[]>();
   const [items, setItems] = useState<[string, string][]>([]);
 
@@ -28,8 +29,13 @@ const LineItemInput: React.FC<LineItemInputComponent> = ({ onChange, ...props })
 
       setLineItems(allItems);
       setItems(dropdownItems);
+
+      if (!!props.value && !!onReady) {
+        const selected = allItems.find(({ id }) => id === props.value);
+        onReady(selected);
+      }
     }
-  }, [query.isFetched]);
+  }, [query.isFetched, props.value]);
 
   return (
     <DropdownInput

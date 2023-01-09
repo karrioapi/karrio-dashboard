@@ -70,6 +70,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     setOperation(operation);
     dispatch({ name: "full", value: connection });
     setKey(`connection-${Date.now()}`);
+    setIsActive(true);
     addUrlParam('modal', connection.id || 'new');
   };
   const close = (e?: React.MouseEvent) => {

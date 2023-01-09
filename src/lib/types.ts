@@ -13,7 +13,7 @@ export type CommodityType = (
   get_shipment_shipment_customs_commodities |
   get_shipment_shipment_parcels_items
 ) & {
-  unfilled_quantity?: number;
+  unfulfilled_quantity?: number | null;
 };
 export type DutyType = get_shipment_shipment_customs_duty;
 export type CustomsType = get_shipment_shipment_customs & {

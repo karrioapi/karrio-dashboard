@@ -1,25 +1,24 @@
 import { CommodityType, CURRENCY_OPTIONS, CustomsType, CUSTOMS_CONTENT_TYPES, DutyType, INCOTERMS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
-import CommodityCollectionEditor, { CommodityCollectionEditorContext } from '@/components/commodity-list-editor';
-import React, { ChangeEvent, FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
-import { deepEqual, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
+import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { useDefaultTemplates } from '@/context/default-template';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
+import { deepEqual, formatRef, isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
-import { useShipmentMutation } from '@/context/shipment';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { useUser } from '@/context/user';
 import moment from 'moment';
+import { DEFAULT_COMMODITY_CONTENT } from '../commodity-edit-modal';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
   duty: { paid_by: PaidByEnum.recipient } as any,
   certify: true,
-  commodities: [],
+  commodities: [DEFAULT_COMMODITY_CONTENT as CommodityType],
   incoterm: IncotermCodeEnum.DDU,
   content_type: CustomsContentTypeEnum.merchandise,
   options: {}
@@ -44,7 +43,6 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   const { loading, setLoading } = useContext(Loading);
   const { query: { data: { user } = {} } } = useUser();
   const { query: { data: { default_templates } = {} } } = useDefaultTemplates();
-  const { discardCustoms, discardCommodity } = useShipmentMutation(shipment?.id);
   const [customs, dispatch] = useReducer((state: any, { name, value }: { name: string, value: string | boolean | object | any }) => {
     switch (name) {
       case 'hasDuty':
@@ -61,33 +59,17 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         return { ...state, [name]: value };
     }
   }, value);
-  const [commodities, setCommodities] = useState<CommodityType[]>([]);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
-  const computeDisableState = (state: CustomsType, commoditiesState: CommodityType[]): boolean => {
+  const computeDisableState = (state: CustomsType): boolean => {
     const isUnchanged = (
       deepEqual(value, state) &&
       deepEqual(value?.duty, state?.duty) &&
-      deepEqual(value?.options, state?.options) &&
-      deepEqual(value?.commodities, commodities)
+      deepEqual(value?.options, state?.options)
     );
 
     return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
   };
-
-  const updateCustomsCommodity = async (commodity: CommodityType) => {
-    await onSubmit([{ id: customs.id, commodities: [commodity] }] as any);
-  }
-  const removeCustomsCommodity = async (id: string) => {
-    setLoading(true);
-    try {
-      await discardCommodity.mutateAsync({ id });
-    } catch (message: any) {
-      notify({ type: NotificationType.error, message });
-    }
-    setLoading(false);
-  };
-
   const handleChange = (event: React.ChangeEvent<any> & CustomEvent<{ name: keyof CustomsType, value: object }>) => {
     const target = event.target;
     const name = target.name;
@@ -98,28 +80,13 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     e.preventDefault();
     try {
       setLoading(true);
-      const payload = { ...customs, commodities };
+      const payload = { ...customs };
       await onSubmit(payload);
 
       if (customs.id === undefined && shipment?.id !== undefined) {
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully added!' });
       } else if (customs.id !== undefined) {
         notify({ type: NotificationType.success, message: 'Customs Declaration successfully updated!' });
-      }
-    } catch (message: any) {
-      notify({ type: NotificationType.error, message });
-    }
-    setLoading(false);
-  };
-  const applyOptOut = async (e: ChangeEvent<any>) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (!isNone(shipment?.id) && !isNone(shipment?.customs?.id)) {
-        await discardCustoms.mutateAsync({ id: shipment?.customs?.id as string });
-        notify({ type: NotificationType.success, message: 'Customs declaration discarded successfully!' });
-      } else {
-        onSubmit(null);
       }
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
@@ -145,15 +112,6 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
         <CheckBoxField defaultChecked={isNone(customs)} onChange={handleChange} name="optOut" fieldClass="column mb-0 is-12 px-3 py-3 has-text-weight-semibold">
           <span>Opt out of customs</span>
         </CheckBoxField>
-      </div>}
-
-      {isNone(customs) && <div>
-        <ButtonField className="is-primary" fieldClass="has-text-centered mt-3" onClick={applyOptOut} disabled={isNone(value)}>
-          <span>Save</span>
-          <span className="icon is-small">
-            <i className="fas fa-chevron-right"></i>
-          </span>
-        </ButtonField>
       </div>}
 
       {!isNone(customs) && <form className="pl-1 pr-2 pb-2" onSubmit={handleSubmit} ref={form}>
@@ -224,35 +182,6 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
 
         </div>
 
-        {/* Commodities */}
-        {!isTemplate && <div className="columns p-2 my-2 is-relative">
-          <CommodityCollectionEditor
-            defaultValue={customs.commodities}
-            onRemove={removeCustomsCommodity}
-            onUpdate={updateCustomsCommodity}
-            onChange={commodities => setCommodities(commodities)}
-            className="is-white column is-12 p-0"
-            style={{ border: "1px #ddd solid" }}
-          >
-            <CommodityCollectionEditorContext.Consumer>{({ commodities }) => (
-              <>
-                <p className="panel-heading is-clickable select is-small is-fullwidth p-0 pt-1">
-                  <span className="is-size-6">{commodities.length == 0 ? 'No' : commodities.length} customs commodity(s) declared</span>
-                </p>
-
-                <input
-                  required
-                  name="commodities"
-                  style={{ position: 'absolute', top: 40, left: 60, zIndex: -10 }}
-                  onChange={validityCheck(() => { })}
-                  onInvalid={validityCheck(validationMessage('Please add at least one commodity'))}
-                  value={(commodities || []).length === 0 ? "" : "specified"}
-                />
-              </>
-            )}</CommodityCollectionEditorContext.Consumer>
-          </CommodityCollectionEditor>
-        </div>}
-
         {/* Customs Options */}
         <div className="columns p-2 my-2">
           <article className="panel is-white is-shadowless column is-12 p-0" style={{ border: "1px #ddd solid" }}>
@@ -318,7 +247,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
           className={`is-primary ${loading ? 'is-loading' : ''} m-0`}
           fieldClass="form-floating-footer p-2"
           controlClass="has-text-centered"
-          disabled={computeDisableState(customs, commodities)}>
+          disabled={computeDisableState(customs)}>
           <span>Save</span>
         </ButtonField>
 

@@ -12,6 +12,7 @@ import axios from "axios";
 export const isEqual = require('lodash.isequal');
 export const snakeCase = require('lodash.snakecase');
 export const groupBy = require('lodash.groupby');
+export const toNumber = require('lodash.tonumber');
 
 export function formatRef(s?: string): string {
   return (s || "").split('_').join(' ').toLocaleUpperCase();
@@ -432,17 +433,45 @@ export function toSingleItem(collection: CommodityType[]) {
     }, [] as typeof collection[]);
 }
 
-export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] {
-  return Object.values(
+export function commodityMatch(item: Partial<CommodityType>, items?: CommodityType[]) {
+  return (items || []).find(cdt => (
+    (!!cdt.parent_id && cdt.parent_id === item.parent_id)
+    || (!!cdt.hs_code && cdt.hs_code === cdt.hs_code)
+    || (!!cdt.sku && cdt.sku === item.sku)
+  ))
+}
+
+export function getShipmentCommodities(shipment: ShipmentType, currentCommodities?: CommodityType[]): CommodityType[] {
+  const parcelItems = Object.values(
     shipment?.parcels
       .map(parcel => parcel.items || [])
       .flat()
-      .reduce((acc, item, _index) => {
-        const index: string = item.parent_id || item.id || item.sku || item.hs_code || `${_index}`;
-        acc[index] = { ...item, quantity: (acc[index]?.quantity || 0) + (item.quantity || 0) };
-        return acc;
-      }, {} as Collection<CommodityType>)
+      .reduce(
+        (acc, { id: _, ...item }: CommodityType, _index) => {
+          const index: string = item.parent_id || item.sku || item.hs_code || _ || `${_index}`;
+          const match: any = commodityMatch(item, currentCommodities) || {};
+          const quantity = (acc[index]?.quantity || 0) + toNumber(item.quantity || 0);
+          acc[index] = { ...match, ...item, quantity };
+          return acc;
+        },
+        {} as Collection<CommodityType>
+      )
   );
+  const unpackedItems = (currentCommodities || []).filter(cdt => isNone(
+    commodityMatch(cdt, parcelItems)
+  ));
+
+  return [...parcelItems, ...unpackedItems];
+}
+
+export function getOrderLineItems(orders: OrderType[]) {
+  return (orders || []).map(({ line_items }) => line_items).flat();
+}
+
+export function getUnfulfilledOrderLineItems(orders: OrderType[]) {
+  return getOrderLineItems(orders)
+    .map(({ id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, id, parent_id: id }))
+    .filter(({ quantity }) => toNumber(quantity) || 0 > 0);
 }
 
 export function forceSignOut() {

@@ -51,7 +51,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
   const [commodity, dispatch] = useReducer(reducer, undefined, () => DEFAULT_COMMODITY_CONTENT);
   const [operation, setOperation] = useState<OperationType | undefined>();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
-  const [maxQty, setMaxQty] = useState<number>();
+  const [maxQty, setMaxQty] = useState<number | null | undefined>();
 
   const editCommodity = (operation: OperationType) => {
     const commodity = (operation.commodity || DEFAULT_COMMODITY_CONTENT as CommodityType);
@@ -116,6 +116,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     label="Order Line Item"
                     value={commodity?.parent_id}
                     onChange={loadLineItem}
+                    onReady={_ => setMaxQty(_?.unfulfilled_quantity)}
                     dropdownClass="is-small"
                     className="is-small is-fullwidth"
                     fieldClass="column is-11 mb-0 pl-2 pr-0 py-1"
@@ -179,7 +180,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     onChange={handleChange}
                     value={commodity?.quantity}
                     onInvalid={validityCheck(validationMessage('Please enter a valid quantity'))}
-                    {...(maxQty ? { max: maxQty } : {})}
+                    {...(isNone(maxQty) ? {} : { max: maxQty as number })}
                     required
                   />
 
@@ -317,7 +318,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                 </button>
                 <button className={`button is-primary ${loading ? 'is-loading' : ''} m-1 is-small`}
                   disabled={loading || isInvalid || deepEqual(operation?.commodity, commodity)}
-                  type="button" onClick={handleSubmit}>
+                  onClick={handleSubmit}>
                   <span>{isNew ? 'Add' : 'Save'}</span>
                 </button>
               </div>
