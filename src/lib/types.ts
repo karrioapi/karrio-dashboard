@@ -298,7 +298,7 @@ export interface References {
   package_presets: object;
   packaging_types: object;
   payment_types: object;
-  carrier_capabilities: object;
+  carrier_capabilities: Collection<Collection<Array<string>>>;
   service_levels: object;
 }
 

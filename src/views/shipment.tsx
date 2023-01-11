@@ -7,11 +7,11 @@ import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
 import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AppLink from "@/components/app-link";
 import { MetadataObjectType } from "karrio/graphql";
 import MetadataMutationProvider from "@/context/metadata-mutation";
-import { CustomsType, ParcelType } from "@/lib/types";
+import { CustomsType, NotificationType, ParcelType } from "@/lib/types";
 import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import Spinner from "@/components/spinner";
 import EventsProvider, { EventsContext } from "@/context/events-provider";
@@ -27,18 +27,69 @@ import CustomsInfoDescription from "@/components/descriptions/customs-info-descr
 import ShipmentMutationProvider from "@/context/shipment-mutation";
 import ConfirmModal from "@/components/confirm-modal";
 import ShipmentsProvider from "@/context/shipments-provider";
+import { useUploadRecordMutation, useUploadRecords } from "@/context/upload-record";
+import { APIReference } from "@/context/references-provider";
+import InputField from "@/components/generic/input-field";
+import { useNotifier } from "@/components/notifier";
+import { DocumentUploadData } from "@karrio/rest";
+import SelectField from "@/components/generic/select-field";
 
 export { getServerSideProps } from "@/lib/middleware";
 
+type FileDataType = DocumentUploadData['document_files'][0];
 
 export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentId }) => {
   const router = useRouter();
+  const notifier = useNotifier();
   const logs = useContext(LogsContext);
   const events = useContext(EventsContext);
+  const $fileInput = useRef<HTMLInputElement>();
+  const $fileSelectInput = useRef<HTMLSelectElement>();
   const { setLoading } = useContext(Loading);
+  const { carrier_capabilities } = useContext(APIReference);
   const { templates } = useDocumentTemplates();
   const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
   const { id } = router.query;
+  const { uploadDocument } = useUploadRecordMutation();
+  const { query: { data: { results: uploads } = {}, ...documents} } = useUploadRecords({ shipmentId: (shipmentId || id) as string });
+  const [fileData, setFileData] = useState<FileDataType>({} as FileDataType)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    try {
+      if (!!e.target.files && !!e.target.files[0]) {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          let sections = (reader.result as string).split(',');
+          let doc_file = sections[sections.length -1];
+          let doc_name = file.name;
+          setFileData({ ...fileData, doc_name, doc_file });
+        };
+      } else {
+        setFileData({ doc_file: fileData.doc_file } as FileDataType);
+      }
+    } catch(_) {
+      setFileData({ doc_file: fileData.doc_file } as FileDataType);
+    }
+  };
+  const uploadCustomsDocument = async () => {
+    try {
+      await uploadDocument.mutateAsync({
+        shipment_id: (shipmentId || id) as string,
+        document_files: [fileData],
+      });
+      notifier.notify({
+        type: NotificationType.success,
+        message: `document updloaded successfully`,
+      });
+      if(!!$fileInput.current) $fileInput.current.value = '';
+      if(!!$fileSelectInput.current) $fileSelectInput.current.value = 'other';
+    } catch (message: any) {
+      notifier.notify({ type: NotificationType.error, message });
+    }
+  };
 
   useEffect(() => { setLoading(loading); });
   useEffect(() => {
@@ -293,6 +344,68 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           </div>
 
         </div>
+
+
+        {/* Document section */}
+        {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("upload_document") && <>
+        
+          <h2 className="title is-5 my-4">Document Details</h2>
+
+          {(!documents.isFetched && documents.isFetching) && <Spinner />}
+
+          {(documents.isFetched && !documents.isFetching) && (uploads || []).length == 0 && <> 
+            <hr className="mt-1 mb-3" style={{ height: '1px' }} />
+            <div>No documents uploaded</div>
+          </>}
+
+          {documents.isFetched && (uploads || []).length > 0 && <div className="table-container">
+            <table className="related-item-table table is-hoverable is-fullwidth">
+              <tbody>
+                {(uploads || []).map(upload => <>
+                  {(upload.documents || []).map(doc => (
+                    <tr key={doc.document_id} className="items">
+                      <td className="description is-vcentered p-0">
+                        <span>{doc.file_name}</span>
+                      </td>
+                      <td className="status is-vcentered p-0">
+                        <span className="tag is-success my-2">uploaded</span>
+                      </td>
+                    </tr>
+                  ))}
+                </>)}
+              </tbody>
+            </table>
+          </div>}
+          
+          <div className="is-flex is-justify-content-space-between">
+            <div className="is-flex">
+              <SelectField
+                onChange={e => setFileData({...fileData, doc_type: e.target.value})}
+                defaultValue="other"
+                className="is-small is-fullwidth">
+                  <option value="other">other</option>
+                  <option value="commercial_invoice">Commercial invoice</option>
+                  <option value="pro_forma_invoice">Pro forma invoice</option>
+                  <option value="packing_list">Packing list</option>
+                  <option value="certificate_of_origin">Certificate of origin</option>
+              </SelectField>
+              <InputField className="is-small mx-2" type="file" onChange={handleFileChange} />
+            </div>
+
+            <button
+              type="button"
+              className="button is-default is-small is-align-self-center"
+              disabled={(uploads || [])?.length > 4 || !fileData.doc_file || documents.isFetching || uploadDocument.isLoading}
+              onClick={() => uploadCustomsDocument()}>
+              <span className="icon is-small">
+                <i className="fas fa-upload"></i>
+              </span>
+              <span>Upload</span>
+            </button>
+          </div>
+
+          <div className="my-3 pt-1"></div>
+        </>}
 
 
         {/* Metadata section */}
