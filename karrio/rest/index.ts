@@ -12,6 +12,8 @@ import {
   ShipmentsApi,
   TrackersApi,
   WebhooksApi,
+  BatchesApi,
+  DocumentsApi,
 } from './generated/api';
 
 
@@ -26,6 +28,8 @@ export interface KarrioClientInterface {
   shipments: ShipmentsApi;
   trackers: TrackersApi;
   webhooks: WebhooksApi;
+  batches: BatchesApi;
+  documents: DocumentsApi;
   config: ConfigurationParameters;
 }
 
@@ -40,6 +44,8 @@ export class KarrioClient implements KarrioClientInterface {
   shipments: ShipmentsApi;
   trackers: TrackersApi;
   webhooks: WebhooksApi;
+  documents: DocumentsApi;
+  batches: BatchesApi;
   config: ConfigurationParameters;
   axios: AxiosInstance;
 
@@ -59,5 +65,7 @@ export class KarrioClient implements KarrioClientInterface {
     this.shipments = new ShipmentsApi(config, config.basePath, axiosInstance);
     this.trackers = new TrackersApi(config, config.basePath, axiosInstance);
     this.webhooks = new WebhooksApi(config, config.basePath, axiosInstance);
+    this.documents = new DocumentsApi(config, config.basePath, axiosInstance);
+    this.batches = new BatchesApi(config, config.basePath, axiosInstance);
   }
 }

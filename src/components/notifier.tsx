@@ -72,7 +72,7 @@ export function formatMessage(msg: Notification['message']) {
 
 function renderError(msg: any, _: number): any {
   const error = msg.data?.errors || msg.data?.messages || msg;
-  console.log(error)
+  
   if (error?.message !== undefined) {
     return error.message;
   }

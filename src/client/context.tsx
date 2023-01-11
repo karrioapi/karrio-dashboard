@@ -134,3 +134,7 @@ function createGrapQLContext(session$: BehaviorSubject<SessionType | null>): apo
     })
   });
 }
+
+export function useKarrio() {
+  return React.useContext(RestContext);
+}
