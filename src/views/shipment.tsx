@@ -4,7 +4,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { Loading } from "@/components/loader";
 import StatusBadge from "@/components/status-badge";
 import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatDateTime, formatRef, isNone, shipmentCarrier } from "@/lib/helper";
+import { formatDateTime, formatRef, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -347,15 +347,15 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
 
         {/* Document section */}
-        {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("upload_document") && <>
+        {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("upload_document") && ("paperless_trade" in shipment.options) && <>
         
-          <h2 className="title is-5 my-4">Document Details</h2>
+          <h2 className="title is-5 my-4">Paperless Trade Documents</h2>
 
           {(!documents.isFetched && documents.isFetching) && <Spinner />}
 
           {(documents.isFetched && !documents.isFetching) && (uploads || []).length == 0 && <> 
             <hr className="mt-1 mb-3" style={{ height: '1px' }} />
-            <div>No documents uploaded</div>
+            <div className="pb-3">No documents uploaded</div>
           </>}
 
           {documents.isFetched && (uploads || []).length > 0 && <div className="table-container">

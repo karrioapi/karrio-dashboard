@@ -137,6 +137,7 @@ export default function CreateShipmentPage(pageProps: any) {
       const options = {
         ...shipment.options,
         ...(order_options.currency ? { currency: order_options.currency } : {}),
+        ...(order_options.service ? { service: order_options.service } : {}),
         declared_value: parseFloat(`${declared_value}`).toFixed(2),
       };
       const metadata = {
@@ -568,6 +569,15 @@ export default function CreateShipmentPage(pageProps: any) {
 
                 </div>
 
+                {/* paperless trade */}
+                <CheckBoxField name="paperless_trade"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={shipment.options?.paperless_trade}
+                  onChange={e => onChange({ options: { ...shipment.options, paperless_trade: e.target.checked } })}
+                >
+                  <span>Opt for paperless trade if supported</span>
+                </CheckBoxField>
+
               </div>
 
               <hr className='my-1' style={{ height: '1px' }} />
@@ -749,7 +759,7 @@ export default function CreateShipmentPage(pageProps: any) {
                   {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-1 rates-list-box" style={{ maxHeight: '20em' }}>
                     {(shipment.rates || []).map(rate => (
                       <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                         onClick={() => setSelectedRate(rate)}>
 
                         <CarrierImage carrier={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />

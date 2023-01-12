@@ -707,7 +707,7 @@ export default function CreateLabelPage(pageProps: any) {
                   {(!loading && (shipment.rates || []).length > 0) && <div className="menu-list py-1 rates-list-box" style={{ maxHeight: '20em' }}>
                     {(shipment.rates || []).map(rate => (
                       <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                        className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                         onClick={() => setSelectedRate(rate)}>
 
                         <CarrierImage carrier={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
