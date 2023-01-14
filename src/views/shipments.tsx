@@ -1,4 +1,4 @@
-import { formatAddressShort, formatAddressLocationShort, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
+import { formatAddressShort, formatAddressLocationShort, formatDateTime, formatRef, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
 import ShipmentPreview, { ShipmentPreviewContext } from "@/components/descriptions/shipment-preview";
 import ShipmentsFilter from "@/components/filters/shipments-filter";
 import AuthenticatedPage from "@/layouts/authenticated-page";
@@ -103,12 +103,12 @@ export default function ShipmentsPage(pageProps: any) {
                 {(shipments?.edges || []).map(({ node: shipment }) => (
                   <tr key={shipment.id} className="items is-clickable">
                     <td className="carrier is-vcentered has-text-centered p-2" onClick={() => previewShipment(shipment.id)}>
-                      {!isNone(shipment.carrier_name) && <CarrierBadge
+                      {!!shipment.carrier_name && <CarrierBadge
                         className="has-background-primary has-text-weight-bold has-text-white-bis"
                         style={{ fontSize: '0.6rem' }}
-                        carrier_name={shipmentCarrier(shipment as any)}
+                        carrier_name={shipment.meta.carrier || shipment.carrier_name}
                       />}
-                      {isNone(shipment.carrier_name) && <AppBadge />}
+                      {!shipment.carrier_name && <AppBadge />}
                     </td>
                     <td className="service is-vcentered p-1 pl-2 is-size-7 has-text-weight-bold has-text-grey text-ellipsis"
                       onClick={() => previewShipment(shipment.id)}

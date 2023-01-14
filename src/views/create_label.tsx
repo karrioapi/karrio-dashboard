@@ -826,7 +826,7 @@ export default function CreateLabelPage(pageProps: any) {
                           className={`columns is-multiline card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                           onClick={() => setSelectedRate(rate)}>
 
-                          <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
+                          <CarrierImage carrier_name={(rate.meta as any)?.carrier || rate.carrier_name} width={30} height={30} />
 
                           <RateDescription rate={rate} />
                         </a>

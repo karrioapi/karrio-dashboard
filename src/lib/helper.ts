@@ -266,13 +266,6 @@ export function createServerError(error: ServerError) {
   return error;
 }
 
-export function shipmentCarrier(shipment: ShipmentType) {
-  if ((shipment.meta as any)?.rate_provider === 'generic') {
-    return shipment.carrier_name;
-  }
-  return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
-}
-
 export const parseJwt = (token: string): any => {
   try {
     const content = Buffer.from(token.split('.')[1], 'base64').toString();
