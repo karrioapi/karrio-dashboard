@@ -1,10 +1,10 @@
 import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
-import { DocumentNode, FetchResult, MutationFunctionOptions } from "@apollo/client";
 import { BASE_PATH, KARRIO_API } from "@/client/context";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Session } from "next-auth";
+import gql from 'graphql-tag';
 import moment from "moment";
 import React from "react";
 import axios from "axios";
@@ -284,7 +284,7 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
     .replace('//', '/');
 }
 
-export function gqlstr(node: DocumentNode): string {
+export function gqlstr(node: ReturnType<typeof gql>): string {
   return (node.loc && node.loc.source.body) || "";
 }
 
@@ -368,39 +368,6 @@ export function failsafe(fn: () => any, defaultValue: any = null) {
   } catch (e) {
     return defaultValue;
   }
-}
-
-export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
-  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(async (resolve, reject) => {
-    const { data, errors }: any = await request({
-      errorPolicy: "all", ...options,
-      onError: (error) => error
-    });
-
-    if (data && (data[operation] as any)?.errors) {
-      const errors = (data[operation] as any).errors
-        .map((error: { field: string, messages: string[] }) => (
-          new ErrorType(error.field, error.messages)
-        ));
-      reject(errors);
-      return
-    }
-
-    if (errors?.graphQLErrors) {
-      reject(errors.graphQLErrors);
-      return
-    }
-
-    if (errors?.networkError) {
-      const _errors = (errors?.networkError?.result?.errors || []).map(
-        ({ message }: any) => new ErrorType("validation", [message])
-      );
-      reject(_errors);
-      return
-    }
-
-    resolve((data ? data[operation] : null) as T[typeof operation]);
-  });
 }
 
 export function debounce(func: (...args: any[]) => any, timeout: number = 300) {

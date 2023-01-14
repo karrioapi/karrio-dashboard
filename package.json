@@ -12,7 +12,6 @@
     "build:image": "./scripts/build-image.sh"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.8",
     "@codemirror/lang-html": "^6.4.0",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-xml": "^6.0.1",
@@ -23,6 +22,7 @@
     "@uiw/react-codemirror": "^4.19.4",
     "axios": "^0.25.0",
     "bulma": "^0.9.3",
+    "graphql-tag": "^2.12.6",
     "highlight.js": "^11.2.0",
     "js-beautify": "^1.14.7",
     "libphonenumber-js": "^1.9.23",

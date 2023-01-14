@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import gql from 'graphql-tag';
 
 
 export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($filter: AddressFilter) {
