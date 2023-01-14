@@ -852,10 +852,6 @@ export default function CreateShipmentPage(pageProps: any) {
                           <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
                           <RateDescription rate={rate} />
-
-                          {rate.test_mode && <div className="has-text-warning p-1">
-                            <i className="fas fa-exclamation-circle"></i>
-                          </div>}
                         </a>
                       ))}
                     </div>}
