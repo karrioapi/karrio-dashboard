@@ -48,7 +48,7 @@ export function useUploadRecordMutation() {
   // Mutations
   const uploadDocument = useMutation(
     (data: DocumentUploadData) => handleFailure(
-      karrio!.documents.upload({ data })
+      karrio!.documents.upload({ documentUploadData: data })
     ),
     { onSuccess: invalidateCache }
   );
