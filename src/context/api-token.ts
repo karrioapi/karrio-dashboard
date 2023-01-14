@@ -10,7 +10,7 @@ export function useAPIToken() {
   const query = useQuery(
     ['api_token'],
     () => request<GetToken>(gqlstr(GET_API_TOKEN), { ...headers() }),
-    { onError }
+    { onError, staleTime: 1500000 }
   );
 
   return {

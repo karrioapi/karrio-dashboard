@@ -34,7 +34,7 @@ export const OrganizationProvider: React.FC<any> = ({ children, ...props }) => {
         return data;
       }
     ),
-    { initialData: props.organizations, onError }
+    { initialData: props.organizations, staleTime: 1500000, onError }
   );
 
   return (
