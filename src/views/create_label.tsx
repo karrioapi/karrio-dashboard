@@ -823,16 +823,12 @@ export default function CreateLabelPage(pageProps: any) {
                     <div className="menu-list px-3 rates-list-box" style={{ maxHeight: '16.8em' }}>
                       {(shipment.rates || []).map(rate => (
                         <a key={rate.id} {...(rate.test_mode ? { title: "Test Mode" } : {})}
-                          className={`columns card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
+                          className={`columns is-multiline card m-0 mb-1 is-vcentered p-1 ${rate.service === shipment.options.preferred_service ? 'has-text-grey-dark has-background-success-light' : 'has-text-grey'} ${rate.id === selected_rate?.id ? 'has-text-grey-dark has-background-grey-lighter' : 'has-text-grey'}`}
                           onClick={() => setSelectedRate(rate)}>
 
                           <CarrierImage carrier_name={(rate.meta as any)?.rate_provider || rate.carrier_name} width={30} height={30} />
 
                           <RateDescription rate={rate} />
-
-                          {rate.test_mode && <div className="has-text-warning p-1">
-                            <i className="fas fa-exclamation-circle"></i>
-                          </div>}
                         </a>
                       ))}
                     </div>}
