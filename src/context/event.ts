@@ -29,7 +29,11 @@ export function useEvents({ setVariablesToURL = false, ...initialData }: FilterT
         ...acc,
         [key]: (["type"].includes(key)
           ? ([].concat(options[key as keyof EventFilter] as any).reduce(
-            (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            (acc, item: string) => (
+              typeof item == 'string'
+                ? [].concat(acc, item.split(',') as any)
+                : [].concat(acc, item)
+            ), []
           ))
           : (["offset", "first"].includes(key)
             ? parseInt(options[key as keyof EventFilter] as any)

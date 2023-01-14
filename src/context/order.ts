@@ -31,7 +31,11 @@ export function useOrders({ setVariablesToURL = false, ...initialData }: FilterT
         ...acc,
         [key]: (["status", "option_key"].includes(key)
           ? ([].concat(options[key as keyof OrderFilter] as any).reduce(
-            (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            (acc, item: string) => (
+              typeof item == 'string'
+                ? [].concat(acc, item.split(',') as any)
+                : [].concat(acc, item)
+            ), []
           ))
           : (["offset", "first"].includes(key)
             ? parseInt(options[key as keyof OrderFilter] as any)

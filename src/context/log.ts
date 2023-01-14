@@ -29,7 +29,11 @@ export function useLogs({ setVariablesToURL = false, ...initialData }: FilterTyp
         ...acc,
         [key]: (["method", "status_code"].includes(key)
           ? ([].concat(options[key as keyof LogFilter] as any).reduce(
-            (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            (acc, item: string) => (
+              typeof item == 'string'
+                ? [].concat(acc, item.split(',') as any)
+                : [].concat(acc, item)
+            ), []
           ))
           : (["offset", "first"].includes(key)
             ? parseInt(options[key as keyof LogFilter] as any)

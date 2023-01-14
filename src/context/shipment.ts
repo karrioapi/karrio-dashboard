@@ -31,7 +31,11 @@ export function useShipments({ setVariablesToURL = false, ...initialData }: Filt
         ...acc,
         [key]: (["carrier_name", "status", "service"].includes(key)
           ? ([].concat(options[key as keyof ShipmentFilter]).reduce(
-            (acc, item: string) => [].concat(acc, item.split(',') as any), []
+            (acc, item: string) => (
+              typeof item == 'string'
+                ? [].concat(acc, item.split(',') as any)
+                : [].concat(acc, item)
+            ), []
           ))
           : (["offset", "first"].includes(key)
             ? parseInt(options[key as keyof ShipmentFilter])
