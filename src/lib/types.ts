@@ -290,21 +290,17 @@ export interface References {
   TENANT_LEVEL_BILLING: boolean;
 
   ADDRESS_AUTO_COMPLETE: object;
-  countries: object;
-  currencies: object;
-  carriers: object;
-  customs_content_type: object;
-  incoterms: object;
-  states: object;
-  services: object;
-  service_names: object;
-  options: object;
-  option_names: object;
-  package_presets: object;
-  packaging_types: object;
-  payment_types: object;
+  countries: Collection;
+  currencies: Collection;
+  carriers: Collection;
+  custom_carriers: Collection;
+  states: Collection<Collection>;
+  services: Collection<Collection>;
+  service_names: Collection<Collection>;
+  package_presets: Collection<Collection>;
+  packaging_types: Collection<Collection>;
   carrier_capabilities: Collection<Collection<Array<string>>>;
-  service_levels: object;
+  service_levels: Collection<Collection<Array<ServiceLevelType>>>;
 }
 
 export const CARRIER_THEMES: Collection = {
