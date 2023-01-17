@@ -15,7 +15,7 @@ If you just want to try Karrio out, check out the [karrio/dashboard](https://hub
 
 Or launch the demo for free on vercel.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard&env=NEXT_PUBLIC_KARRIO_API_URL,JWT_SECRET,NEXTAUTH_URL&envDescription=NEXT_PUBLIC_KARRIO_API_URL%20should%20be%20the%20link%20to%20your%20karrrio%20server%20instance%20and%20NEXTAUTH_URL%20the%20link%20to%20your%20vercel%20deployed%20URL&envLink=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard%23configuration)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard&env=KARRIO_PUBLIC_URL,JWT_SECRET,DASHBOARD_URL&envDescription=KARRIO_PUBLIC_URL%20should%20be%20the%20link%20to%20your%20karrrio%20server%20instance%20and%20DASHBOARD_URL%20the%20link%20to%20your%20vercel%20deployed%20URL&envLink=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard%23configuration)
 
 ### Building and Running Karrio Dashboard
 
@@ -32,9 +32,7 @@ Clone the repository
 
 ```terminal
 git clone https://github.com/karrioapi/karrio-dashboard.git
-
 cd karrio-dashboard
-
 npm install
 ```
 
@@ -42,11 +40,13 @@ npm install
 
 Use the following environment variables to configure the dashboard:
 
-- `NEXT_PUBLIC_KARRIO_API_URL` (**required**) - URL of a running instance of karrio server. If you are running karrio-server locally with the default settings, set `NEXT_PUBLIC_KARRIO_API_URL` to: `http://localhost:5002`.
-
 - `JWT_SECRET` (**required**) - A secret to use for JWT key generation - you should set this explicitly.
 
-- `NEXTAUTH_URL` (**required**) - The URL of your dashboard to restrict the authentication host to your instance. If you are running the dashboard locally, set `NEXTAUTH_URL` to: `http://localhost:3000`.
+- `DASHBOARD_URL` (**required**) - The URL of your dashboard to restrict the authentication host to your instance. If you are running the dashboard locally, set `DASHBOARD_URL` to: `http://localhost:3000`.
+
+- `KARRIO_PUBLIC_URL` (**required**) - URL of a running instance of karrio server. If you are running karrio-server locally with the default settings, set `KARRIO_PUBLIC_URL` to: `http://localhost:5002`.
+
+- `KARRIO_URL` (**optional**) - The internal network karrio API url.
 
 #### Development
 

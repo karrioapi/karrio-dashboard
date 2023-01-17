@@ -6,21 +6,34 @@
 const path = require('path');
 const { withSentryConfig } = require('@sentry/nextjs');
 
+const BASE_PATH = process.env.BASE_PATH || '';
+const KARRIO_PUBLIC_URL = (
+  process.env.KARRIO_PUBLIC_URL || process.env.NEXT_PUBLIC_KARRIO_API_URL
+);
+const KARRIO_URL = (
+  process.env.KARRIO_URL || process.env.KARRIO_HOSTNAME
+);
+const SENTRY_DSN = (
+  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
+);
+
 const moduleExports = {
   swcMinify: false,
-  basePath: process.env.BASE_PATH || '',
   reactStrictMode: true,
+  basePath: BASE_PATH,
   sassOptions: {
     includePaths: [path.join(__dirname, 'src', 'styles')],
   },
   serverRuntimeConfig: {
+    KARRIO_URL: KARRIO_URL,
     JWT_SECRET: process.env.JWT_SECRET,
-    KARRIO_HOSTNAME: process.env.KARRIO_HOSTNAME || process.env.NEXT_PUBLIC_KARRIO_API_URL,
   },
   publicRuntimeConfig: {
-    BASE_PATH: process.env.BASE_PATH || '',
+    BASE_PATH: BASE_PATH,
+    SENTRY_DSN: SENTRY_DSN,
+    KARRIO_PUBLIC_URL: KARRIO_PUBLIC_URL,
+    NEXTAUTH_URL: process.env.DASHBOARD_URL,
     DASHBOARD_VERSION: process.env.DASHBOARD_VERSION,
-    KARRIO_API_URL: process.env.NEXT_PUBLIC_KARRIO_API_URL,
   },
   sentry: {
     disableServerWebpackPlugin: true,

@@ -13,8 +13,8 @@ export const BASE_PATH = (publicRuntimeConfig.BASE_PATH || '/').replace('//', '/
 export const TEST_BASE_PATH = (publicRuntimeConfig.BASE_PATH + '/test').replace('//', '/');
 export const KARRIO_API = (
   typeof window === 'undefined'
-    ? serverRuntimeConfig?.KARRIO_HOSTNAME
-    : publicRuntimeConfig?.KARRIO_API_URL
+    ? serverRuntimeConfig?.KARRIO_URL
+    : publicRuntimeConfig?.KARRIO_PUBLIC_URL
 );
 
 logger.debug("API clients initialized for Server: " + KARRIO_API);
