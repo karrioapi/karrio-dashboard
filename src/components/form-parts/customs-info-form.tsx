@@ -1,18 +1,18 @@
 import { CommodityType, CURRENCY_OPTIONS, CustomsType, CUSTOMS_CONTENT_TYPES, DutyType, INCOTERMS, NotificationType, PAYOR_OPTIONS, ShipmentType } from '@/lib/types';
 import { CurrencyCodeEnum, CustomsContentTypeEnum, IncotermCodeEnum, PaidByEnum } from 'karrio/graphql';
 import React, { FormEvent, useContext, useEffect, useReducer, useRef, useState } from 'react';
+import { DEFAULT_COMMODITY_CONTENT } from '@/components/commodity-edit-modal';
 import { useDefaultTemplates } from '@/context/default-template';
 import TextAreaField from '@/components/generic/textarea-field';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
-import { deepEqual, formatRef, isNone } from '@/lib/helper';
+import { isEqual, formatRef, isNone } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 import { useUser } from '@/context/user';
 import moment from 'moment';
-import { DEFAULT_COMMODITY_CONTENT } from '../commodity-edit-modal';
 
 
 export const DEFAULT_CUSTOMS_CONTENT: Partial<CustomsType> = {
@@ -62,11 +62,7 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
   const computeDisableState = (state: CustomsType): boolean => {
-    const isUnchanged = (
-      deepEqual(value, state) &&
-      deepEqual(value?.duty, state?.duty) &&
-      deepEqual(value?.options, state?.options)
-    );
+    const isUnchanged = isEqual(value, state);
 
     return onTemplateChange ? onTemplateChange(isUnchanged) : isUnchanged;
   };
@@ -94,14 +90,18 @@ const CustomsInfoForm: React.FC<CustomsInfoFormComponent> = ({ children, value, 
     setLoading(false);
   };
 
-  useEffect(() => { if (onChange && !deepEqual(value, customs)) onChange(customs) }, [customs]);
   useEffect(() => {
-    if (shipment && !deepEqual(shipment.customs, customs)) {
+    if (onChange && !isEqual(value, customs)) {
+      onChange(customs)
+    }
+  }, [customs]);
+  useEffect(() => {
+    if (!!shipment && !isEqual(shipment.customs, customs)) {
       dispatch({ name: "full", value: shipment.customs });
     }
   }, [shipment]);
   useEffect(() => {
-    if (user && isNone(value?.signer)) {
+    if (user && isNone(customs?.signer)) {
       dispatch({ name: "signer", value: user.full_name });
     }
   }, [user]);

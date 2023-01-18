@@ -105,7 +105,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
 
             {(template !== undefined) &&
               <CustomsInfoForm
-                value={template.customs}
+                value={(operation?.customsTemplate?.customs || DEFAULT_CUSTOMS_CONTENT) as CustomsType}
                 onSubmit={async customs => handleSubmit(customs as CustomsType)}
                 onChange={(customs: any) => setTemplate({ ...template, customs } as CustomsTemplateType)}
                 onTemplateChange={(isUnchanged) => {
