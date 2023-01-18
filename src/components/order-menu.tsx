@@ -24,7 +24,8 @@ const OrderMenu: React.FC<OrderMenuComponent> = ({ order, isViewing }) => {
   const [isActive, setIsActive] = useState(false);
   const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
   const { query: { data: { document_templates } = {} } } = useDocumentTemplates({
-    related_object: "order"
+    related_object: "order",
+    active: true,
   } as any);
 
   const handleOnClick = (e: React.MouseEvent) => {

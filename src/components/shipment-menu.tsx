@@ -27,7 +27,8 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
   const [isActive, setIsActive] = useState(false);
   const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
   const { query: { data: { document_templates } = {} } } = useDocumentTemplates({
-    related_object: "shipment"
+    related_object: "shipment",
+    active: true,
   } as any);
 
   const handleOnClick = (e: React.MouseEvent) => {
