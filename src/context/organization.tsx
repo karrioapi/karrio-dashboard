@@ -23,9 +23,9 @@ export const OrganizationProvider: React.FC<any> = ({ children, ...props }) => {
     extractCurrent(props.organizations, props.orgId)
   );
 
-  const query = useQuery(
-    ['organizations'],
-    () => request<get_organizations>(gqlstr(GET_ORGANIZATIONS), { ...headers() }).then(
+  const query = useQuery({
+    queryKey: ['organizations'],
+    queryFn: () => request<get_organizations>(gqlstr(GET_ORGANIZATIONS), { ...headers() }).then(
       data => {
         setOrganizations(data?.organizations)
         const current = extractCurrent(data?.organizations, props.orgId);
@@ -34,9 +34,13 @@ export const OrganizationProvider: React.FC<any> = ({ children, ...props }) => {
         return data;
       }
     ),
-    { initialData: props.organizations, staleTime: 1500000, onError }
-  );
+    enabled: props.metadata?.MULTI_ORGANIZATIONS === true,
+    initialData: props.organizations,
+    staleTime: 1500000,
+    onError
+  });
 
+  if (!props.metadata?.MULTI_ORGANIZATIONS) return <>{children}</>;
   return (
     <OrganizationContext.Provider value={{ organization, organizations, query }}>
       {children}
