@@ -2,20 +2,27 @@ import { DocumentTemplateFilter, CreateDocumentTemplateMutationInput, CREATE_DOC
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { gqlstr, insertUrlParam, onError, request, useSessionHeader } from "@/lib/helper";
 import React from "react";
+import { useAPIReference } from "./reference";
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };
 
 export function useDocumentTemplates(initialData: DocumentTemplateFilter = {}) {
   const headers = useSessionHeader();
+  const { DOCUMENTS_MANAGEMENT } = useAPIReference();
   const [filter, setFilter] = React.useState<DocumentTemplateFilter>({ ...PAGINATION, ...initialData });
 
   // Queries
-  const query = useQuery(
-    ['document_templates', filter],
-    () => request<get_document_templates>(gqlstr(GET_DOCUMENT_TEMPLATES), { variables: { filter }, ...headers() }),
-    { keepPreviousData: true, staleTime: 5000, onError },
-  );
+  const query = useQuery({
+    queryKey: ['document_templates', filter],
+    queryFn: () => request<get_document_templates>(
+      gqlstr(GET_DOCUMENT_TEMPLATES), { variables: { filter }, ...headers() }
+    ),
+    enabled: DOCUMENTS_MANAGEMENT === true,
+    keepPreviousData: true,
+    staleTime: 5000,
+    onError
+  });
 
   return {
     query,
