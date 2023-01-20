@@ -1,11 +1,11 @@
-import { CarrierNameEnum } from '@karrio/rest';
+import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import Image from "next/legacy/image";
 import { p } from '@/lib/helper';
 import React from 'react';
 
 
 interface CarrierImageComponent extends React.AllHTMLAttributes<HTMLImageElement> {
-  carrier_name?: CarrierNameEnum | string;
+  carrier_name?: CarrierSettingsCarrierNameEnum | string;
 }
 
 const CarrierImage: React.FC<CarrierImageComponent> = ({ carrier_name, className, width, height, ...props }) => {

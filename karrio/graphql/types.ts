@@ -5550,7 +5550,7 @@ export interface UpdateAddressInput {
 
 // null
 export interface UpdateCustomsInput {
-  commodities: UpdateCommodityInput[];
+  commodities?: UpdateCommodityInput[] | null;
   certify?: boolean | null;
   commercial_invoice?: boolean | null;
   content_type?: CustomsContentTypeEnum | null;
@@ -5872,6 +5872,7 @@ export interface DocumentTemplateFilter {
   offset?: number | null;
   first?: number | null;
   name?: string | null;
+  active?: boolean | null;
   related_object?: TemplateRelatedObject | null;
 }
 

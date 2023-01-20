@@ -18,7 +18,7 @@ const SENTRY_DSN = (
 );
 
 const moduleExports = {
-  swcMinify: false,
+  swcMinify: true,
   reactStrictMode: true,
   basePath: BASE_PATH,
   sassOptions: {

@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen:rest": "./scripts/generate-pship-client",
-    "gen:graph": "./scripts/generate-pship-graphql-types",
-    "build:image": "./scripts/build-image"
+    "gen:rest": "./bin/generate-pship-client",
+    "gen:graph": "./bin/generate-pship-graphql-types",
+    "build:image": "./bin/build-image"
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.0",
