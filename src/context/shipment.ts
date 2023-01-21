@@ -103,7 +103,7 @@ export function useShipmentMutation(id?: string) {
     { onSuccess: invalidateCache, onError }
   );
   const buyLabel = useMutation(
-    ({ id, selected_rate_id, ...shipment }: ShipmentType) => handleFailure(id !== undefined
+    ({ id, selected_rate_id, ...shipment }: ShipmentType) => handleFailure((id !== undefined && id !== 'new')
       ? karrio!.shipments.purchase({ id, shipmentPurchaseData: { selected_rate_id } as any }).then(({ data }) => data)
       : karrio!.shipments.create({ shipmentData: (shipment as any) }).then(({ data }) => data)
     ),
