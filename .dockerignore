@@ -4,6 +4,7 @@
 !/public/
 !/karrio/
 !/src/
+!/docker/entrypoint
 !/package.json
 !/package-lock.json
 !/sentry.client.config.js
