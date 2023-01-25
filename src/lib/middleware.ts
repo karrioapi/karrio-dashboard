@@ -1,4 +1,4 @@
-import { ContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType } from "@/lib/types";
+import { UserContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType, OrgContextDataType } from "@/lib/types";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { KARRIO_API } from "@/client/context";
@@ -12,11 +12,12 @@ const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
-
-  const data = await loadContextData(session as SessionType);
   const pathname = ctx.resolvedUrl;
+
   const orgId = ((session as any)?.orgId as string) || null;
   const testMode = ((session as any)?.testMode as boolean);
+
+  const data = await loadContextData(session as SessionType);
   const subscription = await checkSubscription(session, data.metadata);
 
   await setSessionCookies(ctx, testMode, orgId);
@@ -72,18 +73,28 @@ export async function loadContextData(session: SessionType): Promise<any> {
     'authorization': `Bearer ${accessToken}`,
   } as any;
 
-  const getReferences = () => axios
-    .get<References>(KARRIO_API + '/v1/references', { headers })
-    .then(({ data }) => data);
-  const getUserData = () => axios
-    .post<ContextDataType>(
-      `${KARRIO_API || ''}/graphql`, { query: dataQuery(metadata) }, { headers }
-    )
-    .then(({ data }) => data);
+  const getReferences = () => (
+    axios
+      .get<References>(KARRIO_API + '/v1/references', { headers })
+      .then(({ data }) => data)
+  );
+  const getUserData = () => (
+    axios
+      .post<UserContextDataType>(`${KARRIO_API || ''}/graphql`, { query: USER_DATA_QUERY }, { headers })
+      .then(({ data }) => data)
+  );
+  const getOrgData = () => (!!metadata?.MULTI_ORGANIZATIONS
+    ? axios
+      .post<OrgContextDataType>(`${KARRIO_API || ''}/graphql`, { query: ORG_DATA_QUERY }, { headers })
+      .then(({ data }) => data)
+    : Promise.resolve({ data: {} })
+  );
 
   try {
-    const [references, { data }] = await Promise.all([getReferences(), getUserData()]);
-    return { metadata, references, ...data };
+    const [references, { data: user }, { data: org }] = await Promise.all([
+      getReferences(), getUserData(), getOrgData()
+    ]);
+    return { metadata, references, ...user, ...org };
   } catch (e: any | Response) {
     logger.error(`Failed to fetch API data from (${KARRIO_API})`);
     logger.error(e.response?.data || e.response);
@@ -100,7 +111,7 @@ export async function loadContextData(session: SessionType): Promise<any> {
 
 export async function setSessionCookies(ctx: GetServerSidePropsContext, testMode: boolean, orgId?: string | null) {
   // Sets the authentication orgId cookie if the session has one
-  if (ctx.res && orgId) {
+  if (ctx.res && !!orgId) {
     ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
   }
   ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
@@ -158,8 +169,16 @@ export async function createPortalSession(session: SessionType | any, host: stri
   return {};
 }
 
-function dataQuery(metadata: any) {
-  const organizationQueries = metadata?.MULTI_ORGANIZATIONS ? `
+const USER_DATA_QUERY = `{
+  user {
+    email
+    full_name
+    is_staff
+    last_login
+    date_joined
+  }
+}`;
+const ORG_DATA_QUERY = `{
   organization {
     id
   }
@@ -190,21 +209,7 @@ function dataQuery(metadata: any) {
       last_login
     }
   }
-  `: "";
-
-  return `
-    {
-      user {
-        email
-        full_name
-        is_staff
-        last_login
-        date_joined
-      }
-      ${organizationQueries}
-    }
-  `;
-}
+}`;
 
 function needValidSubscription({ subscription }: { subscription?: SubscriptionType | null }) {
   return (

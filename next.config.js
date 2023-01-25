@@ -11,7 +11,7 @@ const KARRIO_PUBLIC_URL = (
   process.env.KARRIO_PUBLIC_URL || process.env.NEXT_PUBLIC_KARRIO_API_URL
 );
 const KARRIO_URL = (
-  process.env.KARRIO_URL || process.env.KARRIO_HOSTNAME
+  process.env.KARRIO_URL || process.env.KARRIO_HOSTNAME || KARRIO_PUBLIC_URL
 );
 const SENTRY_DSN = (
   process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN

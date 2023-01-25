@@ -34,25 +34,27 @@ export async function refreshToken(refresh: string) {
     });
 }
 
-export async function getCurrentOrg(access: string, orgId?: string) {
+export async function getCurrentOrg(access: string, orgId?: string, isMultiOrg?: string) {
   logger.debug("retrieving session org...");
 
-  return axios.post(
-    `${KARRIO_API || ''}/graphql`,
-    { query: `{ organizations { id } }` },
-    {
-      headers: { 'authorization': `Bearer ${access}` },
-    })
-    .then(({ data: { data } }) => {
-      return (
-        (data?.organizations || []).find(({ id }: any) => id === orgId)
-        || (data?.organizations || { id: null })[0]
-      )
-    })
-    .catch(({ data }) => {
-      logger.error(data)
-      return { id: null };
-    });
+  return (
+    axios.post(
+      `${KARRIO_API || ''}/graphql`,
+      { query: `{ organizations { id } }` },
+      {
+        headers: { 'authorization': `Bearer ${access}` },
+      })
+      .then(({ data: { data } }) => {
+        return (
+          (data?.organizations || []).find(({ id }: any) => id === orgId)
+          || (data?.organizations || [{ id: null }])[0]
+        );
+      })
+      .catch(({ data }) => {
+        logger.error(data)
+        return { id: null };
+      })
+  );
 }
 
 

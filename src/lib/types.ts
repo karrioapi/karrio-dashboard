@@ -226,9 +226,13 @@ export type SessionType = Session & {
   orgId?: string,
   error?: string,
 };
-export type ContextDataType = {
+export type UserContextDataType = {
   data: {
     user: GetUser_user,
+  }
+};
+export type OrgContextDataType = {
+  data: {
     organizations?: get_organizations_organizations[]
   }
 };

@@ -4,7 +4,8 @@ import { GetServerSideProps } from "next"
 import logger from "../logger";
 
 
-export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { res, params } = ctx;
   const id = params?.id as string;
 
   try {
