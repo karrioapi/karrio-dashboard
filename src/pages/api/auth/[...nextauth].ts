@@ -14,7 +14,7 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata } = await checkAPI();
+  const { metadata } = await checkAPI().catch(_ => _);
 
   return NextAuth({
     secret,
