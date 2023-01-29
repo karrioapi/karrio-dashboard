@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
 import { formatAddressRegion, formatDayDate, isNone, useLocation } from '@/lib/helper';
 import { TrackerType, TrackingEventType } from '@/lib/types';
 import CarrierImage from '@/components/carrier-image';
-import AppLink from '@/components/app-link';
 import { TrackerStatusEnum } from '@karrio/graphql';
+import React, { useRef, useState } from 'react';
+import AppLink from '@/components/app-link';
 
 type DayEvents = { [k: string]: TrackingEventType[] };
 type TrackingPreviewContextType = {
@@ -75,7 +75,7 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
           <section className="modal-card-body">
             <div className="has-text-centered pb-4">
               <CarrierImage
-                carrier={(tracker?.meta as any)?.carrier || tracker?.carrier_name}
+                carrier_name={(tracker?.meta as any)?.carrier || tracker?.carrier_name}
                 width={60} height={60}
               />
             </div>

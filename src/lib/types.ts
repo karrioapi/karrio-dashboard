@@ -1,5 +1,4 @@
-import { ApolloError } from '@apollo/client';
-import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, PartialServiceLevel, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum } from 'karrio/graphql';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, CreateServiceLevelInput, UpdateServiceLevelInput, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum, get_user_connections_user_connections_GenericSettingsType_label_template, get_webhooks_webhooks_edges_node } from 'karrio/graphql';
 import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from 'karrio/rest/index';
 import { Session } from 'next-auth';
 
@@ -13,12 +12,13 @@ export type CommodityType = (
   get_shipment_shipment_customs_commodities |
   get_shipment_shipment_parcels_items
 ) & {
-  unfilled_quantity?: number;
+  unfulfilled_quantity?: number | null;
 };
 export type DutyType = get_shipment_shipment_customs_duty;
 export type CustomsType = get_shipment_shipment_customs & {
   commodities: CommodityType[];
   duty?: DutyType;
+  duty_billing_address?: AddressType | null;
   id?: string;
 };
 export type ParcelType = get_shipment_shipment_parcels & {
@@ -33,19 +33,20 @@ export type ChargeType = get_shipment_shipment_selected_rate_extra_charges;
 export type RateType = get_shipment_shipment_rates;
 export type PaymentType = get_shipment_shipment_payment;
 export type ShipmentType = get_shipment_shipment & {
-  customs?: CustomsType | null;
   parcels: ParcelType[];
   shipper: AddressType;
   recipient: AddressType;
+  billing_address?: AddressType | null;
+  customs?: CustomsType | null;
   rates?: RateType[];
   messages?: MessageType[];
   selected_rate?: RateType;
   payment?: PaymentType;
 };
-export type OrderType = get_order_order & {
+export interface OrderType extends get_order_order {
   line_items: get_order_order_line_items[];
   shipments: ShipmentType[];
-};
+}
 
 export type AddressTemplateType = get_address_templates_address_templates_edges_node & {
   address: AddressType;
@@ -58,9 +59,13 @@ export type ParcelTemplateType = get_parcel_templates_parcel_templates_edges_nod
 };
 export type TemplateType = AddressTemplateType & ParcelTemplateType & CustomsTemplateType;
 
-export type ServiceLevelType = PartialServiceLevel;
+export type ServiceLevelType = CreateServiceLevelInput & UpdateServiceLevelInput;
+
+export type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
 
 export type DocumentTemplateType = get_document_template_document_template;
+
+export interface WebhookType extends get_webhooks_webhooks_edges_node { }
 
 export interface View {
   path: string
@@ -75,7 +80,7 @@ export enum NotificationType {
 
 export interface Notification {
   type?: NotificationType;
-  message: string | Error | RequestError | ApolloError | MessageType[] | ErrorType[];
+  message: string | Error | RequestError | MessageType[] | ErrorType[];
 }
 
 export interface LabelData {
@@ -221,9 +226,13 @@ export type SessionType = Session & {
   orgId?: string,
   error?: string,
 };
-export type ContextDataType = {
+export type UserContextDataType = {
   data: {
     user: GetUser_user,
+  }
+};
+export type OrgContextDataType = {
+  data: {
     organizations?: get_organizations_organizations[]
   }
 };
@@ -285,21 +294,17 @@ export interface References {
   TENANT_LEVEL_BILLING: boolean;
 
   ADDRESS_AUTO_COMPLETE: object;
-  countries: object;
-  currencies: object;
-  carriers: object;
-  customs_content_type: object;
-  incoterms: object;
-  states: object;
-  services: object;
-  service_names: object;
-  options: object;
-  option_names: object;
-  package_presets: object;
-  packaging_types: object;
-  payment_types: object;
+  countries: Collection;
+  currencies: Collection;
+  carriers: Collection;
+  custom_carriers: Collection;
+  states: Collection<Collection>;
+  services: Collection<Collection>;
+  service_names: Collection<Collection>;
+  package_presets: Collection<Collection>;
+  packaging_types: Collection<Collection>;
   carrier_capabilities: Collection<Collection<Array<string>>>;
-  service_levels: object;
+  service_levels: Collection<Collection<Array<ServiceLevelType>>>;
 }
 
 export const CARRIER_THEMES: Collection = {

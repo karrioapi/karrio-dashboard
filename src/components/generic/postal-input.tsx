@@ -1,5 +1,5 @@
-import React, { ChangeEvent } from 'react';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
+import React, { ChangeEvent } from 'react';
 
 interface PostalInputComponent extends InputFieldComponent {
   country?: string;

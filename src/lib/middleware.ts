@@ -1,23 +1,24 @@
-import { ContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType } from "@/lib/types";
+import { UserContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType, OrgContextDataType } from "@/lib/types";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { KARRIO_API } from "@/client/context";
 import { getSession } from "next-auth/react";
-import { Response } from "node-fetch";
+import getConfig from "next/config";
 import logger from "@/lib/logger";
 import axios from "axios";
 
-const AUTH_HTTP_CODES = [401, 403, 407];
+const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
+const AUTH_HTTP_CODES = [401, 403, 407];
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
-
-  const data = await loadContextData(session as SessionType);
   const pathname = ctx.resolvedUrl;
+
   const orgId = ((session as any)?.orgId as string) || null;
   const testMode = ((session as any)?.testMode as boolean);
+
+  const data = await loadContextData(session as SessionType);
   const subscription = await checkSubscription(session, data.metadata);
 
   await setSessionCookies(ctx, testMode, orgId);
@@ -40,12 +41,12 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
   // Attempt connection to the karrio API to retrieve the API metadata
   return new Promise(async (resolve, reject) => {
     try {
-      const { data: metadata } = await axios.get<Metadata>(KARRIO_API);
+      const { data: metadata } = await axios.get<Metadata>(serverRuntimeConfig?.KARRIO_URL);
 
       // TODO:: implement version compatibility check here.
       resolve({ metadata });
     } catch (e: any | Response) {
-      logger.error(`Failed to fetch API metadata from (${KARRIO_API})`);
+      logger.error(`Failed to fetch API metadata from (${serverRuntimeConfig?.KARRIO_URL})`);
       logger.error(e.response?.data || e.response);
       const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
         ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
@@ -53,7 +54,7 @@ export async function checkAPI(): Promise<{ metadata?: Metadata }> {
       const error = createServerError({
         code,
         message: `
-          Server (${KARRIO_API}) unreachable.
+          Server (${serverRuntimeConfig?.KARRIO_URL}) unreachable.
           Please make sure that the API is running and reachable.
         `
       });
@@ -73,21 +74,30 @@ export async function loadContextData(session: SessionType): Promise<any> {
     'authorization': `Bearer ${accessToken}`,
   } as any;
 
-  const getReferences = () => axios
-    .get<References>(KARRIO_API + '/v1/references', { headers })
-    .then(({ data }) => data);
-  const getUserData = () => axios
-    .post<ContextDataType>(KARRIO_API + '/graphql', 
-    { query: dataQuery(metadata) }, 
-    { headers })
-    .then(({ data }) => data);
+  const getReferences = () => (
+    axios
+      .get<References>(publicRuntimeConfig.KARRIO_PUBLIC_URL + '/v1/references', { headers })
+      .then(({ data }) => data)
+  );
+  const getUserData = () => (
+    axios
+      .post<UserContextDataType>(`${publicRuntimeConfig.KARRIO_PUBLIC_URL || ''}/graphql`, { query: USER_DATA_QUERY }, { headers })
+      .then(({ data }) => data)
+  );
+  const getOrgData = () => (!!metadata?.MULTI_ORGANIZATIONS
+    ? axios
+      .post<OrgContextDataType>(`${publicRuntimeConfig.KARRIO_PUBLIC_URL || ''}/graphql`, { query: ORG_DATA_QUERY }, { headers })
+      .then(({ data }) => data)
+    : Promise.resolve({ data: {} })
+  );
 
   try {
-    const [references, { data }] = await Promise.all([getReferences(), getUserData()]);
-
-    return { metadata, references, ...data };
+    const [references, { data: user }, { data: org }] = await Promise.all([
+      getReferences(), getUserData(), getOrgData()
+    ]);
+    return { metadata, references, ...user, ...org };
   } catch (e: any | Response) {
-    logger.error(`Failed to fetch API data from (${KARRIO_API})`);
+    logger.error(`Failed to fetch API data from (${publicRuntimeConfig.KARRIO_PUBLIC_URL})`);
     logger.error(e.response?.data || e.response);
     const code = AUTH_HTTP_CODES.includes(e.response?.status) ?
       ServerErrorCode.API_AUTH_ERROR : ServerErrorCode.API_CONNECTION_ERROR;
@@ -102,7 +112,7 @@ export async function loadContextData(session: SessionType): Promise<any> {
 
 export async function setSessionCookies(ctx: GetServerSidePropsContext, testMode: boolean, orgId?: string | null) {
   // Sets the authentication orgId cookie if the session has one
-  if (ctx.res && orgId) {
+  if (ctx.res && !!orgId) {
     ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
   }
   ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
@@ -117,17 +127,19 @@ export async function checkSubscription(session: SessionType | any, metadata?: M
       ...(orgId ? { 'x-org-id': orgId } : {}),
       'authorization': `Bearer ${accessToken}`,
     } as any;
-    const getOrgSubscription = () => axios
-      .get<SubscriptionType>(KARRIO_API + '/v1/billing/subscription', { headers })
-      .then(({ data }) => data)
-      .catch(() => { return null });
+    const getOrgSubscription = () => (
+      axios
+        .get<SubscriptionType>(publicRuntimeConfig.KARRIO_PUBLIC_URL + '/v1/billing/subscription', { headers })
+        .then(({ data }) => data)
+        .catch(() => { return null })
+    );
 
     try {
       const subscription = await getOrgSubscription();
 
       return { subscription };
     } catch (e: any | Response) {
-      logger.error(`Failed to fetch API subscription details from (${KARRIO_API})`);
+      logger.error(`Failed to fetch API subscription details from (${publicRuntimeConfig.KARRIO_PUBLIC_URL})`);
       logger.error(e.response?.data || e.response);
     }
   }
@@ -138,21 +150,23 @@ export async function checkSubscription(session: SessionType | any, metadata?: M
 export async function createPortalSession(session: SessionType | any, host: string, subscription?: SubscriptionType) {
   if (subscription?.is_owner) {
     const return_url = 'http://' + host;
-    const getCustomerPortalSession = () => axios
-      .post<PortalSessionType>(KARRIO_API + '/v1/billing/portal', { return_url }, {
-        headers: {
-          ...(session.orgId ? { 'x-org-id': session.orgId } : {}),
-          'authorization': `Bearer ${session.accessToken}`,
-        } as any
-      })
-      .then(({ data }) => data);
+    const headers = {
+      ...(session.orgId ? { 'x-org-id': session.orgId } : {}),
+      'authorization': `Bearer ${session.accessToken}`,
+    } as any;
+
+    const getCustomerPortalSession = () => (
+      axios
+        .post<PortalSessionType>(publicRuntimeConfig.KARRIO_PUBLIC_URL + '/v1/billing/portal', { return_url }, { headers })
+        .then(({ data }) => data)
+    );
 
     try {
       const portal_session = await getCustomerPortalSession();
 
       return { session_url: portal_session.url };
     } catch (e: any | Response) {
-      logger.error(`Failed to create customer portal session from (${KARRIO_API})`);
+      logger.error(`Failed to create customer portal session from (${publicRuntimeConfig.KARRIO_PUBLIC_URL})`);
       logger.error(e.response?.data || e.response);
     }
   }
@@ -160,8 +174,23 @@ export async function createPortalSession(session: SessionType | any, host: stri
   return {};
 }
 
-function dataQuery(metadata: any) {
-  const organizationQueries = metadata?.MULTI_ORGANIZATIONS ? `
+function needValidSubscription({ subscription }: { subscription?: SubscriptionType | null }) {
+  return (
+    subscription &&
+    !ACTIVE_SUBSCRIPTIONS.includes(subscription?.status as string)
+  )
+}
+
+const USER_DATA_QUERY = `{
+  user {
+    email
+    full_name
+    is_staff
+    last_login
+    date_joined
+  }
+}`;
+const ORG_DATA_QUERY = `{
   organization {
     id
   }
@@ -174,7 +203,6 @@ function dataQuery(metadata: any) {
       email
       full_name
       is_admin
-      is_staff
       is_owner
       last_login
     }
@@ -193,25 +221,4 @@ function dataQuery(metadata: any) {
       last_login
     }
   }
-  `: "";
-
-  return `
-    {
-      user {
-        email
-        full_name
-        is_staff
-        last_login
-        date_joined
-      }
-      ${organizationQueries}
-    }
-  `;
-}
-
-function needValidSubscription({ subscription }: { subscription?: SubscriptionType | null }) {
-  return (
-    subscription &&
-    !ACTIVE_SUBSCRIPTIONS.includes(subscription?.status as string)
-  )
-}
+}`;

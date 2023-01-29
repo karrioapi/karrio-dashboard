@@ -65,6 +65,7 @@ export function formatMessage(msg: Notification['message']) {
 
     return (msg as any).message;
   } catch (e) {
+    console.log('Failed to parse error');
     console.error(e);
     return 'Uh Oh! An uncaught error occured...';
   }
@@ -72,7 +73,6 @@ export function formatMessage(msg: Notification['message']) {
 
 function renderError(msg: any, _: number): any {
   const error = msg.data?.errors || msg.data?.messages || msg;
-  
   if (error?.message !== undefined) {
     return error.message;
   }
@@ -86,11 +86,14 @@ function renderError(msg: any, _: number): any {
 
   else if (Array.isArray(error) && error.length > 0) {
     return (error || []).map((msg: any, index: number) => {
+      if (msg.carrier_name) {
+        return <p key={index}>{msg.carrier_name || msg.carrier_id || JSON.stringify(msg)} {msg.message}</p>;
+      }
       if (msg.details) {
         return <>{renderError(msg, 0)}</>;
       }
-      if (msg.carrier_name) {
-        return <p key={index}>{msg.carrier_name || msg.carrier_id || JSON.stringify(msg)} {msg.message}</p>;
+      if (msg.message) {
+        return <p key={index}><strong>{msg.code}:</strong> {msg.message}</p>;
       }
       return <p key={index}>{JSON.stringify(msg)}</p>;
     });

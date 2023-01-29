@@ -1,9 +1,9 @@
 import { KARRIO_API } from "@/client/context";
 import { TokenObtainPair } from "karrio/rest";
-import axios from "axios";
-import logger from '@/lib/logger';
+import { isNoneOrEmpty } from "@/lib/helper";
 import { NextApiRequest } from "next";
-import { isNoneOrEmpty } from "./helper";
+import logger from '@/lib/logger';
+import axios from "axios";
 
 
 export async function authenticate(data: TokenObtainPair) {
@@ -34,24 +34,27 @@ export async function refreshToken(refresh: string) {
     });
 }
 
-export async function getCurrentOrg(access: string, orgId?: string) {
+export async function getCurrentOrg(access: string, orgId?: string, isMultiOrg?: string) {
   logger.debug("retrieving session org...");
 
-  return axios({
-    url: KARRIO_API + '/graphql',
-    headers: { 'authorization': `Bearer ${access}` },
-    data: { query: `{ organizations { id } }` }
-  })
-    .then(({ data: { data } }) => {
-      return (
-        (data?.organizations || []).find(({ id }: any) => id === orgId)
-        || (data?.organizations || { id: null })[0]
-      )
-    })
-    .catch(({ data }) => {
-      logger.error(data)
-      return { id: null };
-    });
+  return (
+    axios.post(
+      `${KARRIO_API || ''}/graphql`,
+      { query: `{ organizations { id } }` },
+      {
+        headers: { 'authorization': `Bearer ${access}` },
+      })
+      .then(({ data: { data } }) => {
+        return (
+          (data?.organizations || []).find(({ id }: any) => id === orgId)
+          || (data?.organizations || [{ id: null }])[0]
+        );
+      })
+      .catch(({ data }) => {
+        logger.error(data)
+        return { id: null };
+      })
+  );
 }
 
 

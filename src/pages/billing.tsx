@@ -65,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const metadata = await checkAPI().catch(_ => _);
   const subscription = await checkSubscription(session, metadata.metadata).catch(_ => _);
   const portal_session = await createPortalSession(session, ctx.req.headers.host as string, subscription.subscription);
-
+  
   return { props: { ...metadata, ...subscription, ...portal_session } };
 };
 

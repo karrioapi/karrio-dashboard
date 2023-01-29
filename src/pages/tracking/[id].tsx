@@ -1,10 +1,10 @@
 import { TrackingEvent, TrackingStatus } from "karrio/rest";
+import { formatDayDate, isNone, p } from "@/lib/helper";
+import CarrierImage from "@/components/carrier-image";
+import { Metadata } from "@/lib/types";
 import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import { formatDayDate, isNone, p } from "@/lib/helper";
-import { Metadata } from "@/lib/types";
-import CarrierImage from "@/components/carrier-image";
 
 export { getServerSideProps } from '@/lib/static/tracker';
 
@@ -38,7 +38,7 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
               <div className="card-content">
 
                 <div className="pb-4 is-flex is-justify-content-center">
-                  <CarrierImage carrier={tracker?.carrier_name} width={60} height={60} />
+                  <CarrierImage carrier_name={tracker!.carrier_name} width={60} height={60} />
                 </div>
 
 

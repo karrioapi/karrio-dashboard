@@ -1,13 +1,18 @@
-import { BASE_PATH, KARRIO_API } from "@/client/context";
 import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
-import { FetchResult, MutationFunctionOptions } from "@apollo/client";
-import axios from "axios";
-import moment from "moment";
-import { Session } from "next-auth";
+import { BASE_PATH, KARRIO_API } from "@/client/context";
+import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { Session } from "next-auth";
+import gql from 'graphql-tag';
+import moment from "moment";
 import React from "react";
+import axios from "axios";
 
+export const isEqual = require('lodash.isequal');
+export const snakeCase = require('lodash.snakecase');
+export const groupBy = require('lodash.groupby');
+export const toNumber = require('lodash.tonumber');
 
 export function formatRef(s?: string): string {
   return (s || "").split('_').join(' ').toLocaleUpperCase();
@@ -261,23 +266,6 @@ export function createServerError(error: ServerError) {
   return error;
 }
 
-export function getCursorPagination(cursor?: string | null): { limit?: number; offset?: number; } {
-  const [_, queryString] = (cursor || '').split('?');
-  const params = (queryString || '').split('&');
-
-  const [_limit, limit] = (params.find(p => p.includes('limit')) || '').split('=');
-  const [_offset, offset] = (params.find(p => p.includes('offset')) || '').split('=');
-
-  return {
-    ...(limit === undefined ? {} : { limit: parseInt(limit) }),
-    ...(offset === undefined ? {} : { offset: parseInt(offset) })
-  };
-}
-
-export function shipmentCarrier(shipment: ShipmentType) {
-  return (shipment.meta as any)?.rate_provider || shipment.carrier_name;
-}
-
 export const parseJwt = (token: string): any => {
   try {
     const content = Buffer.from(token.split('.')[1], 'base64').toString();
@@ -294,6 +282,10 @@ export function p(strings: TemplateStringsArray, ...keys: any[]) {
   return `${BASE_PATH}/${template}`
     .replace('///', '/')
     .replace('//', '/');
+}
+
+export function gqlstr(node: ReturnType<typeof gql>): string {
+  return (node.loc && node.loc.source.body) || "";
 }
 
 export function useLocation() {
@@ -378,39 +370,6 @@ export function failsafe(fn: () => any, defaultValue: any = null) {
   }
 }
 
-export function handleGraphQLRequest<T, R, S>(operation: keyof T, request: (options?: MutationFunctionOptions<R, S>) => Promise<FetchResult<T>>) {
-  return (options?: MutationFunctionOptions<R, S>) => new Promise<T[typeof operation]>(async (resolve, reject) => {
-    const { data, errors }: any = await request({
-      errorPolicy: "all", ...options,
-      onError: (error) => error
-    });
-
-    if (data && (data[operation] as any)?.errors) {
-      const errors = (data[operation] as any).errors
-        .map((error: { field: string, messages: string[] }) => (
-          new ErrorType(error.field, error.messages)
-        ));
-      reject(errors);
-      return
-    }
-
-    if (errors?.graphQLErrors) {
-      reject(errors.graphQLErrors);
-      return
-    }
-
-    if (errors?.networkError) {
-      const _errors = (errors?.networkError?.result?.errors || []).map(
-        ({ message }: any) => new ErrorType("validation", [message])
-      );
-      reject(_errors);
-      return
-    }
-
-    resolve((data ? data[operation] : null) as T[typeof operation]);
-  });
-}
-
 export function debounce(func: (...args: any[]) => any, timeout: number = 300) {
   let timer: NodeJS.Timeout;
   return (...args: any[]) => {
@@ -423,10 +382,6 @@ export function isListEqual<T>(list1: T[], list2: T[]) {
   return list1.length === list2.length && list1.every((item, index) => item === list2[index]);
 }
 
-export const isEqual = require('lodash.isequal');
-export const snakeCase = require('lodash.snakecase');
-
-
 export function toSingleItem(collection: CommodityType[]) {
   return collection
     .reduce((acc, item) => {
@@ -438,17 +393,45 @@ export function toSingleItem(collection: CommodityType[]) {
     }, [] as typeof collection[]);
 }
 
-export function getShipmentCommodities(shipment: ShipmentType): CommodityType[] {
-  return Object.values(
+export function commodityMatch(item: Partial<CommodityType>, items?: CommodityType[]) {
+  return (items || []).find(cdt => (
+    (!!cdt.parent_id && cdt.parent_id === item.parent_id)
+    || (!!cdt.hs_code && cdt.hs_code === cdt.hs_code)
+    || (!!cdt.sku && cdt.sku === item.sku)
+  ))
+}
+
+export function getShipmentCommodities(shipment: ShipmentType, currentCommodities?: CommodityType[]): CommodityType[] {
+  const parcelItems = Object.values(
     shipment?.parcels
       .map(parcel => parcel.items || [])
       .flat()
-      .reduce((acc, item, _index) => {
-        const index: string = item.parent_id || item.id || item.sku || item.hs_code || `${_index}`;
-        acc[index] = { ...item, quantity: (acc[index]?.quantity || 0) + (item.quantity || 0) };
-        return acc;
-      }, {} as Collection<CommodityType>)
+      .reduce(
+        (acc, { id: _, ...item }: CommodityType, _index) => {
+          const index: string = item.parent_id || item.sku || item.hs_code || _ || `${_index}`;
+          const match: any = commodityMatch(item, currentCommodities) || {};
+          const quantity = (acc[index]?.quantity || 0) + toNumber(item.quantity || 0);
+          acc[index] = { ...match, ...item, quantity };
+          return acc;
+        },
+        {} as Collection<CommodityType>
+      )
   );
+  const unpackedItems = (currentCommodities || []).filter(cdt => isNone(
+    commodityMatch(cdt, parcelItems)
+  ));
+
+  return [...parcelItems, ...unpackedItems];
+}
+
+export function getOrderLineItems(orders: OrderType[]) {
+  return (orders || []).map(({ line_items }) => line_items).flat();
+}
+
+export function getUnfulfilledOrderLineItems(orders: OrderType[]) {
+  return getOrderLineItems(orders)
+    .map(({ id, unfulfilled_quantity: quantity, ...item }) => ({ ...item, quantity, id, parent_id: id }))
+    .filter(({ quantity }) => toNumber(quantity) || 0 > 0);
 }
 
 export function forceSignOut() {
@@ -463,32 +446,53 @@ export function getSessionHeader(session: SessionType | Session | any) {
   return { ...orgHeader, ...testHeader, ...authHeader };
 }
 
-type requestArgs<T> = {
-  query: string;
-  variables: T;
+export function useSessionHeader() {
+  const { data } = useSession();
+  return () => ({ headers: getSessionHeader(data) })
+}
+
+export type dataT<T> = { data?: T }
+type requestArgs = {
+  variables?: Record<string, any>;
+  data?: Record<string, any>;
+  operationName?: string;
   url?: string;
-  config?: any;
-};
+} & Record<string, any>;
 
-export async function request<T, R>(args: requestArgs<T>) {
-  const { url, query, variables, config } = args;
+export async function request<T>(query: string, args?: requestArgs): Promise<T> {
+  const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
-    const { data } = await axios.post<R>(url || `${KARRIO_API}/graphql`, { query, variables }, config);
+    const variables = data ? { data } : reqVariables;
+    const { data: response } = await axios.post<{ data?: T, errors?: any }>(
+      url || `${KARRIO_API || ''}/graphql`, { query, operationName, variables }, config,
+    );
 
-    if ((data as any).errors) {
-      throw new RequestError({ errors: (data as any).errors });
+    if (response.errors) {
+      throw new RequestError({ errors: response.errors });
     }
 
-    return data;
+    return response.data || (response as T);
   } catch (error: any) {
     throw new RequestError(error.response?.data || error.data || error);
   }
 }
 
 export function errorToMessages(error: ErrorType | Error | any) {
+  const data = error.data?.message || error.message;
+
   return (
     error.data?.errors ||
     error.data?.messages ||
-    [error.data?.message || error.message]
+    (data ? [data] : [error])
   );
+}
+
+export function onError(error: any) {
+  const response = error.response?.data || error.data || error;
+
+  const authExpiredError = (response.errors || []).find(
+    (err: any) => (err.code === "authentication_required" || err.status_code === 401)
+  );
+
+  if (authExpiredError) { window.location.pathname = window.location.pathname; }
 }

@@ -81,7 +81,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
           <input
             onClick={handleOnClick}
             onChange={onRefChange}
-            value={selected}
+            value={selected || ""}
             className={"dropdown-trigger input is-clickable is-fullwidth px-2" + ` ${className}` || ''}
             aria-haspopup="true"
             readOnly
@@ -91,7 +91,7 @@ const DropdownInput: React.FC<DropdownInputComponent> = ({ label, name, items, v
           <input
             style={{ zIndex: -1, position: "absolute", left: '20px', bottom: '0' }}
             name={name}
-            value={selected}
+            value={selected || ""}
             onChange={onRefChange}
             tabIndex={-1}
             required={required}

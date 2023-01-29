@@ -1,15 +1,15 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import CloseAccountAction from "@/components/close-account-action";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import Tabs, { TabStateProvider } from "@/components/generic/tabs";
-import Head from "next/head";
-import ProfileUpdateInput from "@/components/profile-update-input";
 import OrganizationManagement from "@/components/organization-management";
-import PasswordManagement from "@/components/password-management";
-import InviteMemberProvider from "@/components/invite-member-modal";
-import ConfirmModal from "@/components/confirm-modal";
-import EmailManagement from "@/components/email-management";
 import SubscriptionManagement from "@/components/subscription-management";
+import InviteMemberProvider from "@/components/invite-member-modal";
+import CloseAccountAction from "@/components/close-account-action";
+import Tabs, { TabStateProvider } from "@/components/generic/tabs";
+import ProfileUpdateInput from "@/components/profile-update-input";
+import PasswordManagement from "@/components/password-management";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import EmailManagement from "@/components/email-management";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import ConfirmModal from "@/components/confirm-modal";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 

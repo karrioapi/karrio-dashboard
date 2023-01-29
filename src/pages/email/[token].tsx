@@ -1,25 +1,22 @@
 import SectionLayout from "@/layouts/section-layout";
-import Spinner from "@/components/spinner";
-import { CONFIRM_EMAIL } from "karrio/graphql";
-import { isNone } from "@/lib/helper";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import Link from "next/link";
+import { useUserMutation } from "@/context/user";
+import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
 import { Metadata } from "@/lib/types";
+import { isNone } from "@/lib/helper";
+import Head from "next/head";
+import Link from "next/link";
 
 export { getServerSideProps } from '@/lib/static/references';
 
 
 export default function Page({ metadata }: { metadata: Metadata }) {
   const router = useRouter();
-  const { token } = router.query;
-  const [confirm, { data, loading }] = useMutation(CONFIRM_EMAIL);
+  const { token } = router.query as { token: string };
+  const { confirmEmail: { isLoading, data, mutateAsync } } = useUserMutation();
 
-  const isConfirmed = (value?: any) => value?.success;
-
-  useEffect(() => { !isNone(token) && confirm({ variables: { data: { token } } }) }, [token, confirm]);
+  useEffect(() => { !isNone(token) && mutateAsync({ token }) }, [token]);
 
   return (
     <>
@@ -29,10 +26,13 @@ export default function Page({ metadata }: { metadata: Metadata }) {
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered ">
 
-            {loading && <Spinner />}
+            {isLoading && <Spinner />}
 
-            {(!loading && isConfirmed(data?.confirm_email)) && <p>Your account is verified!</p>}
-            {(!loading && !isConfirmed(data?.confirm_email)) && <p>Error, invalid or expired account activation token!</p>}
+            {(data?.confirm_email?.success === true) &&
+              <p>Your account is verified!</p>}
+
+            {(!isLoading && !data?.confirm_email?.success) &&
+              <p>Error, invalid or expired account activation token!</p>}
 
           </div>
         </div>

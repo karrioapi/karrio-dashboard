@@ -1,5 +1,5 @@
-import ErrorBoundary from '@/components/error-boudaries';
 import { ServerError, ServerErrorCode } from '@/lib/helper';
+import ErrorBoundary from '@/components/error-boudaries';
 import React from 'react';
 
 const MainLayout: React.FC<{ error?: ServerError }> = ({ children, error }) => {

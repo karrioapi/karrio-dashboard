@@ -1,16 +1,14 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
 import CustomsInfoEditModal, { CustomsInfoEditContext } from "@/components/customs-info-edit-modal";
-import DashboardLayout from "@/layouts/dashboard-layout";
+import { useCustomsTemplateMutation, useCustomsTemplates } from "@/context/customs";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
-import { Loading } from "@/components/loader";
-import CustomInfoTemplatesProvider, { CustomInfoTemplates } from "@/context/customs-templates-provider";
-import CustomsMutationProvider, { CustomsMutationContext } from "@/context/customs-template-mutation";
-import { isNone, isNoneOrEmpty } from "@/lib/helper";
+import ConfirmModal, { ConfirmModalContext } from "@/components/confirm-modal";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import { useRouter } from "next/dist/client/router";
+import { useContext, useEffect } from "react";
+import { isNoneOrEmpty } from "@/lib/helper";
 import { CustomsType } from "@/lib/types";
 import Head from "next/head";
-import { useContext, useEffect } from "react";
-import { useRouter } from "next/dist/client/router";
 import React from "react";
 
 export { getServerSideProps } from "@/lib/middleware";
@@ -19,42 +17,38 @@ export { getServerSideProps } from "@/lib/middleware";
 export default function CustomsInfoPage(pageProps: any) {
   const Component: React.FC<any> = () => {
     const router = useRouter();
-    const { setLoading } = useContext(Loading);
     const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
     const { editCustomsInfo } = useContext(CustomsInfoEditContext);
-    const { deleteCustomsTemplate } = useContext(CustomsMutationContext);
-    const { loading, templates, next, previous, called, load, loadMore, refetch } = useContext(CustomInfoTemplates);
+    const mutation = useCustomsTemplateMutation();
+    const { query, setFilter, filter } = useCustomsTemplates();
     const [initialized, setInitialized] = React.useState(false);
 
-    const update = async () => refetch && await refetch();
     const remove = (id: string) => async () => {
-      await deleteCustomsTemplate(id);
-      update();
+      await mutation.deleteCustomsTemplate.mutateAsync({ id });
     };
 
-    useEffect(() => { !loading && load() }, []);
-    useEffect(() => { setLoading(loading); });
     useEffect(() => {
-      if (called && !initialized && !isNoneOrEmpty(router.query.modal)) {
-        const customsTemplate = templates.find(c => c.id === router.query.modal);
+      if (!initialized && query.isFetched && !isNoneOrEmpty(router.query.modal)) {
+        const customsTemplate: any = (query.data?.customs_templates?.edges || [])
+          .find(c => c.node.id === router.query.modal);
         if (customsTemplate || router.query.modal === 'new') {
-          editCustomsInfo({ customsTemplate, onConfirm: update });
+          editCustomsInfo({ customsTemplate });
         }
         setInitialized(true);
       }
-    }, [router.query.modal, called]);
+    }, [router.query.modal, query.isFetched]);
 
     return (
       <>
 
-        <header className="px-0 py-4">
+        <header className="px-0 py-6">
           <span className="title is-4">Customs</span>
-          <button className="button is-primary is-small is-pulled-right" onClick={() => editCustomsInfo({ onConfirm: update })}>
+          <button className="button is-primary is-small is-pulled-right" onClick={() => editCustomsInfo()}>
             <span>Create customs info</span>
           </button>
         </header>
 
-        {(templates.length > 0) && <div className="table-container">
+        {((query.data?.customs_templates.edges || []).length > 0) && <div className="table-container">
           <table className="table is-fullwidth">
 
             <tbody className="templates-table">
@@ -63,7 +57,7 @@ export default function CustomsInfoPage(pageProps: any) {
                 <td className="action"></td>
               </tr>
 
-              {templates.map((template) => (
+              {(query.data?.customs_templates.edges || []).map(({ node: template }) => (
 
                 <tr key={`${template.id}-${Date.now()}`}>
                   <td className="template">
@@ -78,8 +72,7 @@ export default function CustomsInfoPage(pageProps: any) {
                   <td className="action is-vcentered pr-0">
                     <div className="buttons is-justify-content-end">
                       <button className="button is-white" onClick={() => editCustomsInfo({
-                        customsTemplate: template,
-                        onConfirm: update,
+                        customsTemplate: template as any,
                       })}>
                         <span className="icon is-small">
                           <i className="fas fa-pen"></i>
@@ -104,13 +97,19 @@ export default function CustomsInfoPage(pageProps: any) {
           </table>
 
           <footer className="px-2 py-2 is-vcentered">
-            <span className="is-size-7 has-text-weight-semibold">{templates.length} results</span>
+            <span className="is-size-7 has-text-weight-semibold">
+              {(query.data?.customs_templates.edges || []).length} results
+            </span>
 
             <div className="buttons has-addons is-centered is-pulled-right">
-              <button className="button is-small" onClick={() => loadMore(previous)} disabled={isNone(previous)}>
+              <button className="button is-small"
+                onClick={() => setFilter({ ...filter, offset: (filter.offset || 0) - 20 })}
+                disabled={!query.data?.customs_templates.page_info.has_previous_page}>
                 <span>Previous</span>
               </button>
-              <button className="button is-small" onClick={() => loadMore(next)} disabled={isNone(next)}>
+              <button className="button is-small"
+                onClick={() => setFilter({ ...filter, offset: (filter.offset || 0) + 20 })}
+                disabled={!query.data?.customs_templates.page_info.has_next_page}>
                 <span>Next</span>
               </button>
             </div>
@@ -118,14 +117,13 @@ export default function CustomsInfoPage(pageProps: any) {
 
         </div>}
 
-        {(!loading && templates.length == 0) && <div className="card my-6">
-
-          <div className="card-content has-text-centered">
-            <p>No customs info template has been added yet.</p>
-            <p>Use the <strong>New Customs Info</strong> button above to add</p>
-          </div>
-
-        </div>}
+        {(query.isFetched && (query.data?.customs_templates.edges || []).length == 0) &&
+          <div className="card my-6">
+            <div className="card-content has-text-centered">
+              <p>No customs info template has been added yet.</p>
+              <p>Use the <strong>New Customs Info</strong> button above to add</p>
+            </div>
+          </div>}
 
       </>
     );
@@ -134,17 +132,13 @@ export default function CustomsInfoPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Customs Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <CustomInfoTemplatesProvider>
-        <CustomsMutationProvider>
-          <ConfirmModal>
-            <CustomsInfoEditModal>
+      <ConfirmModal>
+        <CustomsInfoEditModal>
 
-              <Component />
+          <Component />
 
-            </CustomsInfoEditModal>
-          </ConfirmModal>
-        </CustomsMutationProvider>
-      </CustomInfoTemplatesProvider>
+        </CustomsInfoEditModal>
+      </ConfirmModal>
     </DashboardLayout>
   ), pageProps);
 }

@@ -1,7 +1,7 @@
-import { AppMode } from '@/context/app-mode-provider';
-import { p } from '@/lib/helper';
+import { useAppMode } from '@/context/app-mode';
 import Link, { LinkProps } from 'next/link';
-import React, { useContext } from 'react';
+import { p } from '@/lib/helper';
+import React from 'react';
 
 interface AppLinkProps extends LinkProps {
   href: string;
@@ -11,10 +11,10 @@ interface AppLinkProps extends LinkProps {
 }
 
 const AppLink: React.FC<AppLinkProps> = ({ href, className, target, onClick, children, ...props }) => {
-  const { basePath } = useContext(AppMode);
+  const { basePath } = useAppMode();
 
   return (
-    <Link legacyBehavior href={p`${basePath}${href}`} {...props}>
+    <Link href={p`${basePath}${href}`} {...props} legacyBehavior>
       <a
         {...(target ? { target } : {})}
         {...(onClick ? { onClick } : {})}

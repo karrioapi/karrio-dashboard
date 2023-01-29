@@ -1,14 +1,14 @@
-import { rest$ } from "@/client/context";
 import { checkAPI } from "@/lib/middleware";
-import { GetServerSideProps } from "next"
-import logger from "../logger";
+import { GetServerSideProps } from "next";
+import { rest$ } from "@/client/context";
 
 
-export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { res, params } = ctx;
   const id = params?.id as string;
 
   try {
-    const metadata = await checkAPI();
+    const metadata = await checkAPI().catch(_ => _);
 
     // Retrieve tracker by id
     const data = await rest$.value?.trackers.retrieves({ idOrTrackingNumber: id })

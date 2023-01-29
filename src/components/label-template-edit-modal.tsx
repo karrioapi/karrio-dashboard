@@ -1,17 +1,30 @@
+import { get_user_connections_user_connections_GenericSettingsType, get_user_connections_user_connections_GenericSettingsType_label_template, LabelTemplateTypeEnum } from 'karrio/graphql';
+import { failsafe, isEqual, isNone, isNoneOrEmpty, validationMessage, validityCheck } from '@/lib/helper';
+import Tabs, { TabStateProvider } from '@/components/generic/tabs';
 import React, { useContext, useReducer, useState } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-import { html } from '@codemirror/lang-html';
-import { jsonLanguage } from '@codemirror/lang-json';
-import { deepEqual, failsafe, isEqual, isNone, isNoneOrEmpty, validationMessage, validityCheck } from '@/lib/helper';
-import { get_user_connections_with_generics_user_connections_GenericSettings, LabelTemplate, LabelTemplateTypeEnum } from 'karrio/graphql';
-import Notifier from '@/components/notifier';
-import { Loading } from '@/components/loader';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_SVG_LABEL_TEMPLATE } from '@/lib/sample';
+import { jsonLanguage } from '@codemirror/lang-json';
+import CodeMirror from '@uiw/react-codemirror';
+import { Loading } from '@/components/loader';
 import { KARRIO_API } from '@/client/context';
-import Tabs, { TabStateProvider } from './generic/tabs';
+import { htmlLanguage } from '@codemirror/lang-html';
+import Notifier from '@/components/notifier';
 
-export const DEFAULT_LABEL_TEMPLATE_CONTENT: Partial<LabelTemplate> = {
+type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
+type ConnectionType = get_user_connections_user_connections_GenericSettingsType;
+type OperationType = {
+  connection: ConnectionType;
+  onSubmit: (template: LabelTemplateType) => Promise<any>;
+};
+type LabelTemplateStateContextType = {
+  isActive: boolean;
+  operation?: OperationType;
+  editLabelTemplate: (operation: OperationType) => void,
+};
+type stateValue = string | boolean | Partial<LabelTemplateType> | undefined | null;
+
+export const DEFAULT_LABEL_TEMPLATE_CONTENT: Partial<LabelTemplateType> = {
   slug: '',
   width: 4,
   height: 6,
@@ -19,19 +32,6 @@ export const DEFAULT_LABEL_TEMPLATE_CONTENT: Partial<LabelTemplate> = {
   template: DEFAULT_SVG_LABEL_TEMPLATE,
   shipment_sample: {},
 };
-
-type ConnectionType = get_user_connections_with_generics_user_connections_GenericSettings;
-type OperationType = {
-  connection: ConnectionType;
-  onSubmit: (template: LabelTemplate) => Promise<any>;
-};
-type LabelTemplateStateContextType = {
-  isActive: boolean;
-  operation?: OperationType;
-  editLabelTemplate: (operation: OperationType) => void,
-};
-type stateValue = string | boolean | Partial<LabelTemplate> | undefined | null;
-
 export const LabelTemplateStateContext = React.createContext<LabelTemplateStateContextType>({} as LabelTemplateStateContextType);
 
 interface LabelTemplateEditModalComponent { }
@@ -39,7 +39,7 @@ interface LabelTemplateEditModalComponent { }
 function reducer(state: any, { name, value }: { name: string, value: stateValue }) {
   switch (name) {
     case 'partial':
-      return isNone(value) ? undefined : { ...(state || {}), ...(value as LabelTemplate) };
+      return isNone(value) ? undefined : { ...(state || {}), ...(value as LabelTemplateType) };
     case 'shipment_sample':
       const content = failsafe(() => JSON.parse(value as string), state.shipment_sample);
       return { ...state, shipment_sample: content };
@@ -55,13 +55,13 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
   const [template, dispatch] = useReducer(reducer, undefined, () => DEFAULT_LABEL_TEMPLATE_CONTENT);
   const [operation, setOperation] = useState<OperationType | undefined>();
 
-  const isUnChanged = (change: LabelTemplate): boolean => {
+  const isUnChanged = (change: LabelTemplateType): boolean => {
     return (
       isEqual(template, operation?.connection.label_template || DEFAULT_LABEL_TEMPLATE_CONTENT)
     )
   }
   const editLabelTemplate = (operation: OperationType) => {
-    const template = (operation.connection.label_template || DEFAULT_LABEL_TEMPLATE_CONTENT as LabelTemplate);
+    const template = (operation.connection.label_template || DEFAULT_LABEL_TEMPLATE_CONTENT as LabelTemplateType);
 
     setIsActive(true);
     setOperation(operation);
@@ -85,7 +85,7 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    operation?.onSubmit && await operation?.onSubmit(template as LabelTemplate);
+    operation?.onSubmit && await operation?.onSubmit(template as LabelTemplateType);
   };
 
   return (
@@ -183,15 +183,15 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
                   <Tabs tabClass="is-size-7 has-text-weight-bold" style={{ position: 'relative' }}>
                     <div className="card" style={{ borderRadius: 0 }}>
                       <CodeMirror
-                        height="85vh"
-                        extensions={[html({})]}
+                        height="80vh"
+                        extensions={[htmlLanguage]}
                         value={template.template as string}
                         onChange={value => dispatch({ name: 'template', value })}
                       />
                     </div>
                     <div className="card" style={{ borderRadius: 0 }}>
                       <CodeMirror
-                        height="85vh"
+                        height="80vh"
                         extensions={[jsonLanguage]}
                         value={failsafe(() => JSON.stringify(template.shipment_sample, null, 2))}
                         onChange={value => dispatch({ name: 'shipment_sample', value })}

@@ -1,20 +1,19 @@
-import React, { useContext, useEffect } from 'react';
+import { useCarrierConnectionMutation, useCarrierConnections } from '@/context/user-connection';
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
-import CarrierBadge from '@/components/carrier-badge';
-import { UserConnections, UserConnectionType } from '@/context/user-connections-provider';
-import { ConnectionMutationContext } from '@/context/connection-mutation';
-import { Loading } from '@/components/loader';
+import { useLabelTemplateModal } from '@/components/label-template-edit-modal';
+import { UpdateCarrierConnectionMutationInput } from '@karrio/graphql';
+import { ConfirmModalContext } from '@/components/confirm-modal';
+import CarrierNameBadge from '@/components/carrier-name-badge';
+import CopiableLink from '@/components/copiable-link';
+import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/dist/client/router';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
-import { ConfirmModalContext } from '@/components/confirm-modal';
-import Spinner from '@/components/spinner';
-import { useRouter } from 'next/dist/client/router';
+import { Loading } from '@/components/loader';
 import { isNoneOrEmpty } from '@/lib/helper';
-import CopiableLink from '@/components/copiable-link';
-import { useLabelTemplateModal } from './label-template-edit-modal';
-import CarrierNameBadge from './carrier-name-badge';
+import Spinner from '@/components/spinner';
 
-type ConnectionUpdateType = Partial<UserConnectionType> & { id: string, __typename: string };
+type ConnectionUpdateType = Partial<UpdateCarrierConnectionMutationInput> & { id: string, carrier_name: string };
 interface UserConnectionListView { }
 
 const UserConnectionList: React.FC<UserConnectionListView> = () => {
@@ -24,56 +23,53 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const labelModal = useLabelTemplateModal();
   const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
-  const { updateConnection, deleteConnection } = useContext(ConnectionMutationContext);
-  const { user_connections, loading, called, refetch } = useContext(UserConnections);
+  const mutation = useCarrierConnectionMutation();
+  const { query } = useCarrierConnections();
 
-  const onRefresh = async () => refetch && await refetch();
-  const update = ({ __typename, id, ...changes }: ConnectionUpdateType) => async () => {
+  const update = ({ carrier_name, ...changes }: ConnectionUpdateType) => async () => {
     try {
-      const data = { [__typename.toLowerCase()]: changes };
-      await updateConnection({ id, ...data });
+      const data = { [carrier_name]: changes };
+      await mutation.updateCarrierConnection.mutateAsync(data);
       notify({ type: NotificationType.success, message: `carrier connection updated!` });
-      onRefresh();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };
   const onDelete = (id: string) => async () => {
     try {
-      await deleteConnection(id);
+      await mutation.deleteCarrierConnection.mutateAsync({ id });
       notify({
         type: NotificationType.success,
         message: `carrier connection deleted!`
       });
-      onRefresh();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
   };
 
-  useEffect(() => { setLoading(loading); });
+  useEffect(() => { setLoading(query.isFetching); });
   useEffect(() => {
     if (labelModal.isActive) {
-      const connection = user_connections.find(c => c.id === labelModal.operation?.connection.id);
+      const connection = (query.data?.user_connections || []).find(c => c.id === labelModal.operation?.connection.id);
       connection && labelModal.editLabelTemplate({
         connection: connection as any, onSubmit: label_template => update({
-          id: connection.id, __typename: connection.__typename, label_template
+          id: connection.id, carrier_name: connection.carrier_name, label_template
         } as any)()
       })
     }
-  }, [user_connections]);
+  }, [query.data?.user_connections]);
   useEffect(() => {
-    if (called && !loading && !isNoneOrEmpty(router.query.modal)) {
-      const connection = user_connections.find(c => c.id === router.query.modal);
-      connection && editConnection({ connection, onConfirm: onRefresh });
+    if (query.isFetching && !isNoneOrEmpty(router.query.modal)) {
+      const connection = (query.data?.user_connections || []).find(c => c.id === router.query.modal);
+      connection && editConnection({ connection });
     }
-  }, [router.query.modal, user_connections]);
+  }, [router.query.modal, query.data?.user_connections]);
 
   return (
     <>
-      {loading && <Spinner />}
+      {(query.isFetching && !query.isFetched) && <Spinner />}
 
-      {(called && (user_connections || []).length > 0) && <table className="table is-fullwidth">
+      {(query.isFetched && (query.data?.user_connections || []).length > 0) && <table className="table is-fullwidth">
 
         <tbody className="connections-table">
           <tr>
@@ -81,7 +77,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
             <td className="action"></td>
           </tr>
 
-          {user_connections.map((connection) => (
+          {query.data!.user_connections.map((connection) => (
 
             <tr key={`${connection.id}-${Date.now()}`}>
               <td className="carrier pl-0">
@@ -97,7 +93,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
               <td className="active is-vcentered">
                 <button className="button is-white is-large" onClick={update({
                   id: connection.id,
-                  __typename: connection.__typename,
+                  carrier_name: connection.carrier_name,
                   active: !connection.active
                 } as any)}>
                   <span className={`icon is-medium ${connection.active ? 'has-text-success' : 'has-text-grey'}`}>
@@ -126,16 +122,16 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                   {!isNoneOrEmpty((connection as any).custom_carrier_name) && <button
                     title="edit label" className="button is-white" onClick={() => labelModal.editLabelTemplate({
                       connection: connection as any, onSubmit: label_template => update({
-                        id: connection.id, __typename: connection.__typename, label_template
+                        id: connection.id,
+                        carrier_name: connection.carrier_name,
+                        label_template,
                       } as any)()
                     })}>
                     <span className="icon is-small">
                       <i className="fas fa-sticky-note"></i>
                     </span>
                   </button>}
-                  <button title="edit account" className="button is-white" onClick={() => editConnection({
-                    connection, onConfirm: onRefresh
-                  })}>
+                  <button title="edit account" className="button is-white" onClick={() => editConnection({ connection })}>
                     <span className="icon is-small">
                       <i className="fas fa-pen"></i>
                     </span>
@@ -158,7 +154,7 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
 
       </table>}
 
-      {(!loading && (user_connections || []).length == 0) && <div className="card my-6">
+      {(query.isFetched && (query.data?.user_connections || []).length == 0) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>No carriers have been connected yet.</p>

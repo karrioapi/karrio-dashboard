@@ -1,12 +1,12 @@
-import React, { useContext, useRef } from 'react';
-import Image from 'next/image';
-import { AppMode } from '@/context/app-mode-provider';
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
-import AppLink from '@/components/app-link';
-import { APIReference } from '@/context/references-provider';
-import { p } from '@/lib/helper';
+import { useAPIReference } from '@/context/reference';
 import { useRouter } from 'next/dist/client/router';
+import { useAppMode } from '@/context/app-mode';
+import AppLink from '@/components/app-link';
+import React, { useRef } from 'react';
 import getConfig from 'next/config';
+import { p } from '@/lib/helper';
+import Image from 'next/image';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -15,8 +15,8 @@ interface ExpandedSidebarComponent { }
 const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
   const sidebar = useRef<HTMLDivElement>(null);
-  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT, DOCUMENTS_MANAGEMENT } = useContext(APIReference);
-  const { testMode, basePath, switchMode } = useContext(AppMode);
+  const { testMode, basePath, switchMode } = useAppMode();
+  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT, DOCUMENTS_MANAGEMENT } = useAPIReference();
   const [showSettingsMenus, setShowSettingsMenus] = React.useState(false);
 
   const dismiss = (e: React.MouseEvent) => {
@@ -72,12 +72,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
             <span>Account</span>
           </AppLink>
 
-          {DOCUMENTS_MANAGEMENT && <>
-            <AppLink href="/settings/templates" className={"menu-item ml-5 " + activeClass("/settings/templates")} shallow={false} prefetch={false}>
-              <span>Templates</span>
-            </AppLink>
-          </>}
-
           <AppLink href="/settings/addresses" className={"menu-item ml-5 " + activeClass("/settings/addresses")} shallow={false} prefetch={false}>
             <span>Addresses</span>
           </AppLink>
@@ -89,6 +83,12 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
           <AppLink href="/settings/customs-infos" className={"menu-item ml-5 " + activeClass("/settings/customs-infos")} shallow={false} prefetch={false}>
             <span>Customs</span>
           </AppLink>
+
+          {DOCUMENTS_MANAGEMENT && <>
+            <AppLink href="/settings/templates" className={"menu-item ml-5 " + activeClass("/settings/templates")} shallow={false} prefetch={false}>
+              <span>Templates</span>
+            </AppLink>
+          </>}
         </>}
 
         <hr className="my-3 mx-5" style={{ height: '1px' }} />

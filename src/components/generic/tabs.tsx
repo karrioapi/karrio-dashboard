@@ -1,6 +1,6 @@
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { useRouter } from 'next/dist/client/router';
-import React, { useContext, useEffect, useRef, useState } from 'react';
 
 interface TabsComponent extends React.HTMLAttributes<HTMLDivElement> {
   eventKey?: string;
@@ -71,7 +71,7 @@ const Tabs: React.FC<TabsComponent> = ({ eventKey, tabClass, tabContainerClass, 
   return (
     <>
 
-      <div className={`tabs ${tabContainerClass}`}>
+      <div className={`tabs ${tabContainerClass || ''}`}>
         <ul>
 
           {(tabs || []).map((tab, index) => (

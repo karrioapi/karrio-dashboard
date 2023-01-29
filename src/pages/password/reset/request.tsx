@@ -1,14 +1,13 @@
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/layouts/section-layout";
-import LoadingProvider from "@/components/loader";
-import { request_password_reset, REQUEST_PASSWORD_RESET } from "karrio/graphql";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/dist/client/router";
+import LoadingProvider from "@/components/loader";
+import React, { FormEvent, useRef } from "react";
+import { useUserMutation } from "@/context/user";
+import { Metadata } from "@/lib/types";
+import { p } from "@/lib/helper";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useRef } from "react";
-import { p } from "@/lib/helper";
-import { Metadata } from "@/lib/types";
 
 export { getServerSideProps } from '@/lib/static/references';
 
@@ -18,20 +17,16 @@ export default function Page({ metadata }: { metadata: Metadata }) {
   const Component: React.FC<{}> = () => {
     const router = useRouter();
     const email = useRef<HTMLInputElement>(null);
-    const [send_request, { loading }] = useMutation(REQUEST_PASSWORD_RESET);
+    const { requestPasswordReset: { isLoading, mutateAsync } } = useUserMutation();
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const { data } = await send_request({
-        variables: {
-          data: {
-            email: email.current?.value,
-            redirect_url: location.origin + p`/password/reset`
-          }
-        }
-      }) as { data: request_password_reset };
+      const { request_password_reset } = await mutateAsync({
+        email: email.current?.value as string,
+        redirect_url: location.origin + p`/password/reset`
+      });
 
-      if ((data?.request_password_reset?.errors || []).length === 0) router.push(`/password/reset/sent`)
+      if ((request_password_reset?.errors || []).length === 0) router.push(`/password/reset/sent`)
     };
 
     return (
@@ -50,7 +45,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
               </div>
 
               <ButtonField type="submit"
-                disabled={loading}
+                disabled={isLoading}
                 className={`is-primary is-fullwidth mt-6`}
                 controlClass="has-text-centered">
                 <span>Reset my password</span>

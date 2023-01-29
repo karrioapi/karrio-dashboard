@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
 import ParcelForm, { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
-import { deepEqual, isNone, useLocation } from '@/lib/helper';
-import InputField from '@/components/generic/input-field';
-import CheckBoxField from '@/components/generic/checkbox-field';
-import { NotificationType, ParcelTemplateType } from '@/lib/types';
-import { ParcelMutationContext } from '@/context/parcel-template-mutation';
-import Notifier, { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
-import ButtonField from './generic/button-field';
 import { CreateParcelTemplateInput, UpdateParcelTemplateInput } from 'karrio/graphql';
+import { NotificationType, ParcelTemplateType } from '@/lib/types';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import { deepEqual, isNone, useLocation } from '@/lib/helper';
+import { useParcelTemplateMutation } from '@/context/parcel';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
+import React, { useContext, useState } from 'react';
+import { Loading } from '@/components/loader';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',
@@ -18,10 +17,10 @@ const DEFAULT_TEMPLATE_CONTENT = {
 
 type OperationType = {
   parcelTemplate?: ParcelTemplateType;
-  onConfirm: () => Promise<any>;
+  onConfirm?: () => Promise<any>;
 };
 type ParcelEditContextType = {
-  editParcel: (operation: OperationType) => void,
+  editParcel: (operation?: OperationType) => void,
 };
 
 export const ParcelEditContext = React.createContext<ParcelEditContextType>({} as ParcelEditContextType);
@@ -30,9 +29,9 @@ interface ParcelEditModalComponent { }
 
 const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
+  const mutation = useParcelTemplateMutation();
   const { setLoading, loading } = useContext(Loading);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { createParcelTemplate, updateParcelTemplate } = useContext(ParcelMutationContext);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`parcel-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
@@ -50,12 +49,12 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
     );
   };
 
-  const editParcel = (operation: OperationType) => {
-    const template = operation.parcelTemplate || DEFAULT_TEMPLATE_CONTENT;
+  const editParcel = (operation?: OperationType) => {
+    const template = operation?.parcelTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setIsActive(true);
     setOperation(operation);
-    setIsNew(isNone(operation.parcelTemplate));
+    setIsNew(isNone(operation?.parcelTemplate));
     setTemplate({ ...template });
     setKey(`parcel-${Date.now()}`);
     addUrlParam('modal', template.id || 'new');
@@ -75,11 +74,11 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
     try {
       setLoading(true);
       if (isNew) {
-        await createParcelTemplate(template as CreateParcelTemplateInput);
+        await mutation.createParcelTemplate.mutateAsync(template as CreateParcelTemplateInput);
         notify({ type: NotificationType.success, message: 'Parcel successfully added!' });
       }
       else {
-        await updateParcelTemplate(template as UpdateParcelTemplateInput);
+        await mutation.updateParcelTemplate.mutateAsync(template as UpdateParcelTemplateInput);
         notify({ type: NotificationType.success, message: 'Parcel successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 1500);
@@ -128,7 +127,7 @@ const ParcelEditModal: React.FC<ParcelEditModalComponent> = ({ children }) => {
                     <CheckBoxField
                       name="is_default"
                       onChange={e => setTemplate({ ...template, is_default: e.target.checked })}
-                      defaultChecked={template?.is_default}
+                      defaultChecked={template?.is_default as boolean}
                       fieldClass="column mb-0 px-2 pt-3 pb-0">
                       <span>Set as default parcel</span>
                     </CheckBoxField>

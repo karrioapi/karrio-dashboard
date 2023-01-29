@@ -1,15 +1,15 @@
+import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import { formatDateTimeLong, isNone, notEmptyJSON } from "@/lib/helper";
-import Head from "next/head";
-import React, { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/dist/client/router";
-import EventProvider, { Event } from "@/context/event-provider";
-import hljs from "highlight.js";
-import json from 'highlight.js/lib/languages/json';
 import CopiableLink from "@/components/copiable-link";
+import { useRouter } from "next/dist/client/router";
+import json from 'highlight.js/lib/languages/json';
+import React, { useEffect, useState } from "react";
+import { useLoader } from "@/components/loader";
 import AppLink from "@/components/app-link";
+import { useEvent } from "@/context/event";
+import hljs from "highlight.js";
+import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -18,16 +18,15 @@ hljs.registerLanguage('json', json);
 
 export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
   const router = useRouter();
-  const { setLoading } = useContext(Loading);
-  const { event, loading, loadEvent } = useContext(Event);
+  const { setLoading } = useLoader();
+  const entity_id = eventId || router.query.id as string;
   const [data, setData] = useState<string>();
-  const { id } = router.query;
+  const { query: { data: { event } = {}, ...query } } = useEvent(entity_id);
 
-  useEffect(() => { setLoading(loading); });
-  useEffect(() => { (!isNone(loadEvent) && !loading) && loadEvent((id || eventId) as string); }, [id || eventId]);
+  useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
   useEffect(() => {
     if (event !== undefined) {
-      setData(JSON.stringify(event?.data || {}, null, 2));
+      setData(JSON.stringify(event || {}, null, 2));
     }
   });
 
@@ -78,7 +77,12 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
 
         {notEmptyJSON(data) &&
-          <div className="py-3">
+          <div className="py-3 is-relative">
+            <CopiableLink text="COPY"
+              value={data}
+              style={{ position: 'absolute', right: 0, zIndex: 1 }}
+              className="button is-primary is-small m-1"
+            />
             <pre className="code p-1">
               <code
                 dangerouslySetInnerHTML={{
@@ -98,9 +102,7 @@ export default function EventPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Event - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <EventProvider>
-        <EventComponent />
-      </EventProvider>
+      <EventComponent />
     </DashboardLayout>
   ), pageProps);
 }

@@ -1,9 +1,5 @@
-import EventsProvider from '@/context/events-provider';
-import LogsProvider from '@/context/logs-provider';
-import MetadataMutationProvider from '@/context/metadata-mutation';
-import OrderProvider from '@/context/order-provider';
-import { useLocation } from '@/lib/helper';
 import { OrderComponent } from '@/views/order';
+import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 
 type OrderPreviewContextType = {
@@ -44,17 +40,9 @@ const OrderPreview: React.FC<OrderPreviewComponent> = ({ children }) => {
 
         {isActive && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
-            <OrderProvider>
-              <EventsProvider setVariablesToURL={false}>
-                <LogsProvider setVariablesToURL={false}>
-                  <MetadataMutationProvider>
 
-                    <OrderComponent orderId={orderId} />
+            <OrderComponent orderId={orderId} />
 
-                  </MetadataMutationProvider>
-                </LogsProvider>
-              </EventsProvider>
-            </OrderProvider>
           </section>
         </div>}
 

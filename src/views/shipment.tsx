@@ -1,38 +1,34 @@
-import AuthenticatedPage from "@/layouts/authenticated-page";
-import CopiableLink from "@/components/copiable-link";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Loading } from "@/components/loader";
-import StatusBadge from "@/components/status-badge";
-import ShipmentProvider, { ShipmentContext } from "@/context/shipment-provider";
-import { formatDateTime, formatRef, isNone, isNoneOrEmpty, shipmentCarrier } from "@/lib/helper";
-import { useRouter } from "next/dist/client/router";
-import Head from "next/head";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import AppLink from "@/components/app-link";
-import { MetadataObjectType } from "karrio/graphql";
-import MetadataMutationProvider from "@/context/metadata-mutation";
-import { CustomsType, NotificationType, ParcelType } from "@/lib/types";
-import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
-import Spinner from "@/components/spinner";
-import EventsProvider, { EventsContext } from "@/context/events-provider";
-import LogsProvider, { LogsContext } from "@/context/logs-provider";
-import StatusCode from "@/components/status-code-badge";
-import CarrierBadge from "@/components/carrier-badge";
-import ParcelDescription from "@/components/descriptions/parcel-description";
-import ShipmentMenu from "@/components/shipment-menu";
-import DocumentTemplatesProvider, { useDocumentTemplates } from "@/context/document-templates-provider";
-import AddressDescription from "@/components/descriptions/address-description";
-import CommodityDescription from "@/components/descriptions/commodity-description";
 import CustomsInfoDescription from "@/components/descriptions/customs-info-description";
-import ShipmentMutationProvider from "@/context/shipment-mutation";
-import ConfirmModal from "@/components/confirm-modal";
-import ShipmentsProvider from "@/context/shipments-provider";
+import MetadataEditor, { MetadataEditorContext } from "@/components/metadata-editor";
 import { useUploadRecordMutation, useUploadRecords } from "@/context/upload-record";
-import { APIReference } from "@/context/references-provider";
+import CommodityDescription from "@/components/descriptions/commodity-description";
+import { formatDateTime, formatDayDate, formatRef, isNone } from "@/lib/helper";
+import AddressDescription from "@/components/descriptions/address-description";
+import ParcelDescription from "@/components/descriptions/parcel-description";
+import { CustomsType, NotificationType, ParcelType } from "@/lib/types";
+import AuthenticatedPage from "@/layouts/authenticated-page";
+import SelectField from "@/components/generic/select-field";
 import InputField from "@/components/generic/input-field";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import StatusCode from "@/components/status-code-badge";
+import { MetadataObjectTypeEnum } from "karrio/graphql";
+import CopiableLink from "@/components/copiable-link";
+import CarrierBadge from "@/components/carrier-badge";
+import ShipmentMenu from "@/components/shipment-menu";
+import ConfirmModal from "@/components/confirm-modal";
+import { useRouter } from "next/dist/client/router";
+import StatusBadge from "@/components/status-badge";
 import { useNotifier } from "@/components/notifier";
 import { DocumentUploadData } from "@karrio/rest";
-import SelectField from "@/components/generic/select-field";
+import { useShipment } from "@/context/shipment";
+import { useLoader } from "@/components/loader";
+import { useEvents } from "@/context/event";
+import AppLink from "@/components/app-link";
+import Spinner from "@/components/spinner";
+import { useLogs } from "@/context/log";
+import Head from "next/head";
+import React from "react";
+import { useAPIReference } from "@/context/reference";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -41,18 +37,17 @@ type FileDataType = DocumentUploadData['document_files'][0];
 export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentId }) => {
   const router = useRouter();
   const notifier = useNotifier();
-  const logs = useContext(LogsContext);
-  const events = useContext(EventsContext);
-  const $fileInput = useRef<HTMLInputElement>();
-  const $fileSelectInput = useRef<HTMLSelectElement>();
-  const { setLoading } = useContext(Loading);
-  const { carrier_capabilities } = useContext(APIReference);
-  const { templates } = useDocumentTemplates();
-  const { shipment, loading, called, loadShipment } = useContext(ShipmentContext);
-  const { id } = router.query;
+  const { setLoading } = useLoader();
+  const $fileInput = React.useRef<HTMLInputElement>();
+  const $fileSelectInput = React.useRef<HTMLSelectElement>();
+  const { carrier_capabilities } = useAPIReference();
+  const entity_id = shipmentId || router.query.id as string;
+  const { query: logs } = useLogs({ entity_id });
+  const { query: events } = useEvents({ entity_id });
+  const { query: { data: { shipment } = {}, ...query } } = useShipment(entity_id);
   const { uploadDocument } = useUploadRecordMutation();
-  const { query: { data: { results: uploads } = {}, ...documents} } = useUploadRecords({ shipmentId: (shipmentId || id) as string });
-  const [fileData, setFileData] = useState<FileDataType>({} as FileDataType)
+  const { query: { data: { results: uploads } = {}, ...documents } } = useUploadRecords({ shipmentId: entity_id });
+  const [fileData, setFileData] = React.useState<FileDataType>({} as FileDataType)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -63,51 +58,40 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         reader.readAsDataURL(file);
         reader.onloadend = () => {
           let sections = (reader.result as string).split(',');
-          let doc_file = sections[sections.length -1];
+          let doc_file = sections[sections.length - 1];
           let doc_name = file.name;
           setFileData({ ...fileData, doc_name, doc_file });
         };
       } else {
         setFileData({ doc_file: fileData.doc_file } as FileDataType);
       }
-    } catch(_) {
+    } catch (_) {
       setFileData({ doc_file: fileData.doc_file } as FileDataType);
     }
   };
   const uploadCustomsDocument = async () => {
     try {
       await uploadDocument.mutateAsync({
-        shipment_id: (shipmentId || id) as string,
+        shipment_id: entity_id,
         document_files: [fileData],
       });
       notifier.notify({
         type: NotificationType.success,
         message: `document updloaded successfully`,
       });
-      if(!!$fileInput.current) $fileInput.current.value = '';
-      if(!!$fileSelectInput.current) $fileSelectInput.current.value = 'other';
+      if (!!$fileInput.current) $fileInput.current.value = '';
+      if (!!$fileSelectInput.current) $fileSelectInput.current.value = 'other';
     } catch (message: any) {
       notifier.notify({ type: NotificationType.error, message });
     }
   };
 
-  useEffect(() => { setLoading(loading); });
-  useEffect(() => {
-    if (!called && !loading && loadShipment) {
-      loadShipment((id || shipmentId) as string);
-    }
-  }, [called, loading, id || shipmentId]);
-  useEffect(() => {
-    if (called && !isNone(shipment)) {
-      (!logs.called && !logs.loading && logs.load) && logs.load({ first: 6, entity_id: shipment?.id });
-      (!events.called && !events.loading && events.load) && events.load({ first: 6, entity_id: shipment?.id });
-    }
-  }, [called, shipment]);
+  React.useEffect(() => { setLoading(query.isFetching); }, [query.isFetching]);
 
   return (
     <>
 
-      {!called && loading && <Spinner />}
+      {!query.isFetched && query.isFetching && <Spinner />}
 
       {shipment && <>
 
@@ -135,7 +119,10 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </AppLink>}
 
               <div style={{ display: 'inline-flex' }}>
-                <ShipmentMenu shipment={shipment} templates={templates} isViewing />
+                <ShipmentMenu
+                  shipment={shipment as any}
+                  isViewing
+                />
               </div>
 
             </div>
@@ -157,10 +144,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <span className="subtitle is-size-7 my-4">Courier</span><br />
               <CarrierBadge
                 className="has-background-primary has-text-centered has-text-weight-bold has-text-white-bis is-size-7"
-                carrier={shipmentCarrier(shipment)}
-                custom_name={(shipment as any).carrier_id as string}
-                style={{ minWidth: '90px' }}
-                short
+                carrier_name={shipment.meta.carrier as string}
               />
             </div>
 
@@ -199,7 +183,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <div className="columns my-0">
                   <div className="column is-4 is-size-6 py-1">Courier</div>
                   <div className="column is-size-6 has-text-weight-semibold py-1">
-                    {formatRef((shipment.meta.rate_provider === 'generic' ? shipment.carrier_name : shipment.meta.rate_provider) as string)}
+                    {formatRef(shipment.meta.carrier as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
@@ -212,25 +196,18 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                 <div className="columns my-0">
                   <div className="column is-4 is-size-7 py-1">Rate Provider</div>
                   <div className="column is-size-7 has-text-info has-text-weight-semibold py-1">
-                    {formatRef(shipment.carrier_name as string)}
+                    {formatRef(shipment.meta.ext as string)}
                   </div>
                 </div>
                 <div className="columns my-0">
                   <div className="column is-4 is-size-7 py-1">Tracking Number</div>
                   <div className="column has-text-info py-1">
-                    {shipment.tracker_id
-                      ? <a className="p-0 m-0 is-size-7 has-text-weight-semibold"
-                        href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
-                        <span>{shipment.tracking_number as string}</span> {" "}
-                        <span style={{ fontSize: '0.7em' }}><i className="fas fa-external-link-alt"></i></span>
-                      </a>
-                      : <span className="is-size-7 has-text-weight-semibold">{shipment.tracking_number as string}</span>
-                    }
+                    <span className="is-size-7 has-text-weight-semibold">{shipment.tracking_number as string}</span>
                   </div>
                 </div>
               </div>
 
-              {(shipment.selected_rate?.extra_charges || []).length > 0 &&
+              {(shipment.selected_rate?.extra_charges || []).length > 0 && <>
                 <div className="column is-6 is-size-6 py-1">
                   <p className="is-title is-size-6 my-2 has-text-weight-semibold">CHARGES</p>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
@@ -244,7 +221,57 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                       {!isNone(charge?.currency) && <span>{charge?.currency}</span>}
                     </div>
                   </div>)}
+                </div>
+              </>}
+
+            </div>
+          </div>
+
+        </>}
+
+        {!isNone(shipment.tracker) && <>
+
+          <h2 className="title is-5 my-4">
+            <span>Tracking Details</span>
+            <a className="p-0 mx-2 my-0 is-size-6 has-text-weight-semibold"
+              href={`/tracking/${shipment.tracker_id}`} target="_blank" rel="noreferrer">
+              <span><i className="fas fa-external-link-alt"></i></span>
+            </a>
+          </h2>
+          <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+          <div className="mt-3 mb-6">
+            <div className="columns my-0 py-1">
+
+              <div className="column is-6 is-size-7">
+                {!isNone(shipment.tracker?.estimated_delivery) && <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-0">{shipment.tracker?.delivered ? 'Delivered' : 'Estimated Delivery'}</div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {formatDayDate(shipment.tracker!.estimated_delivery as string)}
+                  </div>
                 </div>}
+                <div className="columns my-0">
+                  <div className="column is-4 is-size-6 py-0">Last event</div>
+                  <div className="column has-text-weight-semibold py-1">
+                    <p className="is-capitalized">
+                      {formatDayDate((shipment.tracker?.events || [])[0]?.date as string)}
+                      {' '}
+                      <code>{(shipment.tracker?.events || [])[0]?.time}</code>
+                    </p>
+                  </div>
+                </div>
+                {!isNone((shipment.tracker?.events || [])[0]?.location) && <div className="columns my-0">
+                  <div className="column is-4"></div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {(shipment.tracker?.events || [])[0]?.location}
+                  </div>
+                </div>}
+                {!isNone((shipment.tracker?.events || [])[0]?.description) && <div className="columns my-0">
+                  <div className="column is-4"></div>
+                  <div className="column has-text-weight-semibold py-1">
+                    {(shipment.tracker?.events || [])[0]?.description}
+                  </div>
+                </div>}
+              </div>
 
             </div>
           </div>
@@ -307,10 +334,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                       <span className="is-size-7">({(parcel.items || []).reduce((acc, { quantity }) => acc + (quantity || 0), 0)})</span>
                     </p>
 
-                    {(parcel.items || []).map((item, index) => <React.Fragment key={index + "item-info"}>
-                      <hr className="mt-1 mb-2" style={{ height: '1px' }} />
-                      <CommodityDescription commodity={item} />
-                    </React.Fragment>)}
+                    <div className="menu-list py-2" style={{ maxHeight: '40em', overflow: 'auto' }}>
+                      {(parcel.items || []).map((item, index) => <React.Fragment key={index + "item-info"}>
+                        <hr className="mt-1 mb-2" style={{ height: '1px' }} />
+                        <CommodityDescription commodity={item} />
+                      </React.Fragment>)}
+                    </div>
                   </div>}
 
               </div>
@@ -348,12 +377,12 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
         {/* Document section */}
         {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("upload_document") && ("paperless_trade" in shipment.options) && <>
-        
+
           <h2 className="title is-5 my-4">Paperless Trade Documents</h2>
 
           {(!documents.isFetched && documents.isFetching) && <Spinner />}
 
-          {(documents.isFetched && !documents.isFetching) && (uploads || []).length == 0 && <> 
+          {(documents.isFetched && !documents.isFetching) && (uploads || []).length == 0 && <>
             <hr className="mt-1 mb-3" style={{ height: '1px' }} />
             <div className="pb-3">No documents uploaded</div>
           </>}
@@ -376,18 +405,18 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               </tbody>
             </table>
           </div>}
-          
+
           <div className="is-flex is-justify-content-space-between">
             <div className="is-flex">
               <SelectField
-                onChange={e => setFileData({...fileData, doc_type: e.target.value})}
+                onChange={e => setFileData({ ...fileData, doc_type: e.target.value })}
                 defaultValue="other"
                 className="is-small is-fullwidth">
-                  <option value="other">other</option>
-                  <option value="commercial_invoice">Commercial invoice</option>
-                  <option value="pro_forma_invoice">Pro forma invoice</option>
-                  <option value="packing_list">Packing list</option>
-                  <option value="certificate_of_origin">Certificate of origin</option>
+                <option value="other">other</option>
+                <option value="commercial_invoice">Commercial invoice</option>
+                <option value="pro_forma_invoice">Pro forma invoice</option>
+                <option value="packing_list">Packing list</option>
+                <option value="certificate_of_origin">Certificate of origin</option>
               </SelectField>
               <InputField className="is-small mx-2" type="file" onChange={handleFileChange} />
             </div>
@@ -411,7 +440,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         {/* Metadata section */}
         <MetadataEditor
           id={shipment.id}
-          object_type={MetadataObjectType.shipment}
+          object_type={MetadataObjectTypeEnum.shipment}
           metadata={shipment.metadata}
         >
           <MetadataEditorContext.Consumer>{({ isEditing, editMetadata }) => (<>
@@ -441,69 +470,71 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
         {/* Logs section */}
         <h2 className="title is-5 my-4">Logs</h2>
 
-        {logs.loading && <Spinner />}
+        {!logs.isFetched && logs.isFetching && <Spinner className="my-1 p-1 has-text-centered" size={6} />}
 
-        {!logs.loading && (logs.logs || []).length == 0 && <div>No logs</div>}
+        {logs.isFetched && (logs.data?.logs.edges || []).length == 0 && <div>No logs</div>}
 
-        {!logs.loading && (logs.logs || []).length > 0 && <div className="table-container">
-          <table className="related-item-table table is-hoverable is-fullwidth">
-            <tbody>
-              {(logs.logs || []).map(log => (
-                <tr key={log.id} className="items is-clickable">
-                  <td className="status is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
-                      <StatusCode code={log.status_code as number} />
-                    </AppLink>
-                  </td>
-                  <td className="description is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
-                      {`${log.method} ${log.path}`}
-                    </AppLink>
-                  </td>
-                  <td className="date is-vcentered p-0">
-                    <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTime(log.requested_at)}</span>
-                    </AppLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>}
+        {logs.isFetched && (logs.data?.logs.edges || []).length > 0 &&
+          <div className="table-container py-2" style={{ maxHeight: '20em', overflow: 'auto' }}>
+            <table className="related-item-table table is-hoverable is-fullwidth">
+              <tbody>
+                {(logs.data?.logs.edges || []).map(({ node: log }) => (
+                  <tr key={log.id} className="items is-clickable">
+                    <td className="status is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="pr-2">
+                        <StatusCode code={log.status_code as number} />
+                      </AppLink>
+                    </td>
+                    <td className="description is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                        {`${log.method} ${log.path}`}
+                      </AppLink>
+                    </td>
+                    <td className="date is-vcentered p-0">
+                      <AppLink href={`/developers/logs/${log.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                        <span>{formatDateTime(log.requested_at)}</span>
+                      </AppLink>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
 
         <div className="my-6 pt-1"></div>
 
         {/* Events section */}
         <h2 className="title is-5 my-4">Events</h2>
 
-        {events.loading && <Spinner />}
+        {!events.isFetched && events.isFetching && <Spinner className="my-1 p-1 has-text-centered" size={6} />}
 
-        {!events.loading && (events.events || []).length == 0 && <div>No events</div>}
+        {events.isFetched && (events.data?.events.edges || []).length == 0 && <div>No events</div>}
 
-        {!events.loading && (events.events || []).length > 0 && <div className="table-container">
-          <table className="related-item-table table is-hoverable is-fullwidth">
-            <tbody>
-              {(events.events || []).map(event => (
-                <tr key={event.id} className="items is-clickable">
-                  <td className="description is-vcentered p-0">
-                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
-                      {`${event.type}`}
-                    </AppLink>
-                  </td>
-                  <td className="date is-vcentered p-0">
-                    <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
-                      <span>{formatDateTime(event.created_at)}</span>
-                    </AppLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>}
+        {events.isFetched && (events.data?.events.edges || []).length > 0 &&
+          <div className="table-container py-2" style={{ maxHeight: '20em', overflow: 'auto' }}>
+            <table className="related-item-table table is-hoverable is-fullwidth">
+              <tbody>
+                {(events.data?.events.edges || []).map(({ node: event }) => (
+                  <tr key={event.id} className="items is-clickable">
+                    <td className="description is-vcentered p-0">
+                      <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex py-3">
+                        {`${event.type}`}
+                      </AppLink>
+                    </td>
+                    <td className="date is-vcentered p-0">
+                      <AppLink href={`/developers/events/${event.id}`} className="is-size-7 has-text-weight-semibold has-text-grey is-flex is-justify-content-right py-3">
+                        <span>{formatDateTime(event.created_at)}</span>
+                      </AppLink>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
 
       </>}
 
-      {called && !loading && isNone(shipment) && <div className="card my-6">
+      {query.isFetched && isNone(shipment) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>Uh Oh!</p>
@@ -519,25 +550,11 @@ export default function ShipmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
       <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
-      <ShipmentProvider>
-        <ShipmentMutationProvider>
-          <ShipmentsProvider>
-            <DocumentTemplatesProvider filter={{ related_object: "shipment" }}>
-              <EventsProvider setVariablesToURL={false}>
-                <LogsProvider setVariablesToURL={false}>
-                  <ConfirmModal>
-                    <MetadataMutationProvider>
+      <ConfirmModal>
 
-                      <ShipmentComponent />
+        <ShipmentComponent />
 
-                    </MetadataMutationProvider>
-                  </ConfirmModal>
-                </LogsProvider>
-              </EventsProvider>
-            </DocumentTemplatesProvider>
-          </ShipmentsProvider>
-        </ShipmentMutationProvider>
-      </ShipmentProvider>
+      </ConfirmModal>
     </DashboardLayout>
   ), pageProps);
 }

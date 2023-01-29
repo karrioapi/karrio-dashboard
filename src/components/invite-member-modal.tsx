@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import InputField from '@/components/generic/input-field';
-import { NotificationType } from '@/lib/types';
-import ButtonField from '@/components/generic/button-field';
-import Notifier, { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
 import { p, validationMessage, validityCheck } from '@/lib/helper';
-import { Organizations } from '@/context/organizations-provider';
-import { OrganizationMutationContext } from '@/context/organization-mutation';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
+import { NotificationType } from '@/lib/types';
+import { Loading, useLoader } from '@/components/loader';
+import { useOrganizationMutation, useOrganizations } from '@/context/organization';
 
 type OperationType = {
   onChange?: () => void;
@@ -20,9 +18,9 @@ export const InviteMemberContext = React.createContext<InviteMemberInterface>({}
 const InviteMemberProvider: React.FC<{}> = ({ children }) => {
   const form = useRef<HTMLFormElement>(null);
   const { notify } = useContext(Notify);
-  const { loading, setLoading } = useContext(Loading);
-  const { organization } = useContext(Organizations);
-  const { sendOrganizationInvites } = useContext(OrganizationMutationContext);
+  const mutation = useOrganizationMutation();
+  const { loading, setLoading } = useLoader();
+  const { organization } = useOrganizations();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`invite-${Date.now()}`);
   const [operation, setOperation] = useState<OperationType>({} as OperationType);
@@ -44,9 +42,9 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
     evt.preventDefault();
     setLoading(true);
     try {
-      await sendOrganizationInvites({
+      await mutation.sendOrganizationInvites.mutateAsync({
         redirect_url: location.origin + p`/accept-invite`,
-        org_id: organization.id,
+        org_id: organization!.id,
         emails,
       });
       notify({ type: NotificationType.success, message: 'Invitations sent successfully!' });

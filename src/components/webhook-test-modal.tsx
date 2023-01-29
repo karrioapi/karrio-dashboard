@@ -1,13 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { NotificationType } from '@/lib/types';
-import ButtonField from '@/components/generic/button-field';
-import WebhookMutation from '@/context/webhook-mutation';
-import { Webhook } from 'karrio/rest/index';
-import Notifier, { Notify } from '@/components/notifier';
-import { Loading } from '@/components/loader';
 import SelectField from '@/components/generic/select-field';
-import hljs from 'highlight.js/lib/core';
+import { NotificationType, WebhookType } from '@/lib/types';
+import { useWebhookMutation } from '@/context/webhook';
+import Notifier, { Notify } from '@/components/notifier';
+import React, { useContext, useState } from 'react';
 import json from 'highlight.js/lib/languages/json';
+import { Loading } from '@/components/loader';
+import hljs from 'highlight.js/lib/core';
 
 hljs.registerLanguage('json', json);
 
@@ -18,60 +16,77 @@ const PLAIN_EVENT = JSON.stringify({
   }
 }, null, 2);
 
+type OperationType = {
+  webhook?: WebhookType;
+  onConfirm?: () => Promise<any>;
+};
+type WebhookTestContextType = {
+  testWebhook: (operation?: OperationType) => void,
+};
+const WebhookTestModalContext = React.createContext<WebhookTestContextType>({} as WebhookTestContextType);
 
-interface WebhookTestModalComponent {
-  webhook: Webhook;
-  className?: string;
-}
+const WebhookTestModal: React.FC = ({ children }) => {
+  const mutation = useWebhookMutation();
+  const { notify } = useContext(Notify);
+  const { setLoading, loading } = useContext(Loading);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [payload, setPayload] = useState<string>(PLAIN_EVENT);
+  const [key, setKey] = useState<string>(`webhook-test-${Date.now()}`);
+  const [operation, setOperation] = useState<OperationType | undefined>();
+  const NOTIFICATION_SAMPLE = testPayloadSample();
 
-const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<WebhookTestModalComponent>(
-  ({ webhook, children, className, testWebhook }) => {
-    const { notify } = useContext(Notify);
-    const { setLoading, loading } = useContext(Loading);
-    const [isActive, setIsActive] = useState<boolean>(false);
-    const [key, setKey] = useState<string>(`webhook-test-${Date.now()}`);
-    const [payload, setPayload] = useState<string>(PLAIN_EVENT);
-    const NOTIFICATION_SAMPLE = testPayloadSample();
+  const testWebhook = (operation?: OperationType) => {
+    setIsActive(true);
+    setOperation(operation);
+    setPayload(PLAIN_EVENT);
+    setKey(`webhook-test-${Date.now()}`);
+  };
+  const close = (_?: React.MouseEvent) => {
+    setIsActive(false);
+    setPayload(PLAIN_EVENT);
+    setOperation(undefined);
+    setKey(`webhook-test-${Date.now()}`);
+  };
+  const handleChange = (event: React.ChangeEvent<any>) => {
+    event.preventDefault();
+    setPayload(event.target.value);
+  };
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    setLoading(true);
+    try {
+      await mutation.testWebhook.mutateAsync({
+        id: operation!.webhook!.id,
+        payload: JSON.parse(payload),
+      });
+      notify({ type: NotificationType.success, message: `Webhook successfully Notified` });
+    } catch (err: any) {
+      notify({ type: NotificationType.error, message: err });
+    }
+    setLoading(false);
+  };
 
-    const open = () => {
-      setIsActive(true);
-      setPayload(PLAIN_EVENT);
-    };
-    const close = (_?: React.MouseEvent) => {
-      setPayload(PLAIN_EVENT);
-      setIsActive(false);
-      setKey(`webhook-test-${Date.now()}`);
-    };
-    const handleChange = (event: React.ChangeEvent<any>) => {
-      event.preventDefault();
-      setPayload(event.target.value);
-    };
-    const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
-      evt.preventDefault();
-      setLoading(true);
-      try {
-        await testWebhook(webhook?.id as string, JSON.parse(payload));
-        notify({ type: NotificationType.success, message: `Webhook successfully Notified` });
-      } catch (err: any) {
-        notify({ type: NotificationType.error, message: err });
-      }
-      setLoading(false);
-    };
+  return (
+    <>
+      <WebhookTestModalContext.Provider value={{ testWebhook }}>
+        {children}
+      </WebhookTestModalContext.Provider>
 
-    return (
       <Notifier>
-        <button className={className} onClick={open}>{children}</button>
-
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
           <div className="modal-background" onClick={close}></div>
-          <form className="modal-card" onSubmit={handleSubmit}>
+          {operation !== undefined && <form className="modal-card" onSubmit={handleSubmit}>
+
             <section className="modal-card-body modal-form">
+
               <div className="form-floating-header p-4">
                 <span className="has-text-weight-bold is-size-6">Test a webhook endpoint</span>
               </div>
               <div className="p-3 my-4"></div>
 
-              <p className="is-subtitle is-size-6 has-text-weight-bold has-text-grey my-2">{webhook.url}</p>
+              <p className="is-subtitle is-size-6 has-text-weight-bold has-text-grey my-2">
+                {operation.webhook?.url}
+              </p>
 
               <SelectField label="Notification Payload" onChange={handleChange} className="is-fullwidth">
                 <option key="plain" value={PLAIN_EVENT}>plain event</option>
@@ -104,12 +119,18 @@ const WebhookTestModal: React.FC<WebhookTestModalComponent> = WebhookMutation<We
               </div>
 
             </section>
-          </form>
+          </form>}
           <button className="modal-close is-large has-background-dark" aria-label="close" onClick={close}></button>
         </div>
       </Notifier>
-    )
-  });
+
+    </>
+  );
+};
+
+export function useTestWebhookModal() {
+  return useContext(WebhookTestModalContext);
+}
 
 export default WebhookTestModal;
 

@@ -1,6 +1,6 @@
-import React from 'react';
 import { formatCustomsLabel, formatRef, isNone, isNoneOrEmpty } from '@/lib/helper';
 import { CustomsType } from '@/lib/types';
+import React from 'react';
 
 interface CustomsInfoDescriptionComponent {
   customs: CustomsType;
@@ -27,7 +27,7 @@ const CustomsInfoDescription: React.FC<CustomsInfoDescriptionComponent> = ({ cus
         {isNone(customs?.invoice_date) ? '' : <span>Invoice Date: <strong>{customs.invoice_date}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
-        {!customs?.certify ? '' : <span>Certified and Signed By <strong>{customs.signer}</strong></span>}
+        {!customs?.signer ? '' : <span>{customs?.certify && `Certified and `}Signed By <strong>{customs.signer}</strong></span>}
       </p>
       <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
         {isNone(customs?.content_description) ? '' : <span><strong>Content:</strong> {customs.content_description}</span>}

@@ -1,31 +1,29 @@
-import React, { useContext } from 'react';
+import { useOrganizationMutation, useOrganizations } from '@/context/organization';
 import OrganizationUpdateInput from '@/components/organization-update-input';
-import { OrganizationMutationContext } from '@/context/organization-mutation';
-import { Organizations } from '@/context/organizations-provider';
-import { formatDateTimeLong } from '@/lib/helper';
-import Dropdown from '@/components/generic/dropdown';
-import { NotificationType } from '@/lib/types';
-import { Notify } from '@/components/notifier';
 import { useInviteMember } from '@/components/invite-member-modal';
 import { useConfirmModal } from '@/components/confirm-modal';
+import Dropdown from '@/components/generic/dropdown';
+import { formatDateTimeLong } from '@/lib/helper';
+import { NotificationType } from '@/lib/types';
+import { Notify } from '@/components/notifier';
+import React, { useContext } from 'react';
 
 interface OrganizationManagementComponent { }
 
 const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => {
   const { notify } = useContext(Notify);
   const { confirm } = useConfirmModal();
-  const { organization, load } = useContext(Organizations);
-  const { deleteOrganizationInvitation } = useContext(OrganizationMutationContext);
   const { sendInvites } = useInviteMember();
+  const mutation = useOrganizationMutation();
+  const { organization } = useOrganizations();
 
   const removeInvitation = (id: string) => async () => {
     try {
-      await deleteOrganizationInvitation(id);
+      await mutation.deleteOrganizationInvitation.mutateAsync({ id });
       notify({
         type: NotificationType.success,
         message: `invitation removed!`
       });
-      load();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
@@ -47,10 +45,10 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
 
       <header className="px-0 pt-4">
         <span className="subtitle is-5">Team</span>
-        {organization.current_user.is_admin &&
+        {organization?.current_user?.is_admin &&
           <button
             className="button is-primary is-small is-pulled-right"
-            onClick={() => sendInvites({ onChange: load })}
+            onClick={() => sendInvites()}
           >
             <span>New member</span>
           </button>}
@@ -69,13 +67,13 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
               <td className="action"></td>
             </tr>
 
-            {organization.members.map(member => (
+            {(organization?.members || []).map(member => (
 
               <tr key={`${member.email}-${Date.now()}`} style={{ height: '60px' }}>
                 <td className="member is-vcentered pl-0">
                   {member.full_name && <p className="is-size-7">
                     <span className="pr-2">{member.full_name}</span>
-                    {member.email === organization.current_user.email &&
+                    {member.email === organization?.current_user.email &&
                       <span className="tag is-size-7 is-info is-light px-3">You</span>}
                   </p>}
                   <p className="is-size-7 has-text-weight-semibold">{member.email}</p>
@@ -92,7 +90,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
                   {member.invitation && <span className="tag is-light is-size-7">Invitation-sent</span>}
                 </td>
                 <td className="action is-vcentered">
-                  {member.invitation && organization.current_user.is_admin && <div className="is-pulled-right">
+                  {member.invitation && organization?.current_user.is_admin && <div className="is-pulled-right">
                     <Dropdown >
                       {/* Trigger */}
                       <button className="button is-small is-white">
@@ -125,7 +123,7 @@ const OrganizationManagement: React.FC<OrganizationManagementComponent> = () => 
         <hr style={{ height: '1px' }} className="m-0 mb-3" />
 
         <footer className="py-2 is-vcentered">
-          <span className="is-size-7 has-text-weight-semibold">{organization.members.length} results</span>
+          <span className="is-size-7 has-text-weight-semibold">{(organization?.members || []).length} results</span>
 
           <div className="buttons has-addons is-centered is-pulled-right pr-0">
             <button className="button is-small" disabled>

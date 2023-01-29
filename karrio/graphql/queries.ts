@@ -1,13 +1,13 @@
-import { gql } from "@apollo/client";
+import gql from 'graphql-tag';
 
 
-export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($offset: Int, $first: Int) {
-  address_templates(offset: $offset, first: $first) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($filter: AddressFilter) {
+  address_templates(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -36,13 +36,13 @@ export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($offset: In
 }
 `;
 
-export const GET_CUSTOMS_TEMPLATES = gql`query get_customs_info_templates($offset: Int, $first: Int) {
-  customs_templates(offset: $offset, first: $first) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_CUSTOMS_TEMPLATES = gql`query get_customs_info_templates($filter: TemplateFilter) {
+  customs_templates(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -137,8 +137,8 @@ export const GET_DEFAULT_TEMPLATES = gql`query get_default_templates {
 }
 `;
 
-export const CREATE_CONNECTION = gql`mutation create_connection($data: CreateConnectionInput!) {
-  create_connection(input: $data) {
+export const CREATE_CARRIER_CONNECTION = gql`mutation create_connection($data: CreateCarrierConnectionMutationInput!) {
+  create_carrier_connection(input: $data) {
     errors {
       field
       messages
@@ -147,8 +147,8 @@ export const CREATE_CONNECTION = gql`mutation create_connection($data: CreateCon
 }
 `;
 
-export const UPDATE_CONNECTION = gql`mutation update_connection($data: UpdateConnectionInput!) {
-  update_connection(input: $data) {
+export const UPDATE_CARRIER_CONNECTION = gql`mutation update_connection($data: UpdateCarrierConnectionMutationInput!) {
+  update_carrier_connection(input: $data) {
     errors {
       field
       messages
@@ -157,15 +157,15 @@ export const UPDATE_CONNECTION = gql`mutation update_connection($data: UpdateCon
 }
 `;
 
-export const DELETE_CONNECTION = gql`mutation delete_connection($data: DeleteConnectionInput!) {
-  delete_connection(input: $data) {
+export const DELETE_CARRIER_CONNECTION = gql`mutation delete_connection($data: DeleteMutationInput!) {
+  delete_carrier_connection(input: $data) {
     id
   }
 }
 `;
 
-export const GET_ORGANIZATIONS = gql`query get_organizations {
-  organizations {
+export const GET_ORGANIZATION = gql`query get_organization($id: String!) {
+  organization(id: $id) {
     id
     name
     slug
@@ -174,7 +174,6 @@ export const GET_ORGANIZATIONS = gql`query get_organizations {
       email
       full_name
       is_admin
-      is_staff
       is_owner
       last_login
     }
@@ -196,7 +195,51 @@ export const GET_ORGANIZATIONS = gql`query get_organizations {
 }
 `;
 
-export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationInput!) {
+export const GET_ORGANIZATIONS = gql`query get_organizations {
+  organizations {
+    id
+    name
+    slug
+    token
+    current_user {
+      email
+      full_name
+      is_admin
+      is_owner
+      last_login
+    }
+    members {
+      email
+      full_name
+      is_admin
+      is_owner
+      invitation {
+        id
+        guid
+        invitee_identifier
+        created
+        modified
+      }
+      last_login
+    }
+  }
+}
+`;
+
+export const DELETE_ORGANIZATION = gql`mutation delete_organization($data: DeleteOrganizationMutationInput!) {
+  delete_organization(input: $data) {
+    organization {
+      id
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CREATE_ORGANIZATION = gql`mutation create_organization($data: CreateOrganizationMutationInput!) {
   create_organization(input: $data) {
     organization {
       id
@@ -209,7 +252,7 @@ export const CREATE_ORGANIZATION = gql`mutation create_organization($data: Creat
 }
 `;
 
-export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: UpdateOrganizationInput!) {
+export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: UpdateOrganizationMutationInput!) {
   update_organization(input: $data) {
     organization {
       id
@@ -222,7 +265,7 @@ export const UPDATE_ORGANIZATION = gql`mutation update_organization($data: Updat
 }
 `;
 
-export const CHANGE_ORGANIZATION_OWNER = gql`mutation change_organization_owner($data: ChangeOrganizationOwnerInput!) {
+export const CHANGE_ORGANIZATION_OWNER = gql`mutation change_organization_owner($data: ChangeOrganizationOwnerMutationInput!) {
   change_organization_owner(input: $data) {
     organization {
       id
@@ -235,7 +278,7 @@ export const CHANGE_ORGANIZATION_OWNER = gql`mutation change_organization_owner(
 }
 `;
 
-export const SET_ORGANIZATION_USER_ROLES = gql`mutation set_organization_user_roles($data: SetOrganizationUserRolesInput!) {
+export const SET_ORGANIZATION_USER_ROLES = gql`mutation set_organization_user_roles($data: SetOrganizationUserRolesMutationInput!) {
   set_organization_user_roles(input: $data) {
     organization {
       id
@@ -248,7 +291,7 @@ export const SET_ORGANIZATION_USER_ROLES = gql`mutation set_organization_user_ro
 }
 `;
 
-export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesInput!) {
+export const SEND_ORGANIZATION_INVITES = gql`mutation send_organization_invites($data: SendOrganizationInvitesMutationInput!) {
   send_organization_invites(input: $data) {
     errors {
       field
@@ -269,7 +312,7 @@ export const GET_ORGANIZATION_INVITATION = gql`query get_organization_invitation
 }
 `;
 
-export const ACCEPT_ORGANIZATION_INVITATION = gql`mutation accept_organization_invitation($data: AcceptOrganizationInvitationInput!) {
+export const ACCEPT_ORGANIZATION_INVITATION = gql`mutation accept_organization_invitation($data: AcceptOrganizationInvitationMutationInput!) {
   accept_organization_invitation(input: $data) {
     organization {
       id
@@ -282,7 +325,7 @@ export const ACCEPT_ORGANIZATION_INVITATION = gql`mutation accept_organization_i
 }
 `;
 
-export const DELETE_ORGANIZATION_INVITES = gql`mutation delete_organization_invitation($data: DeleteOrganizationInvitationInput!) {
+export const DELETE_ORGANIZATION_INVITES = gql`mutation delete_organization_invitation($data: DeleteMutationInput!) {
   delete_organization_invitation(input: $data) {
     id
   }
@@ -292,7 +335,6 @@ export const DELETE_ORGANIZATION_INVITES = gql`mutation delete_organization_invi
 export const GET_LOG = gql`query get_log($id: Int!) {
   log(id: $id) {
     id
-    username_persistent
     requested_at
     response_ms
     path
@@ -303,32 +345,49 @@ export const GET_LOG = gql`query get_log($id: Int!) {
     data
     response
     status_code
+    records {
+      id
+      key
+      timestamp
+      test_mode
+      created_at
+      meta
+      record
+    }
   }
 }
 `;
 
-export const GET_LOGS = gql`query get_logs($offset: Int, $first: Int, $status: String, $api_endpoint: String, $date_after: DateTime, $date_before: DateTime, $entity_id: String, $method: [String], $status_code: [String]) {
-  logs(offset: $offset, first: $first, status: $status, api_endpoint: $api_endpoint, date_after: $date_after, date_before: $date_before, entity_id: $entity_id, method: $method, status_code: $status_code) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_LOGS = gql`query get_logs($filter: LogFilter) {
+  logs(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
         id
         path
+        host
         data
         method
         response_ms
         remote_addr
         requested_at
-        username_persistent
         status_code
         query_params
-        host
         response
+        records {
+          id
+          key
+          timestamp
+          test_mode
+          created_at
+          meta
+          record
+        }
       }
     }
   }
@@ -366,6 +425,24 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       validate_location
     }
     shipper {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    billing_address {
       id
       postal_code
       city
@@ -452,6 +529,24 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         metadata
         parent_id
       }
+      duty_billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
     }
     payment {
       paid_by
@@ -467,7 +562,6 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       service
       transit_days
       total_charge
-      duties_and_taxes
       extra_charges {
         name
         amount
@@ -485,7 +579,6 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       service
       transit_days
       total_charge
-      duties_and_taxes
       extra_charges {
         name
         amount
@@ -504,17 +597,43 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       code
       details
     }
+    tracker {
+      id
+      tracking_number
+      carrier_id
+      carrier_name
+      status
+      events {
+        description
+        location
+        code
+        date
+        time
+      }
+      delivered
+      estimated_delivery
+      meta
+      metadata
+      messages {
+        carrier_name
+        carrier_id
+        message
+        code
+        details
+      }
+      updated_at
+    }
   }
 }
 `;
 
-export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $carrier_name: [String], $reference: String, $service: [String]) {
-  shipments(offset: $offset, first: $first, status: $status, address: $address, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name, reference: $reference, service: $service) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
+  shipments(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -547,6 +666,24 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
           validate_location
         }
         shipper {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
+        }
+        billing_address {
           id
           postal_code
           city
@@ -633,6 +770,24 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
             metadata
             parent_id
           }
+          duty_billing_address {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            federal_tax_id
+            state_tax_id
+            validate_location
+          }
         }
         payment {
           paid_by
@@ -689,16 +844,184 @@ export const GET_SHIPMENTS = gql`query get_shipments($offset: Int, $first: Int, 
 }
 `;
 
-export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($data: PartialShipmentUpdateInput!) {
+export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
+  shipment(id: $id) {
+    id
+    status
+    recipient {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    shipper {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    billing_address {
+      id
+      postal_code
+      city
+      person_name
+      company_name
+      country_code
+      email
+      phone_number
+      state_code
+      suburb
+      residential
+      address_line1
+      address_line2
+      federal_tax_id
+      state_tax_id
+      validate_location
+    }
+    parcels {
+      id
+      width
+      height
+      length
+      is_document
+      dimension_unit
+      weight
+      weight_unit
+      packaging_type
+      package_preset
+      freight_class
+      reference_number
+      items {
+        id
+        weight
+        description
+        quantity
+        sku
+        hs_code
+        value_amount
+        weight_unit
+        value_currency
+        origin_country
+        metadata
+        parent_id
+      }
+    }
+    label_type
+    service
+    reference
+    customs {
+      id
+      certify
+      commercial_invoice
+      content_type
+      content_description
+      incoterm
+      invoice
+      invoice_date
+      signer
+      duty {
+        paid_by
+        currency
+        account_number
+        declared_value
+      }
+      options
+      commodities {
+        id
+        weight
+        weight_unit
+        description
+        quantity
+        sku
+        hs_code
+        value_amount
+        value_currency
+        origin_country
+        metadata
+        parent_id
+      }
+      duty_billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
+    }
+    payment {
+      paid_by
+      currency
+      account_number
+    }
+    carrier_ids
+    options
+    metadata
+    rates {
+      id
+      carrier_name
+      carrier_id
+      currency
+      service
+      transit_days
+      total_charge
+      extra_charges {
+        name
+        amount
+        currency
+      }
+      test_mode
+      meta
+    }
+    messages {
+      carrier_name
+      carrier_id
+      message
+      code
+      details
+    }
+  }
+}
+`;
+
+export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($data: PartialShipmentMutationInput!) {
   partial_shipment_update(input: $data) {
     shipment {
       id
-      carrier_id
-      carrier_name
-      created_by {
-        email
-        full_name
-      }
       status
       recipient {
         id
@@ -719,6 +1042,24 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         validate_location
       }
       shipper {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
+      billing_address {
         id
         postal_code
         city
@@ -765,13 +1106,6 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         }
       }
       label_type
-      tracking_number
-      shipment_identifier
-      label_url
-      invoice_url
-      tracking_url
-      tracker_id
-      test_mode
       service
       reference
       customs {
@@ -804,19 +1138,24 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           origin_country
           metadata
           parent_id
-          parent {
-            id
-            weight
-            weight_unit
-            description
-            quantity
-            sku
-            hs_code
-            value_amount
-            value_currency
-            origin_country
-            metadata
-          }
+        }
+        duty_billing_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
         }
       }
       payment {
@@ -824,24 +1163,9 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         currency
         account_number
       }
-      selected_rate_id
-      selected_rate {
-        id
-        carrier_name
-        carrier_id
-        currency
-        service
-        transit_days
-        total_charge
-        extra_charges {
-          name
-          amount
-          currency
-        }
-        test_mode
-        meta
-      }
       carrier_ids
+      options
+      metadata
       rates {
         id
         carrier_name
@@ -858,9 +1182,6 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         test_mode
         meta
       }
-      options
-      metadata
-      meta
       messages {
         carrier_name
         carrier_id
@@ -868,6 +1189,19 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         code
         details
       }
+    }
+    errors {
+      field
+      messages
+    }
+  }
+}
+`;
+
+export const CHANGE_SHIPMENT_STATUS = gql`mutation change_shipment_status($data: ChangeShipmentStatusMutationInput!) {
+  change_shipment_status(input: $data) {
+    shipment {
+      id
     }
     errors {
       field
@@ -928,13 +1262,13 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
 
 `;
 
-export const GET_TRACKERS = gql`query get_trackers($offset: Int, $first: Int, $status: [String], $created_after: DateTime, $created_before: DateTime, $carrier_name: [String]) {
-  trackers(offset: $offset, first: $first, status: $status, created_after: $created_after, created_before: $created_before, carrier_name: $carrier_name) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_TRACKERS = gql`query get_trackers($filter: TrackerFilter) {
+  trackers(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -1001,17 +1335,18 @@ export const GET_WEBHOOK = gql`query get_webhook($id: String!) {
     disabled
     description
     last_event_at
+    secret
   }
 }
 `;
 
-export const GET_WEBHOOKS = gql`query get_webhooks($offset: Int, $first: Int, $description: String, $created_after: DateTime, $created_before: DateTime, $events: [String], $disabled: Boolean) {
-  webhooks(offset: $offset, first: $first, created_after: $created_after, created_before: $created_before, description: $description, events: $events, disabled: $disabled) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_WEBHOOKS = gql`query get_webhooks($filter: WebhookFilter) {
+  webhooks(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -1028,19 +1363,20 @@ export const GET_WEBHOOKS = gql`query get_webhooks($offset: Int, $first: Int, $d
         disabled
         description
         last_event_at
+        secret
       }
     }
   }
 }
 `;
 
-export const GET_PARCEL_TEMPLATES = gql`query get_parcel_templates($offset: Int, $first: Int) {
-  parcel_templates(offset: $offset, first: $first) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_PARCEL_TEMPLATES = gql`query get_parcel_templates($filter: TemplateFilter) {
+  parcel_templates(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -1101,7 +1437,7 @@ export const CREATE_CUSTOMS_TEMPLATE = gql`mutation create_customs_template($dat
 }
 `;
 
-export const UPDATED_CUSTOMS_TEMPLATE = gql`mutation update_customs_template($data: UpdateCustomsTemplateInput!) {
+export const UPDATE_CUSTOMS_TEMPLATE = gql`mutation update_customs_template($data: UpdateCustomsTemplateInput!) {
   update_customs_template(input: $data) {
     template {
       id
@@ -1114,7 +1450,7 @@ export const UPDATED_CUSTOMS_TEMPLATE = gql`mutation update_customs_template($da
 }
 `;
 
-export const DELETE_TEMPLATE = gql`mutation delete_template($data: DeleteTemplateInput!) {
+export const DELETE_TEMPLATE = gql`mutation delete_template($data: DeleteMutationInput!) {
   delete_template(input: $data) {
     id
   }
@@ -1134,7 +1470,7 @@ export const CREATE_PARCEL_TEMPLATE = gql`mutation create_parcel_template($data:
 }
 `;
 
-export const UPDATED_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
+export const UPDATE_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data: UpdateParcelTemplateInput!) {
   update_parcel_template(input: $data) {
     template {
       id
@@ -1147,7 +1483,7 @@ export const UPDATED_PARCEL_TEMPLATE = gql`mutation update_parcel_template($data
 }
 `;
 
-export const CREATE_ADDRESS_TEMPLATE = `mutation create_address_template($data: CreateAddressTemplateInput!) {
+export const CREATE_ADDRESS_TEMPLATE = gql`mutation create_address_template($data: CreateAddressTemplateInput!) {
   create_address_template(input: $data) {
     template {
       id
@@ -1160,7 +1496,7 @@ export const CREATE_ADDRESS_TEMPLATE = `mutation create_address_template($data: 
 }
 `;
 
-export const UPDATED_ADDRESS_TEMPLATE = `mutation update_address_template($data: UpdateAddressTemplateInput!) {
+export const UPDATE_ADDRESS_TEMPLATE = gql`mutation update_address_template($data: UpdateAddressTemplateInput!) {
   update_address_template(input: $data) {
     template {
       id
@@ -1173,35 +1509,28 @@ export const UPDATED_ADDRESS_TEMPLATE = `mutation update_address_template($data:
 }
 `;
 
-export const DELETE_ADDRESS_TEMPLATE = `mutation delete_template($data: DeleteTemplateInput!) {
-  delete_template(input: $data) {
-    id
-  }
-}
-`;
-
-export const DISCARD_COMMODITY = gql`mutation discard_commodity($data: DiscardCommodityInput!) {
+export const DISCARD_COMMODITY = gql`mutation discard_commodity($data: DeleteMutationInput!) {
   discard_commodity(input: $data) {
     id
   }
 }
 `;
 
-export const DISCARD_CUSTOMS = gql`mutation discard_customs($data: DiscardCustomsInput!) {
+export const DISCARD_CUSTOMS = gql`mutation discard_customs($data: DeleteMutationInput!) {
   discard_customs(input: $data) {
     id
   }
 }
 `;
 
-export const DISCARD_PARCEL = gql`mutation discard_parcel($data: DiscardParcelInput!) {
+export const DISCARD_PARCEL = gql`mutation discard_parcel($data: DeleteMutationInput!) {
   discard_parcel(input: $data) {
     id
   }
 }
 `;
 
-export const MUTATE_TOKEN = gql`mutation mutate_token($data: TokenMutationInput!) {
+export const MUTATE_API_TOKEN = gql`mutation mutate_token($data: TokenMutationInput!) {
   mutate_token(input: $data) {
     token {
       key
@@ -1210,7 +1539,7 @@ export const MUTATE_TOKEN = gql`mutation mutate_token($data: TokenMutationInput!
 }
 `;
 
-export const GET_TOKEN = gql`  query GetToken($org_id: String) {
+export const GET_API_TOKEN = gql`query GetToken($org_id: String) {
   token(org_id: $org_id) {
     key
     created
@@ -1221,7 +1550,7 @@ export const GET_TOKEN = gql`  query GetToken($org_id: String) {
 export const GET_USER_CONNECTIONS = gql`query get_user_connections {
   user_connections {
     __typename
-    ... on AmazonMwsSettings {
+    ... on AmazonMwsSettingsType {
       id
       carrier_id
       carrier_name
@@ -1234,7 +1563,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       aws_region
       capabilities
     }
-    ... on AramexSettings {
+    ... on AramexSettingsType {
       id
       carrier_id
       carrier_name
@@ -1249,7 +1578,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_country_code
       capabilities
     }
-    ... on AustraliaPostSettings {
+    ... on AustraliaPostSettingsType {
       id
       carrier_id
       carrier_name
@@ -1261,7 +1590,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_number
       capabilities
     }
-    ... on CanadaPostSettings {
+    ... on CanadaPostSettingsType {
       id
       carrier_id
       carrier_name
@@ -1275,7 +1604,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       metadata
       capabilities
     }
-    ... on CanparSettings {
+    ... on CanparSettingsType {
       id
       carrier_id
       carrier_name
@@ -1286,7 +1615,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       capabilities
     }
-    ... on ChronopostSettings {
+    ... on ChronopostSettingsType {
       id
       carrier_id
       carrier_name
@@ -1298,7 +1627,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_country_code
       capabilities
     }
-    ... on DHLExpressSettings {
+    ... on DHLExpressSettingsType {
       id
       carrier_id
       carrier_name
@@ -1311,7 +1640,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_country_code
       capabilities
     }
-    ... on DHLPolandSettings {
+    ... on DHLPolandSettingsType {
       id
       carrier_id
       carrier_name
@@ -1341,7 +1670,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       }
       capabilities
     }
-    ... on DHLUniversalSettings {
+    ... on DHLUniversalSettingsType {
       id
       carrier_id
       carrier_name
@@ -1352,7 +1681,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       consumer_secret
       capabilities
     }
-    ... on DicomSettings {
+    ... on DicomSettingsType {
       id
       carrier_id
       carrier_name
@@ -1364,7 +1693,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       billing_account
       capabilities
     }
-    ...on DPDHLSettings {
+    ...on DPDHLSettingsType {
       id
       carrier_id
       carrier_name
@@ -1396,7 +1725,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       }
       capabilities
     }
-    ... on EShipperSettings {
+    ... on EShipperSettingsType {
       id
       carrier_id
       carrier_name
@@ -1407,7 +1736,18 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       capabilities
     }
-    ... on FedexSettings {
+    ... on EasyPostSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
+      api_key
+      metadata
+      capabilities
+    }
+    ... on FedexSettingsType {
       id
       carrier_id
       carrier_name
@@ -1422,7 +1762,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       metadata
       capabilities
     }
-    ... on FreightcomSettings {
+    ... on FreightcomSettingsType {
       id
       carrier_id
       carrier_name
@@ -1433,377 +1773,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       password
       capabilities
     }
-    ... on PurolatorSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      account_number
-      user_token
-      metadata
-      capabilities
-    }
-    ... on RoyalMailSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      client_id
-      client_secret
-      capabilities
-    }
-    ... on SendleSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      sendle_id
-      api_key
-      capabilities
-    }
-    ... on SFExpressSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      partner_id
-      check_word
-      capabilities
-    }
-    ... on TNTSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      account_number
-      account_country_code
-      capabilities
-    }
-    ... on UPSSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      access_license_number
-      account_number
-      account_country_code
-      metadata
-      capabilities
-    }
-    ... on UPSFreightSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      access_license_number
-      account_number
-      account_country_code
-      metadata
-      capabilities
-    }
-    ... on USPSSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      mailer_id
-      customer_registration_id
-      logistics_manager_mailer_id
-      capabilities
-    }
-    ... on USPSInternationalSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      mailer_id
-      customer_registration_id
-      logistics_manager_mailer_id
-      capabilities
-    }
-    ... on YanwenSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      customer_number
-      license_key
-      capabilities
-    }
-    ... on YunExpressSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      customer_number
-      api_secret
-      capabilities
-    }
-  }
-}
-`;
-
-export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections_with_generics {
-  user_connections {
-    __typename
-    ... on AmazonMwsSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      seller_id
-      developer_id
-      mws_auth_token
-      aws_region
-      capabilities
-    }
-    ... on AramexSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      account_pin
-      account_entity
-      account_number
-      account_country_code
-      capabilities
-    }
-    ... on AustraliaPostSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      api_key
-      password
-      account_number
-      capabilities
-    }
-    ... on CanadaPostSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      customer_number
-      contract_id
-      metadata
-      capabilities
-    }
-    ... on CanparSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      capabilities
-    }
-    ... on ChronopostSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      password
-      account_number
-      account_country_code
-      capabilities
-    }
-    ... on DHLExpressSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      site_id
-      password
-      account_number
-      account_country_code
-      capabilities
-    }
-    ... on DHLPolandSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      account_number
-      services {
-        id
-        active
-        service_name
-        service_code
-        description
-        cost
-        currency
-        estimated_transit_days
-        max_weight
-        max_width
-        max_height
-        max_length
-        weight_unit
-        dimension_unit
-        domicile
-        international
-      }
-      capabilities
-    }
-    ... on DHLUniversalSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      consumer_key
-      consumer_secret
-      capabilities
-    }
-    ... on DicomSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      billing_account
-      capabilities
-    }
-    ...on DPDHLSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      app_id
-      username
-      password
-      signature
-      account_number
-      services {
-        id
-        active
-        service_name
-        service_code
-        description
-        cost
-        currency
-        estimated_transit_days
-        max_weight
-        max_width
-        max_height
-        max_length
-        weight_unit
-        dimension_unit
-        domicile
-        international
-      }
-      capabilities
-    }
-    ... on EShipperSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      capabilities
-    }
-    ... on EasyPostSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      api_key
-      metadata
-      capabilities
-    }
-    ... on FedexSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      account_number
-      password
-      meter_number
-      user_key
-      account_country_code
-      metadata
-      capabilities
-    }
-    ... on FreightcomSettings {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      username
-      password
-      capabilities
-    }
-    ... on GenericSettings {
+    ... on GenericSettingsType {
       id
       carrier_id
       carrier_name
@@ -1843,7 +1813,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       metadata
       capabilities
     }
-    ... on PurolatorSettings {
+    ... on PurolatorSettingsType {
       id
       carrier_id
       carrier_name
@@ -1857,7 +1827,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       metadata
       capabilities
     }
-    ... on RoyalMailSettings {
+    ... on RoyalMailSettingsType {
       id
       carrier_id
       carrier_name
@@ -1868,7 +1838,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       client_secret
       capabilities
     }
-    ... on SendleSettings {
+    ... on SendleSettingsType {
       id
       carrier_id
       carrier_name
@@ -1879,7 +1849,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       api_key
       capabilities
     }
-    ... on SFExpressSettings {
+    ... on SFExpressSettingsType {
       id
       carrier_id
       carrier_name
@@ -1890,7 +1860,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       check_word
       capabilities
     }
-    ... on TNTSettings {
+    ... on TNTSettingsType {
       id
       carrier_id
       carrier_name
@@ -1903,7 +1873,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       account_country_code
       capabilities
     }
-    ... on UPSSettings {
+    ... on UPSSettingsType {
       id
       carrier_id
       carrier_name
@@ -1918,7 +1888,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       metadata
       capabilities
     }
-    ... on UPSFreightSettings {
+    ... on UPSFreightSettingsType {
       id
       carrier_id
       carrier_name
@@ -1933,7 +1903,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       metadata
       capabilities
     }
-    ... on USPSSettings {
+    ... on USPSSettingsType {
       id
       carrier_id
       carrier_name
@@ -1947,7 +1917,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       logistics_manager_mailer_id
       capabilities
     }
-    ... on USPSInternationalSettings {
+    ... on USPSInternationalSettingsType {
       id
       carrier_id
       carrier_name
@@ -1961,7 +1931,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       logistics_manager_mailer_id
       capabilities
     }
-    ... on YanwenSettings {
+    ... on YanwenSettingsType {
       id
       carrier_id
       carrier_name
@@ -1972,7 +1942,7 @@ export const GET_USER_CONNECTIONS_WITH_GENERICS = gql`query get_user_connections
       license_key
       capabilities
     }
-    ... on YunExpressSettings {
+    ... on YunExpressSettingsType {
       id
       carrier_id
       carrier_name
@@ -2014,7 +1984,7 @@ export const UPDATE_USER = gql`mutation update_user($data: UpdateUserInput!) {
 }
 `;
 
-export const CHANGE_PASSWORD = gql`mutation change_password($data: ChangePasswordInput!) {
+export const CHANGE_PASSWORD = gql`mutation change_password($data: ChangePasswordMutationInput!) {
   change_password(input: $data) {
     errors {
       field
@@ -2024,7 +1994,7 @@ export const CHANGE_PASSWORD = gql`mutation change_password($data: ChangePasswor
 }
 `;
 
-export const REGISTER_USER = gql`mutation register_user($data: RegisterUserInput!) {
+export const REGISTER_USER = gql`mutation register_user($data: RegisterUserMutationInput!) {
   register_user(input: $data) {
     user {
       email
@@ -2039,14 +2009,14 @@ export const REGISTER_USER = gql`mutation register_user($data: RegisterUserInput
 }
 `;
 
-export const CONFIRM_EMAIL = gql`mutation confirm_email($data: ConfirmEmailInput!) {
+export const CONFIRM_EMAIL = gql`mutation confirm_email($data: ConfirmEmailMutationInput!) {
   confirm_email(input: $data) {
     success
   }
 }
 `;
 
-export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: RequestEmailChangeInput!) {
+export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: RequestEmailChangeMutationInput!) {
   request_email_change(input: $data) {
     errors {
       field
@@ -2056,7 +2026,7 @@ export const REQUEST_EMAIL_CHANGE = gql`mutation request_email_change($data: Req
 }
 `;
 
-export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: ConfirmEmailChangeInput!) {
+export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: ConfirmEmailChangeMutationInput!) {
   confirm_email_change(input: $data) {
     user {
       email
@@ -2069,7 +2039,7 @@ export const CONFIRM_EMAIL_CHANGE = gql`mutation confirm_email_change($data: Con
 }
 `;
 
-export const REQUEST_PASSWORD_RESET = gql`mutation request_password_reset($data: RequestPasswordResetInput!) {
+export const REQUEST_PASSWORD_RESET = gql`mutation request_password_reset($data: RequestPasswordResetMutationInput!) {
   request_password_reset(input: $data) {
     errors {
       field
@@ -2079,7 +2049,7 @@ export const REQUEST_PASSWORD_RESET = gql`mutation request_password_reset($data:
 }
 `;
 
-export const CONFIRM_PASSWORD_RESET = gql`mutation confirm_password_reset($data: ConfirmPasswordResetInput!) {
+export const CONFIRM_PASSWORD_RESET = gql`mutation confirm_password_reset($data: ConfirmPasswordResetMutationInput!) {
   confirm_password_reset(input: $data) {
     errors {
       field
@@ -2101,13 +2071,13 @@ export const GET_EVENT = gql`query get_event($id: String!) {
 }
 `;
 
-export const GET_EVENTS = gql`query get_events($offset: Int, $first: Int, $entity_id: String, $type: [String], $date_after: DateTime, $date_before: DateTime) {
-  events(offset: $offset, first: $first, entity_id: $entity_id, type: $type, date_after: $date_after, date_before: $date_before) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_EVENTS = gql`query get_events($filter: EventFilter) {
+  events(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -2254,6 +2224,24 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_tax_id
         validate_location
       }
+      billing_address {
+        id
+        postal_code
+        city
+        person_name
+        company_name
+        country_code
+        email
+        phone_number
+        state_code
+        suburb
+        residential
+        address_line1
+        address_line2
+        federal_tax_id
+        state_tax_id
+        validate_location
+      }
       parcels {
         id
         width
@@ -2322,6 +2310,24 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           metadata
           parent_id
         }
+        duty_billing_address {
+          id
+          postal_code
+          city
+          person_name
+          company_name
+          country_code
+          email
+          phone_number
+          state_code
+          suburb
+          residential
+          address_line1
+          address_line2
+          federal_tax_id
+          state_tax_id
+          validate_location
+        }
       }
       payment {
         paid_by
@@ -2376,13 +2382,13 @@ export const GET_ORDER = gql`query get_order($id: String!) {
 }
 `;
 
-export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [String], $order_id: [String], $source: [String], $status: [String], $address: String, $created_after: DateTime, $created_before: DateTime, $option_key: [String], $option_value: String, $metadata_value: String) {
-  orders(offset: $offset, first: $first, id: $id, order_id: $order_id, source: $source, status: $status, address: $address, created_after: $created_after, created_before: $created_before, option_key: $option_key, option_value: $option_value, metadata_value: $metadata_value) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
+  orders(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -2515,6 +2521,24 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
             state_tax_id
             validate_location
           }
+          billing_address {
+            id
+            postal_code
+            city
+            person_name
+            company_name
+            country_code
+            email
+            phone_number
+            state_code
+            suburb
+            residential
+            address_line1
+            address_line2
+            federal_tax_id
+            state_tax_id
+            validate_location
+          }
           parcels {
             id
             width
@@ -2583,6 +2607,24 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
               metadata
               parent_id
             }
+            duty_billing_address {
+              id
+              postal_code
+              city
+              person_name
+              company_name
+              country_code
+              email
+              phone_number
+              state_code
+              suburb
+              residential
+              address_line1
+              address_line2
+              federal_tax_id
+              state_tax_id
+              validate_location
+            }
           }
           payment {
             paid_by
@@ -2639,7 +2681,7 @@ export const GET_ORDERS = gql`query get_orders($offset: Int, $first: Int, $id: [
 }
 `;
 
-export const MUTATE_METADATA = gql`mutation mutate_metadata($data: MutateMetadataInput!) {
+export const MUTATE_METADATA = gql`mutation mutate_metadata($data: MetadataMutationInput!) {
   mutate_metadata(input: $data) {
     id
     metadata
@@ -2659,17 +2701,19 @@ export const GET_DOCUMENT_TEMPLATE = gql`query get_document_template($id: String
     template
     description
     related_object
+    active
+    updated_at
   }
 }
 `;
 
-export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: Int, $first: Int, $related_object: String) {
-  document_templates(offset: $offset, first: $first, related_object: $related_object) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($filter: DocumentTemplateFilter) {
+  document_templates(filter: $filter) {
+    page_info {
+      has_next_page
+      has_previous_page
+      start_cursor
+      end_cursor
     }
     edges {
       node {
@@ -2679,13 +2723,15 @@ export const GET_DOCUMENT_TEMPLATES = gql`query get_document_templates($offset: 
         template
         description
         related_object
+        active
+        updated_at
       }
     }
   }
 }
 `;
 
-export const CREATE_DOCUMENT_TEMPLATE = gql`mutation create_document_template($data:  CreateDocumentTemplateInput!) {
+export const CREATE_DOCUMENT_TEMPLATE = gql`mutation create_document_template($data:  CreateDocumentTemplateMutationInput!) {
   create_document_template(input: $data) {
     template {
       id
@@ -2698,7 +2744,7 @@ export const CREATE_DOCUMENT_TEMPLATE = gql`mutation create_document_template($d
 }
 `;
 
-export const UPDATE_DOCUMENT_TEMPLATE = gql`mutation update_document_template($data:  UpdateDocumentTemplateInput!) {
+export const UPDATE_DOCUMENT_TEMPLATE = gql`mutation update_document_template($data:  UpdateDocumentTemplateMutationInput!) {
   update_document_template(input: $data) {
     template {
       id
@@ -2711,7 +2757,7 @@ export const UPDATE_DOCUMENT_TEMPLATE = gql`mutation update_document_template($d
 }
 `;
 
-export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($data: DeleteDocumentTemplateInput!) {
+export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($data: DeleteMutationInput!) {
   delete_document_template(input: $data) {
     id
   }
@@ -2719,7 +2765,7 @@ export const DELETE_DOCUMENT_TEMPLATE = gql`mutation delete_document_template($d
 `;
 
 export const SEARCH_DATA = gql`query search_data($keyword: String) {
-  shipment_results: shipments(keyword: $keyword, offset: 0, first: 10) {
+  shipment_results: shipments(filter: { keyword: $keyword, offset: 0, first: 10 }) {
     edges {
       node {
         id
@@ -2741,43 +2787,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
       }
     }
   }
-  trackers_results: trackers(tracking_number: $keyword, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        created_at
-      }
-    }
-  }
-}
-`;
-
-export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: String) {
-  shipment_results: shipments(keyword: $keyword, offset: 0, first: 10) {
-    edges {
-      node {
-        id
-        status
-        tracking_number
-        recipient {
-          id
-          city
-          address_line1
-          address_line2
-          country_code
-          postal_code
-          person_name
-          phone_number
-          company_name
-          state_code
-        }
-        created_at
-      }
-    }
-  }
-  order_results: orders(keyword: $keyword, offset: 0, first: 10) {
+  order_results: orders(filter: { keyword: $keyword, offset: 0, first: 10 }) {
     edges {
       node {
         id
@@ -2799,7 +2809,7 @@ export const SEARCH_DATA_EXTENDED = gql`query search_data_extended($keyword: Str
       }
     }
   }
-  tracker_results: trackers(tracking_number: $keyword, offset: 0, first: 10) {
+  trackers_results: trackers(filter: {tracking_number: $keyword, offset: 0, first: 10 }) {
     edges {
       node {
         id

@@ -124,7 +124,7 @@ Expanded sidebar
   position: fixed;
   top: 0;
   left: 0;
-  width: 320px;
+  width: 280px;
   height: 100%;
   background: $light-grey;
   border-right: 1px solid $fade-grey;
@@ -279,9 +279,9 @@ Main wrappers
 ========================================================================== */
 
 .plex-wrapper {
-  width: calc(100% - 320px);
-  margin-left: 320px;
-  min-height: 100vh;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  min-height: 98vh;
   background: $white;
   padding: 0 40px;
   transition: all 0.3s;
@@ -292,7 +292,7 @@ Main wrappers
   }
 
   .wrapper-inner {
-    max-width: 1040px;
+    max-width: 1080px;
     width: 100%;
     margin: 0 auto;
 

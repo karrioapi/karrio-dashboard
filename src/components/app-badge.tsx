@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
 import { formatCarrierSlug } from '@/lib/helper';
+import React from 'react';
 
 interface AppBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> { }
 
 const AppBadge: React.FC<AppBadgeComponent> = ({ className, ...props }) => {
-  const { APP_NAME } = useContext(APIReference);
+  const { APP_NAME } = useAPIReference();
 
   return (
     <strong

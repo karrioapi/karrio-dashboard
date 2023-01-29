@@ -5,7 +5,7 @@
 import * as Sentry from '@sentry/nextjs';
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
-const API_URL = process.env.NEXT_PUBLIC_KARRIO_API_URL;
+const API_URL = process.env.KARRIO_PUBLIC_URL;
 
 Sentry.init({
   dsn: SENTRY_DSN,

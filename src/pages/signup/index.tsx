@@ -1,27 +1,27 @@
+import { RegisterUserMutationInput, register_user_register_user_errors } from "karrio/graphql";
+import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
+import LoadingProvider, { Loading } from "@/components/loader";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
+import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import SectionLayout from "@/layouts/section-layout";
-import LoadingProvider, { Loading } from "@/components/loader";
-import UserMutation from "@/context/user-mutation";
-import { RegisterUserInput, register_user_register_user_errors } from "karrio/graphql";
-import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
+import { useUserMutation } from "@/context/user";
+import { Metadata } from "@/lib/types";
+import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
-import { Metadata } from "@/lib/types";
-import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/static/references';
 
-const DEFAULT_VALUE: Partial<RegisterUserInput> = {
+const DEFAULT_VALUE: Partial<RegisterUserMutationInput> = {
   email: "",
   full_name: "",
   password1: "",
   password2: "",
 };
 
-function reducer(state: Partial<RegisterUserInput>, { name, value }: { name: string, value: string | object }) {
+function reducer(state: Partial<RegisterUserMutationInput>, { name, value }: { name: string, value: string | object }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -32,9 +32,10 @@ function reducer(state: Partial<RegisterUserInput>, { name, value }: { name: str
   }
 }
 
-const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
+const Component: React.FC = () => {
   const router = useRouter();
   const { email } = router.query;
+  const mutation = useUserMutation();
   const { loading, setLoading } = useContext(Loading);
   const [user, dispatch] = useReducer(reducer, DEFAULT_VALUE, () => DEFAULT_VALUE);
   const [errors, setErrors] = useState<register_user_register_user_errors[]>([]);
@@ -49,7 +50,9 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await registerUser({ ...user, redirect_url: location.origin + p`/email` } as RegisterUserInput);
+      await mutation.registerUser.mutateAsync({
+        ...user, redirect_url: location.origin + p`/email`
+      } as RegisterUserMutationInput);
       router.push(p`/signup/success`);
     } catch (error: any) {
       setErrors(Array.isArray(error) ? error : [error]);
@@ -135,7 +138,7 @@ const Component: React.FC<{}> = UserMutation<{}>(({ registerUser }) => {
       </div>
     </>
   )
-});
+};
 
 const SignUp: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
   return (

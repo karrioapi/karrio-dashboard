@@ -1,13 +1,13 @@
+import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
+import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
+import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
+import { useCustomsTemplateMutation } from '@/context/customs';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import InputField from '@/components/generic/input-field';
+import Notifier, { Notify } from '@/components/notifier';
 import React, { useContext, useState } from 'react';
 import { isNone, useLocation } from '@/lib/helper';
-import CustomsInfoForm, { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
-import InputField from '@/components/generic/input-field';
-import { CustomsTemplateType, CustomsType, NotificationType } from '@/lib/types';
-import CheckBoxField from '@/components/generic/checkbox-field';
-import Notifier, { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
-import { CustomsMutationContext } from '@/context/customs-template-mutation';
-import { CreateCustomsTemplateInput, UpdateCustomsTemplateInput } from 'karrio/graphql';
 
 const DEFAULT_TEMPLATE_CONTENT = {
   label: '',
@@ -18,10 +18,10 @@ const DEFAULT_TEMPLATE_CONTENT = {
 
 type OperationType = {
   customsTemplate?: CustomsTemplateType;
-  onConfirm: () => Promise<any>;
+  onConfirm?: () => Promise<any>;
 };
 type CustomsInfoEditContextType = {
-  editCustomsInfo: (operation: OperationType) => void,
+  editCustomsInfo: (operation?: OperationType) => void,
 };
 
 export const CustomsInfoEditContext = React.createContext<CustomsInfoEditContextType>({} as CustomsInfoEditContextType);
@@ -32,18 +32,18 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
   const { notify } = useContext(Notify);
   const { setLoading } = useContext(Loading);
   const { addUrlParam, removeUrlParam } = useLocation();
-  const { createCustomsTemplate, updateCustomsTemplate } = useContext(CustomsMutationContext);
+  const mutation = useCustomsTemplateMutation();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`customs-info-${Date.now()}`);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [template, setTemplate] = useState<CustomsTemplateType | undefined>();
   const [operation, setOperation] = useState<OperationType | undefined>();
 
-  const editCustomsInfo = (operation: OperationType) => {
-    const template = operation.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
+  const editCustomsInfo = (operation?: OperationType) => {
+    const template = operation?.customsTemplate || DEFAULT_TEMPLATE_CONTENT;
 
     setOperation(operation);
-    setIsNew(isNone(operation.customsTemplate));
+    setIsNew(isNone(template));
     setTemplate({ ...template });
 
     setIsActive(true);
@@ -73,11 +73,11 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
     try {
       setLoading(true);
       if (isNew) {
-        await createCustomsTemplate(payload as CreateCustomsTemplateInput);
+        await mutation.createCustomsTemplate.mutateAsync(payload as CreateCustomsTemplateInput);
         notify({ type: NotificationType.success, message: 'Customs info successfully added!' });
       }
       else {
-        await updateCustomsTemplate(payload as UpdateCustomsTemplateInput);
+        await mutation.updateCustomsTemplate.mutateAsync(payload as UpdateCustomsTemplateInput);
         notify({ type: NotificationType.success, message: 'Customs info successfully updated!' });
       }
       setTimeout(() => close(undefined, true), 2000);
@@ -105,7 +105,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
 
             {(template !== undefined) &&
               <CustomsInfoForm
-                value={template.customs}
+                value={(operation?.customsTemplate?.customs || DEFAULT_CUSTOMS_CONTENT) as CustomsType}
                 onSubmit={async customs => handleSubmit(customs as CustomsType)}
                 onChange={(customs: any) => setTemplate({ ...template, customs } as CustomsTemplateType)}
                 onTemplateChange={(isUnchanged) => {
@@ -133,7 +133,7 @@ const CustomsInfoEditModal: React.FC<CustomsInfoEditModalComponent> = ({ childre
                   <CheckBoxField
                     name="is_default"
                     onChange={handleChange}
-                    defaultChecked={template?.is_default}
+                    defaultChecked={template?.is_default as boolean}
                     fieldClass="column mb-0 px-2 pt-3 pb-2">
                     <span>Set as default customs info</span>
                   </CheckBoxField>

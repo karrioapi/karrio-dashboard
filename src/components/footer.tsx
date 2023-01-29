@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
+import React from 'react';
 
 
 const Footer: React.FC = () => {
-  const { OPENAPI, GRAPHQL } = useContext(APIReference);
+  const { OPENAPI, GRAPHQL } = useAPIReference();
 
   return (
-    <footer className="footer py-6 px-0">
+    <footer className="footer p-0 pt-6">
       <div className="content columns">
         <div className="column has-text-right-desktop">
           <a className="button is-white footer-api-reference-link"

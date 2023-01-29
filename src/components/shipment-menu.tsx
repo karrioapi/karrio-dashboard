@@ -1,13 +1,14 @@
-import React, { useState, useRef, useContext } from 'react';
+import { useDocumentTemplates } from '@/context/document-template';
 import { DocumentTemplateType, ShipmentType } from '@/lib/types';
-import { ShipmentsContext } from '@/context/shipments-provider';
-import { isNone } from '@/lib/helper';
-import { AppMode } from '@/context/app-mode-provider';
-import { useRouter } from 'next/dist/client/router';
-import { ShipmentMutationContext } from '@/context/shipment-mutation';
-import { ShipmentStatusEnum } from 'karrio/graphql';
-import { KARRIO_API } from '@/client/context';
 import { ConfirmModalContext } from '@/components/confirm-modal';
+import React, { useState, useRef, useContext } from 'react';
+import { useShipmentMutation } from '@/context/shipment';
+import { useRouter } from 'next/dist/client/router';
+import { ManualShipmentStatusEnum, ShipmentStatusEnum } from 'karrio/graphql';
+import { useAppMode } from '@/context/app-mode';
+import { KARRIO_API } from '@/client/context';
+import { isNone } from '@/lib/helper';
+import { useAPIReference } from '@/context/reference';
 
 
 interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -17,14 +18,18 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 }
 
 
-const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, isViewing }) => {
+const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) => {
   const router = useRouter();
-  const { basePath } = useContext(AppMode);
-  const { voidLabel } = useContext(ShipmentMutationContext);
-  const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
-  const shipments = useContext(ShipmentsContext);
+  const { basePath } = useAppMode();
+  const references = useAPIReference();
+  const mutation = useShipmentMutation();
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
+  const { confirm: confirmCancellation } = useContext(ConfirmModalContext);
+  const { query: { data: { document_templates } = {} } } = useDocumentTemplates({
+    related_object: "shipment",
+    active: true,
+  } as any);
 
   const handleOnClick = (e: React.MouseEvent) => {
     setIsActive(!isActive);
@@ -44,8 +49,10 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
     router.push(basePath + '/shipments/' + shipment.id);
   };
   const cancelShipment = (shipment: ShipmentType) => async () => {
-    await voidLabel(shipment);
-    shipments.loadMore();
+    await mutation.voidLabel.mutateAsync(shipment);
+  };
+  const changeStatus = ({ id }: ShipmentType, status: ManualShipmentStatusEnum) => async () => {
+    await mutation.changeStatus.mutateAsync({ id: shipment.id, status });
   };
 
   return (
@@ -73,9 +80,9 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
           {!isViewing &&
             <a className="dropdown-item" onClick={displayDetails}>View Shipment</a>}
 
-          {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status) &&
+          {![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status as any) &&
             <a className="dropdown-item" onClick={() => confirmCancellation({
-              identifier: shipment.id,
+              identifier: shipment.id as string,
               label: `Cancel Shipment`,
               action: 'Submit',
               onConfirm: cancelShipment(shipment),
@@ -85,10 +92,35 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, templates, is
             <a className="dropdown-item" href={`${KARRIO_API}${shipment.invoice_url}`}
               target="_blank" rel="noreferrer">Print Invoice</a>}
 
-          {templates && templates.length > 0 &&
+          {(
+            shipment.carrier_name &&
+            !(shipment!.carrier_name in references.carriers) &&
+            ![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status as any)
+          ) && <>
+              <hr className="my-1" style={{ height: '1px' }} />
+
+              {(shipment.status === ShipmentStatusEnum.purchased) &&
+                <a className="dropdown-item" onClick={() => confirmCancellation({
+                  identifier: shipment.id as string,
+                  label: `Mark shipment as ${ManualShipmentStatusEnum.in_transit}`,
+                  action: 'Apply',
+                  onConfirm: changeStatus(shipment, ManualShipmentStatusEnum.in_transit),
+                })}>Mark as {ManualShipmentStatusEnum.in_transit}</a>}
+
+              {([ShipmentStatusEnum.purchased, ShipmentStatusEnum.in_transit].includes(shipment.status as any)) &&
+                <a className="dropdown-item" onClick={() => confirmCancellation({
+                  identifier: shipment.id as string,
+                  label: `Mark shipment as ${ManualShipmentStatusEnum.delivered}`,
+                  action: 'Save',
+                  onConfirm: changeStatus(shipment, ManualShipmentStatusEnum.delivered),
+                })}>Mark as {ManualShipmentStatusEnum.delivered}</a>}
+
+            </>}
+
+          {(document_templates?.edges || []).length > 0 &&
             <hr className="my-1" style={{ height: '1px' }} />}
 
-          {(templates || []).map(template =>
+          {(document_templates?.edges || []).map(({ node: template }) =>
             <a href={`${KARRIO_API}/documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
               className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
               Download {template.name}

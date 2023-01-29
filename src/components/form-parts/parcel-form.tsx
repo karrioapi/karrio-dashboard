@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
-import InputField from '@/components/generic/input-field';
-import SelectField from '@/components/generic/select-field';
-import CheckBoxField from '@/components/generic/checkbox-field';
 import { deepEqual, findPreset, formatDimension, formatRef, isNone, validationMessage, validityCheck } from '@/lib/helper';
 import { DIMENSION_UNITS, ParcelType, PresetCollection, ShipmentType, WEIGHT_UNITS } from '@/lib/types';
-import { APIReference } from '@/context/references-provider';
-import { ParcelTemplates } from '@/context/parcel-templates-provider';
 import { DimensionUnitEnum, WeightUnitEnum } from 'karrio/graphql';
+import CheckBoxField from '@/components/generic/checkbox-field';
+import React, { useEffect, useReducer, useState } from 'react';
+import SelectField from '@/components/generic/select-field';
+import InputField from '@/components/generic/input-field';
+import { useAPIReference } from '@/context/reference';
+import { useParcelTemplates } from '@/context/parcel';
 
 type stateValue = string | number | boolean | Partial<ParcelType>;
 export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
@@ -49,8 +49,8 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, prefixChilren, onChange }) => {
-  const { packaging_types, package_presets } = useContext(APIReference);
-  const { templates, load, ...state } = useContext(ParcelTemplates);
+  const { packaging_types, package_presets } = useAPIReference();
+  const { query } = useParcelTemplates();
   const [key] = useState<string>(`parcel-${Date.now()}`);
   const [parcel, dispatch] = useReducer(reducer, value, () => value || DEFAULT_PARCEL_CONTENT);
   const [parcel_type, setParcelType] = useState<string>(isNone(value?.package_preset) ? 'custom' : 'preset');
@@ -76,7 +76,8 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
     let value: stateValue = target.type === 'checkbox' ? target.checked : target.value;
 
     if (name === 'parcel_type') {
-      const template = (templates || []).find(p => p.id === value)?.parcel;
+      const template = (query.data?.parcel_templates.edges || [])
+        .find(p => p.node.id === value)?.node?.parcel;
       const preset = { ...parcel, package_preset: undefined } as Partial<ParcelType>;
 
       setParcelType(value as string);
@@ -93,7 +94,6 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
     dispatch({ name, value: target.type === 'number' ? parseFloat(value as string) : value });
   };
 
-  useEffect(() => { (!state.called && !state.loading && load) && load(); }, [state, load]);
   useEffect(() => {
     if (onChange && !deepEqual(value, parcel)) {
       const { validation, ...changes } = parcel;
@@ -121,9 +121,9 @@ const ParcelForm: React.FC<ParcelFormComponent> = ({ value, shipment, children, 
           <option value='custom'>Custom Measurements</option>
           <option value='preset'>Carrier Parcel Presets</option>
         </optgroup>
-        {(!isNone(shipment) && (templates || []).length > 0) &&
+        {(!isNone(shipment) && (query.data?.parcel_templates.edges || []).length > 0) &&
           <optgroup label="Load your custom parcel template">
-            {(templates || []).map(template => <option key={template.id} value={template.id}>{template.label}</option>)}
+            {(query.data?.parcel_templates.edges || []).map(({ node: template }) => <option key={template.id} value={template.id}>{template.label}</option>)}
           </optgroup>}
       </SelectField>
 

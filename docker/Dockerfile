@@ -22,8 +22,9 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV SENTRY_IGNORE_API_RESOLUTION_ERROR 1
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_KARRIO_API_URL https://api.karrio.io
 ENV JWT_SECRET "nasdlfij34l5kj5k6j5kl6lp+lsick5bi*90!mbk7rc3iy_op1r"
+ENV KARRIO_PUBLIC_URL https://api.karrio.io
+ENV DASHBOARD_URL http://localhost:3000
 ENV DASHBOARD_VERSION ${VERSION}
 
 RUN addgroup -g 1001 -S nodejs
@@ -33,6 +34,7 @@ RUN adduser -S pship -u 1001
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=pship:nodejs /app/.next ./.next
+COPY --from=builder /app/docker/entrypoint ./entrypoint
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
@@ -40,4 +42,4 @@ USER pship
 
 EXPOSE 3000
 
-CMD ["node_modules/.bin/next", "start"]
+CMD ["/bin/sh", "./entrypoint"]

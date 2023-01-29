@@ -1,14 +1,14 @@
-import React from 'react';
-import { MetadataObjectType } from 'karrio/graphql';
-import MetadataStateProvider, { MetadataStateContext } from '@/context/metadata-state';
-import InputField from '@/components/generic/input-field';
 import TextAreaField from '@/components/generic/textarea-field';
+import InputField from '@/components/generic/input-field';
+import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { Loading } from '@/components/loader';
+import React from 'react';
+import MetadataStateProvider, { MetadataStateContext } from '@/context/metadata';
 
 interface MetadataEditorProps {
   id?: string;
   metadata?: {};
-  object_type: MetadataObjectType;
+  object_type: MetadataObjectTypeEnum;
   onChange?: (metadata: any) => void;
 }
 interface MetadataEditorInterface {
@@ -36,43 +36,45 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({ id, metadata, object_ty
 
             {children}
 
-            {Object.entries(context.state).map(
-              ([uid, { key, value }], index) => <React.Fragment key={index + "-metadata"}>
-                <div className="is-flex columns my-1 mx-0" key={uid}>
-                  <div className="column is-3 p-1">
-                    {!isEditing && <span className="has-text-weight-semibold has-text-grey is-size-7 p-2">{key}</span>}
-                    {isEditing && <InputField
-                      placeholder="Key"
-                      defaultValue={key}
-                      onChange={(e: React.ChangeEvent<any>) => context.updateItem(uid, { key: e.target.value, value })}
-                      className="is-small is-fullwidth"
-                      required />}
-                  </div>
-                  <div className="column p-1">
-                    {!isEditing && <span className="is-size-7">{value}</span>}
-                    {isEditing &&
-                      <TextAreaField
-                        placeholder="Value"
-                        defaultValue={value}
-                        onChange={(e: React.ChangeEvent<any>) => context.updateItem(uid, { key, value: e.target.value })}
-                        className="is-small is-fullwidth py-1"
-                        style={{ minHeight: "30px" }}
-                        rows={1}
+            <div style={{ overflow: 'auto', maxHeight: '12em' }}>
+              {Object.entries(context.state).map(
+                ([uid, { key, value }], index) => <React.Fragment key={index + "-metadata"}>
+                  <div className="is-flex columns my-1 mx-0" key={uid}>
+                    <div className="column is-3 p-1">
+                      {!isEditing && <span className="has-text-weight-semibold has-text-grey is-size-7 p-2">{key}</span>}
+                      {isEditing && <InputField
+                        placeholder="Key"
+                        defaultValue={key}
+                        onChange={(e: React.ChangeEvent<any>) => context.updateItem(uid, { key: e.target.value, value })}
+                        className="is-small is-fullwidth"
                         required />}
+                    </div>
+                    <div className="column p-1">
+                      {!isEditing && <span className="is-size-7">{value}</span>}
+                      {isEditing &&
+                        <TextAreaField
+                          placeholder="Value"
+                          defaultValue={value}
+                          onChange={(e: React.ChangeEvent<any>) => context.updateItem(uid, { key, value: e.target.value })}
+                          className="is-small is-fullwidth py-1"
+                          style={{ minHeight: "30px" }}
+                          rows={1}
+                          required />}
+                    </div>
+                    {isEditing && <div className="p-1">
+                      <button className="button is-white is-small" onClick={() => context.removeItem(uid)}>
+                        <span className="icon is-small">
+                          <i className="fas fa-trash"></i>
+                        </span>
+                      </button>
+                    </div>}
                   </div>
-                  {isEditing && <div className="p-1">
-                    <button className="button is-white is-small" onClick={() => context.removeItem(uid)}>
-                      <span className="icon is-small">
-                        <i className="fas fa-trash"></i>
-                      </span>
-                    </button>
-                  </div>}
-                </div>
-                {context.error?.key === key && <p className="has-text-danger px-2 is-size-7">
-                  {context.error?.message}
-                </p>}
-              </React.Fragment>
-            )}
+                  {context.error?.key === key && <p className="has-text-danger px-2 is-size-7">
+                    {context.error?.message}
+                  </p>}
+                </React.Fragment>
+              )}
+            </div>
 
             {!isEditing && Object.keys(context.state || {}).length == 0 && <div className="p-2 is-size-7">No metadata</div>}
 

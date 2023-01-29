@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
 import { formatAddressName, formatFullAddress } from '@/lib/helper';
-import { APIReference } from '@/context/references-provider';
+import { useAPIReference } from '@/context/reference';
 import { AddressType, Collection } from '@/lib/types';
+import React from 'react';
 
 interface AddressDescriptionComponent {
   address: AddressType;
 }
 
 const AddressDescription: React.FC<AddressDescriptionComponent> = ({ address }) => {
-  const { countries } = useContext(APIReference);
+  const { countries } = useAPIReference();
   return (
     <>
 

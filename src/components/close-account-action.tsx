@@ -1,16 +1,18 @@
-import { NotificationType } from '@/lib/types';
 import React, { useContext, useState } from 'react';
-import UserMutation from '@/context/user-mutation';
+import { useRouter } from 'next/dist/client/router';
+import { useUserMutation } from '@/context/user';
+import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/dist/client/router';
 
 interface CloseAccountActionComponent extends React.InputHTMLAttributes<HTMLDivElement> { }
 
-const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<CloseAccountActionComponent>(({ children, closeAccount }) => {
+const CloseAccountAction: React.FC<CloseAccountActionComponent> = ({ children }) => {
   const router = useRouter();
+  const mutation = useUserMutation();
   const { notify } = useContext(Notify);
   const [isActive, setIsActive] = useState<boolean>(false);
+
   const close = (evt: React.MouseEvent) => {
     evt.preventDefault();
     setIsActive(false);
@@ -18,7 +20,7 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<C
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     try {
-      await closeAccount();
+      await mutation.closeAccount.mutateAsync();
       signOut();
       router.push('/login');
     } catch (err: any) {
@@ -48,6 +50,6 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = UserMutation<C
       </div>
     </>
   )
-});
+};
 
 export default CloseAccountAction;

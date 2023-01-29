@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useContext, useEffect } from 'react';
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
+import { useAddressTemplates } from '@/context/address';
 import { formatAddress, isNone } from '@/lib/helper';
 import { Address } from 'karrio/rest/index';
-import { AddressTemplates } from '@/context/address-templates-provider';
+import React, { ChangeEvent } from 'react';
 
 interface NameInputComponent extends InputFieldComponent {
   onValueChange: (value: Partial<Address>, refresh?: boolean) => void;
@@ -11,22 +11,22 @@ interface NameInputComponent extends InputFieldComponent {
 }
 
 const NameInput: React.FC<NameInputComponent> = ({ disableSuggestion, onValueChange, ...props }) => {
-  const { templates, loading, called, load } = useContext(AddressTemplates);
+  const { query } = useAddressTemplates();
 
   const onInput = (e: ChangeEvent<any>) => {
     e.preventDefault();
-    const template = (templates || []).find(t => t.address?.person_name === e.target.value);
+    const template = (query.data?.address_templates?.edges || [])
+      .find(t => t.node.address?.person_name === e.target.value)
+      ?.node;
     let value = template?.address || { person_name: e.target.value };
     onValueChange(value as Partial<Address>, !isNone(template));
   };
 
-  useEffect(() => { if (!called && !loading && load) load(); }, [called, templates, loading, load]);
-
   return (
     <InputField onInput={onInput} list="address_templates" {...props}>
       {!disableSuggestion && <datalist id="address_templates">
-        {(templates || [])
-          .map(template => (
+        {(query.data?.address_templates?.edges || [])
+          .map(({ node: template }) => (
             <option key={template.id} value={template.address?.person_name as string}>
               {template.label} - {formatAddress(template?.address as any)}
             </option>

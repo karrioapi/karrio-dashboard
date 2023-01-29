@@ -1,26 +1,23 @@
-import { SystemConnections, SystemConnectionType } from '@/context/system-connections-provider';
+import { useSystemConnectionMutation, useSystemConnections } from '@/context/system-connection';
 import ConnectionDescription from '@/components/descriptions/connection-description';
-import { useSystemConnectionMutation } from '@/context/system-connection-mutation';
 import CarrierNameBadge from '@/components/carrier-name-badge';
-import { NotificationType } from '@/lib/types';
 import { Notify } from '@/components/notifier';
+import { NotificationType } from '@/lib/types';
 import React, { useContext } from 'react';
 
 
 const SystemConnectionList: React.FC = () => {
   const { notify } = useContext(Notify);
-  const { system_connections, refetch } = useContext(SystemConnections);
-  const { updateConnection } = useSystemConnectionMutation();
+  const { query } = useSystemConnections();
+  const { updateSystemConnection } = useSystemConnectionMutation();
 
-  const onUpdate = async () => refetch && await refetch();
-  const toggle = ({ enabled, id }: SystemConnectionType) => async () => {
+  const toggle = ({ enabled, id }: any) => async () => {
     try {
-      await updateConnection({ id, enable: !enabled });
+      await updateSystemConnection.mutateAsync({ id, enable: !enabled });
       notify({
         type: NotificationType.success,
         message: `system carrier connection ${!enabled ? 'enabled' : 'disabled'}!`
       });
-      onUpdate();
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
     }
@@ -29,14 +26,14 @@ const SystemConnectionList: React.FC = () => {
   return (
     <>
 
-      {((system_connections || []).length > 0) && <table className="table is-fullwidth">
+      {((query.data?.system_connections || []).length > 0) && <table className="table is-fullwidth">
 
         <tbody className="system-connections-table">
           <tr>
             <td className="is-size-7" colSpan={4}>ACCOUNTS</td>
           </tr>
 
-          {(system_connections || []).map((connection) => (
+          {(query.data?.system_connections || []).map((connection) => (
 
             <tr key={`connection-${connection.id}-${Date.now()}`}>
               <td className="carrier is-vcentered pl-0">
@@ -66,7 +63,7 @@ const SystemConnectionList: React.FC = () => {
 
       </table>}
 
-      {((system_connections || []).length == 0) && <div className="card my-6">
+      {((query.data?.system_connections || []).length == 0) && <div className="card my-6">
 
         <div className="card-content has-text-centered">
           <p>The administrators have not provided any system wide carrier connections.</p>
