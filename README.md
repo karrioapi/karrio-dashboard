@@ -13,10 +13,6 @@ Karrio Dashboard is a browser-based logistics and shipping app for [karrio](http
 
 If you just want to try Karrio out, check out the [karrio/dashboard](https://hub.docker.com/repository/docker/karrio/dashboard) Docker Image to give it a whirl.
 
-Or launch the demo for free on vercel.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard&env=KARRIO_PUBLIC_URL,JWT_SECRET,DASHBOARD_URL&envDescription=KARRIO_PUBLIC_URL%20should%20be%20the%20link%20to%20your%20karrrio%20server%20instance%20and%20DASHBOARD_URL%20the%20link%20to%20your%20vercel%20deployed%20URL&envLink=https%3A%2F%2Fgithub.com%2Fkarrioapi%2Fkarrio-dashboard%23configuration)
-
 ### Building and Running Karrio Dashboard
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
