@@ -5,11 +5,12 @@ import AddressDescription from "@/components/descriptions/address-description";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import StatusCode from "@/components/status-code-badge";
+import { MetadataObjectTypeEnum } from "karrio/graphql";
 import CopiableLink from "@/components/copiable-link";
 import StatusBadge from "@/components/status-badge";
 import { useRouter } from "next/dist/client/router";
-import { MetadataObjectTypeEnum } from "karrio/graphql";
 import { useLoader } from "@/components/loader";
+import OrderMenu from "@/components/order-menu";
 import AppLink from "@/components/app-link";
 import { useEvents } from "@/context/event";
 import { useOrder } from "@/context/order";
@@ -17,7 +18,6 @@ import Spinner from "@/components/spinner";
 import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
-import OrderMenu from "@/components/order-menu";
 
 export { getServerSideProps } from "@/lib/middleware";
 
@@ -124,7 +124,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
                 LINE ITEMS ({order?.line_items.reduce((_, { quantity }) => _ + (quantity || 1), 0)})
               </p>
 
-              <div className="menu-list py-2" style={{ maxHeight: '40em', overflow: 'auto' }}>
+              <div className="menu-list py-2 pr-1" style={{ maxHeight: '40em', overflow: 'auto' }}>
                 {order?.line_items.map((item, index) => <React.Fragment key={index + "parcel-info"}>
                   <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                   <CommodityDescription commodity={item} />
@@ -194,7 +194,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 
         {(order?.shipments || []).length == 0 && <div>No shipments</div>}
 
-        {(order?.shipments || []).length > 0 && <div className="table-container">
+        {(order?.shipments || []).length > 0 && <div className="table-container" style={{ maxHeight: '20em', overflow: 'auto' }}>
           <table className="related-item-table table is-hoverable is-fullwidth">
             <tbody>
               {(order?.shipments || []).map(shipment => (

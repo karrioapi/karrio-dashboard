@@ -334,7 +334,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                       <span className="is-size-7">({(parcel.items || []).reduce((acc, { quantity }) => acc + (quantity || 0), 0)})</span>
                     </p>
 
-                    <div className="menu-list py-2" style={{ maxHeight: '40em', overflow: 'auto' }}>
+                    <div className="menu-list py-2 pr-1" style={{ maxHeight: '40em', overflow: 'auto' }}>
                       {(parcel.items || []).map((item, index) => <React.Fragment key={index + "item-info"}>
                         <hr className="mt-1 mb-2" style={{ height: '1px' }} />
                         <CommodityDescription commodity={item} />
