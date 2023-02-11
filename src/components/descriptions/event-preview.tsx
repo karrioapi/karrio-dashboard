@@ -1,4 +1,4 @@
-import { EventComponent } from '@/views/event';
+import { EventComponent } from '@/modules/Developers/event';
 import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 

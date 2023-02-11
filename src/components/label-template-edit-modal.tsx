@@ -4,11 +4,11 @@ import Tabs, { TabStateProvider } from '@/components/generic/tabs';
 import React, { useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_SVG_LABEL_TEMPLATE } from '@/lib/sample';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { jsonLanguage } from '@codemirror/lang-json';
+import { htmlLanguage } from '@codemirror/lang-html';
 import CodeMirror from '@uiw/react-codemirror';
 import { Loading } from '@/components/loader';
-import { KARRIO_API } from '@/client/context';
-import { htmlLanguage } from '@codemirror/lang-html';
 import Notifier from '@/components/notifier';
 
 type LabelTemplateType = get_user_connections_user_connections_GenericSettingsType_label_template;
@@ -49,6 +49,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> = ({ children }) => {
+  const metadata = useAPIMetadata();
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`template-${Date.now()}`);
@@ -111,7 +112,7 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
               </div>
               <div>
                 <a className={`button is-small is-primary mx-1 ${isNoneOrEmpty(template.id) ? 'is-static' : ''}`}
-                  href={`${KARRIO_API}/v1/carriers/${operation?.connection.id}/label.pdf`}
+                  href={`${metadata?.HOST}v1/carriers/${operation?.connection.id}/label.pdf`}
                   target="_blank" rel="noreferrer">
                   Preview Template
                 </a>

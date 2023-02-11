@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/parcels";
+export { default, getServerSideProps } from "@/modules/Settings/parcels";

@@ -1,5 +1,5 @@
 import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
-import { BASE_PATH, KARRIO_API } from "@/client/context";
+import { BASE_PATH, KARRIO_API } from "@/lib/client";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -464,7 +464,7 @@ export async function request<T>(query: string, args?: requestArgs): Promise<T> 
   try {
     const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
-      url || `${KARRIO_API || ''}/graphql`, { query, operationName, variables }, config,
+      url || `${getCookie('apiUrl') || KARRIO_API || ''}graphql`, { query, operationName, variables }, config,
     );
 
     if (response.errors) {

@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/template";
+export { default, getServerSideProps } from "@/modules/Settings/template";

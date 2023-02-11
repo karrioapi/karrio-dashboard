@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/shipments";
+export { default, getServerSideProps } from "@/modules/Shipments";

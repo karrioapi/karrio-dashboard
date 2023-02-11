@@ -67,6 +67,11 @@ export type DocumentTemplateType = get_document_template_document_template;
 
 export interface WebhookType extends get_webhooks_webhooks_edges_node { }
 
+export type TenantType = {
+  schema_name: string;
+  api_domains: string[];
+}
+
 export interface View {
   path: string
 }
@@ -249,12 +254,12 @@ export type PortalSessionType = {
 }
 
 export interface Metadata {
+  HOST: string;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;
   VERSION: string;
   APP_NAME: string;
-  APP_WEBSITE?: string;
 
   AUDIT_LOGGING: boolean;
   ALLOW_SIGNUP: boolean;
@@ -272,6 +277,7 @@ export interface Metadata {
 };
 
 export interface References {
+  HOST: string;
   ADMIN: string;
   OPENAPI: string;
   GRAPHQL: string;

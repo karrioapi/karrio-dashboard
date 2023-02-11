@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/events";
+export { default, getServerSideProps } from "@/modules/Developers/events";

@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/api";
+export { default, getServerSideProps } from "@/modules/Developers/api";

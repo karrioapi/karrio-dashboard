@@ -16,6 +16,9 @@ const KARRIO_URL = (
 const SENTRY_DSN = (
   process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
 );
+const MULTI_TENANT = (
+  Boolean(JSON.parse(process.env.MULTI_TENANT || 'false'))
+);
 
 const moduleExports = {
   swcMinify: true,
@@ -26,7 +29,9 @@ const moduleExports = {
   },
   serverRuntimeConfig: {
     KARRIO_URL: KARRIO_URL,
+    MULTI_TENANT: MULTI_TENANT,
     JWT_SECRET: process.env.JWT_SECRET,
+    KARRIO_ADMIN_API_KEY: process.env.KARRIO_ADMIN_API_KEY,
   },
   publicRuntimeConfig: {
     BASE_PATH: BASE_PATH,

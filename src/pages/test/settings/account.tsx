@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/account";
+export { default, getServerSideProps } from "@/modules/Settings/account";

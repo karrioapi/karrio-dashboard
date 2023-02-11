@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DocumentUploadData, DocumentsApiListRequest } from "@karrio/rest";
 import { handleFailure } from "@/lib/helper";
-import { useKarrio } from "@/client/context";
+import { useKarrio } from "@/lib/client";
 import React from "react";
 
 const PAGE_SIZE = 20;

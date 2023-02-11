@@ -1,7 +1,7 @@
 import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT, ChangeShipmentStatusMutationInput, CHANGE_SHIPMENT_STATUS, change_shipment_status, DISCARD_PARCEL } from "@karrio/graphql";
 import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RestContext } from "@/client/context";
+import { RestContext } from "@/lib/client";
 import { ShipmentType } from "@/lib/types";
 import React from "react";
 

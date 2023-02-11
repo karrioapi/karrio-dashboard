@@ -1,15 +1,16 @@
 import { NotificationType, PortalSessionType } from '@/lib/types';
 import { useOrganizations } from '@/context/organization';
 import { useSubscription } from '@/context/subscription';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useLoader } from '@/components/loader';
 import { Notify } from '@/components/notifier';
-import { KARRIO_API } from '@/client/context';
 import React, { useContext } from 'react';
 import axios from 'axios';
 
 interface SubscriptionManagementComponent { }
 
 const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => {
+  const metadata = useAPIMetadata();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useLoader();
   const { organization } = useOrganizations();
@@ -20,7 +21,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => 
     try {
       const return_url = window.location.href;
       const response = await axios.post<PortalSessionType>(
-        KARRIO_API + '/v1/billing/portal',
+        metadata?.HOST + 'v1/billing/portal',
         { return_url },
         {
           headers: {

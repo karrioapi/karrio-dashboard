@@ -2,7 +2,7 @@ import { WebhookFilter, get_webhooks, GET_WEBHOOKS, GET_WEBHOOK, get_webhook } f
 import { gqlstr, handleFailure, onError, request, useSessionHeader } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Webhook, WebhookData } from "@karrio/rest";
-import { RestContext } from "@/client/context";
+import { RestContext } from "@/lib/client";
 import React from "react";
 
 const PAGE_SIZE = 20;
