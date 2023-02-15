@@ -2,11 +2,13 @@ import { UserContextDataType, Metadata, PortalSessionType, References, SessionTy
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from "next";
 import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
 import { getSession } from "next-auth/react";
+import { KARRIO_API } from "@/lib/client";
+import getConfig from "next/config";
 import logger from "@/lib/logger";
 import axios from "axios";
 
 type RequestContext = GetServerSidePropsContext | NextApiRequest;
-const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
+const { serverRuntimeConfig } = getConfig();
 const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
 const AUTH_HTTP_CODES = [401, 403, 407];
 
@@ -190,7 +192,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 export async function loadTenantInfo(filter: { app_domain?: string, schema_name?: string }): Promise<TenantType | null> {
   try {
     const { data: { data: { tenants } } } = await axios({
-      url: `${publicRuntimeConfig.KARRIO_PUBLIC_URL || ''}/admin/graphql/`,
+      url: `${KARRIO_API || ''}/admin/graphql/`,
       method: 'POST',
       headers: { 'authorization': `Token ${serverRuntimeConfig.KARRIO_ADMIN_API_KEY}` },
       data: { variables: { filter }, query: TENANT_QUERY },
@@ -198,7 +200,7 @@ export async function loadTenantInfo(filter: { app_domain?: string, schema_name?
 
     return tenants.edges[0].node;
   } catch (e: any) {
-    console.log(e.response?.data, `${publicRuntimeConfig.KARRIO_PUBLIC_URL || ''}/admin/graphql/`);
+    console.log(e.response?.data, `${KARRIO_API || ''}/admin/graphql/`);
 
     return null;
   }
@@ -213,7 +215,7 @@ function needValidSubscription({ subscription }: { subscription?: SubscriptionTy
 
 async function getAPIURL(ctx: RequestContext) {
   if (!serverRuntimeConfig?.MULTI_TENANT) {
-    return serverRuntimeConfig?.KARRIO_URL
+    return KARRIO_API;
   }
 
   const params = (ctx as GetServerSidePropsContext).params;
@@ -232,7 +234,7 @@ async function getAPIURL(ctx: RequestContext) {
 
   return (!!APIURL
     ? APIURL
-    : serverRuntimeConfig?.KARRIO_URL
+    : KARRIO_API
   );
 }
 
