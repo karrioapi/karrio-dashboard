@@ -1,5 +1,5 @@
 import { BASE_PATH, TEST_BASE_PATH } from "@/lib/client";
-import { getCookie, setCookie, useLocation } from "@/lib/helper";
+import { failsafe, getCookie, setCookie, useLocation } from "@/lib/helper";
 import React from "react";
 
 
@@ -10,7 +10,10 @@ type AppModeType = {
 };
 
 export function computeMode() {
-  return Boolean(JSON.parse(getCookie("testMode"))) === true;
+  const testMode = failsafe(
+    () => Boolean(JSON.parse(getCookie("testMode") || "false"))
+  );
+  return testMode === true;
 };
 
 export function computeBasePath(pathname?: string) {

@@ -128,7 +128,7 @@ export async function setSessionCookies(ctx: GetServerSidePropsContext, metadata
   if (!!metadata?.HOST) {
     ctx.res.setHeader('Set-Cookie', `apiUrl=${metadata.HOST}`);
   }
-  if (!isNone(testMode)) {
+  if (!!testMode) {
     ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
   }
 }
