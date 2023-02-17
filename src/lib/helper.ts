@@ -462,9 +462,10 @@ type requestArgs = {
 export async function request<T>(query: string, args?: requestArgs): Promise<T> {
   const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
+    const APIUrl = url || `${getCookie('apiUrl') || KARRIO_API || ''}/graphql`.replace('//graphql', '/graphql');
     const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
-      url || `${getCookie('apiUrl') || KARRIO_API || ''}graphql`, { query, operationName, variables }, config,
+      APIUrl, { query, operationName, variables }, config,
     );
 
     if (response.errors) {

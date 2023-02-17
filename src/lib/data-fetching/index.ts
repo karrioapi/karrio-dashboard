@@ -8,7 +8,7 @@ import logger from "@/lib/logger";
 import axios from "axios";
 
 type RequestContext = GetServerSidePropsContext | NextApiRequest;
-const { serverRuntimeConfig } = getConfig();
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
 const AUTH_HTTP_CODES = [401, 403, 407];
 
@@ -126,7 +126,9 @@ export async function setSessionCookies(ctx: GetServerSidePropsContext, metadata
     ctx.res.setHeader('Set-Cookie', `appUrl=${ctx.params?.site}`);
   }
   if (!!metadata?.HOST) {
-    ctx.res.setHeader('Set-Cookie', `apiUrl=${metadata.HOST}`);
+    const host = serverRuntimeConfig?.MULTI_TENANT ? metadata.HOST : publicRuntimeConfig?.KARRIO_PUBLIC_URL
+    ctx.res.setHeader('Set-Cookie', `apiUrl=${host}`);
+    ctx.res.setHeader('Set-Cookie', `apiHOST=${metadata.HOST}`);
   }
   if (!!testMode) {
     ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
@@ -221,11 +223,11 @@ async function getAPIURL(ctx: RequestContext) {
   const params = (ctx as GetServerSidePropsContext).params;
   const cookies = (ctx as NextApiRequest).cookies;
 
-  if (cookies && cookies['apiUrl']) return cookies['apiUrl'];
+  if (cookies && cookies['apiHOST']) return cookies['apiHOST'];
 
   const app_domain = (
     (params && params.site) ||
-    (cookies && cookies['appUrl'])
+    (cookies && cookies['apiHOST'])
   ) as string;
   const APIURL = (serverRuntimeConfig?.MULTI_TENANT && !!app_domain
     ? (await loadTenantInfo({ app_domain }))?.api_domains[0]
