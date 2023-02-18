@@ -1,4 +1,4 @@
-import { OrderComponent } from '@/views/order';
+import { OrderComponent } from '@/modules/Orders/order';
 import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 

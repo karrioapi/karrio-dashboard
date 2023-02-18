@@ -1,14 +1,14 @@
+import { useAPIMetadata } from '@/context/api-metadata';
 import React, { useState, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import { signOut } from 'next-auth/react';
 import { useUser } from '@/context/user';
-import getConfig from 'next/config';
 
-const { publicRuntimeConfig } = getConfig();
 interface AccountDropdownComponent { }
 
 
 const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
+  const metadata = useAPIMetadata();
   const menu = useRef<HTMLDivElement>(null);
   const btn = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -52,7 +52,7 @@ const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
               </div>
             </AppLink>
 
-            {(user?.is_staff === true) && <a href={publicRuntimeConfig?.KARRIO_PUBLIC_URL + '/admin/'} target="_blank" rel="noreferrer" className="options-item">
+            {(user?.is_staff === true) && <a href={metadata.ADMIN} target="_blank" rel="noreferrer" className="options-item">
               <i className="fas fa-tools"></i>
               <div className="option-content">
                 <span>Admin Console</span>

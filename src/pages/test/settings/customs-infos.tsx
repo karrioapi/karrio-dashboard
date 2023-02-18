@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/customs-infos";
+export { default, getServerSideProps } from "@/modules/Settings/customs-infos";

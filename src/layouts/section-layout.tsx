@@ -1,9 +1,10 @@
 import { Metadata, SessionType } from '@/lib/types';
-import { ClientsProvider } from '@/client/context';
+import { ClientsProvider } from '@/lib/client';
 import { SessionProvider } from 'next-auth/react';
 import MainLayout from '@/layouts/main-layout';
 import { p, ServerError } from '@/lib/helper';
 import React from 'react';
+import Link from 'next/link';
 
 type SectionLayoutProps = {
   metadata?: Metadata,
@@ -32,7 +33,9 @@ const SectionLayout: React.FC<SectionLayoutProps> = ({ session, metadata, error,
             <div className="hero-footer">
               <div className="content has-text-centered">
                 <p>
-                  <a href={metadata?.APP_WEBSITE || ""} className="button is-white">&copy; {metadata?.APP_NAME}</a>
+                  <Link legacyBehavior href="/">
+                    <span className="button is-white">&copy; {metadata?.APP_NAME}</span>
+                  </Link>
                   <a href="https://docs.karrio.io" className="button is-white">Documentation</a>
                 </p>
               </div>

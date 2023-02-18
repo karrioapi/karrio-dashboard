@@ -8,7 +8,7 @@ import ErrorBoundary from '@/components/error-boudaries';
 import APIReferenceProvider from '@/context/reference';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
-import { ClientsProvider } from '@/client/context';
+import { ClientsProvider } from '@/lib/client';
 import LoadingProvider from '@/components/loader';
 import AppModeProvider from '@/context/app-mode';
 import Notifier from '@/components/notifier';

@@ -1,5 +1,5 @@
+import { LogComponent } from '@/modules/Developers/log';
 import { useLocation } from '@/lib/helper';
-import { LogComponent } from '@/views/log';
 import React, { useState } from 'react';
 
 type LogPreviewContextType = {

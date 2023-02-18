@@ -1,4 +1,4 @@
-import { ShipmentComponent } from '@/views/shipment';
+import { ShipmentComponent } from '@/modules/Shipments/shipment';
 import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 

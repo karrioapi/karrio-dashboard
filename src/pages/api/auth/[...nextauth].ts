@@ -1,10 +1,10 @@
-import { authenticate, computeTestMode, getCurrentOrg, refreshToken } from '@/lib/auth';
 import CredentialProvider from "next-auth/providers/credentials";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
-import { checkAPI } from '@/lib/middleware';
-import getConfig from 'next/config';
+import { computeTestMode, Auth } from '@/lib/auth';
+import { loadAPIMetadata } from '@/lib/data-fetching';
 import { JWT } from 'next-auth/jwt';
+import getConfig from 'next/config';
 import logger from '@/lib/logger';
 import NextAuth from 'next-auth';
 import moment from 'moment';
@@ -14,7 +14,8 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata } = await checkAPI().catch(_ => _);
+  const { metadata } = await loadAPIMetadata(req).catch(_ => _);
+  const auth = Auth(metadata?.HOST);
 
   return NextAuth({
     secret,
@@ -29,10 +30,10 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         },
         async authorize({ orgId, ...credentials }: any, _) {
           try {
-            const token = await authenticate(credentials as any);
+            const token = await auth.authenticate(credentials as any);
             const testMode = req.headers.referer?.includes("/test");
             const org = (metadata?.MULTI_ORGANIZATIONS
-              ? await getCurrentOrg(token.access, orgId)
+              ? await auth.getCurrentOrg(token.access, orgId)
               : { id: null }
             );
 
@@ -68,7 +69,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         if (!isNoneOrEmpty(cookieOrgId) && !isNoneOrEmpty((token as any).orgId) && cookieOrgId !== (token as any).orgId) {
           logger.debug(`Switching organization to ${cookieOrgId}...`);
 
-          const org = await getCurrentOrg((token as any).accessToken, cookieOrgId);
+          const org = await auth.getCurrentOrg((token as any).accessToken, cookieOrgId);
           token.orgId = org?.id;
         }
 
@@ -80,7 +81,7 @@ async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
         // Access token has expired, try to update it OR orgId has changed
         try {
           logger.info('Refreshing expired token...');
-          const { access, refresh } = await refreshToken(token.refreshToken as string);
+          const { access, refresh } = await auth.refreshToken(token.refreshToken as string);
 
           return {
             ...token,

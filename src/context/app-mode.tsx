@@ -1,5 +1,5 @@
-import { BASE_PATH, TEST_BASE_PATH } from "@/client/context";
-import { setCookie, useLocation } from "@/lib/helper";
+import { BASE_PATH, TEST_BASE_PATH } from "@/lib/client";
+import { failsafe, getCookie, setCookie, useLocation } from "@/lib/helper";
 import React from "react";
 
 
@@ -9,8 +9,11 @@ type AppModeType = {
   switchMode: () => void;
 };
 
-export function computeMode(pathname?: string) {
-  return pathname?.startsWith(TEST_BASE_PATH);
+export function computeMode() {
+  const testMode = failsafe(
+    () => Boolean(JSON.parse(getCookie("testMode") || "false"))
+  );
+  return testMode === true;
 };
 
 export function computeBasePath(pathname?: string) {
@@ -26,7 +29,7 @@ const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }
   const switchMode = () => {
     insertUrlParam({});
     const currentPathName = `${window.location.pathname}`;
-    const isTestMode = computeMode(currentPathName);
+    const isTestMode = computeMode();
 
     setCookie("testMode", !isTestMode);
 
@@ -36,7 +39,7 @@ const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }
 
   return (
     <AppMode.Provider value={{
-      testMode: computeMode(pathname),
+      testMode: computeMode(),
       basePath: computeBasePath(pathname),
       switchMode
     }}>

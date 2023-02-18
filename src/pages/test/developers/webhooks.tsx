@@ -1,1 +1,1 @@
-export { default, getServerSideProps } from "@/views/webhooks";
+export { default, getServerSideProps } from "@/modules/Developers/webhooks";
