@@ -239,7 +239,7 @@ export const LogComponent: React.FC<{ logId?: string }> = ({ logId }) => {
 export default function LogPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Log - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Log - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <LogComponent />
     </DashboardLayout>
   ), pageProps);
