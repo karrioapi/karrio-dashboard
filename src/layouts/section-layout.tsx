@@ -34,7 +34,7 @@ const SectionLayout: React.FC<SectionLayoutProps> = ({ session, metadata, error,
               <div className="content has-text-centered">
                 <p>
                   <Link legacyBehavior href="/">
-                    <div className="button is-white">&copy; {metadata?.APP_NAME}</div>
+                    <span className="button is-white">&copy; {metadata?.APP_NAME}</span>
                   </Link>
                   <a href="https://docs.karrio.io" className="button is-white">Documentation</a>
                 </p>
