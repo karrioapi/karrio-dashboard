@@ -62,7 +62,7 @@ export default function ConnectionsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Carrier Connections - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Carrier Connections - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <ConfirmModal>
         <ConnectProviderModal>
           <LabelTemplateEditModalProvider>

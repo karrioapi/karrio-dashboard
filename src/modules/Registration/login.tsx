@@ -5,12 +5,14 @@ import React, { FormEvent, useRef } from "react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useAPIMetadata } from "@/context/api-metadata";
 
 export { getServerSideProps } from '@/lib/data-fetching/references';
 
 
 export default function LoginPage(pageProps: any) {
   const router = useRouter();
+  const metadata = useAPIMetadata();
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const [showError, setShowError] = React.useState<boolean>(false);
@@ -39,8 +41,8 @@ export default function LoginPage(pageProps: any) {
 
   return (
     <>
-      <SectionLayout metadata={pageProps?.metadata}>
-        <Head><title>Login - {pageProps?.metadata?.APP_NAME}</title></Head>
+      <SectionLayout metadata={metadata}>
+        <Head><title>{`Login - ${metadata?.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card">
           <div className="card-content">

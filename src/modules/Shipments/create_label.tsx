@@ -928,7 +928,7 @@ export default function CreateLabelPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
       <GoogleGeocodingScript />
-      <Head><title>Create label - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Create label - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <ContextProviders>
 

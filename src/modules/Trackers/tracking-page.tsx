@@ -22,7 +22,7 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number || id} - {metadata.APP_NAME}</title></Head>
+      <Head><title>{`Tracking - ${tracker?.tracking_number || id} - ${metadata?.APP_NAME}`}</title></Head>
 
       <section className="hero is-fullheight p-2">
 

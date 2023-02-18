@@ -178,7 +178,7 @@ export default function TrackersPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Trackers - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Trackers - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <TrackerModalProvider>
         <TrackingPreview>
           <ConfirmModal>

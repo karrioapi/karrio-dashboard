@@ -244,7 +244,7 @@ export default function OrdersPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Orders - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Orders - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <OrderPreview>
         <ConfirmModal>
 

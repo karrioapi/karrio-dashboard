@@ -130,7 +130,7 @@ export default function WebhooksPage(pageProps: any) {
 
   return AuthenticatedPage(<>
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Webhooks - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Webhooks - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <WebhookEditModal>
         <WebhookTestModal>

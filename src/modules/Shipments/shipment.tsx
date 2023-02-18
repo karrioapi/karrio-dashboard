@@ -549,7 +549,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 export default function ShipmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Shipment - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <ConfirmModal>
 
         <ShipmentComponent />

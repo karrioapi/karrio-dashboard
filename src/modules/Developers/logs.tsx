@@ -128,7 +128,7 @@ export default function LogsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Logs - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Logs - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <LogPreview>
         <Component />
       </LogPreview>

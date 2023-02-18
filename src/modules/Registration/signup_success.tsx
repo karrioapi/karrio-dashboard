@@ -13,7 +13,7 @@ const SignUpSuccess: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
   return (
     <>
       <SectionLayout metadata={metadata}>
-        <Head><title>Sign Up Success - {metadata?.APP_NAME}</title></Head>
+        <Head><title>{`Sign Up Success - ${metadata?.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered ">

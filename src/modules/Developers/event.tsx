@@ -101,7 +101,7 @@ export const EventComponent: React.FC<{ eventId?: string }> = ({ eventId }) => {
 export default function EventPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Event - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Event - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <EventComponent />
     </DashboardLayout>
   ), pageProps);

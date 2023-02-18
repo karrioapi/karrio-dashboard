@@ -185,7 +185,7 @@ export default function ShipmentsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Shipments - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Shipments - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <ShipmentPreview>
         <ConfirmModal>
 

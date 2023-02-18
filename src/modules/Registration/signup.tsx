@@ -144,7 +144,7 @@ const SignUp: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
   return (
     <>
       <SectionLayout metadata={metadata}>
-        <Head><title>Sign Up - {metadata?.APP_NAME}</title></Head>
+        <Head><title>{`Sign Up - ${metadata?.APP_NAME}`}</title></Head>
 
         <LoadingProvider>
           <Component />

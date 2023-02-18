@@ -214,7 +214,7 @@ export default function DocumentTemplatePage(pageProps: any) {
 
   return AuthenticatedPage((
     <>
-      <Head><title>Template - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Template - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <Component />
     </>

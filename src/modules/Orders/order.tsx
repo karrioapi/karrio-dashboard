@@ -304,7 +304,7 @@ export const OrderComponent: React.FC<{ orderId?: string }> = ({ orderId }) => {
 export default function OrderPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Order - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Order - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <OrderComponent />
 
