@@ -29,8 +29,8 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
         <div className="container">
 
           <div className="has-text-centered my-4">
-            <Link legacyBehavior href="/" className="is-size-4 has-text-primary has-text-weight-bold is-lowercase">
-              <span>{metadata?.APP_NAME}</span>
+            <Link legacyBehavior href="/">
+              <span className="is-size-4 has-text-primary has-text-weight-bold is-lowercase">{metadata?.APP_NAME}</span>
             </Link>
           </div>
 

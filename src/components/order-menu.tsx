@@ -8,6 +8,7 @@ import { useOrderMutation } from '@/context/order';
 import { useAppMode } from '@/context/app-mode';
 import { OrderStatusEnum } from '@karrio/rest';
 import AppLink from '@/components/app-link';
+import { url$ } from '@/lib/helper';
 
 
 interface OrderMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -80,7 +81,7 @@ const OrderMenu: React.FC<OrderMenuComponent> = ({ order, isViewing }) => {
             <hr className="my-1" style={{ height: '1px' }} />}
 
           {(document_templates?.edges || []).map(({ node: template }) =>
-            <a href={`${metadata?.HOST}documents/${template.id}.${template.slug}?orders=${order.id}`}
+            <a href={url$`${metadata?.HOST}/documents/${template.id}.${template.slug}?orders=${order.id}`}
               className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
               Download {template.name}
             </a>

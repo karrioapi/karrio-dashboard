@@ -1,6 +1,6 @@
 import { UserContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType, OrgContextDataType, TenantType } from "@/lib/types";
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
-import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
+import { createServerError, isNone, ServerErrorCode, url$ } from "@/lib/helper";
 import { getSession } from "next-auth/react";
 import { KARRIO_API } from "@/lib/client";
 import getConfig from "next/config";
@@ -81,17 +81,17 @@ export async function loadContextData(session: SessionType, metadata: Metadata):
 
   const getReferences = () => (
     axios
-      .get<References>(`${metadata.HOST || '/'}v1/references`, { headers })
+      .get<References>(url$`${metadata.HOST || ''}/v1/references`, { headers })
       .then(({ data }) => data)
   );
   const getUserData = () => (
     axios
-      .post<UserContextDataType>(`${metadata.HOST || '/'}graphql`, { query: USER_DATA_QUERY }, { headers })
+      .post<UserContextDataType>(url$`${metadata.HOST || ''}/graphql`, { query: USER_DATA_QUERY }, { headers })
       .then(({ data }) => data)
   );
   const getOrgData = () => (!!metadata?.MULTI_ORGANIZATIONS
     ? axios
-      .post<OrgContextDataType>(`${metadata.HOST || '/'}graphql`, { query: ORG_DATA_QUERY }, { headers })
+      .post<OrgContextDataType>(url$`${metadata.HOST || ''}/graphql`, { query: ORG_DATA_QUERY }, { headers })
       .then(({ data }) => data)
     : Promise.resolve({ data: {} })
   );
@@ -144,7 +144,7 @@ export async function checkSubscription(session: SessionType | any, metadata?: M
     } as any;
     const getOrgSubscription = () => (
       axios
-        .get<SubscriptionType>(metadata?.HOST + 'v1/billing/subscription', { headers })
+        .get<SubscriptionType>(url$`${metadata?.HOST}/v1/billing/subscription`, { headers })
         .then(({ data }) => data)
         .catch(() => { return null })
     );
@@ -172,7 +172,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 
     const getCustomerPortalSession = () => (
       axios
-        .post<PortalSessionType>(metadata?.HOST + 'v1/billing/portal', { return_url }, { headers })
+        .post<PortalSessionType>(url$`${metadata?.HOST}/v1/billing/portal`, { return_url }, { headers })
         .then(({ data }) => data)
     );
 

@@ -6,6 +6,7 @@ import { useLoader } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import React, { useContext } from 'react';
 import axios from 'axios';
+import { url$ } from '@/lib/helper';
 
 interface SubscriptionManagementComponent { }
 
@@ -21,7 +22,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => 
     try {
       const return_url = window.location.href;
       const response = await axios.post<PortalSessionType>(
-        metadata?.HOST + 'v1/billing/portal',
+        url$`${metadata?.HOST}/v1/billing/portal`,
         { return_url },
         {
           headers: {

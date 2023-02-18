@@ -276,12 +276,14 @@ export const parseJwt = (token: string): any => {
 };
 
 export function p(strings: TemplateStringsArray, ...keys: any[]) {
+  return url$`${BASE_PATH}/${url$(strings, ...keys)}`.replace("//", "/");
+}
+
+export function url$(strings: TemplateStringsArray, ...keys: any[]) {
   const base = (keys || []).reduce((acc, key, i) => acc + strings[i] + key, '');
   const template = `${base}${strings[strings.length - 1]}`;
 
-  return `${BASE_PATH}/${template}`
-    .replace('///', '/')
-    .replace('//', '/');
+  return template.replace(/([^:])(\/\/+)/g, '$1/');
 }
 
 export function gqlstr(node: ReturnType<typeof gql>): string {
@@ -462,7 +464,7 @@ type requestArgs = {
 export async function request<T>(query: string, args?: requestArgs): Promise<T> {
   const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
-    const APIUrl = url || `${getCookie('apiHOST') || KARRIO_API || ''}/graphql`.replace('//graphql', '/graphql');
+    const APIUrl = url || url$`${getCookie('apiHOST') || KARRIO_API || ''}/graphql`;
     const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
       APIUrl, { query, operationName, variables }, config,

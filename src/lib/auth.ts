@@ -1,5 +1,5 @@
 import { TokenObtainPair } from "karrio/rest";
-import { isNoneOrEmpty } from "@/lib/helper";
+import { isNoneOrEmpty, url$ } from "@/lib/helper";
 import { NextApiRequest } from "next";
 import logger from '@/lib/logger';
 import axios from "axios";
@@ -24,7 +24,7 @@ export function Auth(HOST: string) {
       logger.debug("authenticating...");
 
       const { data } = await axios({
-        url: `${HOST || '/'}api/token`,
+        url: url$`${HOST || ''}/api/token`,
         method: 'POST',
         data: credentials
       });
@@ -39,7 +39,7 @@ export function Auth(HOST: string) {
       logger.debug("Send refresh token request...");
 
       const { data: { refresh, access } } = await axios({
-        url: `${HOST || '/'}api/token/refresh`,
+        url: url$`${HOST || ''}/api/token/refresh`,
         method: 'POST',
         data: { refresh: refreshToken }
       });
@@ -50,7 +50,7 @@ export function Auth(HOST: string) {
 
       return (
         axios({
-          url: `${HOST || '/'}graphql`,
+          url: url$`${HOST || ''}/graphql`,
           method: 'POST',
           data: { query: `{ organizations { id } }` },
           headers: { 'authorization': `Bearer ${access}` },

@@ -1,4 +1,4 @@
-import { formatAddressLocationShort, formatAddressShort, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty } from "@/lib/helper";
+import { formatAddressLocationShort, formatAddressShort, formatDateTime, getURLSearchParams, isListEqual, isNone, isNoneOrEmpty, url$ } from "@/lib/helper";
 import OrderPreview, { OrderPreviewContext } from "@/components/descriptions/order-preview";
 import { useDocumentTemplates } from "@/context/document-template";
 import React, { ChangeEvent, useContext, useEffect } from "react";
@@ -134,7 +134,7 @@ export default function OrdersPage(pageProps: any) {
                     {(document_templates?.edges || []).map(({ node: template }) =>
                       <a
                         key={template.id}
-                        href={`${metadata?.HOST}documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
+                        href={url$`${metadata?.HOST}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
                         className="button is-small is-default px-3 mx-2"
                         target="_blank"
                         rel="noreferrer">

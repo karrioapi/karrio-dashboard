@@ -1,5 +1,5 @@
 import { get_user_connections_user_connections_GenericSettingsType, get_user_connections_user_connections_GenericSettingsType_label_template, LabelTemplateTypeEnum } from 'karrio/graphql';
-import { failsafe, isEqual, isNone, isNoneOrEmpty, validationMessage, validityCheck } from '@/lib/helper';
+import { failsafe, isEqual, isNone, isNoneOrEmpty, url$, validationMessage, validityCheck } from '@/lib/helper';
 import Tabs, { TabStateProvider } from '@/components/generic/tabs';
 import React, { useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
@@ -112,7 +112,7 @@ const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> 
               </div>
               <div>
                 <a className={`button is-small is-primary mx-1 ${isNoneOrEmpty(template.id) ? 'is-static' : ''}`}
-                  href={`${metadata?.HOST}v1/carriers/${operation?.connection.id}/label.pdf`}
+                  href={url$`${metadata?.HOST}/v1/carriers/${operation?.connection.id}/label.pdf`}
                   target="_blank" rel="noreferrer">
                   Preview Template
                 </a>
