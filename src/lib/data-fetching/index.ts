@@ -232,8 +232,9 @@ async function getAPIURL(ctx: RequestContext) {
     : null
   );
   const APIURL = (
-    (tenant?.api_domains || []).find(d => d.includes(serverRuntimeConfig?.TENANT_ENV_KEY))
-    || (tenant?.api_domains || [])[0]
+    !!serverRuntimeConfig?.TENANT_ENV_KEY
+      ? (tenant?.api_domains || []).find(d => d.includes(serverRuntimeConfig?.TENANT_ENV_KEY))
+      : (tenant?.api_domains || [])[0]
   );
 
   return !!APIURL ? APIURL : KARRIO_API;
