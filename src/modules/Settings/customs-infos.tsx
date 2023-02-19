@@ -131,7 +131,7 @@ export default function CustomsInfoPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Customs Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Customs Templates - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <ConfirmModal>
         <CustomsInfoEditModal>
 

@@ -90,7 +90,7 @@ export default function AccountPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout>
-      <Head><title>Account Settings - {APP_NAME}</title></Head>
+      <Head><title>{`Account Settings - ${APP_NAME}`}</title></Head>
 
       <ConfirmModal>
         <TabStateProvider tabs={tabs} setSelectedToURL>

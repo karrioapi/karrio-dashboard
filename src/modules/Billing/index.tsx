@@ -11,7 +11,7 @@ type BillingPageProps = { metadata: Metadata, subscription?: SubscriptionType, s
 const Billing: NextPage<BillingPageProps> = ({ metadata, subscription, session_url }) => {
   return (
     <>
-      <Head><title>Billing - {metadata.APP_NAME}</title></Head>
+      <Head><title>{`Billing - ${metadata?.APP_NAME}`}</title></Head>
 
       <section className="hero is-fullheight p-2">
 

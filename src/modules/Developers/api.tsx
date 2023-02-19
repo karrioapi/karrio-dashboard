@@ -132,7 +132,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>API Keys - {metadata?.APP_NAME}</title></Head>
+      <Head><title>{`API Keys - ${metadata?.APP_NAME}`}</title></Head>
       <Component />
     </DashboardLayout>
   ), pageProps)

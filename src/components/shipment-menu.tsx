@@ -6,7 +6,7 @@ import { useShipmentMutation } from '@/context/shipment';
 import { useRouter } from 'next/dist/client/router';
 import { ManualShipmentStatusEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import { useAppMode } from '@/context/app-mode';
-import { isNone } from '@/lib/helper';
+import { isNone, url$ } from '@/lib/helper';
 import { useAPIReference } from '@/context/reference';
 
 
@@ -71,7 +71,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
             </a>}
 
           {!isNone(shipment.label_url) &&
-            <a className="dropdown-item" href={`${references.HOST}${shipment?.label_url}`}
+            <a className="dropdown-item" href={url$`${references.HOST}/${shipment?.label_url}`}
               target="_blank" rel="noreferrer">
               <span>Print Label</span>
             </a>}
@@ -88,7 +88,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
             })}>Cancel Shipment</a>}
 
           {!isNone(shipment.invoice_url) &&
-            <a className="dropdown-item" href={`${references.HOST}${shipment.invoice_url}`}
+            <a className="dropdown-item" href={url$`${references.HOST}/${shipment.invoice_url}`}
               target="_blank" rel="noreferrer">Print Invoice</a>}
 
           {(
@@ -120,7 +120,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
             <hr className="my-1" style={{ height: '1px' }} />}
 
           {(document_templates?.edges || []).map(({ node: template }) =>
-            <a href={`${references.HOST}documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
+            <a href={url$`${references.HOST}/documents/${template.id}.${template.slug}?shipments=${shipment.id}`}
               className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
               Download {template.name}
             </a>

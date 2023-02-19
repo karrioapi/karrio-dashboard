@@ -66,7 +66,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
   return (
     <>
       <SectionLayout metadata={metadata}>
-        <Head><title>Password Reset - {metadata?.APP_NAME}</title></Head>
+        <Head><title>{`Password Reset - ${metadata?.APP_NAME}`}</title></Head>
 
         <LoadingProvider>
           <Component />

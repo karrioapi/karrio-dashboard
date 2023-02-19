@@ -114,7 +114,7 @@ export default function EventsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Events - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Events - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <EventPreview>
         <Component />
       </EventPreview>

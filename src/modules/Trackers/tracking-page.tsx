@@ -22,15 +22,15 @@ const Tracking: NextPage<{ id: string, metadata: Metadata, tracker?: TrackingSta
 
   return (
     <>
-      <Head><title>Tracking - {tracker?.tracking_number || id} - {metadata.APP_NAME}</title></Head>
+      <Head><title>{`Tracking - ${tracker?.tracking_number || id} - ${metadata?.APP_NAME}`}</title></Head>
 
       <section className="hero is-fullheight p-2">
 
         <div className="container">
 
           <div className="has-text-centered my-4">
-            <Link legacyBehavior href="/" className="is-size-4 has-text-primary has-text-weight-bold is-lowercase">
-              <span>{metadata?.APP_NAME}</span>
+            <Link legacyBehavior href="/">
+              <span className="is-size-4 has-text-primary has-text-weight-bold is-lowercase">{metadata?.APP_NAME}</span>
             </Link>
           </div>
 

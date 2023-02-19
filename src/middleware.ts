@@ -28,6 +28,7 @@ export async function middleware(req: NextRequest) {
       const name = req.url.split('/carriers/').pop();
       return NextResponse.rewrite(new URL(`/api/images/${name}`, req.url));
     }
+    return;
   }
 
   if (MULTI_TENANT === false) return;

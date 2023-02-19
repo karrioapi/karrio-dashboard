@@ -64,7 +64,7 @@ export default function Page(pageProps: { metadata: Metadata }) {
 
   return AuthenticatedPage((
     <SectionLayout metadata={metadata}>
-      <Head><title>Email change confirmation - {metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Email change confirmation - ${metadata?.APP_NAME}`}</title></Head>
 
       <Component />
 

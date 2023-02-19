@@ -1,5 +1,5 @@
 import { DocumentTemplateType, DOCUMENT_RELATED_OBJECTS, NotificationType, TemplateType } from '@/lib/types';
-import { isEqual, isNoneOrEmpty, useLocation, validationMessage, validityCheck } from '@/lib/helper';
+import { isEqual, isNoneOrEmpty, url$, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import { useDocumentTemplate, useDocumentTemplateMutation } from '@/context/document-template';
 import TextAreaField from '@/components/generic/textarea-field';
 import React, { useEffect, useReducer, useState } from 'react';
@@ -106,7 +106,7 @@ export default function DocumentTemplatePage(pageProps: any) {
           </div>
           <div>
             <a className={`button is-small is-primary mx-1 ${isNoneOrEmpty(template.id) ? 'is-static' : ''}`}
-              href={`${metadata.HOST}documents/${template.id}.${template.slug}${computeParams(template)}`}
+              href={url$`${metadata.HOST}/documents/${template.id}.${template.slug}${computeParams(template)}`}
               target="_blank" rel="noreferrer">
               Preview Template
             </a>
@@ -214,7 +214,7 @@ export default function DocumentTemplatePage(pageProps: any) {
 
   return AuthenticatedPage((
     <>
-      <Head><title>Template - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Template - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <Component />
     </>

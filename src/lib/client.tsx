@@ -1,12 +1,12 @@
+import { useAPIMetadata } from "@/context/api-metadata";
 import { useSyncedSession } from "@/context/session";
 import { KarrioClient } from "karrio/rest/index";
 import { BehaviorSubject, filter } from "rxjs";
-import { Metadata, SessionType } from "@/lib/types";
+import { SessionType } from "@/lib/types";
 import React, { useEffect } from "react";
 import { isNone } from "@/lib/helper";
 import getConfig from 'next/config';
 import logger from "@/lib/logger";
-import { useAPIMetadata } from "@/context/api-metadata";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
@@ -55,7 +55,8 @@ export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ childre
 function createRestContext(host: string | undefined, session$: BehaviorSubject<SessionType | null>): KarrioClient | undefined {
   if (!host) return undefined;
 
-  const client = new KarrioClient({ basePath: `${host || ''}` });
+  const url = host[host.length - 1] === '/' ? host.slice(0, -1) : host;
+  const client = new KarrioClient({ basePath: `${url || ''}` });
 
   client.axios.interceptors.request.use((config) => {
     const orgHeader: any = session$?.value?.orgId ? { 'x-org-id': session$?.value?.orgId } : {};

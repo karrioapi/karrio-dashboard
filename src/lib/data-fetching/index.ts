@@ -1,13 +1,13 @@
 import { UserContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType, OrgContextDataType, TenantType } from "@/lib/types";
-import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from "next";
-import { createServerError, isNone, ServerErrorCode } from "@/lib/helper";
+import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
+import { createServerError, isNone, ServerErrorCode, url$ } from "@/lib/helper";
 import { getSession } from "next-auth/react";
 import { KARRIO_API } from "@/lib/client";
 import getConfig from "next/config";
 import logger from "@/lib/logger";
 import axios from "axios";
 
-type RequestContext = GetServerSidePropsContext | NextApiRequest;
+type RequestContext = GetServerSidePropsContext | { req: NextApiRequest, res: NextApiResponse };
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 const ACTIVE_SUBSCRIPTIONS = ["active", "trialing", "incomplete", "free"];
 const AUTH_HTTP_CODES = [401, 403, 407];
@@ -49,7 +49,7 @@ export async function loadAPIMetadata(ctx: RequestContext): Promise<{ metadata?:
       const { data: metadata } = await axios.get<Metadata>(API_URL);
 
       // TODO:: implement version compatibility check here.
-      setSessionCookies(ctx as any, metadata)
+      await setSessionCookies(ctx as any, metadata)
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${API_URL})`);
@@ -81,17 +81,17 @@ export async function loadContextData(session: SessionType, metadata: Metadata):
 
   const getReferences = () => (
     axios
-      .get<References>(`${metadata.HOST || '/'}v1/references`, { headers })
+      .get<References>(url$`${metadata.HOST || ''}/v1/references`, { headers })
       .then(({ data }) => data)
   );
   const getUserData = () => (
     axios
-      .post<UserContextDataType>(`${metadata.HOST || '/'}graphql`, { query: USER_DATA_QUERY }, { headers })
+      .post<UserContextDataType>(url$`${metadata.HOST || ''}/graphql`, { query: USER_DATA_QUERY }, { headers })
       .then(({ data }) => data)
   );
   const getOrgData = () => (!!metadata?.MULTI_ORGANIZATIONS
     ? axios
-      .post<OrgContextDataType>(`${metadata.HOST || '/'}graphql`, { query: ORG_DATA_QUERY }, { headers })
+      .post<OrgContextDataType>(url$`${metadata.HOST || ''}/graphql`, { query: ORG_DATA_QUERY }, { headers })
       .then(({ data }) => data)
     : Promise.resolve({ data: {} })
   );
@@ -117,8 +117,6 @@ export async function loadContextData(session: SessionType, metadata: Metadata):
 
 export async function setSessionCookies(ctx: GetServerSidePropsContext, metadata?: Metadata, testMode?: boolean, orgId?: string | null) {
   // Sets the authentication orgId cookie if the session has one
-  if (isNone(ctx.res)) return;
-
   if (ctx.res && !!orgId) {
     ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
   }
@@ -146,7 +144,7 @@ export async function checkSubscription(session: SessionType | any, metadata?: M
     } as any;
     const getOrgSubscription = () => (
       axios
-        .get<SubscriptionType>(metadata?.HOST + 'v1/billing/subscription', { headers })
+        .get<SubscriptionType>(url$`${metadata?.HOST}/v1/billing/subscription`, { headers })
         .then(({ data }) => data)
         .catch(() => { return null })
     );
@@ -174,7 +172,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 
     const getCustomerPortalSession = () => (
       axios
-        .post<PortalSessionType>(metadata?.HOST + 'v1/billing/portal', { return_url }, { headers })
+        .post<PortalSessionType>(url$`${metadata?.HOST}/v1/billing/portal`, { return_url }, { headers })
         .then(({ data }) => data)
     );
 
@@ -221,23 +219,25 @@ async function getAPIURL(ctx: RequestContext) {
   }
 
   const params = (ctx as GetServerSidePropsContext).params;
-  const cookies = (ctx as NextApiRequest).cookies;
+  const cookies = (ctx.req as NextApiRequest).cookies;
+  const apiHost = cookies ? cookies['apiHOST'] : null;
+  const host = cookies ? cookies['HOST'] : null;
+  const site = params ? params.site : null;
 
-  if (cookies && cookies['apiHOST']) return cookies['apiHOST'];
+  if (!!apiHost) return apiHost;
 
-  const app_domain = (
-    (params && params.site) ||
-    (cookies && cookies['apiHOST'])
-  ) as string;
-  const APIURL = (serverRuntimeConfig?.MULTI_TENANT && !!app_domain
-    ? (await loadTenantInfo({ app_domain }))?.api_domains[0]
+  const app_domain = (site || host) as string;
+  const tenant = (serverRuntimeConfig?.MULTI_TENANT && !!app_domain
+    ? (await loadTenantInfo({ app_domain }))
     : null
   );
-
-  return (!!APIURL
-    ? APIURL
-    : KARRIO_API
+  const APIURL = (
+    !!serverRuntimeConfig?.TENANT_ENV_KEY
+      ? (tenant?.api_domains || []).find(d => d.includes(serverRuntimeConfig?.TENANT_ENV_KEY))
+      : (tenant?.api_domains || [])[0]
   );
+
+  return !!APIURL ? APIURL : KARRIO_API;
 }
 
 

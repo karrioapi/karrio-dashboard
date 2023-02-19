@@ -135,7 +135,7 @@ export default function ParcelsPage(pageProps: any) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>Parcel Templates - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Parcel Templates - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
       <ConfirmModal>
         <ParcelEditModal>
 

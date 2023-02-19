@@ -1,8 +1,8 @@
 import CredentialProvider from "next-auth/providers/credentials";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { isNoneOrEmpty, parseJwt } from '@/lib/helper';
+import { loadAPIMetadata, setSessionCookies } from '@/lib/data-fetching';
 import { computeTestMode, Auth } from '@/lib/auth';
-import { loadAPIMetadata } from '@/lib/data-fetching';
 import { JWT } from 'next-auth/jwt';
 import getConfig from 'next/config';
 import logger from '@/lib/logger';
@@ -14,7 +14,7 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
-  const { metadata } = await loadAPIMetadata(req).catch(_ => _);
+  const { metadata } = await loadAPIMetadata({ req, res }).catch(_ => _);
   const auth = Auth(metadata?.HOST);
 
   return NextAuth({

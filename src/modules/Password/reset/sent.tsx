@@ -11,7 +11,7 @@ export default function Page({ metadata }: { metadata: Metadata }) {
   return (
     <>
       <SectionLayout metadata={metadata}>
-        <Head><title>Password Reset Sent - {metadata?.APP_NAME}</title></Head>
+        <Head><title>{`Password Reset Sent - ${metadata?.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered">

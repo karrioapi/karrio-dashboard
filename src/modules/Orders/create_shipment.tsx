@@ -961,7 +961,7 @@ export default function CreateShipmentPage(pageProps: any) {
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
       <GoogleGeocodingScript />
-      <Head><title>Create shipment - {(pageProps as any).metadata?.APP_NAME}</title></Head>
+      <Head><title>{`Create shipment - ${(pageProps as any).metadata?.APP_NAME}`}</title></Head>
 
       <ContextProviders>
 

@@ -1,5 +1,5 @@
-import { BASE_PATH, TEST_BASE_PATH } from "@/lib/client";
 import { failsafe, getCookie, setCookie, useLocation } from "@/lib/helper";
+import { BASE_PATH, TEST_BASE_PATH } from "@/lib/client";
 import React from "react";
 
 
@@ -16,8 +16,8 @@ export function computeMode() {
   return testMode === true;
 };
 
-export function computeBasePath(pathname?: string) {
-  return pathname?.startsWith(TEST_BASE_PATH) ? TEST_BASE_PATH : BASE_PATH;
+export function computeBasePath(testMode: boolean) {
+  return testMode ? TEST_BASE_PATH : BASE_PATH;
 };
 
 // Init the APP client mode
@@ -40,7 +40,7 @@ const AppModeProvider: React.FC<{ pathname?: string }> = ({ children, pathname }
   return (
     <AppMode.Provider value={{
       testMode: computeMode(),
-      basePath: computeBasePath(pathname),
+      basePath: computeBasePath(computeMode()),
       switchMode
     }}>
       {children}
