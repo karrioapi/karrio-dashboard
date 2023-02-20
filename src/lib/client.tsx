@@ -1,10 +1,10 @@
-import { useAPIMetadata } from "@/context/api-metadata";
+import { useAPIReference } from "@/context/api-metadata";
 import { useSyncedSession } from "@/context/session";
 import { KarrioClient } from "karrio/rest/index";
 import { BehaviorSubject, filter } from "rxjs";
 import { SessionType } from "@/lib/types";
 import React, { useEffect } from "react";
-import { isNone } from "@/lib/helper";
+import { getCookie, isNone } from "@/lib/helper";
 import getConfig from 'next/config';
 import logger from "@/lib/logger";
 
@@ -26,23 +26,21 @@ export const RestContext = React.createContext<KarrioClient | undefined>(createR
 
 
 export const ClientsProvider: React.FC<{ authenticated?: boolean }> = ({ children, authenticated }) => {
-  const metadata = useAPIMetadata();
+  const references = useAPIReference();
   const { query: { data: session } } = useSyncedSession() as (any & { query: { data: SessionType } });
-  const [restCli] = React.useState<KarrioClient | undefined>(createRestContext(metadata?.HOST, session$));
+  const [restCli] = React.useState<KarrioClient | undefined>(createRestContext(KARRIO_API, session$));
 
   useEffect(() => {
-    if (!!metadata?.HOST) {
-      session$
-        .pipe(filter(_ => !isNone(_)))
-        .subscribe(_ => {
-          console.log('session updated');
-          rest$.next(createRestContext(metadata?.HOST, session$));
-        });
-    }
-  }, [metadata?.HOST]);
+    session$
+      .pipe(filter(_ => !isNone(_)))
+      .subscribe(_ => {
+        console.log('session updated');
+        rest$.next(createRestContext(getCookie("apiUrl"), session$));
+      });
+  }, [references.HOST]);
   useEffect(() => { if (session) { session$.next(session); } }, [session]);
 
-  if (authenticated && (!metadata?.HOST || !restCli)) return <></>;
+  if (authenticated && (!references.HOST || !restCli)) return <></>;
 
   return (
     <RestContext.Provider value={restCli}>

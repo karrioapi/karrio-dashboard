@@ -1,6 +1,6 @@
 import { Metadata, SessionType } from '@/lib/types';
-import { ClientsProvider } from '@/lib/client';
 import { SessionProvider } from 'next-auth/react';
+import { ClientsProvider } from '@/lib/client';
 import MainLayout from '@/layouts/main-layout';
 import { p, ServerError } from '@/lib/helper';
 import React from 'react';

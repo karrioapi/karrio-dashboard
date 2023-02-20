@@ -464,7 +464,7 @@ type requestArgs = {
 export async function request<T>(query: string, args?: requestArgs): Promise<T> {
   const { url, data, variables: reqVariables, operationName, ...config } = args || {};
   try {
-    const APIUrl = url || url$`${getCookie('apiHOST') || KARRIO_API || ''}/graphql`;
+    const APIUrl = url || url$`${getCookie('apiUrl') || KARRIO_API || ''}/graphql`;
     const variables = data ? { data } : reqVariables;
     const { data: response } = await axios.post<{ data?: T, errors?: any }>(
       APIUrl, { query, operationName, variables }, config,

@@ -4,15 +4,14 @@ import { useRouter } from "next/dist/client/router";
 import LoadingProvider from "@/components/loader";
 import React, { FormEvent, useRef } from "react";
 import { useUserMutation } from "@/context/user";
-import { Metadata } from "@/lib/types";
 import { p } from "@/lib/helper";
 import Head from "next/head";
 import Link from "next/link";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
-export default function Page({ metadata }: { metadata: Metadata }) {
+export default function Page(pageProps: any) {
 
   const Component: React.FC<{}> = () => {
     const router = useRouter();
@@ -65,8 +64,8 @@ export default function Page({ metadata }: { metadata: Metadata }) {
 
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Password Reset - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Password Reset - ${pageProps.metadata?.APP_NAME}`}</title></Head>
 
         <LoadingProvider>
           <Component />

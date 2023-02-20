@@ -1,7 +1,7 @@
 import { NotificationType, PortalSessionType } from '@/lib/types';
 import { useOrganizations } from '@/context/organization';
 import { useSubscription } from '@/context/subscription';
-import { useAPIMetadata } from '@/context/api-metadata';
+import { useAPIReference } from '@/context/api-metadata';
 import { useLoader } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import React, { useContext } from 'react';
@@ -11,7 +11,7 @@ import { url$ } from '@/lib/helper';
 interface SubscriptionManagementComponent { }
 
 const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => {
-  const metadata = useAPIMetadata();
+  const references = useAPIReference();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useLoader();
   const { organization } = useOrganizations();
@@ -22,7 +22,7 @@ const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => 
     try {
       const return_url = window.location.href;
       const response = await axios.post<PortalSessionType>(
-        url$`${metadata?.HOST}/v1/billing/portal`,
+        url$`${references.HOST}/v1/billing/portal`,
         { return_url },
         {
           headers: {

@@ -1,3 +1,4 @@
+import { useAPIReference } from "@/context/api-metadata";
 import SectionLayout from "@/layouts/section-layout";
 import { getCookie, isNone, p } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
@@ -5,14 +6,13 @@ import React, { FormEvent, useRef } from "react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useAPIMetadata } from "@/context/api-metadata";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
 export default function LoginPage(pageProps: any) {
   const router = useRouter();
-  const metadata = useAPIMetadata();
+  const references = useAPIReference();
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const [showError, setShowError] = React.useState<boolean>(false);
@@ -41,8 +41,8 @@ export default function LoginPage(pageProps: any) {
 
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Login - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Login - ${references.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card">
           <div className="card-content">

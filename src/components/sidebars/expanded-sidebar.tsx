@@ -1,5 +1,5 @@
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { useRouter } from 'next/dist/client/router';
 import { useAppMode } from '@/context/app-mode';
 import AppLink from '@/components/app-link';

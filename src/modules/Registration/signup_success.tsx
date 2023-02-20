@@ -1,19 +1,16 @@
 import SectionLayout from "@/layouts/section-layout";
-import { Metadata } from "@/lib/types";
-import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
-const SignUpSuccess: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
-
+function SignUpSuccess(pageProps: any) {
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Sign Up Success - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Sign Up Success - ${pageProps.metadata?.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered ">

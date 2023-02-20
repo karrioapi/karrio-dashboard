@@ -2,7 +2,7 @@ import { OrganizationType, useOrganizationMutation, useOrganizations } from '@/c
 import { useCreateOrganizationModal } from '@/components/create-organization-modal';
 import { useAcceptInvitation } from '@/components/accept-invitation-modal';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { useAPIToken } from '@/context/api-token';
 import { isNoneOrEmpty, p } from '@/lib/helper';
 import { Loading } from '@/components/loader';

@@ -1,17 +1,16 @@
 import SectionLayout from "@/layouts/section-layout";
-import { Metadata } from "@/lib/types";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
-export default function Page({ metadata }: { metadata: Metadata }) {
+export default function Page(pageProps: any) {
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Password Reset Complete - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Password Reset Complete - ${pageProps.metadata?.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered">

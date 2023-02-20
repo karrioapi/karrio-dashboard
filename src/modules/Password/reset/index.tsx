@@ -1,16 +1,15 @@
-import { ConfirmPasswordResetMutationInput, confirm_password_reset_confirm_password_reset_errors } from "karrio/graphql";
-import React, { FormEvent, useContext, useEffect, useReducer, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useReducer } from "react";
+import { ConfirmPasswordResetMutationInput } from "karrio/graphql";
 import LoadingProvider, { Loading } from "@/components/loader";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useUserMutation } from "@/context/user";
-import { Metadata } from "@/lib/types";
 import Head from "next/head";
 import Link from "next/link";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 const DEFAULT_VALUE: Partial<ConfirmPasswordResetMutationInput> = {
   new_password1: "",
@@ -113,11 +112,11 @@ const Component: React.FC<{}> = () => {
   )
 };
 
-export default function Page({ metadata }: { metadata: Metadata }) {
+export default function Page(pageProps: any) {
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Password Reset - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Password Reset - ${pageProps.metadata?.APP_NAME}`}</title></Head>
 
         <LoadingProvider>
           <Component />

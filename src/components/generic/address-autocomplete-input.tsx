@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { initDebouncedPrediction, QueryAutocompletePrediction } from '@/lib/autocomplete';
 import { InputFieldComponent } from '@/components/generic/input-field';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { Subject } from 'rxjs/internal/Subject';
 import { Address } from 'karrio/rest/index';
 import { isNone } from '@/lib/helper';

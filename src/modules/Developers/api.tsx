@@ -2,17 +2,17 @@ import GenerateAPIModal from "@/components/generate-api-dialog";
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useAPIReference } from "@/context/api-metadata";
 import CopiableLink from "@/components/copiable-link";
 import { useAPIToken } from "@/context/api-token";
 import { Loading } from "@/components/loader";
-import { Metadata } from "@/lib/types";
 import Head from "next/head";
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
 
-export default function ApiPage(pageProps: { metadata: Metadata }) {
-  const { metadata } = pageProps;
+export default function ApiPage(pageProps: any) {
+  const references = useAPIReference();
 
   const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
@@ -44,18 +44,18 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
 
           <div className="is-flex my-0 px-3">
             <div className="py-1" style={{ width: '40%' }}>API Version</div>
-            <div className="py-1" style={{ width: '40%' }}><code>{metadata.VERSION}</code></div>
+            <div className="py-1" style={{ width: '40%' }}><code>{references?.VERSION}</code></div>
           </div>
           <div className="is-flex my-0 px-3">
             <div className="py-1" style={{ width: '40%' }}>REST API</div>
             <div className="py-1" style={{ width: '40%' }}>
-              <CopiableLink className="button is-white py-2 px-1" text={metadata.HOST} />
+              <CopiableLink className="button is-white py-2 px-1" text={references?.HOST} />
             </div>
           </div>
           <div className="is-flex my-0 px-3">
             <div className="py-1" style={{ width: '40%' }}>GRAPHQL API</div>
             <div className="py-1" style={{ width: '40%' }}>
-              <CopiableLink className="button is-white py-2 px-1" text={metadata.GRAPHQL} />
+              <CopiableLink className="button is-white py-2 px-1" text={references?.GRAPHQL} />
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
                 <span>Use this key to authenticate your API calls. </span>
                 <a
                   className="has-text-link"
-                  href={`${metadata.OPENAPI}/#section/Authentication`}
+                  href={`${references?.OPENAPI}/#section/Authentication`}
                   target="_blank"
                   rel="noreferrer">
                   Learn more
@@ -132,8 +132,8 @@ export default function ApiPage(pageProps: { metadata: Metadata }) {
 
   return AuthenticatedPage((
     <DashboardLayout showModeIndicator={true}>
-      <Head><title>{`API Keys - ${metadata?.APP_NAME}`}</title></Head>
+      <Head><title>{`API Keys - ${references?.APP_NAME}`}</title></Head>
       <Component />
     </DashboardLayout>
-  ), pageProps)
+  ), pageProps);
 }

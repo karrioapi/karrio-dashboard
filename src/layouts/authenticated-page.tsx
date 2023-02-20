@@ -5,19 +5,17 @@ import NextSessionProvider, { NextSession } from '@/context/session';
 import { OrganizationProvider } from '@/context/organization';
 import SubscriptionProvider from '@/context/subscription';
 import ErrorBoundary from '@/components/error-boudaries';
-import APIReferenceProvider from '@/context/reference';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
-import { ClientsProvider } from '@/lib/client';
 import LoadingProvider from '@/components/loader';
 import AppModeProvider from '@/context/app-mode';
+import { ClientsProvider } from '@/lib/client';
 import Notifier from '@/components/notifier';
 
 
 const CONTEXT_PROVIDERS: React.FC<any>[] = [
   OrganizationProvider,
   SubscriptionProvider,
-  APIReferenceProvider,
   AppModeProvider,
   LoadingProvider,
 ];

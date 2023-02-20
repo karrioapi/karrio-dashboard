@@ -2,7 +2,7 @@ import { DocumentTemplateFilter, CreateDocumentTemplateMutationInput, CREATE_DOC
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { gqlstr, insertUrlParam, onError, request, useSessionHeader } from "@/lib/helper";
 import React from "react";
-import { useAPIReference } from "./reference";
+import { useAPIReference } from "@/context/api-metadata";
 
 const PAGE_SIZE = 20;
 const PAGINATION = { offset: 0, first: PAGE_SIZE };

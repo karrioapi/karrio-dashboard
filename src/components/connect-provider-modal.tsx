@@ -11,7 +11,7 @@ import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import React, { useContext, useReducer, useState } from 'react';
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import { Loading } from '@/components/loader';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { useAppMode } from '@/context/app-mode';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;

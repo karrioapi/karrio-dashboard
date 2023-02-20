@@ -5,7 +5,7 @@ import React, { ChangeEvent, useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { useAPIMetadata } from "@/context/api-metadata";
+import { useAPIReference } from "@/context/api-metadata";
 import ConfirmModal from "@/components/confirm-modal";
 import StatusBadge from "@/components/status-badge";
 import { useRouter } from "next/dist/client/router";
@@ -23,7 +23,7 @@ export { getServerSideProps } from "@/lib/data-fetching";
 export default function OrdersPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
-    const metadata = useAPIMetadata();
+    const references = useAPIReference();
     const { setLoading } = useLoader();
     const context = useOrders({ setVariablesToURL: true });
     const { previewOrder } = useContext(OrderPreviewContext);
@@ -134,7 +134,7 @@ export default function OrdersPage(pageProps: any) {
                     {(document_templates?.edges || []).map(({ node: template }) =>
                       <a
                         key={template.id}
-                        href={url$`${metadata?.HOST}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
+                        href={url$`${references.HOST}/documents/${template.id}.${template.slug}?orders=${selection.join(',')}`}
                         className="button is-small is-default px-3 mx-2"
                         target="_blank"
                         rel="noreferrer">

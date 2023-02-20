@@ -1,4 +1,4 @@
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { formatCarrierSlug } from '@/lib/helper';
 import React from 'react';
 

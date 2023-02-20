@@ -1,5 +1,5 @@
 import { formatAddressName, formatFullAddress } from '@/lib/helper';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { AddressType, Collection } from '@/lib/types';
 import React from 'react';
 

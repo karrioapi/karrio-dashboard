@@ -28,7 +28,7 @@ import Spinner from "@/components/spinner";
 import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
-import { useAPIReference } from "@/context/reference";
+import { useAPIReference } from "@/context/api-metadata";
 
 export { getServerSideProps } from "@/lib/data-fetching";
 

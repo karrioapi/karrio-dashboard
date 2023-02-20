@@ -1,10 +1,10 @@
 import AuthenticatedPage from "@/layouts/authenticated-page";
+import { useAPIReference } from "@/context/api-metadata";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useUserMutation } from "@/context/user";
 import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
-import { Metadata } from "@/lib/types";
 import { isNone } from "@/lib/helper";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,8 +12,8 @@ import Link from "next/link";
 export { getServerSideProps } from '@/lib/data-fetching';
 
 
-export default function Page(pageProps: { metadata: Metadata }) {
-  const { metadata } = pageProps;
+export default function Page(pageProps: any) {
+  const references = useAPIReference();
 
   const Component: React.FC = () => {
     const router = useRouter();
@@ -63,8 +63,8 @@ export default function Page(pageProps: { metadata: Metadata }) {
   };
 
   return AuthenticatedPage((
-    <SectionLayout metadata={metadata}>
-      <Head><title>{`Email change confirmation - ${metadata?.APP_NAME}`}</title></Head>
+    <SectionLayout {...pageProps}>
+      <Head><title>{`Email change confirmation - ${references.APP_NAME}`}</title></Head>
 
       <Component />
 

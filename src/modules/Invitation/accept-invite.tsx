@@ -1,18 +1,19 @@
 import { useOrganizationInvitation } from "@/context/organization";
+import { useAPIReference } from "@/context/api-metadata";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useSession } from "next-auth/react";
 import Spinner from "@/components/spinner";
 import React, { useEffect } from "react";
-import { Metadata } from "@/lib/types";
 import { isNone } from "@/lib/helper";
 import Link from "next/link";
 import Head from "next/head";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
-export default function Page({ metadata }: { metadata: Metadata }) {
+export default function Page(pageProps: any) {
+  const references = useAPIReference();
   const { data: session } = useSession();
   const router = useRouter();
   const { token } = router.query;
@@ -41,8 +42,8 @@ export default function Page({ metadata }: { metadata: Metadata }) {
 
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Accept Invitation - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Accept Invitation - ${references.APP_NAME}`}</title></Head>
 
         <div className="card isolated-card my-6">
           <div className="card-content has-text-centered ">

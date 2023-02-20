@@ -2,7 +2,7 @@ import { useDocumentTemplates } from '@/context/document-template';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import { DocumentTemplateType, OrderType } from '@/lib/types';
 import React, { useState, useRef, useContext } from 'react';
-import { useAPIMetadata } from '@/context/api-metadata';
+import { useAPIReference } from '@/context/api-metadata';
 import { useRouter } from 'next/dist/client/router';
 import { useOrderMutation } from '@/context/order';
 import { useAppMode } from '@/context/app-mode';
@@ -20,7 +20,7 @@ interface OrderMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
 const OrderMenu: React.FC<OrderMenuComponent> = ({ order, isViewing }) => {
   const router = useRouter();
   const { basePath } = useAppMode();
-  const metadata = useAPIMetadata();
+  const references = useAPIReference();
   const mutation = useOrderMutation();
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -81,7 +81,7 @@ const OrderMenu: React.FC<OrderMenuComponent> = ({ order, isViewing }) => {
             <hr className="my-1" style={{ height: '1px' }} />}
 
           {(document_templates?.edges || []).map(({ node: template }) =>
-            <a href={url$`${metadata?.HOST}/documents/${template.id}.${template.slug}?orders=${order.id}`}
+            <a href={url$`${references.HOST}/documents/${template.id}.${template.slug}?orders=${order.id}`}
               className="dropdown-item" target="_blank" rel="noreferrer" key={template.id}>
               Download {template.name}
             </a>

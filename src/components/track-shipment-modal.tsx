@@ -9,7 +9,7 @@ import Notifier, { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 
 type Connection = CarrierConnectionType | SystemConnectionType;
 type OperationType = {

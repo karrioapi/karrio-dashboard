@@ -6,7 +6,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
-import { useAPIMetadata } from '@/context/api-metadata';
+import { useAPIReference } from '@/context/api-metadata';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import CodeMirror from '@uiw/react-codemirror';
@@ -37,7 +37,7 @@ export default function DocumentTemplatePage(pageProps: any) {
     const router = useLocation();
     const { id } = router.query;
     const notifier = useNotifier();
-    const metadata = useAPIMetadata();
+    const references = useAPIReference();
     const [isNew, setIsNew] = useState<boolean>();
     const mutation = useDocumentTemplateMutation();
     const [template, dispatch] = useReducer(reducer, DEFAULT_STATE, () => DEFAULT_STATE);
@@ -106,7 +106,7 @@ export default function DocumentTemplatePage(pageProps: any) {
           </div>
           <div>
             <a className={`button is-small is-primary mx-1 ${isNoneOrEmpty(template.id) ? 'is-static' : ''}`}
-              href={url$`${metadata.HOST}/documents/${template.id}.${template.slug}${computeParams(template)}`}
+              href={url$`${references.HOST}/documents/${template.id}.${template.slug}${computeParams(template)}`}
               target="_blank" rel="noreferrer">
               Preview Template
             </a>

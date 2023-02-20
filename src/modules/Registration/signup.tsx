@@ -7,12 +7,10 @@ import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useUserMutation } from "@/context/user";
-import { Metadata } from "@/lib/types";
-import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-export { getServerSideProps } from '@/lib/data-fetching/references';
+export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 const DEFAULT_VALUE: Partial<RegisterUserMutationInput> = {
   email: "",
@@ -140,11 +138,11 @@ const Component: React.FC = () => {
   )
 };
 
-const SignUp: NextPage<any, { metadata: Metadata }> = ({ metadata }) => {
+function SignUp(pageProps: any) {
   return (
     <>
-      <SectionLayout metadata={metadata}>
-        <Head><title>{`Sign Up - ${metadata?.APP_NAME}`}</title></Head>
+      <SectionLayout {...pageProps}>
+        <Head><title>{`Sign Up - ${pageProps.metadata?.APP_NAME}`}</title></Head>
 
         <LoadingProvider>
           <Component />

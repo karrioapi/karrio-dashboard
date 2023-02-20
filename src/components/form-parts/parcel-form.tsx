@@ -5,7 +5,7 @@ import CheckBoxField from '@/components/generic/checkbox-field';
 import React, { useEffect, useReducer, useState } from 'react';
 import SelectField from '@/components/generic/select-field';
 import InputField from '@/components/generic/input-field';
-import { useAPIReference } from '@/context/reference';
+import { useAPIReference } from '@/context/api-metadata';
 import { useParcelTemplates } from '@/context/parcel';
 
 type stateValue = string | number | boolean | Partial<ParcelType>;
