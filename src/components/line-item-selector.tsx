@@ -101,7 +101,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
       </button>
 
       <div className={`modal ${isActive ? "is-active" : ""}`}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <div className="modal-card max-modal-height">
 
           <section className="modal-card-body modal-form p-2">

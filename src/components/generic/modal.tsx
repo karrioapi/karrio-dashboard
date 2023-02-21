@@ -35,7 +35,7 @@ const ModalProvider: React.FC<ModalComponent> = ({ children }) => {
         {children}
 
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-          <div className="modal-background" onClick={close}></div>
+          <div className="modal-background"></div>
           <div className="modal-card">
 
             {isActive && modal}

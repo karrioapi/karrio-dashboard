@@ -99,7 +99,7 @@ const WebhookEditModal: React.FC = ({ children }) => {
       </WebhookModalContext.Provider>
 
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <form className="modal-card" onSubmit={handleSubmit}>
           <section className="modal-card-body modal-form">
             <div className="form-floating-header p-4">

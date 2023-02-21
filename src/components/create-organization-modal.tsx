@@ -79,7 +79,7 @@ const CreateOrganizationModalProvider: React.FC = ({ children }) => {
       </CreateOrganizationContext.Provider>
 
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <div className="modal-card max-modal-height">
 
           <section className="modal-card-body modal-form">

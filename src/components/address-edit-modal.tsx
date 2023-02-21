@@ -92,7 +92,7 @@ const AddressEditModal: React.FC<AddressEditModalComponent> = ({ children }) => 
       </AddressEditContext.Provider>
 
       <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <div className="modal-card">
 
           <section className="modal-card-body modal-form">
