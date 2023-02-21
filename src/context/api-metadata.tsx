@@ -1,6 +1,7 @@
 import { getCookie, onError, url$, useSessionHeader } from '@/lib/helper';
 import { Metadata, References } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
+import { KARRIO_API } from '@/lib/client';
 import React, { useContext } from 'react';
 import axios from 'axios';
 
@@ -13,7 +14,7 @@ const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metad
     queryKey: ['references'],
     queryFn: () => (
       axios
-        .get<References>(url$`${getCookie("apiUrl")}/v1/references`, { ...headers() })
+        .get<References>(url$`${getCookie("apiUrl") || KARRIO_API}/v1/references`, { ...headers() })
         .then(({ data }) => data)
     ),
     staleTime: 5000,
