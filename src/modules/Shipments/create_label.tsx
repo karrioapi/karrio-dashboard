@@ -815,7 +815,7 @@ export default function CreateLabelPage(pageProps: any) {
                     <Spinner className="my-1 p-2 has-text-centered" />}
 
                   {(query.isFetched && !query.isFetching && (shipment.rates || []).length === 0) &&
-                    <div className="notification is-default m-3 p-2 is-size-7">
+                    <div className="notification is-default m-2 p-2 is-size-7">
                       Provide all shipping details to retrieve shipping rates.
                     </div>}
 
