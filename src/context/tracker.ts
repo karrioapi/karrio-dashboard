@@ -1,7 +1,7 @@
-import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
 import { TrackerFilter, get_trackers, GET_TRACKERS, get_tracker, GET_TRACKER } from "@karrio/graphql";
+import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RestContext } from "@/lib/client";
+import { useKarrio } from "@/lib/client";
 import React from "react";
 
 const PAGE_SIZE = 20;
@@ -9,11 +9,11 @@ const PAGINATION = { offset: 0, first: PAGE_SIZE };
 type FilterType = TrackerFilter & { setVariablesToURL?: boolean };
 
 export function useTrackers({ setVariablesToURL = false, ...initialData }: FilterType = {}) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const [filter, _setFilter] = React.useState<TrackerFilter>({ ...PAGINATION, ...initialData });
-  const fetch = (variables: { filter: TrackerFilter }) => request<get_trackers>(
-    gqlstr(GET_TRACKERS), { variables, ...headers() }
+  const fetch = (variables: { filter: TrackerFilter }) => karrio.graphql$.request<get_trackers>(
+    gqlstr(GET_TRACKERS), { variables }
   );
 
   // Queries
@@ -64,11 +64,11 @@ export function useTrackers({ setVariablesToURL = false, ...initialData }: Filte
 }
 
 export function useTracker(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
 
   // Queries
   const query = useQuery(['trackers', id], {
-    queryFn: () => request<get_tracker>(gqlstr(GET_TRACKER), { data: { id }, ...headers() }),
+    queryFn: () => karrio.graphql$.request<get_tracker>(gqlstr(GET_TRACKER), { data: { id } }),
     enabled: !!id,
     onError,
   });
@@ -81,18 +81,18 @@ export function useTracker(id: string) {
 
 export function useTrackerMutation() {
   const queryClient = useQueryClient();
-  const karrio = React.useContext(RestContext);
+  const karrio = useKarrio();
   const invalidateCache = () => { queryClient.invalidateQueries(['trackers']) };
 
   // Mutations
   const createTracker = useMutation(
-    (data: { tracking_number: string, carrier_name: string }) => handleFailure(karrio!.trackers.add({
+    (data: { tracking_number: string, carrier_name: string }) => handleFailure(karrio.rest$.trackers.add({
       trackingData: data
     })),
     { onSuccess: invalidateCache, onError }
   );
   const deleteTracker = useMutation(
-    (data: { idOrTrackingNumber: string }) => handleFailure(karrio!.trackers.remove(data)),
+    (data: { idOrTrackingNumber: string }) => handleFailure(karrio.rest$.trackers.remove(data)),
     { onSuccess: invalidateCache, onError }
   );
 

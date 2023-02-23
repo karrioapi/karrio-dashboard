@@ -1,11 +1,11 @@
 import { TrackingEvent, TrackingStatus } from "karrio/rest";
-import { formatDayDate, isNone, p } from "@/lib/helper";
 import CarrierImage from "@/components/carrier-image";
+import { formatDayDate, isNone } from "@/lib/helper";
 import { Metadata } from "@/lib/types";
 import { NextPage } from "next";
 import Head from "next/head";
-import React from "react";
 import Link from "next/link";
+import React from "react";
 
 export { getServerSideProps } from '@/lib/data-fetching/tracker';
 

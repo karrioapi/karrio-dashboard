@@ -1,6 +1,7 @@
-import { gqlstr, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
+import { gqlstr, insertUrlParam, isNoneOrEmpty, onError } from "@/lib/helper";
 import { EventFilter, GET_EVENT, get_event, get_events, GET_EVENTS } from "@karrio/graphql";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useKarrio } from "@/lib/client";
 import React from "react";
 
 const PAGE_SIZE = 20;
@@ -8,11 +9,11 @@ const PAGINATION = { offset: 0, first: PAGE_SIZE };
 type FilterType = EventFilter & { setVariablesToURL?: boolean };
 
 export function useEvents({ setVariablesToURL = false, ...initialData }: FilterType = {}) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const [filter, _setFilter] = React.useState<EventFilter>({ ...PAGINATION, ...initialData });
-  const fetch = (variables: { filter: EventFilter }) => request<get_events>(
-    gqlstr(GET_EVENTS), { variables, ...headers() }
+  const fetch = (variables: { filter: EventFilter }) => karrio.graphql$.request<get_events>(
+    gqlstr(GET_EVENTS), { variables }
   );
 
   // Queries
@@ -67,12 +68,12 @@ export function useEvents({ setVariablesToURL = false, ...initialData }: FilterT
 }
 
 export function useEvent(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
 
   // Queries
   const query = useQuery(['events', id], {
     queryFn: () => (
-      request<get_event>(gqlstr(GET_EVENT), { variables: { id }, ...headers() })
+      karrio.graphql$.request<get_event>(gqlstr(GET_EVENT), { variables: { id } })
     ),
     enabled: !!id,
     onError,

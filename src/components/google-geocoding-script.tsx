@@ -1,13 +1,13 @@
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import Script from 'next/script';
 import React from 'react';
 
 
 const GoogleGeocodingScript: React.FC = () => {
-  const { ADDRESS_AUTO_COMPLETE } = useAPIReference() as { ADDRESS_AUTO_COMPLETE: any };
+  const { references: { ADDRESS_AUTO_COMPLETE } } = useAPIMetadata();
   const initMap = () => { };
 
-  React.useEffect(() => (window as any).initMap = initMap, [])
+  React.useEffect(() => (window as any).initMap = initMap, []);
 
   return (
     <>

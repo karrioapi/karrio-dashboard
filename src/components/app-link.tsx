@@ -1,6 +1,6 @@
 import { useAppMode } from '@/context/app-mode';
 import Link, { LinkProps } from 'next/link';
-import { p } from '@/lib/helper';
+import { p } from '@/lib/client';
 import React from 'react';
 
 interface AppLinkProps extends LinkProps {

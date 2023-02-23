@@ -1,20 +1,34 @@
-import { getCookie, onError, url$, useSessionHeader } from '@/lib/helper';
 import { Metadata, References } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
-import { KARRIO_API } from '@/lib/client';
+import { onError, url$ } from '@/lib/helper';
 import React, { useContext } from 'react';
+import getConfig from 'next/config';
 import axios from 'axios';
 
-const APIMetadata = React.createContext<Metadata>({} as Metadata);
-const APIReference = React.createContext<References>({} as References);
+const { publicRuntimeConfig } = getConfig();
+type APIMeta = {
+  host: string,
+  metadata: Metadata,
+  references: References,
+};
+const APIMetadata = React.createContext<APIMeta>({} as any);
 
 const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metadata }) => {
-  const headers: any = useSessionHeader();
+  const context = {
+    metadata: (metadata || {}) as Metadata,
+    get host() {
+      return (publicRuntimeConfig?.MULTI_TENANT
+        ? metadata?.HOST || publicRuntimeConfig?.KARRIO_PUBLIC_URL
+        : publicRuntimeConfig?.KARRIO_PUBLIC_URL
+      )
+    }
+  };
+
   const { data: references } = useQuery({
     queryKey: ['references'],
     queryFn: () => (
       axios
-        .get<References>(url$`${getCookie("apiUrl") || KARRIO_API}/v1/references`, { ...headers() })
+        .get<References>(url$`${context.host}/v1/references`)
         .then(({ data }) => data)
     ),
     staleTime: 5000,
@@ -22,20 +36,17 @@ const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metad
   });
 
   return (
-    <APIMetadata.Provider value={metadata || {}}>
-      <APIReference.Provider value={references || metadata as any || {} as References}>
-        {children}
-      </APIReference.Provider>
+    <APIMetadata.Provider value={{
+      ...context,
+      references: (references || metadata || {}) as References,
+    }}>
+      {children}
     </APIMetadata.Provider>
   );
 };
 
 export function useAPIMetadata() {
   return useContext(APIMetadata);
-}
-
-export function useAPIReference() {
-  return useContext(APIReference);
 }
 
 export default APIMetadataProvider;

@@ -9,7 +9,7 @@ import Notifier, { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 
 type Connection = CarrierConnectionType | SystemConnectionType;
 type OperationType = {
@@ -25,7 +25,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
   const { testMode } = useAppMode();
   const mutation = useTrackerMutation();
   const { notify } = useContext(Notify);
-  const { carriers } = useAPIReference();
+  const { references } = useAPIMetadata();
   const { loading, setLoading } = useContext(Loading);
   const { query: { data: userQuery, ...user } } = useCarrierConnections();
   const { query: { data: systemQuery, ...system } } = useSystemConnections();
@@ -74,7 +74,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
       ...(systemQuery?.system_connections || []),
     ].filter(c => (
       c.active &&
-      c.carrier_name in carriers &&
+      c.carrier_name in references.carriers &&
       c.carrier_name !== 'generic' &&
       (c as any).enabled !== false &&
       c.capabilities.includes('tracking')
@@ -91,7 +91,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
 
       <Notifier>
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-          <div className="modal-background" onClick={close}></div>
+          <div className="modal-background"></div>
           {isActive && <form className="modal-card" onSubmit={create}>
             <section className="modal-card-body modal-form">
               <div className="form-floating-header p-4">
@@ -108,7 +108,7 @@ const TrackerModalProvider: React.FC<{}> = ({ children }) => {
                   {carrierList
                     .map((carrier, index) => (
                       <option key={index} value={carrier.carrier_id}>
-                        {`${(carriers as any)[carrier.carrier_name]} ${carrier.test_mode ? '(Sandbox)' : ''}`}
+                        {`${(references.carriers as any)[carrier.carrier_name]} ${carrier.test_mode ? '(Sandbox)' : ''}`}
                       </option>
                     ))}
                 </SelectField>}

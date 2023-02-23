@@ -29,14 +29,15 @@ const moduleExports = {
   },
   serverRuntimeConfig: {
     KARRIO_URL: KARRIO_URL,
-    MULTI_TENANT: MULTI_TENANT,
     JWT_SECRET: process.env.JWT_SECRET,
     TENANT_ENV_KEY: process.env.TENANT_ENV_KEY,
+    KARRIO_ADMIN_URL: process.env.KARRIO_ADMIN_URL,
     KARRIO_ADMIN_API_KEY: process.env.KARRIO_ADMIN_API_KEY,
   },
   publicRuntimeConfig: {
     BASE_PATH: BASE_PATH,
     SENTRY_DSN: SENTRY_DSN,
+    MULTI_TENANT: MULTI_TENANT,
     KARRIO_PUBLIC_URL: KARRIO_PUBLIC_URL,
     NEXTAUTH_URL: process.env.DASHBOARD_URL,
     DASHBOARD_VERSION: process.env.DASHBOARD_VERSION,

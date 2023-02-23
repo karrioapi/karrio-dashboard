@@ -9,7 +9,6 @@ import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 import LoadingProvider from '@/components/loader';
 import AppModeProvider from '@/context/app-mode';
-import { ClientsProvider } from '@/lib/client';
 import Notifier from '@/components/notifier';
 
 
@@ -47,13 +46,11 @@ const AuthenticatedPage = (content: any, pageProps?: any | {}) => {
 
     return (
       <>
-        <ClientsProvider authenticated={true}>
-          <ContextProviders {...(pageProps || {})}>
-            <ErrorBoundary>
-              {session && children}
-            </ErrorBoundary>
-          </ContextProviders>
-        </ClientsProvider>
+        <ContextProviders {...(pageProps || {})}>
+          <ErrorBoundary>
+            {session && children}
+          </ErrorBoundary>
+        </ContextProviders>
       </>
     );
   };

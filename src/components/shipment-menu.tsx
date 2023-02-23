@@ -4,7 +4,7 @@ import { DocumentTemplateType, ShipmentType } from '@/lib/types';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import React, { useState, useRef, useContext } from 'react';
 import { useShipmentMutation } from '@/context/shipment';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useRouter } from 'next/dist/client/router';
 import { useAppMode } from '@/context/app-mode';
 import { isNone, url$ } from '@/lib/helper';
@@ -20,7 +20,7 @@ interface ShipmentMenuComponent extends React.InputHTMLAttributes<HTMLDivElement
 const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) => {
   const router = useRouter();
   const { basePath } = useAppMode();
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const mutation = useShipmentMutation();
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -93,7 +93,7 @@ const ShipmentMenu: React.FC<ShipmentMenuComponent> = ({ shipment, isViewing }) 
 
           {(
             shipment.carrier_name &&
-            !(shipment!.carrier_name in references.carriers) &&
+            !(shipment!.carrier_name in (references.carriers || {})) &&
             ![ShipmentStatusEnum.cancelled, ShipmentStatusEnum.delivered].includes(shipment.status as any)
           ) && <>
               <hr className="my-1" style={{ height: '1px' }} />

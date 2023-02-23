@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const orgId = ((session as any)?.orgId as string) || null;
   const testMode = ((session as any)?.testMode as boolean);
 
-  const { metadata } = await loadAPIMetadata(ctx).catch(_ => _);
+  const { metadata } = await loaduseAPIMetadata(ctx).catch(_ => _);
   const data = await loadContextData(session, metadata);
   const subscription = await checkSubscription(session, metadata);
 
@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-export async function loadAPIMetadata(ctx: RequestContext): Promise<{ metadata?: Metadata }> {
+export async function loaduseAPIMetadata(ctx: RequestContext): Promise<{ metadata?: Metadata }> {
   // Attempt connection to the karrio API to retrieve the API metadata
   const API_URL = await getAPIURL(ctx);
 
@@ -119,7 +119,7 @@ export async function setSessionCookies(ctx: GetServerSidePropsContext, metadata
     ctx.res.setHeader('Set-Cookie', `appUrl=${ctx.params?.site}`);
   }
   if (!!metadata?.HOST) {
-    const host = serverRuntimeConfig?.MULTI_TENANT ? metadata.HOST : publicRuntimeConfig?.KARRIO_PUBLIC_URL
+    const host = publicRuntimeConfig?.MULTI_TENANT ? metadata.HOST : publicRuntimeConfig?.KARRIO_PUBLIC_URL
     ctx.res.setHeader('Set-Cookie', `apiUrl=${host}`);
     ctx.res.setHeader('Set-Cookie', `apiHOST=${metadata.HOST}`);
   }
@@ -187,7 +187,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 export async function loadTenantInfo(filter: { app_domain?: string, schema_name?: string }): Promise<TenantType | null> {
   try {
     const { data: { data: { tenants } } } = await axios({
-      url: `${KARRIO_API || ''}/admin/graphql/`,
+      url: `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`,
       method: 'POST',
       headers: { 'authorization': `Token ${serverRuntimeConfig.KARRIO_ADMIN_API_KEY}` },
       data: { variables: { filter }, query: TENANT_QUERY },
@@ -195,7 +195,7 @@ export async function loadTenantInfo(filter: { app_domain?: string, schema_name?
 
     return tenants.edges[0].node;
   } catch (e: any) {
-    console.log(e.response?.data, `${KARRIO_API || ''}/admin/graphql/`);
+    console.log(e.response?.data, `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`);
 
     return null;
   }
@@ -209,7 +209,7 @@ function needValidSubscription({ subscription }: { subscription?: SubscriptionTy
 }
 
 async function getAPIURL(ctx: RequestContext) {
-  if (!serverRuntimeConfig?.MULTI_TENANT) {
+  if (!publicRuntimeConfig?.MULTI_TENANT) {
     return KARRIO_API;
   }
 
@@ -219,10 +219,10 @@ async function getAPIURL(ctx: RequestContext) {
   const host = cookies ? cookies['HOST'] : null;
   const site = params ? params.site : null;
 
-  if (!!apiHost) return apiHost;
+  if (!!site === false && !!apiHost === true) return apiHost;
 
   const app_domain = (site || host) as string;
-  const tenant = (serverRuntimeConfig?.MULTI_TENANT && !!app_domain
+  const tenant = (publicRuntimeConfig?.MULTI_TENANT && !!app_domain
     ? (await loadTenantInfo({ app_domain }))
     : null
   );

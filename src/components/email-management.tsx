@@ -37,6 +37,12 @@ const EmailManagement: React.FC<EmailManagementComponent> = ({ children }) => {
     evt.preventDefault();
     setIsActive(false);
   };
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    const isValid = (e.target as any).checkValidity();
+    if (e.key !== 'Enter' || loading) return;
+    e.preventDefault();
+    isValid && handleSubmit(e as any);
+  };
 
   return (
     <>
@@ -48,8 +54,8 @@ const EmailManagement: React.FC<EmailManagementComponent> = ({ children }) => {
         </div>
 
         <div className={`modal ${isActive ? "is-active" : ""}`}>
-          <div className="modal-background" onClick={close}></div>
-          {isActive && <form className="modal-card" onSubmit={handleSubmit}>
+          <div className="modal-background"></div>
+          {isActive && <form className="modal-card" onSubmit={handleSubmit} onKeyPress={handleKeyPress}>
             <section className="modal-card-body modal-form">
               <div className="form-floating-header p-4">
                 <span className="has-text-weight-bold is-size-6">Change your email</span>

@@ -50,7 +50,7 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
       </ConfirmModalContext.Provider>
 
       <div className={`modal ${isActive ? "is-active" : ""}`}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <form className="modal-card" onSubmit={handleSubmit}>
           <section className="modal-card-body">
             <div className="form-floating-header p-4">

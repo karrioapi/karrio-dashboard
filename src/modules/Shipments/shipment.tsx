@@ -28,7 +28,7 @@ import Spinner from "@/components/spinner";
 import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
-import { useAPIReference } from "@/context/api-metadata";
+import { useAPIMetadata } from "@/context/api-metadata";
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
@@ -40,7 +40,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
   const { setLoading } = useLoader();
   const $fileInput = React.useRef<HTMLInputElement>();
   const $fileSelectInput = React.useRef<HTMLSelectElement>();
-  const { carrier_capabilities } = useAPIReference();
+  const { references: { carrier_capabilities = {} } } = useAPIMetadata();
   const entity_id = shipmentId || router.query.id as string;
   const { query: logs } = useLogs({ entity_id });
   const { query: events } = useEvents({ entity_id });

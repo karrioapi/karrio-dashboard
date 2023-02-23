@@ -2,7 +2,7 @@ import { useDocumentTemplates } from '@/context/document-template';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import { DocumentTemplateType, OrderType } from '@/lib/types';
 import React, { useState, useRef, useContext } from 'react';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useRouter } from 'next/dist/client/router';
 import { useOrderMutation } from '@/context/order';
 import { useAppMode } from '@/context/app-mode';
@@ -20,7 +20,7 @@ interface OrderMenuComponent extends React.InputHTMLAttributes<HTMLDivElement> {
 const OrderMenu: React.FC<OrderMenuComponent> = ({ order, isViewing }) => {
   const router = useRouter();
   const { basePath } = useAppMode();
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const mutation = useOrderMutation();
   const trigger = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);

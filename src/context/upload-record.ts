@@ -14,7 +14,7 @@ export function useUploadRecords(params: DocumentsApiListRequest = {}) {
   // Queries
   const query = useQuery(
     ['upload_records'],
-    () => karrio!.documents.list(filter).then(({ data }) => data),
+    () => karrio.rest$.documents.list(filter).then(({ data }) => data),
     { keepPreviousData: true, staleTime: 5000 },
   );
 
@@ -31,7 +31,7 @@ export function useUploadRecord(id: string) {
   // Queries
   const query = useQuery(
     ['upload_records', id],
-    () => karrio!.documents.retrieve({ id }),
+    () => karrio.rest$.documents.retrieve({ id }),
   );
 
   return {
@@ -48,7 +48,7 @@ export function useUploadRecordMutation() {
   // Mutations
   const uploadDocument = useMutation(
     (data: DocumentUploadData) => handleFailure(
-      karrio!.documents.upload({ documentUploadData: data })
+      karrio.rest$.documents.upload({ documentUploadData: data })
     ),
     { onSuccess: invalidateCache }
   );

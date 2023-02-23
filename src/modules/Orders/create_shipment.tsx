@@ -151,6 +151,7 @@ export default function CreateShipmentPage(pageProps: any) {
         ...shipment.options,
         ...(order_options.currency ? { currency: order_options.currency } : {}),
         ...(order_options.service ? { service: order_options.service } : {}),
+        ...(order_options.invoice_template ? { invoice_template: order_options.invoice_template } : {}),
         declared_value: parseFloat(`${declared_value}`).toFixed(2),
       };
       const metadata = {
@@ -848,7 +849,7 @@ export default function CreateShipmentPage(pageProps: any) {
 
                   {loading && <Spinner className="my-1 p-2 has-text-centered" />}
 
-                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification p-2 is-default is-size-7">
+                  {(!loading && (shipment.rates || []).length === 0) && <div className="notification p-2 m-2 is-default is-size-7">
                     Provide all shipping details to retrieve shipping rates.
                   </div>}
 

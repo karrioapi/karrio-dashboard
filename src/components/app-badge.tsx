@@ -1,11 +1,11 @@
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { formatCarrierSlug } from '@/lib/helper';
 import React from 'react';
 
 interface AppBadgeComponent extends React.AllHTMLAttributes<HTMLSpanElement> { }
 
 const AppBadge: React.FC<AppBadgeComponent> = ({ className, ...props }) => {
-  const { APP_NAME } = useAPIReference();
+  const { metadata: { APP_NAME } } = useAPIMetadata();
 
   return (
     <strong

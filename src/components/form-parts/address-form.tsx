@@ -10,7 +10,7 @@ import InputField from '@/components/generic/input-field';
 import StateInput from '@/components/generic/state-input';
 import PhoneInput from '@/components/generic/phone-input';
 import NameInput from '@/components/generic/name-input';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { Notify } from '@/components/notifier';
 import { Loading } from '@/components/loader';
 
@@ -42,7 +42,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 
 
 const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shipment, name, onSubmit, onTemplateChange, children }) => {
-  const { states } = useAPIReference();
+  const { references } = useAPIMetadata();
   const { notify } = useContext(Notify);
   const form = useRef<HTMLFormElement>(null);
   const { loading, setLoading } = useContext(Loading);
@@ -160,7 +160,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
           className="is-small"
           fieldClass="column is-6 mb-0 px-2 py-2"
           country_code={address.country_code}
-          required={Object.keys(states || {}).includes(address.country_code)}
+          required={Object.keys(references.states || {}).includes(address.country_code)}
         />
 
         <PostalInput

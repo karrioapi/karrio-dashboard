@@ -1,8 +1,8 @@
 import { ShipmentFilter, get_shipments, DISCARD_COMMODITY, PartialShipmentMutationInput, PARTIAL_UPDATE_SHIPMENT, DELETE_TEMPLATE, get_shipment, partial_shipment_update, discard_commodity, discard_customs, discard_parcel, GET_SHIPMENTS, GET_SHIPMENT, ChangeShipmentStatusMutationInput, CHANGE_SHIPMENT_STATUS, change_shipment_status, DISCARD_PARCEL } from "@karrio/graphql";
-import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
+import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError } from "@/lib/helper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RestContext } from "@/lib/client";
 import { ShipmentType } from "@/lib/types";
+import { useKarrio } from "@/lib/client";
 import React from "react";
 
 const PAGE_SIZE = 20;
@@ -10,11 +10,11 @@ const PAGINATION = { offset: 0, first: PAGE_SIZE };
 type FilterType = ShipmentFilter & { setVariablesToURL?: boolean };
 
 export function useShipments({ setVariablesToURL = false, ...initialData }: FilterType = {}) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const [filter, _setFilter] = React.useState<ShipmentFilter>({ ...PAGINATION, ...initialData });
-  const fetch = (variables: { filter: ShipmentFilter }) => request<get_shipments>(
-    gqlstr(GET_SHIPMENTS), { variables, ...headers() }
+  const fetch = (variables: { filter: ShipmentFilter }) => karrio.graphql$.request<get_shipments>(
+    gqlstr(GET_SHIPMENTS), { variables }
   );
 
   // Queries
@@ -69,12 +69,12 @@ export function useShipments({ setVariablesToURL = false, ...initialData }: Filt
 }
 
 export function useShipment(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
 
   // Queries
   const query = useQuery({
     queryKey: ['shipments', id],
-    queryFn: () => request<get_shipment>(gqlstr(GET_SHIPMENT), { variables: { id }, ...headers() }),
+    queryFn: () => karrio.graphql$.request<get_shipment>(gqlstr(GET_SHIPMENT), { variables: { id } }),
     enabled: !!id && id !== 'new',
     onError,
   });
@@ -85,9 +85,8 @@ export function useShipment(id: string) {
 }
 
 export function useShipmentMutation(id?: string) {
-  const headers = useSessionHeader();
   const queryClient = useQueryClient();
-  const karrio = React.useContext(RestContext);
+  const karrio = useKarrio();
   const invalidateCache = () => {
     queryClient.invalidateQueries(['shipments']);
     queryClient.invalidateQueries(['shipments', id]);
@@ -97,59 +96,59 @@ export function useShipmentMutation(id?: string) {
   // REST requests
   const fetchRates = useMutation(
     ({ id, ...data }: ShipmentType) => handleFailure((id !== undefined && id !== 'new')
-      ? karrio!.shipments.rates({ id, shipmentRateData: data as any }).then(({ data: { rates, messages } }) => ({ rates, messages }))
-      : karrio!.proxy.fetchRates({ rateRequest: (data as any) }).then(({ data: { rates, messages } }) => ({ rates, messages }))
+      ? karrio.rest$.shipments.rates({ id, shipmentRateData: data as any }).then(({ data: { rates, messages } }) => ({ rates, messages }))
+      : karrio.rest$.proxy.fetchRates({ rateRequest: (data as any) }).then(({ data: { rates, messages } }) => ({ rates, messages }))
     ),
     { onSuccess: invalidateCache, onError }
   );
   const buyLabel = useMutation(
     ({ id, selected_rate_id, ...shipment }: ShipmentType) => handleFailure((id !== undefined && id !== 'new')
-      ? karrio!.shipments.purchase({ id, shipmentPurchaseData: { selected_rate_id } as any }).then(({ data }) => data)
-      : karrio!.shipments.create({ shipmentData: (shipment as any) }).then(({ data }) => data)
+      ? karrio.rest$.shipments.purchase({ id, shipmentPurchaseData: { selected_rate_id } as any }).then(({ data }) => data)
+      : karrio.rest$.shipments.create({ shipmentData: (shipment as any) }).then(({ data }) => data)
     ),
     { onSuccess: invalidateCache, onError }
   );
   const voidLabel = useMutation(
     ({ id }: ShipmentType) => handleFailure(
-      karrio!.shipments.cancel({ id }).then(({ data }) => data)
+      karrio.rest$.shipments.cancel({ id }).then(({ data }) => data)
     ),
     { onSuccess: invalidateCache, onError }
   );
   const createShipment = useMutation(
     (data: ShipmentType) => handleFailure(
-      karrio!.shipments.create({ shipmentData: (data as any) }).then(({ data }) => data)
+      karrio.rest$.shipments.create({ shipmentData: (data as any) }).then(({ data }) => data)
     ),
     { onSuccess: invalidateCache, onError }
   );
 
   // GraphQL requests
   const updateShipment = useMutation(
-    (data: PartialShipmentMutationInput) => request<partial_shipment_update>(
-      gqlstr(PARTIAL_UPDATE_SHIPMENT), { data, ...headers() }
+    (data: PartialShipmentMutationInput) => karrio.graphql$.request<partial_shipment_update>(
+      gqlstr(PARTIAL_UPDATE_SHIPMENT), { data }
     ),
     { onSuccess: invalidateCache }
   );
   const discardCustoms = useMutation(
-    (data: { id: string }) => request<discard_customs>(
-      gqlstr(DELETE_TEMPLATE), { data, ...headers() }
+    (data: { id: string }) => karrio.graphql$.request<discard_customs>(
+      gqlstr(DELETE_TEMPLATE), { data }
     ),
     { onSuccess: invalidateCache, onError }
   );
   const discardCommodity = useMutation(
-    (data: { id: string }) => request<discard_commodity>(
-      gqlstr(DISCARD_COMMODITY), { data, ...headers() }
+    (data: { id: string }) => karrio.graphql$.request<discard_commodity>(
+      gqlstr(DISCARD_COMMODITY), { data }
     ),
     { onSuccess: invalidateCache, onError }
   );
   const discardParcel = useMutation(
-    (data: { id: string }) => request<discard_parcel>(
-      gqlstr(DISCARD_PARCEL), { data, ...headers() }
+    (data: { id: string }) => karrio.graphql$.request<discard_parcel>(
+      gqlstr(DISCARD_PARCEL), { data }
     ),
     { onSuccess: invalidateCache, onError }
   );
   const changeStatus = useMutation(
-    (data: ChangeShipmentStatusMutationInput) => request<change_shipment_status>(
-      gqlstr(CHANGE_SHIPMENT_STATUS), { data, ...headers() }
+    (data: ChangeShipmentStatusMutationInput) => karrio.graphql$.request<change_shipment_status>(
+      gqlstr(CHANGE_SHIPMENT_STATUS), { data }
     ),
     { onSuccess: invalidateCache }
   );

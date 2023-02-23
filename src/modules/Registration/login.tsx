@@ -1,9 +1,10 @@
-import { useAPIReference } from "@/context/api-metadata";
+import { useAPIMetadata } from "@/context/api-metadata";
 import SectionLayout from "@/layouts/section-layout";
-import { getCookie, isNone, p } from "@/lib/helper";
 import { useRouter } from "next/dist/client/router";
+import { getCookie, isNone } from "@/lib/helper";
 import React, { FormEvent, useRef } from "react";
 import { signIn } from "next-auth/react";
+import { p } from "@/lib/client";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -12,7 +13,7 @@ export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 export default function LoginPage(pageProps: any) {
   const router = useRouter();
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const [showError, setShowError] = React.useState<boolean>(false);

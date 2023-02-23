@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { p, validationMessage, validityCheck } from '@/lib/helper';
+import { useOrganizationMutation, useOrganizations } from '@/context/organization';
+import { validationMessage, validityCheck } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
+import { useLoader } from '@/components/loader';
 import { NotificationType } from '@/lib/types';
-import { Loading, useLoader } from '@/components/loader';
-import { useOrganizationMutation, useOrganizations } from '@/context/organization';
+import { p } from '@/lib/client';
 
 type OperationType = {
   onChange?: () => void;
@@ -54,6 +55,13 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
     }
     setLoading(false);
   };
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    const isValid = (e.target as any).checkValidity();
+    if (e.key !== 'Enter' || loading || emails.length === 0) return;
+    e.preventDefault();
+    setIsValid(isValid);
+    isValid && handleSubmit(e as any);
+  };
 
   useEffect(() => { form.current && setIsValid(form.current!.checkValidity()); }, [emails]);
 
@@ -65,9 +73,14 @@ const InviteMemberProvider: React.FC<{}> = ({ children }) => {
 
       <Notifier>
         <div className={`modal ${isActive ? "is-active" : ""}`} key={key}>
-          <div className="modal-background" onClick={close}></div>
+          <div className="modal-background"></div>
           {isActive &&
-            <form className="modal-card" onChange={e => setIsValid((e.target as any).checkValidity())} onSubmit={handleSubmit} ref={form}>
+            <form className="modal-card"
+              onChange={e => setIsValid((e.target as any).checkValidity())}
+              onKeyPress={handleKeyPress}
+              onSubmit={handleSubmit}
+              ref={form}
+            >
               <section className="modal-card-body modal-form">
                 <div className="form-floating-header p-4">
                   <span className="has-text-weight-bold is-size-6">Invite team members</span>

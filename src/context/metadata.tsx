@@ -1,6 +1,7 @@
 import { MetadataMutationInput, MetadataObjectTypeEnum, mutate_metadata, MUTATE_METADATA } from 'karrio/graphql';
-import { gqlstr, isNone, isNoneOrEmpty, onError, request, useSessionHeader } from '@/lib/helper';
+import { gqlstr, isNone, isNoneOrEmpty, onError } from '@/lib/helper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useKarrio } from '@/lib/client';
 import React from 'react';
 
 type MetaPair = { key?: string; value?: string };
@@ -114,14 +115,14 @@ const MetadataStateProvider: React.FC<MetadataProviderComponent> = ({ children, 
 
 
 export function useMetadataMutation(queryKey?: string[] | undefined) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const invalidateCache = () => { queryKey && queryClient.invalidateQueries(queryKey) };
 
   // Mutations
   const updateMetadata = useMutation(
-    (data: MetadataMutationInput) => request<mutate_metadata>(
-      gqlstr(MUTATE_METADATA), { data, ...headers() }
+    (data: MetadataMutationInput) => karrio.graphql$.request<mutate_metadata>(
+      gqlstr(MUTATE_METADATA), { data }
     ),
     { onSuccess: invalidateCache, onError }
   );

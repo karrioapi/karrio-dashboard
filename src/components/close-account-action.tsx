@@ -35,7 +35,7 @@ const CloseAccountAction: React.FC<CloseAccountActionComponent> = ({ children })
       </button>
 
       <div className={`modal ${isActive ? "is-active" : ""}`}>
-        <div className="modal-background" onClick={close}></div>
+        <div className="modal-background"></div>
         <form className="modal-card" onSubmit={handleSubmit}>
           <section className="modal-card-body">
             <h3 className="subtitle is-3">Close Account</h3>

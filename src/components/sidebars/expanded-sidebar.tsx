@@ -1,11 +1,11 @@
 import OrganizationDropdown from '@/components/sidebars/organization-dropdown';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useRouter } from 'next/dist/client/router';
 import { useAppMode } from '@/context/app-mode';
 import AppLink from '@/components/app-link';
 import React, { useRef } from 'react';
 import getConfig from 'next/config';
-import { p } from '@/lib/helper';
+import { p } from '@/lib/client';
 import Image from 'next/image';
 
 const { publicRuntimeConfig } = getConfig();
@@ -16,7 +16,7 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
   const router = useRouter();
   const sidebar = useRef<HTMLDivElement>(null);
   const { testMode, basePath, switchMode } = useAppMode();
-  const { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT, DOCUMENTS_MANAGEMENT } = useAPIReference();
+  const { metadata: { MULTI_ORGANIZATIONS, ORDERS_MANAGEMENT, DOCUMENTS_MANAGEMENT } } = useAPIMetadata();
   const [showSettingsMenus, setShowSettingsMenus] = React.useState(false);
 
   const dismiss = (e: React.MouseEvent) => {

@@ -1,5 +1,5 @@
 import { useOrganizationInvitation } from "@/context/organization";
-import { useAPIReference } from "@/context/api-metadata";
+import { useAPIMetadata } from "@/context/api-metadata";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useSession } from "next-auth/react";
@@ -13,7 +13,7 @@ export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
 
 export default function Page(pageProps: any) {
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const { data: session } = useSession();
   const router = useRouter();
   const { token } = router.query;

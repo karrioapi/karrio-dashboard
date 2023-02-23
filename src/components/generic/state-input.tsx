@@ -1,5 +1,5 @@
 import InputField, { InputFieldComponent } from '@/components/generic/input-field';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { isNoneOrEmpty } from '@/lib/helper';
 import React, { ChangeEvent } from 'react';
 import { Collection } from '@/lib/types';
@@ -12,7 +12,7 @@ interface StateInputComponent extends InputFieldComponent {
 
 const StateInput: React.FC<StateInputComponent> = ({ name, country_code, value, onValueChange, ...props }) => {
   const onClick = (e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select();
-  const { states } = useAPIReference() as { states?: Collection<Collection<string>> };
+  const { references: { states } } = useAPIMetadata();
 
   const onChange = (e: ChangeEvent<any>) => {
     e.preventDefault();

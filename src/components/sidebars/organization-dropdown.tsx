@@ -2,11 +2,12 @@ import { OrganizationType, useOrganizationMutation, useOrganizations } from '@/c
 import { useCreateOrganizationModal } from '@/components/create-organization-modal';
 import { useAcceptInvitation } from '@/components/accept-invitation-modal';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useAPIToken } from '@/context/api-token';
-import { isNoneOrEmpty, p } from '@/lib/helper';
+import { isNoneOrEmpty } from '@/lib/helper';
 import { Loading } from '@/components/loader';
 import { useRouter } from 'next/router';
+import { p } from '@/lib/client';
 import Image from 'next/image';
 
 
@@ -17,7 +18,7 @@ const OrganizationDropdown: React.FC = () => {
   const mutation = useOrganizationMutation();
   const { setLoading } = useContext(Loading);
   const { organizations, organization } = useOrganizations();
-  const { ALLOW_MULTI_ACCOUNT } = useAPIReference();
+  const { metadata: { ALLOW_MULTI_ACCOUNT } } = useAPIMetadata();
   const { acceptInvitation } = useAcceptInvitation();
   const { createOrganization } = useCreateOrganizationModal();
   const [isActive, setIsActive] = useState<boolean>(false);
