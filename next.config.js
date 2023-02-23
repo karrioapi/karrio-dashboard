@@ -31,6 +31,7 @@ const moduleExports = {
     KARRIO_URL: KARRIO_URL,
     JWT_SECRET: process.env.JWT_SECRET,
     TENANT_ENV_KEY: process.env.TENANT_ENV_KEY,
+    KARRIO_ADMIN_URL: process.env.KARRIO_ADMIN_URL,
     KARRIO_ADMIN_API_KEY: process.env.KARRIO_ADMIN_API_KEY,
   },
   publicRuntimeConfig: {

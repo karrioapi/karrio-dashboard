@@ -187,7 +187,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 export async function loadTenantInfo(filter: { app_domain?: string, schema_name?: string }): Promise<TenantType | null> {
   try {
     const { data: { data: { tenants } } } = await axios({
-      url: `${KARRIO_API || ''}/admin/graphql/`,
+      url: `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`,
       method: 'POST',
       headers: { 'authorization': `Token ${serverRuntimeConfig.KARRIO_ADMIN_API_KEY}` },
       data: { variables: { filter }, query: TENANT_QUERY },
@@ -195,7 +195,7 @@ export async function loadTenantInfo(filter: { app_domain?: string, schema_name?
 
     return tenants.edges[0].node;
   } catch (e: any) {
-    console.log(e.response?.data, `${KARRIO_API || ''}/admin/graphql/`);
+    console.log(e.response?.data, `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`);
 
     return null;
   }

@@ -17,7 +17,7 @@ const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metad
   const context = {
     metadata: (metadata || {}) as Metadata,
     get host() {
-      return (!!publicRuntimeConfig?.MULTI_TENANT
+      return (publicRuntimeConfig?.MULTI_TENANT
         ? metadata?.HOST || publicRuntimeConfig?.KARRIO_PUBLIC_URL
         : publicRuntimeConfig?.KARRIO_PUBLIC_URL
       )
