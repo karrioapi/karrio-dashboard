@@ -3,10 +3,11 @@ import React, { FormEvent, useContext, useEffect, useReducer, useState } from "r
 import LoadingProvider, { Loading } from "@/components/loader";
 import ButtonField from "@/components/generic/button-field";
 import InputField from "@/components/generic/input-field";
-import { isNone, isNoneOrEmpty, p } from "@/lib/helper";
+import { isNone, isNoneOrEmpty } from "@/lib/helper";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
 import { useUserMutation } from "@/context/user";
+import { p } from "@/lib/client";
 import Head from "next/head";
 import Link from "next/link";
 

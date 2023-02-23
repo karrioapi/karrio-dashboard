@@ -11,7 +11,7 @@ import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import React, { useContext, useReducer, useState } from 'react';
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import { Loading } from '@/components/loader';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useAppMode } from '@/context/app-mode';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;
@@ -43,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
-  const { carriers, service_levels } = useAPIReference() as References & { service_levels: Record<string, ServiceLevelType[]> };
+  const { references: { carriers, service_levels } } = useAPIMetadata();
   const { testMode } = useAppMode();
   const { notify } = useContext(Notify);
   const mutation = useCarrierConnectionMutation();

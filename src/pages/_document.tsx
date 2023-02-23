@@ -1,7 +1,7 @@
 // pages/_document.js
 
-import { p } from '@/lib/helper';
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { p } from '@/lib/client';
 
 class AppDocument extends Document {
   render() {

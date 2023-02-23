@@ -1,18 +1,22 @@
 import { getSession, useSession } from 'next-auth/react';
 import { useQuery } from "@tanstack/react-query";
+import { SessionType } from '@/lib/types';
 import { Session } from 'next-auth';
 import React from 'react';
 
 export function useSyncedSession() {
   // Queries
   const query = useQuery(['session'],
-    () => getSession().then(_ => { console.log('fetch session', new Date()); return _; }),
+    () => getSession().then(_ => {
+      console.log('fetch session', new Date());
+      return _;
+    }),
     { refetchInterval: 120000 }
   );
 
   return {
     query,
-  };
+  } as (any & { query: { data: SessionType } });
 }
 
 export const NextSession = React.createContext<Session | null | undefined>(undefined);

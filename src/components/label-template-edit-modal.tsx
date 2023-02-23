@@ -4,7 +4,7 @@ import Tabs, { TabStateProvider } from '@/components/generic/tabs';
 import React, { useContext, useReducer, useState } from 'react';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_SVG_LABEL_TEMPLATE } from '@/lib/sample';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { jsonLanguage } from '@codemirror/lang-json';
 import { htmlLanguage } from '@codemirror/lang-html';
 import CodeMirror from '@uiw/react-codemirror';
@@ -49,7 +49,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const LabelTemplateEditModalProvider: React.FC<LabelTemplateEditModalComponent> = ({ children }) => {
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`template-${Date.now()}`);

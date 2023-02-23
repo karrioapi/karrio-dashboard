@@ -1,13 +1,9 @@
 import { AddressType, Collection, CommodityType, CustomsType, ErrorType, OrderType, ParcelType, PresetCollection, RequestError, SessionType, ShipmentType } from "@/lib/types";
-import { BASE_PATH, KARRIO_API } from "@/lib/client";
-import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Session } from "next-auth";
 import gql from 'graphql-tag';
 import moment from "moment";
 import React from "react";
-import axios from "axios";
 
 export const isEqual = require('lodash.isequal');
 export const snakeCase = require('lodash.snakecase');
@@ -275,10 +271,6 @@ export const parseJwt = (token: string): any => {
   }
 };
 
-export function p(strings: TemplateStringsArray, ...keys: any[]) {
-  return url$`${BASE_PATH}/${url$(strings, ...keys)}`.replace("//", "/");
-}
-
 export function url$(strings: TemplateStringsArray, ...keys: any[]) {
   const base = (keys || []).reduce((acc, key, i) => acc + strings[i] + key, '');
   const template = `${base}${strings[strings.length - 1]}`;
@@ -440,46 +432,6 @@ export function forceSignOut() {
   signOut({ callbackUrl: '/login?next=' + window.location.pathname + window.location.search });
 }
 
-export function getSessionHeader(session: SessionType | Session | any) {
-  const orgHeader = session?.orgId ? { 'x-org-id': session?.orgId } : {};
-  const testHeader = session?.testMode ? { 'x-test-mode': session?.testMode } : {};
-  const authHeader = session?.accessToken ? { 'Authorization': `Bearer ${session?.accessToken}` } : {};
-
-  return { ...orgHeader, ...testHeader, ...authHeader };
-}
-
-export function useSessionHeader() {
-  const { data } = useSession();
-  return () => ({ headers: getSessionHeader(data) })
-}
-
-export type dataT<T> = { data?: T }
-type requestArgs = {
-  variables?: Record<string, any>;
-  data?: Record<string, any>;
-  operationName?: string;
-  url?: string;
-} & Record<string, any>;
-
-export async function request<T>(query: string, args?: requestArgs): Promise<T> {
-  const { url, data, variables: reqVariables, operationName, ...config } = args || {};
-  try {
-    const APIUrl = url || url$`${getCookie('apiUrl') || KARRIO_API || ''}/graphql`;
-    const variables = data ? { data } : reqVariables;
-    const { data: response } = await axios.post<{ data?: T, errors?: any }>(
-      APIUrl, { query, operationName, variables }, config,
-    );
-
-    if (response.errors) {
-      throw new RequestError({ errors: response.errors });
-    }
-
-    return response.data || (response as T);
-  } catch (error: any) {
-    throw new RequestError(error.response?.data || error.data || error);
-  }
-}
-
 export function errorToMessages(error: ErrorType | Error | any) {
   const data = error.data?.message || error.message;
 
@@ -497,5 +449,5 @@ export function onError(error: any) {
     (err: any) => (err.code === "authentication_required" || err.status_code === 401)
   );
 
-  if (authExpiredError) { window.location.pathname = window.location.pathname; }
+  // if (authExpiredError) { window.location.pathname = window.location.pathname; }
 }

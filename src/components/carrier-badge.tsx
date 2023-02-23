@@ -1,5 +1,5 @@
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
-import { p } from '@/lib/helper';
+import { p } from '@/lib/client';
 import Image from "next/image";
 import React from 'react';
 

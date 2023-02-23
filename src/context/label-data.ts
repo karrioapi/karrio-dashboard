@@ -1,5 +1,5 @@
+import { commodityMatch, errorToMessages, getShipmentCommodities, gqlstr, isEqual, isNone, isNoneOrEmpty, toNumber, useLocation } from "@/lib/helper";
 import { AddressType, Collection, CommodityType, CustomsType, NotificationType, ParcelType, ShipmentType } from "@/lib/types";
-import { commodityMatch, errorToMessages, getShipmentCommodities, gqlstr, isEqual, isNone, isNoneOrEmpty, onError, request, toNumber, useLocation, useSessionHeader } from "@/lib/helper";
 import { get_shipment_data, GET_SHIPMENT_DATA, LabelTypeEnum, PaidByEnum } from "@karrio/graphql";
 import { DEFAULT_CUSTOMS_CONTENT } from "@/components/form-parts/customs-info-form";
 import { useShipmentMutation } from "@/context/shipment";
@@ -7,6 +7,7 @@ import { useNotifier } from "@/components/notifier";
 import { useQuery } from "@tanstack/react-query";
 import { useAppMode } from "@/context/app-mode";
 import { useLoader } from "@/components/loader";
+import { useKarrio } from "@/lib/client";
 import moment from "moment";
 import React from "react";
 
@@ -42,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: Partial<Shi
 
 
 export function useLabelData(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const mutation = useShipmentMutation();
   const [shipment, dispatch] = React.useReducer(reducer, DEFAULT_SHIPMENT_DATA);
 
@@ -52,7 +53,7 @@ export function useLabelData(id: string) {
     queryFn: () => (
       id === 'new'
         ? { shipment }
-        : request<get_shipment_data>(gqlstr(GET_SHIPMENT_DATA), { variables: { id }, ...headers() })
+        : karrio.graphql$.request<get_shipment_data>(gqlstr(GET_SHIPMENT_DATA), { variables: { id } })
     ),
     enabled: !!id,
   });

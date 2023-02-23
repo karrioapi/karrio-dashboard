@@ -6,7 +6,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import InputField from '@/components/generic/input-field';
 import { DEFAULT_DOCUMENT_TEMPLATE } from '@/lib/sample';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useNotifier } from '@/components/notifier';
 import { useLoader } from '@/components/loader';
 import CodeMirror from '@uiw/react-codemirror';
@@ -37,7 +37,7 @@ export default function DocumentTemplatePage(pageProps: any) {
     const router = useLocation();
     const { id } = router.query;
     const notifier = useNotifier();
-    const references = useAPIReference();
+    const { references } = useAPIMetadata();
     const [isNew, setIsNew] = useState<boolean>();
     const mutation = useDocumentTemplateMutation();
     const [template, dispatch] = useReducer(reducer, DEFAULT_STATE, () => DEFAULT_STATE);

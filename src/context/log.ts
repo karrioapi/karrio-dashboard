@@ -1,4 +1,5 @@
-import { gqlstr, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
+import { useKarrio } from "@/lib/client";
+import { gqlstr, insertUrlParam, isNoneOrEmpty, onError } from "@/lib/helper";
 import { LogFilter, get_logs, GET_LOGS, get_log, GET_LOG } from "@karrio/graphql";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
@@ -8,11 +9,11 @@ const PAGINATION = { offset: 0, first: PAGE_SIZE };
 type FilterType = LogFilter & { setVariablesToURL?: boolean };
 
 export function useLogs({ setVariablesToURL = false, ...initialData }: FilterType = {}) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const [filter, _setFilter] = React.useState<LogFilter>({ ...PAGINATION, ...initialData });
-  const fetch = (variables: { filter: LogFilter }) => request<get_logs>(
-    gqlstr(GET_LOGS), { variables, ...headers() }
+  const fetch = (variables: { filter: LogFilter }) => karrio.graphql$.request<get_logs>(
+    gqlstr(GET_LOGS), { variables }
   );
 
   // Queries
@@ -67,12 +68,12 @@ export function useLogs({ setVariablesToURL = false, ...initialData }: FilterTyp
 }
 
 export function useLog(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
 
   // Queries
   const query = useQuery({
     queryKey: ['logs', id],
-    queryFn: () => request<get_log>(gqlstr(GET_LOG), { variables: { id: parseInt(id) }, ...headers() }),
+    queryFn: () => karrio.graphql$.request<get_log>(gqlstr(GET_LOG), { variables: { id: parseInt(id) } }),
     enabled: !!id,
     onError,
   });

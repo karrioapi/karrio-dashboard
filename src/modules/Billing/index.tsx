@@ -1,8 +1,9 @@
-import { loadAPIMetadata, checkSubscription, createPortalSession } from "@/lib/data-fetching";
+import { loaduseAPIMetadata, checkSubscription, createPortalSession } from "@/lib/data-fetching";
 import { Metadata, SubscriptionType } from "@/lib/types";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
-import { isNone, p } from "@/lib/helper";
+import { isNone } from "@/lib/helper";
+import { p } from "@/lib/client";
 import Head from "next/head";
 import React from "react";
 
@@ -62,7 +63,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const metadata = await loadAPIMetadata(ctx).catch(_ => _);
+  const metadata = await loaduseAPIMetadata(ctx).catch(_ => _);
   const subscription = await checkSubscription(session, metadata.metadata).catch(_ => _);
   const portal_session = await createPortalSession(
     session,

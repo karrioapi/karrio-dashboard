@@ -1,7 +1,7 @@
-import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError, request, useSessionHeader } from "@/lib/helper";
+import { gqlstr, handleFailure, insertUrlParam, isNoneOrEmpty, onError } from "@/lib/helper";
 import { OrderFilter, get_orders, GET_ORDERS, get_order, GET_ORDER } from "@karrio/graphql";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RestContext } from "@/lib/client";
+import { useKarrio } from "@/lib/client";
 import { OrderType } from "@/lib/types";
 import React from "react";
 
@@ -10,11 +10,11 @@ const PAGINATION = { offset: 0, first: PAGE_SIZE };
 type FilterType = OrderFilter & { setVariablesToURL?: boolean };
 
 export function useOrders({ setVariablesToURL = false, ...initialData }: FilterType = {}) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
   const [filter, _setFilter] = React.useState<OrderFilter>({ ...PAGINATION, ...initialData });
-  const fetch = (variables: { filter: OrderFilter }) => request<get_orders>(
-    gqlstr(GET_ORDERS), { variables, ...headers() }
+  const fetch = (variables: { filter: OrderFilter }) => karrio.graphql$.request<get_orders>(
+    gqlstr(GET_ORDERS), { variables }
   );
 
   // Queries
@@ -69,12 +69,12 @@ export function useOrders({ setVariablesToURL = false, ...initialData }: FilterT
 }
 
 export function useOrder(id: string) {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
 
   // Queries
   const query = useQuery({
     queryKey: ['orders', id],
-    queryFn: () => request<get_order>(gqlstr(GET_ORDER), { variables: { id }, ...headers() }),
+    queryFn: () => karrio.graphql$.request<get_order>(gqlstr(GET_ORDER), { variables: { id } }),
     enabled: !!id,
     onError,
   });
@@ -86,8 +86,8 @@ export function useOrder(id: string) {
 
 
 export function useOrderMutation(id?: string) {
+  const karrio = useKarrio();
   const queryClient = useQueryClient();
-  const karrio = React.useContext(RestContext);
   const invalidateCache = () => {
     queryClient.invalidateQueries(['orders']);
     queryClient.invalidateQueries(['orders', id]);
@@ -97,7 +97,7 @@ export function useOrderMutation(id?: string) {
   // REST requests
   const cancelOrder = useMutation(
     ({ id }: OrderType) => handleFailure(
-      karrio!.orders.cancel({ id }).then(({ data }) => data)
+      karrio.rest$.orders.cancel({ id }).then(({ data }) => data)
     ),
     { onSuccess: invalidateCache, onError }
   );

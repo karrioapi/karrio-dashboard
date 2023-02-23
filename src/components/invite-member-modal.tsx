@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { p, validationMessage, validityCheck } from '@/lib/helper';
+import { useOrganizationMutation, useOrganizations } from '@/context/organization';
+import { validationMessage, validityCheck } from '@/lib/helper';
 import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
+import { useLoader } from '@/components/loader';
 import { NotificationType } from '@/lib/types';
-import { Loading, useLoader } from '@/components/loader';
-import { useOrganizationMutation, useOrganizations } from '@/context/organization';
+import { p } from '@/lib/client';
 
 type OperationType = {
   onChange?: () => void;

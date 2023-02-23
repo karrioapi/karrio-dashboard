@@ -225,6 +225,7 @@ export const HTTP_METHODS = [
 
 export enum NoneEnum { none = "none" };
 
+export type dataT<T> = { data?: T };
 export type SessionType = Session & {
   accessToken: string,
   testMode?: boolean,
@@ -299,7 +300,7 @@ export interface References {
   ORG_LEVEL_BILLING: boolean;
   TENANT_LEVEL_BILLING: boolean;
 
-  ADDRESS_AUTO_COMPLETE: object;
+  ADDRESS_AUTO_COMPLETE: Collection;
   countries: Collection;
   currencies: Collection;
   carriers: Collection;

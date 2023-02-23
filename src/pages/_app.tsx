@@ -3,11 +3,11 @@ import 'highlight.js/styles/stackoverflow-light.css';
 import '@/styles/theme.scss';
 import '@/styles/dashboard.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import APIMetadataProvider from '@/context/api-metadata';
 import { SessionProvider } from "next-auth/react";
 import { ClientsProvider } from '@/lib/client';
 import MainLayout from '@/layouts/main-layout';
 import type { AppProps } from 'next/app';
-import APIMetadataProvider from '@/context/api-metadata';
 
 const queryClient = new QueryClient();
 

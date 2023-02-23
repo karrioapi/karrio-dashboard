@@ -1,7 +1,7 @@
 import { NotificationType, PortalSessionType } from '@/lib/types';
 import { useOrganizations } from '@/context/organization';
 import { useSubscription } from '@/context/subscription';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { useLoader } from '@/components/loader';
 import { Notify } from '@/components/notifier';
 import React, { useContext } from 'react';
@@ -11,7 +11,7 @@ import { url$ } from '@/lib/helper';
 interface SubscriptionManagementComponent { }
 
 const SubscriptionManagement: React.FC<SubscriptionManagementComponent> = () => {
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const { notify } = useContext(Notify);
   const { loading, setLoading } = useLoader();
   const { organization } = useOrganizations();

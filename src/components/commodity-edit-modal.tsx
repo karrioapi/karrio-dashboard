@@ -7,7 +7,7 @@ import React, { useContext, useReducer, useState } from 'react';
 import TextAreaField from '@/components/generic/textarea-field';
 import CountryInput from '@/components/generic/country-input';
 import InputField from '@/components/generic/input-field';
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import { Loading } from '@/components/loader';
 import Notifier from '@/components/notifier';
 
@@ -43,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: stateValue 
 }
 
 const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ children }) => {
-  const { ORDERS_MANAGEMENT } = useAPIReference();
+  const { metadata: { ORDERS_MANAGEMENT } } = useAPIMetadata();
   const { loading, setLoading } = useContext(Loading);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [key, setKey] = useState<string>(`commodity-${Date.now()}`);

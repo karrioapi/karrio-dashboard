@@ -1,9 +1,9 @@
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import React from 'react';
 
 
 const Footer: React.FC = () => {
-  const { OPENAPI, GRAPHQL } = useAPIReference();
+  const { references } = useAPIMetadata();
 
   return (
     <footer className="footer p-0 pt-6">
@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           <a className="button is-white footer-api-reference-link"
             target="_blank"
             rel="noreferrer"
-            href={OPENAPI}>
+            href={references.OPENAPI}>
             <span>API Reference</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>
@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
           <a className="button is-white footer-api-reference-link"
             target="_blank"
             rel="noreferrer"
-            href={GRAPHQL}>
+            href={references.GRAPHQL}>
             <span>GraphQL</span>
             <span className="icon is-small">
               <i className="fas fa-external-link-alt"></i>

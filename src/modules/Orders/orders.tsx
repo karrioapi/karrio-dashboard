@@ -5,7 +5,7 @@ import React, { ChangeEvent, useContext, useEffect } from "react";
 import OrdersFilter from "@/components/filters/orders-filter";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { useAPIReference } from "@/context/api-metadata";
+import { useAPIMetadata } from "@/context/api-metadata";
 import ConfirmModal from "@/components/confirm-modal";
 import StatusBadge from "@/components/status-badge";
 import { useRouter } from "next/dist/client/router";
@@ -23,7 +23,7 @@ export { getServerSideProps } from "@/lib/data-fetching";
 export default function OrdersPage(pageProps: any) {
   const Component: React.FC = () => {
     const router = useRouter();
-    const references = useAPIReference();
+    const { references } = useAPIMetadata();
     const { setLoading } = useLoader();
     const context = useOrders({ setVariablesToURL: true });
     const { previewOrder } = useContext(OrderPreviewContext);

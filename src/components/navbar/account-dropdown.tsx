@@ -1,4 +1,4 @@
-import { useAPIReference } from '@/context/api-metadata';
+import { useAPIMetadata } from '@/context/api-metadata';
 import React, { useState, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import { signOut } from 'next-auth/react';
@@ -8,7 +8,7 @@ interface AccountDropdownComponent { }
 
 
 const AccountDropdown: React.FC<AccountDropdownComponent> = ({ ...props }) => {
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
   const menu = useRef<HTMLDivElement>(null);
   const btn = useRef<HTMLButtonElement>(null);
   const [isActive, setIsActive] = useState(false);

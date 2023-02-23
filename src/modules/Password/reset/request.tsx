@@ -4,7 +4,7 @@ import { useRouter } from "next/dist/client/router";
 import LoadingProvider from "@/components/loader";
 import React, { FormEvent, useRef } from "react";
 import { useUserMutation } from "@/context/user";
-import { p } from "@/lib/helper";
+import { p } from "@/lib/client";
 import Head from "next/head";
 import Link from "next/link";
 

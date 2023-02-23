@@ -1,20 +1,21 @@
-import { gqlstr, isNone, onError, request, useSessionHeader } from "@/lib/helper";
 import { SEARCH_DATA, search_data, search_dataVariables } from "@karrio/graphql";
+import { gqlstr, isNone, onError } from "@/lib/helper";
 import { useQuery } from "@tanstack/react-query";
 import { debounceTime, Subject } from "rxjs";
+import { useKarrio } from "@/lib/client";
 import React from "react";
 
 const observable$ = new Subject<search_dataVariables>();
 const search$ = observable$.pipe(debounceTime(500));
 
 export function useSearch() {
-  const headers = useSessionHeader();
+  const karrio = useKarrio();
   const [filter, _setFilter] = React.useState<search_dataVariables>({});
 
   // Queries
   const query = useQuery(['search', filter], {
     queryFn: () => (
-      request<search_data>(gqlstr(SEARCH_DATA), { variables: { ...filter }, ...headers() })
+      karrio.graphql$.request<search_data>(gqlstr(SEARCH_DATA), { variables: { ...filter } })
         .then((data) => {
           const results = [
             ...(data?.order_results?.edges || []),

@@ -2,7 +2,7 @@ import GenerateAPIModal from "@/components/generate-api-dialog";
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthenticatedPage from "@/layouts/authenticated-page";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { useAPIReference } from "@/context/api-metadata";
+import { useAPIMetadata } from "@/context/api-metadata";
 import CopiableLink from "@/components/copiable-link";
 import { useAPIToken } from "@/context/api-token";
 import { Loading } from "@/components/loader";
@@ -12,7 +12,7 @@ export { getServerSideProps } from "@/lib/data-fetching";
 
 
 export default function ApiPage(pageProps: any) {
-  const references = useAPIReference();
+  const { references } = useAPIMetadata();
 
   const Component: React.FC<any> = () => {
     const { setLoading } = useContext(Loading);
