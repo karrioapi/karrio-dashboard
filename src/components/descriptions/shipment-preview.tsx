@@ -5,6 +5,7 @@ import ShipmentProvider from '@/context/shipment-provider';
 import { useLocation } from '@/lib/helper';
 import { ShipmentComponent } from '@/views/shipment';
 import React, { useState } from 'react';
+import ConfirmModal from '@/components/confirm-modal';
 
 type ShipmentPreviewContextType = {
   previewShipment: (shipmentId: string) => void,
@@ -48,9 +49,11 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
               <EventsProvider setVariablesToURL={false}>
                 <LogsProvider setVariablesToURL={false}>
                   <MetadataMutationProvider>
+                    <ConfirmModal>
 
-                    <ShipmentComponent shipmentId={shipmentId} />
+                      <ShipmentComponent shipmentId={shipmentId} />
 
+                    </ConfirmModal>
                   </MetadataMutationProvider>
                 </LogsProvider>
               </EventsProvider>
