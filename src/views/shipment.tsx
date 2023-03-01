@@ -361,7 +361,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
           {documents.isFetched && (uploads || []).length > 0 && <div className="table-container">
             <table className="related-item-table table is-hoverable is-fullwidth">
               <tbody>
-                {(uploads || []).map(upload => <>
+                {(uploads || []).map(upload => <React.Fragment key={shipment.id}>
                   {(upload.documents || []).map(doc => (
                     <tr key={doc.document_id} className="items">
                       <td className="description is-vcentered p-0">
@@ -372,7 +372,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
                       </td>
                     </tr>
                   ))}
-                </>)}
+                </React.Fragment>)}
               </tbody>
             </table>
           </div>}

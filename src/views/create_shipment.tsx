@@ -139,6 +139,7 @@ export default function CreateShipmentPage(pageProps: any) {
         ...(order_options.currency ? { currency: order_options.currency } : {}),
         ...(order_options.service ? { service: order_options.service } : {}),
         ...(order_options.invoice_template ? { invoice_template: order_options.invoice_template } : {}),
+        ...(order_options.paperless_trade ? { paperless_trade: order_options.paperless_trade } : {}),
         declared_value: parseFloat(`${declared_value}`).toFixed(2),
       };
       const metadata = {
