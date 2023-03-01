@@ -20,11 +20,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const orgId = ((session as any)?.orgId as string) || null;
   const testMode = ((session as any)?.testMode as boolean);
 
-  const { metadata } = await loaduseAPIMetadata(ctx).catch(_ => _);
-  const data = await loadContextData(session, metadata);
-  const subscription = await checkSubscription(session, metadata);
+  const metadata = await loaduseAPIMetadata(ctx).catch(_ => _);
+  const data = await loadContextData(session, metadata.metadata);
+  const subscription = await checkSubscription(session, metadata.metadata);
 
-  await setSessionCookies(ctx, metadata, testMode, orgId);
+  await setSessionCookies(ctx, metadata.metadata, testMode, orgId);
 
   if (needValidSubscription(subscription)) {
     return {
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   return {
-    props: { pathname, orgId, metadata, ...subscription, ...data }
+    props: { pathname, orgId, ...metadata, ...subscription, ...data }
   };
 };
 
