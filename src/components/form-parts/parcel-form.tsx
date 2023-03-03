@@ -15,7 +15,7 @@ export const DEFAULT_PARCEL_CONTENT: Partial<ParcelType> = {
   height: 18.2,
   length: 10.0,
   is_document: false,
-  packaging_type: "medium_box",
+  packaging_type: "your_packaging",
   weight_unit: WeightUnitEnum.KG,
   dimension_unit: DimensionUnitEnum.CM,
   items: [],
