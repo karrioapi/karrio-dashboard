@@ -143,6 +143,19 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                 </div>}
 
                 <div className="columns is-multiline mb-4 px-1">
+                  <InputField
+                    name="title"
+                    label="Title"
+                    placeholder="IPod Nano"
+                    onChange={handleChange}
+                    value={commodity?.title}
+                    className="is-small is-fullwidth"
+                    fieldClass="column mb-0 is-12 px-2 py-1"
+                    disabled={!isNone(commodity?.parent_id)}
+                  />
+                </div>
+
+                <div className="columns is-multiline mb-4 px-1">
 
                   <InputField
                     name="sku"

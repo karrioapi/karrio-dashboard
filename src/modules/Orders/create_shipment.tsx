@@ -362,7 +362,7 @@ export default function CreateShipmentPage(pageProps: any) {
                         <div key={item_index} className="py-1 is-flex is-justify-content-space-between">
                           <div>
                             <p className="is-size-7 my-1 has-text-weight-semibold">
-                              {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
+                              {item_index + 1} {`${item.title || item.description || 'Item'}`}
                             </p>
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                               <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>

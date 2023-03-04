@@ -24,8 +24,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const data = await loadContextData(session, metadata.metadata);
   const subscription = await checkSubscription(session, metadata.metadata);
 
-  console.log(metadata)
-
   await setSessionCookies(ctx, metadata.metadata, testMode, orgId);
 
   if (needValidSubscription(subscription)) {
@@ -51,7 +49,7 @@ export async function loaduseAPIMetadata(ctx: RequestContext): Promise<{ metadat
       const { data: metadata } = await axios.get<Metadata>(API_URL);
 
       // TODO:: implement version compatibility check here.
-      await setSessionCookies(ctx as any, metadata)
+      await setSessionCookies(ctx as any, metadata);
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${API_URL})`);

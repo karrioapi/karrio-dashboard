@@ -790,6 +790,7 @@ export interface get_shipment_shipment_billing_address {
 export interface get_shipment_shipment_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -829,6 +830,7 @@ export interface get_shipment_shipment_customs_commodities {
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1081,6 +1083,7 @@ export interface get_shipments_shipments_edges_node_billing_address {
 export interface get_shipments_shipments_edges_node_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1120,6 +1123,7 @@ export interface get_shipments_shipments_edges_node_customs_commodities {
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1337,6 +1341,7 @@ export interface get_shipment_data_shipment_billing_address {
 export interface get_shipment_data_shipment_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1376,6 +1381,7 @@ export interface get_shipment_data_shipment_customs_commodities {
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1550,6 +1556,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_billin
 export interface partial_shipment_update_partial_shipment_update_shipment_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -1589,6 +1596,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -3237,6 +3245,7 @@ export interface get_order_order_billing_address {
 export interface get_order_order_line_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   unfulfilled_quantity: number | null;
@@ -3320,6 +3329,7 @@ export interface get_order_order_shipments_billing_address {
 export interface get_order_order_shipments_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -3359,6 +3369,7 @@ export interface get_order_order_shipments_customs_commodities {
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -3590,6 +3601,7 @@ export interface get_orders_orders_edges_node_billing_address {
 export interface get_orders_orders_edges_node_line_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   unfulfilled_quantity: number | null;
@@ -3673,6 +3685,7 @@ export interface get_orders_orders_edges_node_shipments_billing_address {
 export interface get_orders_orders_edges_node_shipments_parcels_items {
   id: string;
   weight: number;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -3712,6 +3725,7 @@ export interface get_orders_orders_edges_node_shipments_customs_commodities {
   id: string;
   weight: number;
   weight_unit: WeightUnitEnum | null;
+  title: string | null;
   description: string | null;
   quantity: number;
   sku: string | null;
@@ -5571,6 +5585,7 @@ export interface UpdateCommodityInput {
   weight_unit?: WeightUnitEnum | null;
   quantity?: number | null;
   sku?: string | null;
+  title?: string | null;
   hs_code?: string | null;
   description?: string | null;
   value_amount?: number | null;
@@ -5700,6 +5715,7 @@ export interface CommodityInput {
   weight_unit: WeightUnitEnum;
   quantity?: number | null;
   sku?: string | null;
+  title?: string | null;
   hs_code?: string | null;
   description?: string | null;
   value_amount?: number | null;
