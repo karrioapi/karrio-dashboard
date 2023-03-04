@@ -183,7 +183,7 @@ export default function OrdersPage(pageProps: any) {
                         )}
                       </p>
                       <p className="is-size-7 has-text-grey" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].description || order.line_items[0].sku}
+                        {order.line_items.length > 1 ? "(Multiple)" : order.line_items[0].title || order.line_items[0].description || order.line_items[0].sku}
                       </p>
                     </td>
                     <td className="customer is-vcentered is-size-7 has-text-weight-bold has-text-grey text-ellipsis"

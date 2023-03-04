@@ -150,7 +150,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                       onChange={handleChange([`ex-${item_index}`])}
                     />
                     <p className="column is-5 p-0 my-1">
-                      {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
+                      {item_index + 1} {`${item.title || item.description || 'Item'}`}
                     </p>
                     <p className="column is-3 p-0 my-1">{item.sku}</p>
                     <p className="column is-2 p-0 my-1 has-text-centered">{item.metadata?.ship_qty}</p>
@@ -191,7 +191,7 @@ const LineItemSelector: React.FC<LineItemSelectorComponent> = ({ title, shipment
                         onChange={handleChange([item.id])}
                       />
                       <p className="column is-5 p-0 my-1">
-                        {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
+                        {item_index + 1} {`${item.title || item.description || 'Item'}`}
                       </p>
                       <p className="column is-3 p-0 my-1">{item.sku}</p>
                       <p className="column is-2 p-0 my-1 has-text-centered">{item.metadata?.ship_qty}</p>

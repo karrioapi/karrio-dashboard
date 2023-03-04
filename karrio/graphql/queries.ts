@@ -476,6 +476,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       items {
         id
         weight
+        title
         description
         quantity
         sku
@@ -519,6 +520,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         id
         weight
         weight_unit
+        title
         description
         quantity
         sku
@@ -717,6 +719,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           items {
             id
             weight
+            title
             description
             quantity
             sku
@@ -760,6 +763,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
             id
             weight
             weight_unit
+            title
             description
             quantity
             sku
@@ -918,6 +922,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       items {
         id
         weight
+        title
         description
         quantity
         sku
@@ -954,6 +959,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
         id
         weight
         weight_unit
+        title
         description
         quantity
         sku
@@ -1093,6 +1099,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         items {
           id
           weight
+          title
           description
           quantity
           sku
@@ -1129,6 +1136,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           id
           weight
           weight_unit
+          title
           description
           quantity
           sku
@@ -2156,6 +2164,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
     line_items {
       id
       weight
+      title
       description
       quantity
       unfulfilled_quantity
@@ -2258,6 +2267,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         items {
           id
           weight
+          title
           description
           quantity
           sku
@@ -2300,6 +2310,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           id
           weight
           weight_unit
+          title
           description
           quantity
           sku
@@ -2453,6 +2464,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
         line_items {
           id
           weight
+          title
           description
           quantity
           unfulfilled_quantity
@@ -2555,6 +2567,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             items {
               id
               weight
+              title
               description
               quantity
               sku
@@ -2597,6 +2610,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
               id
               weight
               weight_unit
+              title
               description
               quantity
               sku

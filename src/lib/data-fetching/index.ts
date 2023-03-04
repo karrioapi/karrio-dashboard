@@ -49,7 +49,7 @@ export async function loaduseAPIMetadata(ctx: RequestContext): Promise<{ metadat
       const { data: metadata } = await axios.get<Metadata>(API_URL);
 
       // TODO:: implement version compatibility check here.
-      await setSessionCookies(ctx as any, metadata)
+      await setSessionCookies(ctx as any, metadata);
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${API_URL})`);
@@ -187,7 +187,7 @@ export async function createPortalSession(session: SessionType | any, host: stri
 export async function loadTenantInfo(filter: { app_domain?: string, schema_name?: string }): Promise<TenantType | null> {
   try {
     const { data: { data: { tenants } } } = await axios({
-      url: `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`,
+      url: url$`${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`,
       method: 'POST',
       headers: { 'authorization': `Token ${serverRuntimeConfig.KARRIO_ADMIN_API_KEY}` },
       data: { variables: { filter }, query: TENANT_QUERY },
@@ -195,7 +195,7 @@ export async function loadTenantInfo(filter: { app_domain?: string, schema_name?
 
     return tenants.edges[0].node;
   } catch (e: any) {
-    console.log(e.response?.data, `${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`);
+    console.log(e.response?.data, url$`${serverRuntimeConfig.KARRIO_ADMIN_URL}/admin/graphql/`);
 
     return null;
   }

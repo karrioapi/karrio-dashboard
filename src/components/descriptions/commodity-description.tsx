@@ -14,7 +14,7 @@ const CommodityDescription: React.FC<CommodityDescriptionComponent> = ({ commodi
     <div className={`is-flex ${className || ''}`}>
       <div className="is-flex-grow-3 p-0 text-ellipsis">
         <p className="is-size-7 my-1 has-text-weight-semibold">
-          {prefix} {isNoneOrEmpty(commodity.description) ? 'Item' : commodity.description} {suffix}
+          {prefix} {`${commodity.title || commodity.description || 'Item'}`} {suffix}
         </p>
         <p className="is-size-7 my-1 has-text-weight-semibold has-text-grey">
           {isNoneOrEmpty(commodity.sku) ? ' SKU: 0000000' : ` SKU: ${commodity.sku}`}

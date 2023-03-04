@@ -11,6 +11,7 @@ import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import CommoditySummary from '@/components/descriptions/commodity-summary';
+import { CommodityStateContext } from '@/components/commodity-edit-modal';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
@@ -33,7 +34,6 @@ import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
 import moment from 'moment';
-import { CommodityStateContext } from '@/components/commodity-edit-modal';
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
@@ -152,6 +152,7 @@ export default function CreateShipmentPage(pageProps: any) {
         ...(order_options.currency ? { currency: order_options.currency } : {}),
         ...(order_options.service ? { service: order_options.service } : {}),
         ...(order_options.invoice_template ? { invoice_template: order_options.invoice_template } : {}),
+        ...(order_options.paperless_trade ? { paperless_trade: order_options.paperless_trade } : {}),
         declared_value: parseFloat(`${declared_value}`).toFixed(2),
       };
       const metadata = {
@@ -361,7 +362,7 @@ export default function CreateShipmentPage(pageProps: any) {
                         <div key={item_index} className="py-1 is-flex is-justify-content-space-between">
                           <div>
                             <p className="is-size-7 my-1 has-text-weight-semibold">
-                              {item_index + 1} - {isNoneOrEmpty(item.description) ? 'Item' : item.description}
+                              {item_index + 1} {`${item.title || item.description || 'Item'}`}
                             </p>
                             <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
                               <span className='has-text-info'>{` ORDER: ${getOrder(item.parent_id)?.order_id}`}</span>
@@ -571,15 +572,6 @@ export default function CreateShipmentPage(pageProps: any) {
                   </InputField>
 
                 </div>
-
-                {/* paperless trade */}
-                <CheckBoxField name="paperless_trade"
-                  fieldClass="column mb-0 is-12 px-0 py-2"
-                  defaultChecked={shipment.options?.paperless_trade}
-                  onChange={e => onChange({ options: { ...shipment.options, paperless_trade: e.target.checked } })}
-                >
-                  <span>Opt for paperless trade if supported</span>
-                </CheckBoxField>
 
               </div>
 
