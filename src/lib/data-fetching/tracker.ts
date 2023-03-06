@@ -2,13 +2,17 @@ import { loadAPIMetadata } from "@/lib/data-fetching";
 import { KarrioClient } from "@karrio/rest";
 import { KARRIO_API } from "@/lib/client";
 import { GetServerSideProps } from "next";
+import { url$ } from "@/lib/helper";
+import logger from "@/lib/logger";
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res, params } = ctx;
   const id = params?.id as string;
   const metadata = await loadAPIMetadata(ctx).catch(_ => _);
-  const client = new KarrioClient({ basePath: `${metadata.metadata?.HOST || KARRIO_API}` });
+  const client = new KarrioClient({ basePath: url$`${metadata.metadata?.HOST || KARRIO_API}` });
+
+  console.log(metadata, ">>>")
 
   try {
     // Retrieve tracker by id
@@ -20,6 +24,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return { props: { id, ...metadata, ...data } };
   } catch (e) {
+    logger.error(e, "Failed to retrieve tracking info");
     return { props: { id, ...metadata, ...(e as {}) } };
   }
 };
