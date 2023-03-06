@@ -1,4 +1,4 @@
-import { loaduseAPIMetadata } from "@/lib/data-fetching";
+import { loadAPIMetadata } from "@/lib/data-fetching";
 import { KarrioClient } from "@karrio/rest";
 import { KARRIO_API } from "@/lib/client";
 import { GetServerSideProps } from "next";
@@ -7,7 +7,7 @@ import { GetServerSideProps } from "next";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res, params } = ctx;
   const id = params?.id as string;
-  const metadata = await loaduseAPIMetadata(ctx).catch(_ => _);
+  const metadata = await loadAPIMetadata(ctx).catch(_ => _);
   const client = new KarrioClient({ basePath: `${metadata.metadata?.HOST || KARRIO_API}` });
 
   try {

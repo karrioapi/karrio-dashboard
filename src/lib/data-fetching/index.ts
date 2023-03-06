@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const orgId = ((session as any)?.orgId as string) || null;
   const testMode = ((session as any)?.testMode as boolean);
 
-  const metadata = await loaduseAPIMetadata(ctx).catch(_ => _);
+  const metadata = await loadAPIMetadata(ctx).catch(_ => _);
   const data = await loadContextData(session, metadata.metadata);
   const subscription = await checkSubscription(session, metadata.metadata);
 
@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-export async function loaduseAPIMetadata(ctx: RequestContext): Promise<{ metadata?: Metadata }> {
+export async function loadAPIMetadata(ctx: RequestContext): Promise<{ metadata?: Metadata }> {
   // Attempt connection to the karrio API to retrieve the API metadata
   const API_URL = await getAPIURL(ctx);
 
