@@ -14,6 +14,10 @@ const secret = serverRuntimeConfig?.JWT_SECRET;
 
 
 async function AuthAPI(req: NextApiRequest, res: NextApiResponse) {
+  const { host } = req.headers
+  if (host) {
+    process.env.NEXTAUTH_URL = /localhost/.test(host) ? `http://${host}` : host
+  }
   const { metadata } = await loadAPIMetadata({ req, res }).catch(_ => _);
   const auth = Auth(metadata?.HOST);
 
