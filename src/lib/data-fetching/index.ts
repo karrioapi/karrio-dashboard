@@ -1,4 +1,4 @@
-import { UserContextDataType, Metadata, PortalSessionType, References, SessionType, SubscriptionType, OrgContextDataType, TenantType } from "@/lib/types";
+import { UserContextDataType, Metadata, PortalSessionType, SessionType, SubscriptionType, OrgContextDataType, TenantType } from "@/lib/types";
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { createServerError, isNone, ServerErrorCode, url$ } from "@/lib/helper";
 import { getSession } from "next-auth/react";
@@ -18,13 +18,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const pathname = ctx.resolvedUrl;
 
   const orgId = ((session as any)?.orgId as string) || null;
-  const testMode = ((session as any)?.testMode as boolean);
 
   const metadata = await loadAPIMetadata(ctx).catch(_ => _);
   const data = await loadContextData(session, metadata.metadata);
   const subscription = await checkSubscription(session, metadata.metadata);
 
-  await setSessionCookies(ctx, metadata.metadata, testMode, orgId);
+  await setSessionCookies(ctx, orgId);
 
   if (needValidSubscription(subscription)) {
     return {
@@ -49,7 +48,7 @@ export async function loadAPIMetadata(ctx: RequestContext): Promise<{ metadata?:
       const { data: metadata } = await axios.get<Metadata>(API_URL);
 
       // TODO:: implement version compatibility check here.
-      await setSessionCookies(ctx as any, metadata);
+      await setSessionCookies(ctx as any);
       resolve({ metadata });
     } catch (e: any | Response) {
       logger.error(`Failed to fetch API metadata from (${API_URL})`);
@@ -110,21 +109,10 @@ export async function loadContextData(session: SessionType, metadata: Metadata):
   }
 }
 
-export async function setSessionCookies(ctx: GetServerSidePropsContext, metadata?: Metadata, testMode?: boolean, orgId?: string | null) {
+export async function setSessionCookies(ctx: GetServerSidePropsContext, orgId?: string | null) {
   // Sets the authentication orgId cookie if the session has one
   if (ctx.res && !!orgId) {
-    ctx.res.setHeader('Set-Cookie', `orgId=${orgId}`);
-  }
-  if (!!ctx.params?.site) {
-    ctx.res.setHeader('Set-Cookie', `appUrl=${ctx.params?.site}`);
-  }
-  if (!!metadata?.HOST) {
-    const host = publicRuntimeConfig?.MULTI_TENANT ? metadata.HOST : publicRuntimeConfig?.KARRIO_PUBLIC_URL
-    ctx.res.setHeader('Set-Cookie', `apiUrl=${host}`);
-    ctx.res.setHeader('Set-Cookie', `apiHOST=${metadata.HOST}`);
-  }
-  if (!!testMode) {
-    ctx.res.setHeader('Set-Cookie', `testMode=${testMode}`);
+    ctx.res.setHeader('Set-Cookie', `orgId=${orgId}; path=${ctx.resolvedUrl || '/'}`);
   }
 }
 
@@ -214,27 +202,22 @@ async function getAPIURL(ctx: RequestContext) {
   }
 
   const params = (ctx as GetServerSidePropsContext).params;
-  const cookies = (ctx.req as NextApiRequest).cookies;
-  const apiHost = cookies ? cookies['apiHOST'] : null;
-  const host = cookies ? cookies['HOST'] : null;
+  const headers = (ctx.req as NextApiRequest).headers;
+  const host = headers ? headers.host : null;
   const site = params ? params.site : null;
-
-  if (!!site === false && !!apiHost === true) return apiHost;
 
   const app_domain = (site || host) as string;
   const tenant = (publicRuntimeConfig?.MULTI_TENANT && !!app_domain
     ? (await loadTenantInfo({ app_domain }))
     : null
   );
-  const APIURL = (
-    !!serverRuntimeConfig?.TENANT_ENV_KEY
+  const APIURL = (!!serverRuntimeConfig?.TENANT_ENV_KEY
       ? (tenant?.api_domains || []).find(d => d.includes(serverRuntimeConfig?.TENANT_ENV_KEY))
       : (tenant?.api_domains || [])[0]
   );
 
   return !!APIURL ? APIURL : KARRIO_API;
 }
-
 
 
 const USER_DATA_QUERY = `{

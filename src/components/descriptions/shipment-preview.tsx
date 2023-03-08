@@ -1,4 +1,5 @@
 import { ShipmentComponent } from '@/modules/Shipments/shipment';
+import ConfirmModal from '@/components/confirm-modal';
 import { useLocation } from '@/lib/helper';
 import React, { useState } from 'react';
 
@@ -41,7 +42,9 @@ const ShipmentPreview: React.FC<ShipmentPreviewComponent> = ({ children }) => {
         {(isActive && shipmentId) && <div className="modal-card is-medium-modal">
           <section className="modal-card-body px-5 pt-0 pb-6">
 
-            <ShipmentComponent shipmentId={shipmentId} />
+            <ConfirmModal>
+              <ShipmentComponent shipmentId={shipmentId} />
+            </ConfirmModal>
 
           </section>
         </div>}
