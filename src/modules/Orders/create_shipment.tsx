@@ -124,8 +124,8 @@ export default function CreateShipmentPage(pageProps: any) {
 
       const order_ids = orderList.map(({ node: { order_id } }) => order_id).join(',');
       const { id: _, ...recipient } = orderList[0].node.shipping_to || {};
-      const { id: __, ...shipper } = (orderList[0] as any)?.shipping_from || default_address || {};
-      const billing_address = (orderList[0] as any)?.billing_address ? (orderList[0] as any)?.billing_address : undefined;
+      const { id: __, ...shipper } = (orderList[0].node!.shipping_from || default_address || {} as any);
+      const billing_address = orderList[0].node.billing_address ? orderList[0].node.billing_address : undefined;
 
       // Collect orders merged options
       const order_options = getOptions();
@@ -642,7 +642,7 @@ export default function CreateShipmentPage(pageProps: any) {
               </div>
 
               {/* Billing address section */}
-              {(shipment?.billing_address || shipment.payment?.paid_by === PaidByEnum.third_party) && <>
+              {(shipment.billing_address || shipment.payment?.paid_by === PaidByEnum.third_party) && <>
                 <hr className='my-1' style={{ height: '1px' }} />
 
                 <div className="p-3">
@@ -665,7 +665,7 @@ export default function CreateShipmentPage(pageProps: any) {
                   {shipment?.billing_address &&
                     <AddressDescription address={shipment!.billing_address as any} />}
 
-                  {isNone(shipment?.billing_address) && <div className="notification is-default p-2 is-size-7">
+                  {shipment.billing_address && <div className="notification is-default p-2 is-size-7">
                     Add shipment billing address. (optional)
                   </div>}
 
