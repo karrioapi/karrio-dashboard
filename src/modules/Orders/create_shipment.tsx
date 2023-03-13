@@ -1,6 +1,7 @@
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, toSingleItem, useLocation } from '@/lib/helper';
 import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, OrderType, ShipmentType } from '@/lib/types';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
+import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import { DEFAULT_CUSTOMS_CONTENT } from '@/components/form-parts/customs-info-form';
@@ -11,7 +12,6 @@ import AddressDescription from '@/components/descriptions/address-description';
 import ParcelDescription from '@/components/descriptions/parcel-description';
 import { DEFAULT_PARCEL_CONTENT } from '@/components/form-parts/parcel-form';
 import CommoditySummary from '@/components/descriptions/commodity-summary';
-import { CommodityStateContext } from '@/components/commodity-edit-modal';
 import GoogleGeocodingScript from '@/components/google-geocoding-script';
 import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
@@ -38,6 +38,7 @@ import moment from 'moment';
 export { getServerSideProps } from "@/lib/data-fetching";
 
 const ContextProviders = bundleContexts([
+  CommodityEditModalProvider,
   ModalProvider,
 ]);
 
