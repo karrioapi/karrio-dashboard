@@ -274,10 +274,10 @@ export const parseJwt = (token: string): any => {
 export function url$(strings: TemplateStringsArray, ...keys: any[]) {
   const base = (keys || []).reduce((acc, key, i) => acc + strings[i] + key, '');
   const template = `${base}${strings[strings.length - 1]}`;
-  
+
   const _url = template.replace(/([^:])(\/\/+)/g, '$1/')
   const url = _url[_url.length - 1] === '/' ? _url.slice(0, -1) : _url;
-  
+
   return url;
 }
 
@@ -452,5 +452,5 @@ export function onError(error: any) {
     (err: any) => (err.code === "authentication_required" || err.status_code === 401)
   );
 
-  // if (authExpiredError) { window.location.pathname = window.location.pathname; }
+  if (authExpiredError) { window.location.pathname = window.location.pathname; }
 }

@@ -662,10 +662,10 @@ export default function CreateShipmentPage(pageProps: any) {
                     </div>
                   </header>
 
-                  {shipment?.billing_address &&
+                  {shipment.billing_address &&
                     <AddressDescription address={shipment!.billing_address as any} />}
 
-                  {shipment.billing_address && <div className="notification is-default p-2 is-size-7">
+                  {!shipment.billing_address && <div className="notification is-default p-2 is-size-7">
                     Add shipment billing address. (optional)
                   </div>}
 
