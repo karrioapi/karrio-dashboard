@@ -87,7 +87,7 @@ export function useTrackerMutation() {
   // Mutations
   const createTracker = useMutation(
     (data: { tracking_number: string, carrier_name: string }) => handleFailure(karrio.rest$.trackers.add({
-      trackingData: data
+      trackingData: data as any
     })),
     { onSuccess: invalidateCache, onError }
   );
