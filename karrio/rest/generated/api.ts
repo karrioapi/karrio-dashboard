@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.1.10`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.1.11`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
  *
- * The version of the OpenAPI document: 2023.1.10
+ * The version of the OpenAPI document: 2023.1.11
  * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -97,7 +97,7 @@ export interface Address {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof Address
      */
@@ -446,7 +446,7 @@ export interface AddressData {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof AddressData
      */
@@ -803,7 +803,7 @@ export interface BatchObject {
      */
     'id'?: string;
     /**
-     * The batch operation resource status
+     * The batch operation resource status  * `queued` - queued * `running` - running * `failed` - failed * `completed` - completed * `completed_with_errors` - completed_with_errors
      * @type {string}
      * @memberof BatchObject
      */
@@ -839,13 +839,13 @@ export interface BatchOperation {
      */
     'id'?: string;
     /**
-     * 
+     * * `queued` - queued * `running` - running * `failed` - failed * `completed` - completed * `completed_with_errors` - completed_with_errors
      * @type {string}
      * @memberof BatchOperation
      */
     'status': BatchOperationStatusEnum;
     /**
-     * 
+     * * `orders` - orders * `shipments` - shipments * `trackers` - trackers * `billing` - billing
      * @type {string}
      * @memberof BatchOperation
      */
@@ -1020,7 +1020,7 @@ export interface CarrierSettings {
      */
     'carrier_id': string;
     /**
-     * Indicates a carrier (type)
+     * Indicates a carrier (type)  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpdhl` - dpdhl * `easypost` - easypost * `eshipper` - eshipper * `fedex` - fedex * `freightcom` - freightcom * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
      * @type {string}
      * @memberof CarrierSettings
      */
@@ -1127,7 +1127,7 @@ export interface Commodity {
      */
     'weight': number;
     /**
-     * The commodity\'s weight unit
+     * The commodity\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof Commodity
      */
@@ -1169,13 +1169,13 @@ export interface Commodity {
      */
     'value_amount'?: number | null;
     /**
-     * The currency of the commodity value amount
+     * The currency of the commodity value amount  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof Commodity
      */
     'value_currency'?: CommodityValueCurrencyEnum;
     /**
-     * The origin or manufacture country
+     * The origin or manufacture country  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof Commodity
      */
@@ -1607,7 +1607,7 @@ export interface CommodityData {
      */
     'weight': number;
     /**
-     * The commodity\'s weight unit
+     * The commodity\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof CommodityData
      */
@@ -1649,13 +1649,13 @@ export interface CommodityData {
      */
     'value_amount'?: number | null;
     /**
-     * The currency of the commodity value amount
+     * The currency of the commodity value amount  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof CommodityData
      */
     'value_currency'?: CommodityDataValueCurrencyEnum;
     /**
-     * The origin or manufacture country
+     * The origin or manufacture country  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof CommodityData
      */
@@ -2099,7 +2099,7 @@ export interface Customs {
      */
     'duty_billing_address'?: CustomsDutyBillingAddress | null;
     /**
-     * 
+     * * `documents` - documents * `gift` - gift * `sample` - sample * `merchandise` - merchandise * `return_merchandise` - return_merchandise * `other` - other
      * @type {string}
      * @memberof Customs
      */
@@ -2111,7 +2111,7 @@ export interface Customs {
      */
     'content_description'?: string | null;
     /**
-     * The customs \'term of trade\' also known as \'incoterm\'
+     * The customs \'term of trade\' also known as \'incoterm\'  * `CFR` - CFR * `CIF` - CIF * `CIP` - CIP * `CPT` - CPT * `DAF` - DAF * `DDP` - DDP * `DDU` - DDU * `DEQ` - DEQ * `DES` - DES * `EXW` - EXW * `FAS` - FAS * `FCA` - FCA * `FOB` - FOB
      * @type {string}
      * @memberof Customs
      */
@@ -2216,7 +2216,7 @@ export interface CustomsData {
      */
     'duty_billing_address'?: CustomsDataDutyBillingAddress | null;
     /**
-     * 
+     * * `documents` - documents * `gift` - gift * `sample` - sample * `merchandise` - merchandise * `return_merchandise` - return_merchandise * `other` - other
      * @type {string}
      * @memberof CustomsData
      */
@@ -2228,7 +2228,7 @@ export interface CustomsData {
      */
     'content_description'?: string | null;
     /**
-     * The customs \'term of trade\' also known as \'incoterm\'
+     * The customs \'term of trade\' also known as \'incoterm\'  * `CFR` - CFR * `CIF` - CIF * `CIP` - CIP * `CPT` - CPT * `DAF` - DAF * `DDP` - DDP * `DDU` - DDU * `DEQ` - DEQ * `DES` - DES * `EXW` - EXW * `FAS` - FAS * `FCA` - FCA * `FOB` - FOB
      * @type {string}
      * @memberof CustomsData
      */
@@ -2345,7 +2345,7 @@ export interface CustomsDataDutyBillingAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof CustomsDataDutyBillingAddress
      */
@@ -2646,13 +2646,13 @@ export type CustomsDataDutyBillingAddressCountryCodeEnum = typeof CustomsDataDut
  */
 export interface CustomsDuty {
     /**
-     * The duty payer
+     * The duty payer  * `sender` - sender * `recipient` - recipient * `third_party` - third_party
      * @type {string}
      * @memberof CustomsDuty
      */
     'paid_by'?: CustomsDutyPaidByEnum;
     /**
-     * The declared value currency
+     * The declared value currency  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof CustomsDuty
      */
@@ -2879,7 +2879,7 @@ export interface CustomsDutyBillingAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof CustomsDutyBillingAddress
      */
@@ -3391,13 +3391,13 @@ export interface Documents {
  */
 export interface Duty {
     /**
-     * The duty payer
+     * The duty payer  * `sender` - sender * `recipient` - recipient * `third_party` - third_party
      * @type {string}
      * @memberof Duty
      */
     'paid_by'?: DutyPaidByEnum;
     /**
-     * The declared value currency
+     * The declared value currency  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof Duty
      */
@@ -3620,7 +3620,7 @@ export interface LineItem {
      */
     'weight': number;
     /**
-     * The commodity\'s weight unit
+     * The commodity\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof LineItem
      */
@@ -3662,13 +3662,13 @@ export interface LineItem {
      */
     'value_amount'?: number | null;
     /**
-     * The currency of the commodity value amount
+     * The currency of the commodity value amount  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof LineItem
      */
     'value_currency'?: LineItemValueCurrencyEnum;
     /**
-     * The origin or manufacture country
+     * The origin or manufacture country  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof LineItem
      */
@@ -4267,7 +4267,7 @@ export interface Order {
      */
     'source'?: string;
     /**
-     * The order status.
+     * The order status.  * `unfulfilled` - unfulfilled * `cancelled` - cancelled * `fulfilled` - fulfilled * `delivered` - delivered * `partial` - partial
      * @type {string}
      * @memberof Order
      */
@@ -4387,7 +4387,7 @@ export interface OrderBillingAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof OrderBillingAddress
      */
@@ -4785,7 +4785,7 @@ export interface OrderDataShippingFrom {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof OrderDataShippingFrom
      */
@@ -5122,7 +5122,7 @@ export interface OrderDataShippingTo {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof OrderDataShippingTo
      */
@@ -5496,7 +5496,7 @@ export interface OrderShippingFrom {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof OrderShippingFrom
      */
@@ -5851,7 +5851,7 @@ export interface OrderShippingTo {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof OrderShippingTo
      */
@@ -6243,13 +6243,13 @@ export interface Parcel {
      */
     'is_document'?: boolean | null;
     /**
-     * The parcel\'s weight unit
+     * The parcel\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof Parcel
      */
     'weight_unit': ParcelWeightUnitEnum;
     /**
-     * The parcel\'s dimension unit
+     * The parcel\'s dimension unit  * `CM` - CM * `IN` - IN
      * @type {string}
      * @memberof Parcel
      */
@@ -6361,13 +6361,13 @@ export interface ParcelData {
      */
     'is_document'?: boolean | null;
     /**
-     * The parcel\'s weight unit
+     * The parcel\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof ParcelData
      */
     'weight_unit': ParcelDataWeightUnitEnum;
     /**
-     * The parcel\'s dimension unit
+     * The parcel\'s dimension unit  * `CM` - CM * `IN` - IN
      * @type {string}
      * @memberof ParcelData
      */
@@ -6486,7 +6486,7 @@ export interface PatchedAddressData {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof PatchedAddressData
      */
@@ -6805,7 +6805,7 @@ export interface PatchedCustomsData {
      */
     'duty_billing_address'?: CustomsDataDutyBillingAddress | null;
     /**
-     * 
+     * * `documents` - documents * `gift` - gift * `sample` - sample * `merchandise` - merchandise * `return_merchandise` - return_merchandise * `other` - other
      * @type {string}
      * @memberof PatchedCustomsData
      */
@@ -6817,7 +6817,7 @@ export interface PatchedCustomsData {
      */
     'content_description'?: string | null;
     /**
-     * The customs \'term of trade\' also known as \'incoterm\'
+     * The customs \'term of trade\' also known as \'incoterm\'  * `CFR` - CFR * `CIF` - CIF * `CIP` - CIP * `CPT` - CPT * `DAF` - DAF * `DDP` - DDP * `DDU` - DDU * `DEQ` - DEQ * `DES` - DES * `EXW` - EXW * `FAS` - FAS * `FCA` - FCA * `FOB` - FOB
      * @type {string}
      * @memberof PatchedCustomsData
      */
@@ -6952,13 +6952,13 @@ export interface PatchedParcelData {
      */
     'is_document'?: boolean | null;
     /**
-     * The parcel\'s weight unit
+     * The parcel\'s weight unit  * `KG` - KG * `LB` - LB
      * @type {string}
      * @memberof PatchedParcelData
      */
     'weight_unit'?: PatchedParcelDataWeightUnitEnum;
     /**
-     * The parcel\'s dimension unit
+     * The parcel\'s dimension unit  * `CM` - CM * `IN` - IN
      * @type {string}
      * @memberof PatchedParcelData
      */
@@ -7062,13 +7062,13 @@ export type PatchedWebhookDataEnabledEventsEnum = typeof PatchedWebhookDataEnabl
  */
 export interface Payment {
     /**
-     * The payor type
+     * The payor type  * `sender` - sender * `recipient` - recipient * `third_party` - third_party
      * @type {string}
      * @memberof Payment
      */
     'paid_by'?: PaymentPaidByEnum;
     /**
-     * The payment amount currency
+     * The payment amount currency  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof Payment
      */
@@ -7390,7 +7390,7 @@ export interface PickupAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof PickupAddress
      */
@@ -7783,7 +7783,7 @@ export interface PickupCancelRequestAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof PickupCancelRequestAddress
      */
@@ -8664,7 +8664,7 @@ export interface RateRequestShipper {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof RateRequestShipper
      */
@@ -9062,7 +9062,7 @@ export interface Shipment {
      */
     'reference'?: string | null;
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof Shipment
      */
@@ -9098,7 +9098,7 @@ export interface Shipment {
      */
     'messages'?: Array<Message>;
     /**
-     * The current Shipment status
+     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered
      * @type {string}
      * @memberof Shipment
      */
@@ -9240,7 +9240,7 @@ export interface ShipmentBillingAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof ShipmentBillingAddress
      */
@@ -9602,7 +9602,7 @@ export interface ShipmentCustoms {
      */
     'duty_billing_address'?: CustomsDutyBillingAddress | null;
     /**
-     * 
+     * * `documents` - documents * `gift` - gift * `sample` - sample * `merchandise` - merchandise * `return_merchandise` - return_merchandise * `other` - other
      * @type {string}
      * @memberof ShipmentCustoms
      */
@@ -9614,7 +9614,7 @@ export interface ShipmentCustoms {
      */
     'content_description'?: string | null;
     /**
-     * The customs \'term of trade\' also known as \'incoterm\'
+     * The customs \'term of trade\' also known as \'incoterm\'  * `CFR` - CFR * `CIF` - CIF * `CIP` - CIP * `CPT` - CPT * `DAF` - DAF * `DDP` - DDP * `DDU` - DDU * `DEQ` - DEQ * `DES` - DES * `EXW` - EXW * `FAS` - FAS * `FCA` - FCA * `FOB` - FOB
      * @type {string}
      * @memberof ShipmentCustoms
      */
@@ -9749,7 +9749,7 @@ export interface ShipmentData {
      */
     'reference'?: string | null;
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof ShipmentData
      */
@@ -9831,7 +9831,7 @@ export interface ShipmentDataBillingAddress {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof ShipmentDataBillingAddress
      */
@@ -10150,7 +10150,7 @@ export interface ShipmentDataCustoms {
      */
     'duty_billing_address'?: CustomsDataDutyBillingAddress | null;
     /**
-     * 
+     * * `documents` - documents * `gift` - gift * `sample` - sample * `merchandise` - merchandise * `return_merchandise` - return_merchandise * `other` - other
      * @type {string}
      * @memberof ShipmentDataCustoms
      */
@@ -10162,7 +10162,7 @@ export interface ShipmentDataCustoms {
      */
     'content_description'?: string | null;
     /**
-     * The customs \'term of trade\' also known as \'incoterm\'
+     * The customs \'term of trade\' also known as \'incoterm\'  * `CFR` - CFR * `CIF` - CIF * `CIP` - CIP * `CPT` - CPT * `DAF` - DAF * `DDP` - DDP * `DDU` - DDU * `DEQ` - DEQ * `DES` - DES * `EXW` - EXW * `FAS` - FAS * `FCA` - FCA * `FOB` - FOB
      * @type {string}
      * @memberof ShipmentDataCustoms
      */
@@ -10279,7 +10279,7 @@ export interface ShipmentDataShipper {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof ShipmentDataShipper
      */
@@ -10611,13 +10611,13 @@ export interface ShipmentList {
  */
 export interface ShipmentPayment {
     /**
-     * The payor type
+     * The payor type  * `sender` - sender * `recipient` - recipient * `third_party` - third_party
      * @type {string}
      * @memberof ShipmentPayment
      */
     'paid_by'?: ShipmentPaymentPaidByEnum;
     /**
-     * The payment amount currency
+     * The payment amount currency  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof ShipmentPayment
      */
@@ -10800,7 +10800,7 @@ export interface ShipmentPurchaseData {
      */
     'selected_rate_id': string;
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof ShipmentPurchaseData
      */
@@ -10840,13 +10840,13 @@ export type ShipmentPurchaseDataLabelTypeEnum = typeof ShipmentPurchaseDataLabel
  */
 export interface ShipmentPurchaseDataPayment {
     /**
-     * The payor type
+     * The payor type  * `sender` - sender * `recipient` - recipient * `third_party` - third_party
      * @type {string}
      * @memberof ShipmentPurchaseDataPayment
      */
     'paid_by'?: ShipmentPurchaseDataPaymentPaidByEnum;
     /**
-     * The payment amount currency
+     * The payment amount currency  * `EUR` - EUR * `AED` - AED * `USD` - USD * `XCD` - XCD * `AMD` - AMD * `ANG` - ANG * `AOA` - AOA * `ARS` - ARS * `AUD` - AUD * `AWG` - AWG * `AZN` - AZN * `BAM` - BAM * `BBD` - BBD * `BDT` - BDT * `XOF` - XOF * `BGN` - BGN * `BHD` - BHD * `BIF` - BIF * `BMD` - BMD * `BND` - BND * `BOB` - BOB * `BRL` - BRL * `BSD` - BSD * `BTN` - BTN * `BWP` - BWP * `BYN` - BYN * `BZD` - BZD * `CAD` - CAD * `CDF` - CDF * `XAF` - XAF * `CHF` - CHF * `NZD` - NZD * `CLP` - CLP * `CNY` - CNY * `COP` - COP * `CRC` - CRC * `CUC` - CUC * `CVE` - CVE * `CZK` - CZK * `DJF` - DJF * `DKK` - DKK * `DOP` - DOP * `DZD` - DZD * `EGP` - EGP * `ERN` - ERN * `ETB` - ETB * `FJD` - FJD * `GBP` - GBP * `GEL` - GEL * `GHS` - GHS * `GMD` - GMD * `GNF` - GNF * `GTQ` - GTQ * `GYD` - GYD * `HKD` - HKD * `HNL` - HNL * `HRK` - HRK * `HTG` - HTG * `HUF` - HUF * `IDR` - IDR * `ILS` - ILS * `INR` - INR * `IRR` - IRR * `ISK` - ISK * `JMD` - JMD * `JOD` - JOD * `JPY` - JPY * `KES` - KES * `KGS` - KGS * `KHR` - KHR * `KMF` - KMF * `KPW` - KPW * `KRW` - KRW * `KWD` - KWD * `KYD` - KYD * `KZT` - KZT * `LAK` - LAK * `LKR` - LKR * `LRD` - LRD * `LSL` - LSL * `LYD` - LYD * `MAD` - MAD * `MDL` - MDL * `MGA` - MGA * `MKD` - MKD * `MMK` - MMK * `MNT` - MNT * `MOP` - MOP * `MRO` - MRO * `MUR` - MUR * `MVR` - MVR * `MWK` - MWK * `MXN` - MXN * `MYR` - MYR * `MZN` - MZN * `NAD` - NAD * `XPF` - XPF * `NGN` - NGN * `NIO` - NIO * `NOK` - NOK * `NPR` - NPR * `OMR` - OMR * `PEN` - PEN * `PGK` - PGK * `PHP` - PHP * `PKR` - PKR * `PLN` - PLN * `PYG` - PYG * `QAR` - QAR * `RSD` - RSD * `RUB` - RUB * `RWF` - RWF * `SAR` - SAR * `SBD` - SBD * `SCR` - SCR * `SDG` - SDG * `SEK` - SEK * `SGD` - SGD * `SHP` - SHP * `SLL` - SLL * `SOS` - SOS * `SRD` - SRD * `SSP` - SSP * `STD` - STD * `SYP` - SYP * `SZL` - SZL * `THB` - THB * `TJS` - TJS * `TND` - TND * `TOP` - TOP * `TRY` - TRY * `TTD` - TTD * `TWD` - TWD * `TZS` - TZS * `UAH` - UAH * `UYU` - UYU * `UZS` - UZS * `VEF` - VEF * `VND` - VND * `VUV` - VUV * `WST` - WST * `YER` - YER * `ZAR` - ZAR
      * @type {string}
      * @memberof ShipmentPurchaseDataPayment
      */
@@ -11169,7 +11169,7 @@ export interface ShipmentShipper {
      */
     'company_name'?: string | null;
     /**
-     * The address country code
+     * The address country code  * `AD` - AD * `AE` - AE * `AF` - AF * `AG` - AG * `AI` - AI * `AL` - AL * `AM` - AM * `AN` - AN * `AO` - AO * `AR` - AR * `AS` - AS * `AT` - AT * `AU` - AU * `AW` - AW * `AZ` - AZ * `BA` - BA * `BB` - BB * `BD` - BD * `BE` - BE * `BF` - BF * `BG` - BG * `BH` - BH * `BI` - BI * `BJ` - BJ * `BM` - BM * `BN` - BN * `BO` - BO * `BR` - BR * `BS` - BS * `BT` - BT * `BW` - BW * `BY` - BY * `BZ` - BZ * `CA` - CA * `CD` - CD * `CF` - CF * `CG` - CG * `CH` - CH * `CI` - CI * `CK` - CK * `CL` - CL * `CM` - CM * `CN` - CN * `CO` - CO * `CR` - CR * `CU` - CU * `CV` - CV * `CY` - CY * `CZ` - CZ * `DE` - DE * `DJ` - DJ * `DK` - DK * `DM` - DM * `DO` - DO * `DZ` - DZ * `EC` - EC * `EE` - EE * `EG` - EG * `ER` - ER * `ES` - ES * `ET` - ET * `FI` - FI * `FJ` - FJ * `FK` - FK * `FM` - FM * `FO` - FO * `FR` - FR * `GA` - GA * `GB` - GB * `GD` - GD * `GE` - GE * `GF` - GF * `GG` - GG * `GH` - GH * `GI` - GI * `GL` - GL * `GM` - GM * `GN` - GN * `GP` - GP * `GQ` - GQ * `GR` - GR * `GT` - GT * `GU` - GU * `GW` - GW * `GY` - GY * `HK` - HK * `HN` - HN * `HR` - HR * `HT` - HT * `HU` - HU * `IC` - IC * `ID` - ID * `IE` - IE * `IL` - IL * `IN` - IN * `IQ` - IQ * `IR` - IR * `IS` - IS * `IT` - IT * `JE` - JE * `JM` - JM * `JO` - JO * `JP` - JP * `KE` - KE * `KG` - KG * `KH` - KH * `KI` - KI * `KM` - KM * `KN` - KN * `KP` - KP * `KR` - KR * `KV` - KV * `KW` - KW * `KY` - KY * `KZ` - KZ * `LA` - LA * `LB` - LB * `LC` - LC * `LI` - LI * `LK` - LK * `LR` - LR * `LS` - LS * `LT` - LT * `LU` - LU * `LV` - LV * `LY` - LY * `MA` - MA * `MC` - MC * `MD` - MD * `ME` - ME * `MG` - MG * `MH` - MH * `MK` - MK * `ML` - ML * `MM` - MM * `MN` - MN * `MO` - MO * `MP` - MP * `MQ` - MQ * `MR` - MR * `MS` - MS * `MT` - MT * `MU` - MU * `MV` - MV * `MW` - MW * `MX` - MX * `MY` - MY * `MZ` - MZ * `NA` - NA * `NC` - NC * `NE` - NE * `NG` - NG * `NI` - NI * `NL` - NL * `NO` - NO * `NP` - NP * `NR` - NR * `NU` - NU * `NZ` - NZ * `OM` - OM * `PA` - PA * `PE` - PE * `PF` - PF * `PG` - PG * `PH` - PH * `PK` - PK * `PL` - PL * `PR` - PR * `PT` - PT * `PW` - PW * `PY` - PY * `QA` - QA * `RE` - RE * `RO` - RO * `RS` - RS * `RU` - RU * `RW` - RW * `SA` - SA * `SB` - SB * `SC` - SC * `SD` - SD * `SE` - SE * `SG` - SG * `SH` - SH * `SI` - SI * `SK` - SK * `SL` - SL * `SM` - SM * `SN` - SN * `SO` - SO * `SR` - SR * `SS` - SS * `ST` - ST * `SV` - SV * `SY` - SY * `SZ` - SZ * `TC` - TC * `TD` - TD * `TG` - TG * `TH` - TH * `TJ` - TJ * `TL` - TL * `TN` - TN * `TO` - TO * `TR` - TR * `TT` - TT * `TV` - TV * `TW` - TW * `TZ` - TZ * `UA` - UA * `UG` - UG * `US` - US * `UY` - UY * `UZ` - UZ * `VA` - VA * `VC` - VC * `VE` - VE * `VG` - VG * `VI` - VI * `VN` - VN * `VU` - VU * `WS` - WS * `XB` - XB * `XC` - XC * `XE` - XE * `XM` - XM * `XN` - XN * `XS` - XS * `XY` - XY * `YE` - YE * `YT` - YT * `ZA` - ZA * `ZM` - ZM * `ZW` - ZW
      * @type {string}
      * @memberof ShipmentShipper
      */
@@ -11482,7 +11482,7 @@ export type ShipmentShipperCountryCodeEnum = typeof ShipmentShipperCountryCodeEn
  */
 export interface ShipmentUpdateData {
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof ShipmentUpdateData
      */
@@ -11576,7 +11576,7 @@ export interface ShippingRequest {
      */
     'reference'?: string | null;
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof ShippingRequest
      */
@@ -11688,7 +11688,7 @@ export interface ShippingResponse {
      */
     'reference'?: string | null;
     /**
-     * The shipment label file type.
+     * The shipment label file type.  * `PDF` - PDF * `ZPL` - ZPL * `PNG` - PNG
      * @type {string}
      * @memberof ShippingResponse
      */
@@ -11724,7 +11724,7 @@ export interface ShippingResponse {
      */
     'messages'?: Array<Message>;
     /**
-     * The current Shipment status
+     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered
      * @type {string}
      * @memberof ShippingResponse
      */
@@ -11957,12 +11957,42 @@ export interface TrackingData {
      */
     'tracking_number': string;
     /**
-     * The tracking carrier
+     * The tracking carrier  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpdhl` - dpdhl * `fedex` - fedex * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
      * @type {string}
      * @memberof TrackingData
      */
-    'carrier_name': string;
+    'carrier_name': TrackingDataCarrierNameEnum;
 }
+
+export const TrackingDataCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpdhl: 'dpdhl',
+    Fedex: 'fedex',
+    Generic: 'generic',
+    Purolator: 'purolator',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+
+export type TrackingDataCarrierNameEnum = typeof TrackingDataCarrierNameEnum[keyof typeof TrackingDataCarrierNameEnum];
+
 /**
  * 
  * @export
@@ -12068,7 +12098,7 @@ export interface TrackingResponseTracking {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status
+     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
      * @type {string}
      * @memberof TrackingResponseTracking
      */
@@ -12164,7 +12194,7 @@ export interface TrackingStatus {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status
+     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
      * @type {string}
      * @memberof TrackingStatus
      */
@@ -18576,10 +18606,11 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
          * @summary Add a package tracker
          * @param {TrackingData} trackingData 
          * @param {string} [hub] 
+         * @param {boolean} [pendingPickup] Add this flag to add the tracker whether the tracking info exist or not.When the package is eventually picked up, the tracker with capture real time updates.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        add: async (trackingData: TrackingData, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        add: async (trackingData: TrackingData, hub?: string, pendingPickup?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'trackingData' is not null or undefined
             assertParamExists('add', 'trackingData', trackingData)
             const localVarPath = `/v1/trackers`;
@@ -18610,6 +18641,10 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
 
             if (hub !== undefined) {
                 localVarQueryParameter['hub'] = hub;
+            }
+
+            if (pendingPickup !== undefined) {
+                localVarQueryParameter['pending_pickup'] = pendingPickup;
             }
 
 
@@ -18927,11 +18962,12 @@ export const TrackersApiFp = function(configuration?: Configuration) {
          * @summary Add a package tracker
          * @param {TrackingData} trackingData 
          * @param {string} [hub] 
+         * @param {boolean} [pendingPickup] Add this flag to add the tracker whether the tracking info exist or not.When the package is eventually picked up, the tracker with capture real time updates.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async add(trackingData: TrackingData, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.add(trackingData, hub, options);
+        async add(trackingData: TrackingData, hub?: string, pendingPickup?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.add(trackingData, hub, pendingPickup, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -19013,11 +19049,12 @@ export const TrackersApiFactory = function (configuration?: Configuration, baseP
          * @summary Add a package tracker
          * @param {TrackingData} trackingData 
          * @param {string} [hub] 
+         * @param {boolean} [pendingPickup] Add this flag to add the tracker whether the tracking info exist or not.When the package is eventually picked up, the tracker with capture real time updates.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        add(trackingData: TrackingData, hub?: string, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.add(trackingData, hub, options).then((request) => request(axios, basePath));
+        add(trackingData: TrackingData, hub?: string, pendingPickup?: boolean, options?: any): AxiosPromise<TrackingStatus> {
+            return localVarFp.add(trackingData, hub, pendingPickup, options).then((request) => request(axios, basePath));
         },
         /**
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
@@ -19100,6 +19137,13 @@ export interface TrackersApiAddRequest {
      * @memberof TrackersApiAdd
      */
     readonly hub?: string
+
+    /**
+     * Add this flag to add the tracker whether the tracking info exist or not.When the package is eventually picked up, the tracker with capture real time updates.
+     * @type {boolean}
+     * @memberof TrackersApiAdd
+     */
+    readonly pendingPickup?: boolean
 }
 
 /**
@@ -19244,7 +19288,7 @@ export class TrackersApi extends BaseAPI {
      * @memberof TrackersApi
      */
     public add(requestParameters: TrackersApiAddRequest, options?: AxiosRequestConfig) {
-        return TrackersApiFp(this.configuration).add(requestParameters.trackingData, requestParameters.hub, options).then((request) => request(this.axios, this.basePath));
+        return TrackersApiFp(this.configuration).add(requestParameters.trackingData, requestParameters.hub, requestParameters.pendingPickup, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

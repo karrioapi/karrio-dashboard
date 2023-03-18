@@ -2597,10 +2597,12 @@ export interface get_user_connections_user_connections_DPDHLSettingsType {
   display_name: string;
   test_mode: boolean;
   active: boolean;
-  app_id: string;
   username: string;
   password: string;
-  signature: string;
+  app_id: string | null;
+  app_token: string | null;
+  zt_id: string;
+  zt_password: string;
   account_number: string | null;
   services: get_user_connections_user_connections_DPDHLSettingsType_services[] | null;
   capabilities: string[];
@@ -4857,9 +4859,11 @@ export interface DPDHLSettingsInput {
   metadata?: any | null;
   username: string;
   password: string;
-  signature: string;
-  app_id: string;
-  account_number: string;
+  app_id?: string | null;
+  app_token?: string | null;
+  zt_id: string;
+  zt_password: string;
+  account_number?: string | null;
   test_mode?: boolean | null;
   carrier_id: string;
 }
@@ -5242,8 +5246,10 @@ export interface UpdateDPDHLSettingsInput {
   metadata?: any | null;
   username?: string | null;
   password?: string | null;
-  signature?: string | null;
   app_id?: string | null;
+  app_token?: string | null;
+  zt_id?: string | null;
+  zt_password?: string | null;
   account_number?: string | null;
   test_mode?: boolean | null;
   carrier_id?: string | null;
