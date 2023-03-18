@@ -392,7 +392,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
               <tbody>
                 {(uploads || []).map(upload => <React.Fragment key={shipment.id}>
                   {(upload.documents || []).map(doc => (
-                    <tr key={doc.document_id} className="items">
+                    <tr key={doc.doc_id} className="items">
                       <td className="description is-vcentered p-0">
                         <span>{doc.file_name}</span>
                       </td>
