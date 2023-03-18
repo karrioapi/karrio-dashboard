@@ -1,17 +1,17 @@
-import { deepEqual, isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/user-connection';
-import { Collection, NoneEnum, NotificationType, References, ServiceLevelType } from '@/lib/types';
+import { isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
 import CarrierServiceEditor from '@/components/carrier-services-editor';
+import { Collection, NoneEnum, NotificationType } from '@/lib/types';
+import React, { useContext, useReducer, useState } from 'react';
+import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import CountryInput from '@/components/generic/country-input';
 import SelectField from '@/components/generic/select-field';
 import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
 import { MetadataObjectTypeEnum } from 'karrio/graphql';
-import React, { useContext, useReducer, useState } from 'react';
-import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
-import { Loading } from '@/components/loader';
 import { useAPIMetadata } from '@/context/api-metadata';
+import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;
@@ -175,16 +175,10 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("carrier_id").required}
+                  placeholder='friendly-tag. e.g: dhl-express-us, ups-ca-test...'
                 />
 
                 {/* Carrier specific fields BEGING */}
-
-                {field("app_id").exists && <InputField label="App Id" value={payload.app_id}
-                  name="app_id"
-                  onChange={handleChange}
-                  className="is-small"
-                  required={field("app_id").required}
-                />}
 
                 {field("site_id").exists && <InputField label="Site Id" value={payload.site_id}
                   name="site_id"
@@ -243,13 +237,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("check_word").required}
                 />}
 
-                {field("signature").exists && <InputField label="Signature" value={payload.signature}
-                  name="signature"
-                  onChange={handleChange}
-                  className="is-small"
-                  required={field("signature").required}
-                />}
-
                 {field("username").exists && <InputField label="Username" value={payload.username}
                   name="username"
                   onChange={handleChange}
@@ -263,6 +250,34 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("password").required}
+                />}
+
+                {field("zt_id").exists && <InputField label="ZT ID" value={payload.zt_id}
+                  name="zt_id"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={!testMode}
+                />}
+
+                {field("zt_password").exists && <InputField label="ZT Password" value={payload.zt_password}
+                  name="zt_password"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={!testMode}
+                />}
+
+                {field("app_id").exists && <InputField label="App Id" value={payload.app_id}
+                  name="app_id"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={!testMode}
+                />}
+
+                {field("app_token").exists && <InputField label="App Token" value={payload.app_token}
+                  name="app_token"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={!testMode}
                 />}
 
                 {field("client_secret").exists && <InputField label="Client Secret" value={payload.client_secret}
@@ -492,7 +507,7 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Dicom]: [["carrier_id", true], ["username", true], ["password", true], ["billing_account"]],
-      [CarrierSettingsCarrierNameEnum.Dpdhl]: [["carrier_id", true], ["app_id", true], ["username", true], ["password", true], ["signature", true], ["account_number"], ["services"]],
+      [CarrierSettingsCarrierNameEnum.Dpdhl]: [["carrier_id", true], ["username", true], ["password", true], ["app_id"], ["app_token"], ["zt_id"], ["zt_password"], ["account_number"], ["services"]],
       [CarrierSettingsCarrierNameEnum.DhlExpress]: [["carrier_id", true], ["site_id", true], ["password", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.DhlPoland]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["services"]],
       [CarrierSettingsCarrierNameEnum.DhlUniversal]: [["carrier_id", true], ["consumer_key", true], ["consumer_secret", true]],

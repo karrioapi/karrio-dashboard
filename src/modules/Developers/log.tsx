@@ -248,11 +248,11 @@ export default function LogPage(pageProps: any) {
 function parseRecordData(record: any) {
   if (!record) return null;
   if (record?.format === 'xml') {
-    return (record.data || record.response);
+    return (record.data || record.response || record.error);
   }
 
   return failsafe(
-    () => jsonify(record.data || record.response),
-    (record.data || record.response)
+    () => jsonify(record.data || record.response || record.error),
+    (record.data || record.response || record.error)
   )
 }

@@ -36,3 +36,5 @@ yarn-error.log*
 
 # Sentry
 .sentryclirc
+
+karrio/rest/generated/.openapi-generator/

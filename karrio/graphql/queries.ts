@@ -1708,10 +1708,12 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
-      app_id
       username
       password
-      signature
+      app_id
+      app_token
+      zt_id
+      zt_password
       account_number
       services {
         id
