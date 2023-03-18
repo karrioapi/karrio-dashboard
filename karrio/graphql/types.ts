@@ -2601,8 +2601,8 @@ export interface get_user_connections_user_connections_DPDHLSettingsType {
   password: string;
   app_id: string | null;
   app_token: string | null;
-  zt_id: string;
-  zt_password: string;
+  zt_id: string | null;
+  zt_password: string | null;
   account_number: string | null;
   services: get_user_connections_user_connections_DPDHLSettingsType_services[] | null;
   capabilities: string[];
@@ -4861,8 +4861,8 @@ export interface DPDHLSettingsInput {
   password: string;
   app_id?: string | null;
   app_token?: string | null;
-  zt_id: string;
-  zt_password: string;
+  zt_id?: string | null;
+  zt_password?: string | null;
   account_number?: string | null;
   test_mode?: boolean | null;
   carrier_id: string;
