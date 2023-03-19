@@ -237,6 +237,13 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("check_word").required}
                 />}
 
+                {field("delis_id").exists && <InputField label="Delis ID" value={payload.delis_id}
+                  name="delis_id"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("delis_id").required}
+                />}
+
                 {field("username").exists && <InputField label="Username" value={payload.username}
                   name="username"
                   onChange={handleChange}
@@ -388,6 +395,13 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("account_entity").required}
                 />}
 
+                {field("depot").exists && <InputField label="Depot" value={payload.depot}
+                  name="depot"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("depot").required}
+                />}
+
                 {field("account_country_code").exists && <CountryInput label="Account Country Code"
                   onValueChange={directChange("account_country_code")}
                   value={payload.account_country_code}
@@ -507,6 +521,7 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Dicom]: [["carrier_id", true], ["username", true], ["password", true], ["billing_account"]],
+      [CarrierSettingsCarrierNameEnum.Dpd]: [["carrier_id", true], ["delis_id", true], ["password", true], ["depot"], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Dpdhl]: [["carrier_id", true], ["username", true], ["password", true], ["app_id"], ["app_token"], ["zt_id"], ["zt_password"], ["account_number"], ["services"]],
       [CarrierSettingsCarrierNameEnum.DhlExpress]: [["carrier_id", true], ["site_id", true], ["password", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.DhlPoland]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["services"]],

@@ -324,6 +324,7 @@ export const CARRIER_THEMES: Collection = {
   'dhl_express': 'is-dhl',
   'dhl_poland': 'is-dhl',
   'dhl_universal': 'is-dhl',
+  'dpd': 'is-dpd',
   'dpdhl': 'is-dhl',
   'eshipper': 'is-eshipper',
   'easypost': 'is-easypost',

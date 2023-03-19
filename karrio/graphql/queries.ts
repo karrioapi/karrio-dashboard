@@ -1701,7 +1701,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       billing_account
       capabilities
     }
-    ...on DPDHLSettingsType {
+    ... on DPDSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
+      delis_id
+      password
+      depot
+      capabilities
+    }
+    ... on DPDHLSettingsType {
       id
       carrier_id
       carrier_name
@@ -1964,8 +1976,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       capabilities
     }
   }
-}
-`;
+}`;
 
 export const GET_USER = gql`query GetUser {
   user {
