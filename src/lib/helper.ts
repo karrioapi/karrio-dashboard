@@ -452,5 +452,5 @@ export function onError(error: any) {
     (err: any) => (err.code === "authentication_required" || err.status_code === 401)
   );
 
-  if (authExpiredError) { window.location.pathname = window.location.pathname; }
+  // if (authExpiredError) { window.location.pathname = window.location.pathname; }
 }
