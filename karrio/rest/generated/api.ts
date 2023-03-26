@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.1.12`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.3`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
  *
- * The version of the OpenAPI document: 2023.1.12
+ * The version of the OpenAPI document: 2023.3
  * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -132,6 +132,12 @@ export interface Address {
      * @memberof Address
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof Address
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -481,6 +487,12 @@ export interface AddressData {
      * @memberof AddressData
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof AddressData
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -2382,6 +2394,12 @@ export interface CustomsDataDutyBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof CustomsDataDutyBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof CustomsDataDutyBillingAddress
@@ -2915,6 +2933,12 @@ export interface CustomsDutyBillingAddress {
      * @memberof CustomsDutyBillingAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof CustomsDutyBillingAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -4430,6 +4454,12 @@ export interface OrderBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderBillingAddress
@@ -4828,6 +4858,12 @@ export interface OrderDataShippingFrom {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderDataShippingFrom
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderDataShippingFrom
@@ -5164,6 +5200,12 @@ export interface OrderDataShippingTo {
      * @memberof OrderDataShippingTo
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderDataShippingTo
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -5539,6 +5581,12 @@ export interface OrderShippingFrom {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderShippingFrom
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderShippingFrom
@@ -5893,6 +5941,12 @@ export interface OrderShippingTo {
      * @memberof OrderShippingTo
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderShippingTo
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -6528,6 +6582,12 @@ export interface PatchedAddressData {
      * @memberof PatchedAddressData
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof PatchedAddressData
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -7433,6 +7493,12 @@ export interface PickupAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof PickupAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof PickupAddress
@@ -7825,6 +7891,12 @@ export interface PickupCancelRequestAddress {
      * @memberof PickupCancelRequestAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof PickupCancelRequestAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -8707,6 +8779,12 @@ export interface RateRequestShipper {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof RateRequestShipper
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof RateRequestShipper
@@ -9282,6 +9360,12 @@ export interface ShipmentBillingAddress {
      * @memberof ShipmentBillingAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentBillingAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -9874,6 +9958,12 @@ export interface ShipmentDataBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentDataBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof ShipmentDataBillingAddress
@@ -10321,6 +10411,12 @@ export interface ShipmentDataShipper {
      * @memberof ShipmentDataShipper
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentDataShipper
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -11212,6 +11308,12 @@ export interface ShipmentShipper {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentShipper
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof ShipmentShipper
@@ -11945,11 +12047,138 @@ export interface TrackerList {
  */
 export interface TrackerUpdateData {
     /**
+     * 
+     * @type {TrackerUpdateDataInfo}
+     * @memberof TrackerUpdateData
+     */
+    'info'?: TrackerUpdateDataInfo | null;
+    /**
      * User metadata for the tracker
      * @type {{ [key: string]: any; }}
      * @memberof TrackerUpdateData
      */
     'metadata'?: { [key: string]: any; };
+}
+/**
+ * The package and shipment tracking details
+ * @export
+ * @interface TrackerUpdateDataInfo
+ */
+export interface TrackerUpdateDataInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'source'?: string | null;
 }
 /**
  * 
@@ -11969,6 +12198,24 @@ export interface TrackingData {
      * @memberof TrackingData
      */
     'carrier_name': TrackingDataCarrierNameEnum;
+    /**
+     * The shipper account number
+     * @type {string}
+     * @memberof TrackingData
+     */
+    'account_number'?: string | null;
+    /**
+     * The shipment reference
+     * @type {string}
+     * @memberof TrackingData
+     */
+    'reference'?: string | null;
+    /**
+     * 
+     * @type {TrackerUpdateDataInfo}
+     * @memberof TrackingData
+     */
+    'info'?: TrackerUpdateDataInfo | null;
 }
 
 export const TrackingDataCarrierNameEnum = {
@@ -12037,6 +12284,139 @@ export interface TrackingEvent {
      * @memberof TrackingEvent
      */
     'time'?: string | null;
+    /**
+     * The tracking event\'s latitude.
+     * @type {number}
+     * @memberof TrackingEvent
+     */
+    'latitude'?: number | null;
+    /**
+     * The tracking event\'s longitude.
+     * @type {number}
+     * @memberof TrackingEvent
+     */
+    'longitude'?: number | null;
+}
+/**
+ * 
+ * @export
+ * @interface TrackingInfo
+ */
+export interface TrackingInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'source'?: string | null;
 }
 /**
  * 
@@ -12088,6 +12468,12 @@ export interface TrackingResponseTracking {
      */
     'tracking_number': string;
     /**
+     * 
+     * @type {TrackingStatusInfo}
+     * @memberof TrackingResponseTracking
+     */
+    'info'?: TrackingStatusInfo | null;
+    /**
      * The tracking details events
      * @type {Array<TrackingEvent>}
      * @memberof TrackingResponseTracking
@@ -12106,7 +12492,7 @@ export interface TrackingResponseTracking {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
+     * The current tracking status  * `pending` - pending * `unknown` - unknown * `delivered` - delivered * `on_hold` - on_hold * `in_transit` - in_transit * `delivery_delayed` - delivery_delayed * `out_for_delivery` - out_for_delivery * `ready_for_pickup` - ready_for_pickup * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof TrackingResponseTracking
      */
@@ -12145,10 +12531,14 @@ export interface TrackingResponseTracking {
 
 export const TrackingResponseTrackingStatusEnum = {
     Pending: 'pending',
-    InTransit: 'in_transit',
-    Incident: 'incident',
+    Unknown: 'unknown',
     Delivered: 'delivered',
-    Unknown: 'unknown'
+    OnHold: 'on_hold',
+    InTransit: 'in_transit',
+    DeliveryDelayed: 'delivery_delayed',
+    OutForDelivery: 'out_for_delivery',
+    ReadyForPickup: 'ready_for_pickup',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type TrackingResponseTrackingStatusEnum = typeof TrackingResponseTrackingStatusEnum[keyof typeof TrackingResponseTrackingStatusEnum];
@@ -12184,6 +12574,12 @@ export interface TrackingStatus {
      */
     'tracking_number': string;
     /**
+     * 
+     * @type {TrackingStatusInfo}
+     * @memberof TrackingStatus
+     */
+    'info'?: TrackingStatusInfo | null;
+    /**
      * The tracking details events
      * @type {Array<TrackingEvent>}
      * @memberof TrackingStatus
@@ -12202,7 +12598,7 @@ export interface TrackingStatus {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
+     * The current tracking status  * `pending` - pending * `unknown` - unknown * `delivered` - delivered * `on_hold` - on_hold * `in_transit` - in_transit * `delivery_delayed` - delivery_delayed * `out_for_delivery` - out_for_delivery * `ready_for_pickup` - ready_for_pickup * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof TrackingStatus
      */
@@ -12241,14 +12637,139 @@ export interface TrackingStatus {
 
 export const TrackingStatusStatusEnum = {
     Pending: 'pending',
-    InTransit: 'in_transit',
-    Incident: 'incident',
+    Unknown: 'unknown',
     Delivered: 'delivered',
-    Unknown: 'unknown'
+    OnHold: 'on_hold',
+    InTransit: 'in_transit',
+    DeliveryDelayed: 'delivery_delayed',
+    OutForDelivery: 'out_for_delivery',
+    ReadyForPickup: 'ready_for_pickup',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type TrackingStatusStatusEnum = typeof TrackingStatusStatusEnum[keyof typeof TrackingStatusStatusEnum];
 
+/**
+ * The package and shipment tracking details
+ * @export
+ * @interface TrackingStatusInfo
+ */
+export interface TrackingStatusInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'source'?: string | null;
+}
 /**
  * 
  * @export
@@ -15242,7 +15763,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
         cancel: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('cancel', 'id', id)
-            const localVarPath = `/v1/orders/{id}`
+            const localVarPath = `/v1/orders/{id}/cancel`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -15251,7 +15772,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -15324,6 +15845,55 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(orderData, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        dismiss: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('dismiss', 'id', id)
+            const localVarPath = `/v1/orders/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            // authentication TokenBasic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -15507,6 +16077,18 @@ export const OrdersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        async dismiss(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dismiss(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Retrieve all orders.
          * @summary List all orders
          * @param {*} [options] Override http request option.
@@ -15570,6 +16152,17 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.create(orderData, options).then((request) => request(axios, basePath));
         },
         /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        dismiss(id: string, options?: any): AxiosPromise<Order> {
+            return localVarFp.dismiss(id, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Retrieve all orders.
          * @summary List all orders
          * @param {*} [options] Override http request option.
@@ -15628,6 +16221,20 @@ export interface OrdersApiCreateRequest {
      * @memberof OrdersApiCreate
      */
     readonly orderData: OrderData
+}
+
+/**
+ * Request parameters for dismiss operation in OrdersApi.
+ * @export
+ * @interface OrdersApiDismissRequest
+ */
+export interface OrdersApiDismissRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrdersApiDismiss
+     */
+    readonly id: string
 }
 
 /**
@@ -15694,6 +16301,19 @@ export class OrdersApi extends BaseAPI {
      */
     public create(requestParameters: OrdersApiCreateRequest, options?: AxiosRequestConfig) {
         return OrdersApiFp(this.configuration).create(requestParameters.orderData, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Dismiss an order from fulfillment.
+     * @summary Dismiss an order
+     * @param {OrdersApiDismissRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @deprecated
+     * @throws {RequiredError}
+     * @memberof OrdersApi
+     */
+    public dismiss(requestParameters: OrdersApiDismissRequest, options?: AxiosRequestConfig) {
+        return OrdersApiFp(this.configuration).dismiss(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -18740,12 +19360,12 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
          * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/trackers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -18999,12 +19619,12 @@ export const TrackersApiFp = function(configuration?: Configuration) {
          * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
+        async list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -19084,12 +19704,12 @@ export const TrackersApiFactory = function (configuration?: Configuration, baseP
          * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options?: any): AxiosPromise<TrackerList> {
+        list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: any): AxiosPromise<TrackerList> {
             return localVarFp.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
@@ -19218,10 +19838,10 @@ export interface TrackersApiListRequest {
 
     /**
      * 
-     * @type {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'}
+     * @type {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'}
      * @memberof TrackersApiList
      */
-    readonly status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'
+    readonly status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'
 
     /**
      * 

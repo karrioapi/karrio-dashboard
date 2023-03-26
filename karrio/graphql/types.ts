@@ -935,6 +935,30 @@ export interface get_shipment_shipment_tracker_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_shipment_shipment_tracker_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_shipment_shipment_tracker_messages {
@@ -956,6 +980,7 @@ export interface get_shipment_shipment_tracker {
   estimated_delivery: any | null;
   meta: any | null;
   metadata: any;
+  info: get_shipment_shipment_tracker_info | null;
   messages: get_shipment_shipment_tracker_messages[];
   updated_at: any;
 }
@@ -1757,6 +1782,30 @@ export interface get_tracker_tracker_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_tracker_tracker_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_tracker_tracker_messages {
@@ -1802,6 +1851,7 @@ export interface get_tracker_tracker {
   estimated_delivery: any | null;
   meta: any | null;
   metadata: any;
+  info: get_tracker_tracker_info | null;
   messages: get_tracker_tracker_messages[];
   created_at: any;
   updated_at: any;
@@ -1844,6 +1894,30 @@ export interface get_trackers_trackers_edges_node_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_trackers_trackers_edges_node_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_trackers_trackers_edges_node_messages {
@@ -1884,6 +1958,7 @@ export interface get_trackers_trackers_edges_node {
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
+  info: get_trackers_trackers_edges_node_info | null;
   messages: get_trackers_trackers_edges_node_messages[];
   carrier_id: string;
   carrier_name: string;
@@ -2509,15 +2584,29 @@ export interface get_user_connections_user_connections_DHLExpressSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_DHLPolandSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_DHLPolandSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2526,6 +2615,7 @@ export interface get_user_connections_user_connections_DHLPolandSettingsType_ser
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_DHLPolandSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_DHLPolandSettingsType {
@@ -2584,15 +2674,29 @@ export interface get_user_connections_user_connections_DPDSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_DPDHLSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_DPDHLSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2601,6 +2705,7 @@ export interface get_user_connections_user_connections_DPDHLSettingsType_service
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_DPDHLSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_DPDHLSettingsType {
@@ -2678,15 +2783,29 @@ export interface get_user_connections_user_connections_FreightcomSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_GenericSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_GenericSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2695,6 +2814,7 @@ export interface get_user_connections_user_connections_GenericSettingsType_servi
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_GenericSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_GenericSettingsType_label_template {
@@ -4634,9 +4754,13 @@ export enum LabelTypeEnum {
 
 export enum TrackerStatusEnum {
   delivered = "delivered",
+  delivery_delayed = "delivery_delayed",
+  delivery_failed = "delivery_failed",
   in_transit = "in_transit",
-  incident = "incident",
+  on_hold = "on_hold",
+  out_for_delivery = "out_for_delivery",
   pending = "pending",
+  ready_for_pickup = "ready_for_pickup",
   unknown = "unknown",
 }
 
@@ -4831,19 +4955,36 @@ export interface DHLPolandSettingsInput {
 export interface CreateServiceLevelInput {
   service_name: string;
   service_code: string;
-  cost: number;
   currency: CurrencyCodeEnum;
+  zones: ServiceZoneInput[];
   description?: string | null;
   active?: boolean | null;
-  estimated_transit_days?: number | null;
-  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
   max_width?: number | null;
   max_height?: number | null;
   max_length?: number | null;
-  weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  weight_unit?: WeightUnitEnum | null;
   domicile?: boolean | null;
   international?: boolean | null;
+}
+
+// null
+export interface ServiceZoneInput {
+  rate: number;
+  label?: string | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
+  radius?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  cities?: string[] | null;
+  country_codes?: string[] | null;
 }
 
 // null
@@ -4869,6 +5010,7 @@ export interface DicomSettingsInput {
 
 // null
 export interface DPDSettingsInput {
+  account_country_code?: string | null;
   services?: CreateServiceLevelInput[] | null;
   active?: boolean | null;
   metadata?: any | null;
@@ -5227,20 +5369,37 @@ export interface UpdateDHLPolandSettingsInput {
 export interface UpdateServiceLevelInput {
   service_name?: string | null;
   service_code?: string | null;
-  cost?: number | null;
   currency?: CurrencyCodeEnum | null;
+  zones?: UpdateServiceZoneInput[] | null;
   description?: string | null;
   active?: boolean | null;
-  estimated_transit_days?: number | null;
-  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
   max_width?: number | null;
   max_height?: number | null;
   max_length?: number | null;
-  weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  weight_unit?: WeightUnitEnum | null;
   domicile?: boolean | null;
   international?: boolean | null;
   id?: string | null;
+}
+
+// null
+export interface UpdateServiceZoneInput {
+  rate?: number | null;
+  label?: string | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
+  radius?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  cities?: string[] | null;
+  country_codes?: string[] | null;
 }
 
 // null
@@ -5269,6 +5428,7 @@ export interface UpdateDicomSettingsInput {
 // null
 export interface UpdateDPDSettingsInput {
   id: string;
+  account_country_code?: string | null;
   services?: UpdateServiceLevelInput[] | null;
   active?: boolean | null;
   metadata?: any | null;
