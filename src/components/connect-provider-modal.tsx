@@ -1,7 +1,6 @@
 import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/user-connection';
 import { isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import CarrierServiceEditor from '@/components/carrier-services-editor';
 import { Collection, NoneEnum, NotificationType } from '@/lib/types';
 import React, { useContext, useReducer, useState } from 'react';
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
@@ -450,13 +449,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("mws_auth_token").required}
-                />}
-
-
-                {field("services").exists && <CarrierServiceEditor
-                  carrierName={payload.custom_carrier_name || carrier_name}
-                  defaultValue={payload.services || service_levels[carrier_name] || service_levels['generic']}
-                  onChange={directChange("services")}
                 />}
 
                 {/* Carrier specific fields END */}
