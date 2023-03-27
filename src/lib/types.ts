@@ -310,8 +310,8 @@ export interface References {
   service_names: Collection<Collection>;
   package_presets: Collection<Collection>;
   packaging_types: Collection<Collection>;
-  carrier_capabilities: Collection<Collection<Array<string>>>;
-  service_levels: Collection<Collection<Array<ServiceLevelType>>>;
+  carrier_capabilities: Collection<string[]>;
+  service_levels: Collection<ServiceLevelType[]>;
 }
 
 export const CARRIER_THEMES: Collection = {
@@ -324,6 +324,7 @@ export const CARRIER_THEMES: Collection = {
   'dhl_express': 'is-dhl',
   'dhl_poland': 'is-dhl',
   'dhl_universal': 'is-dhl',
+  'dpd': 'is-dpd',
   'dpdhl': 'is-dhl',
   'eshipper': 'is-eshipper',
   'easypost': 'is-easypost',

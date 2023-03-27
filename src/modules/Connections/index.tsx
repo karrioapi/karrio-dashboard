@@ -12,6 +12,7 @@ import { useRouter } from "next/dist/client/router";
 import { Loading } from "@/components/loader";
 import { useContext, useEffect } from "react";
 import Head from "next/head";
+import RateSheetEditModalProvider from "@/components/rate-sheet-edit-modal";
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
@@ -66,11 +67,13 @@ export default function ConnectionsPage(pageProps: any) {
       <ConfirmModal>
         <ConnectProviderModal>
           <LabelTemplateEditModalProvider>
+            <RateSheetEditModalProvider>
 
-            <TabStateProvider tabs={tabs} setSelectedToURL={true}>
-              <Component />
-            </TabStateProvider>
+              <TabStateProvider tabs={tabs} setSelectedToURL={true}>
+                <Component />
+              </TabStateProvider>
 
+            </RateSheetEditModalProvider>
           </LabelTemplateEditModalProvider>
         </ConnectProviderModal>
       </ConfirmModal>

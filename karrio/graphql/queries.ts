@@ -17,6 +17,7 @@ export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($filter: Ad
         address {
           company_name
           person_name
+          street_number
           address_line1
           address_line2
           postal_code
@@ -81,6 +82,7 @@ export const GET_DEFAULT_TEMPLATES = gql`query get_default_templates {
       address {
         company_name
         person_name
+        street_number
         address_line1
         address_line2
         postal_code
@@ -418,6 +420,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -436,6 +439,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -454,6 +458,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -543,6 +548,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -611,11 +617,34 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         code
         date
         time
+        latitude
+        longitude
       }
       delivered
       estimated_delivery
       meta
       metadata
+      info {
+        carrier_tracking_link
+        customer_name
+        expected_delivery
+        note
+        order_date
+        order_id
+        package_weight
+        package_weight_unit
+        shipment_package_count
+        shipment_pickup_date
+        shipment_service
+        shipment_delivery_date
+        shipment_origin_country
+        shipment_origin_postal_code
+        shipment_destination_country
+        shipment_destination_postal_code
+        shipping_date
+        signed_by
+        source
+      }
       messages {
         carrier_name
         carrier_id
@@ -661,6 +690,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -679,6 +709,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -697,6 +728,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -786,6 +818,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -864,6 +897,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -882,6 +916,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -900,6 +935,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -982,6 +1018,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1041,6 +1078,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1059,6 +1097,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1077,6 +1116,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1159,6 +1199,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -1232,11 +1273,34 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
       code
       date
       time
+      latitude
+      longitude
     }
     delivered
     estimated_delivery
     meta
     metadata
+    info {
+      carrier_tracking_link
+      customer_name
+      expected_delivery
+      note
+      order_date
+      order_id
+      package_weight
+      package_weight_unit
+      shipment_package_count
+      shipment_pickup_date
+      shipment_service
+      shipment_delivery_date
+      shipment_origin_country
+      shipment_origin_postal_code
+      shipment_destination_country
+      shipment_destination_postal_code
+      shipping_date
+      signed_by
+      source
+    }
     messages {
       carrier_name
       carrier_id
@@ -1266,9 +1330,7 @@ export const GET_TRACKER = gql`query get_tracker($id: String!) {
       reference
     }
   }
-}
-
-`;
+}`;
 
 export const GET_TRACKERS = gql`query get_trackers($filter: TrackerFilter) {
   trackers(filter: $filter) {
@@ -1295,10 +1357,33 @@ export const GET_TRACKERS = gql`query get_trackers($filter: TrackerFilter) {
           code
           date
           time
+          latitude
+          longitude
         }
         delivered
         estimated_delivery
         test_mode
+        info {
+          carrier_tracking_link
+          customer_name
+          expected_delivery
+          note
+          order_date
+          order_id
+          package_weight
+          package_weight_unit
+          shipment_package_count
+          shipment_pickup_date
+          shipment_service
+          shipment_delivery_date
+          shipment_origin_country
+          shipment_origin_postal_code
+          shipment_destination_country
+          shipment_destination_postal_code
+          shipping_date
+          signed_by
+          source
+        }
         messages {
           carrier_name
           carrier_id
@@ -1664,9 +1749,9 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         service_name
         service_code
         description
-        cost
         currency
-        estimated_transit_days
+        transit_days
+        transit_time
         max_weight
         max_width
         max_height
@@ -1675,6 +1760,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         dimension_unit
         domicile
         international
+        zones {
+          label
+          rate
+          min_weight
+          max_weight
+          transit_days
+          transit_time
+          radius
+          latitude
+          longitude
+          cities
+          country_codes
+        }
       }
       capabilities
     }
@@ -1701,7 +1799,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       billing_account
       capabilities
     }
-    ...on DPDHLSettingsType {
+    ... on DPDSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
+      delis_id
+      password
+      depot
+      capabilities
+    }
+    ... on DPDHLSettingsType {
       id
       carrier_id
       carrier_name
@@ -1721,9 +1831,9 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         service_name
         service_code
         description
-        cost
         currency
-        estimated_transit_days
+        transit_days
+        transit_time
         max_weight
         max_width
         max_height
@@ -1732,6 +1842,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         dimension_unit
         domicile
         international
+        zones {
+          label
+          rate
+          min_weight
+          max_weight
+          transit_days
+          transit_time
+          radius
+          latitude
+          longitude
+          cities
+          country_codes
+        }
       }
       capabilities
     }
@@ -1799,9 +1922,9 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         service_name
         service_code
         description
-        cost
         currency
-        estimated_transit_days
+        transit_days
+        transit_time
         max_weight
         max_width
         max_height
@@ -1810,6 +1933,19 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         dimension_unit
         domicile
         international
+        zones {
+          label
+          rate
+          min_weight
+          max_weight
+          transit_days
+          transit_time
+          radius
+          latitude
+          longitude
+          cities
+          country_codes
+        }
       }
       label_template {
         id
@@ -1964,8 +2100,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       capabilities
     }
   }
-}
-`;
+}`;
 
 export const GET_USER = gql`query GetUser {
   user {
@@ -2121,6 +2256,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2139,6 +2275,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2157,6 +2294,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2211,6 +2349,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2229,6 +2368,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2247,6 +2387,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2335,6 +2476,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2421,6 +2563,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2439,6 +2582,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2457,6 +2601,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2511,6 +2656,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2529,6 +2675,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2547,6 +2694,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2635,6 +2783,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
               state_code
               suburb
               residential
+              street_number
               address_line1
               address_line2
               federal_tax_id
@@ -2790,6 +2939,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
         recipient {
           id
           city
+          street_number
           address_line1
           address_line2
           country_code
@@ -2812,6 +2962,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
         shipping_to {
           id
           city
+          street_number
           address_line1
           address_line2
           country_code

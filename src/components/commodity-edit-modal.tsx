@@ -152,6 +152,21 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     className="is-small is-fullwidth"
                     fieldClass="column mb-0 is-12 px-2 py-1"
                     disabled={!isNone(commodity?.parent_id)}
+                    max={35}
+                  />
+                </div>
+
+                <div className="columns is-multiline mb-4 px-1">
+                  <InputField
+                    name="hs_code"
+                    label="HS code"
+                    placeholder="000000"
+                    onChange={handleChange}
+                    value={commodity?.hs_code}
+                    className="is-small is-fullwidth"
+                    fieldClass="column mb-0 is-12 px-2 py-1"
+                    disabled={!isNone(commodity?.parent_id)}
+                    max={35}
                   />
                 </div>
 
@@ -166,6 +181,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     fieldClass="column is-7 mb-0 px-2 py-1"
                     placeholder="0000001"
                     disabled={!isNone(commodity?.parent_id)}
+                    max={35}
                   />
 
                   <CountryInput
@@ -265,19 +281,6 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
 
                 </div>
 
-                <div className="columns is-multiline mb-4 px-1">
-                  <InputField
-                    name="hs_code"
-                    label="HS code"
-                    placeholder="000000"
-                    onChange={handleChange}
-                    value={commodity?.hs_code}
-                    className="is-small is-fullwidth"
-                    fieldClass="column mb-0 is-12 px-2 py-1"
-                    disabled={!isNone(commodity?.parent_id)}
-                  />
-                </div>
-
                 <div className="columns is-multiline mb-0 px-1">
                   <TextAreaField
                     name="description"
@@ -286,6 +289,7 @@ const CommodityEditModalProvider: React.FC<CommodityEditModalComponent> = ({ chi
                     fieldClass="column mb-0 is-12 px-2 py-1"
                     placeholder="item description"
                     rows={2}
+                    maxLength={100}
                     onChange={handleChange}
                     value={commodity?.description}
                     disabled={!isNone(commodity?.parent_id)}

@@ -80,10 +80,6 @@ const ExpandedSidebar: React.FC<ExpandedSidebarComponent> = () => {
             <span>Parcels</span>
           </AppLink>
 
-          <AppLink href="/settings/customs-infos" className={"menu-item ml-5 " + activeClass("/settings/customs-infos")} shallow={false} prefetch={false}>
-            <span>Customs</span>
-          </AppLink>
-
           {DOCUMENTS_MANAGEMENT && <>
             <AppLink href="/settings/templates" className={"menu-item ml-5 " + activeClass("/settings/templates")} shallow={false} prefetch={false}>
               <span>Templates</span>

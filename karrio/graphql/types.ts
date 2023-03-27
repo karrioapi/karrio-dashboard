@@ -17,6 +17,7 @@ export interface get_address_templates_address_templates_page_info {
 export interface get_address_templates_address_templates_edges_node_address {
   company_name: string | null;
   person_name: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   postal_code: string | null;
@@ -125,6 +126,7 @@ export interface get_customs_info_templatesVariables {
 export interface get_default_templates_default_templates_default_address_address {
   company_name: string | null;
   person_name: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   postal_code: string | null;
@@ -742,6 +744,7 @@ export interface get_shipment_shipment_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -761,6 +764,7 @@ export interface get_shipment_shipment_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -780,6 +784,7 @@ export interface get_shipment_shipment_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -854,6 +859,7 @@ export interface get_shipment_shipment_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -935,6 +941,30 @@ export interface get_shipment_shipment_tracker_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_shipment_shipment_tracker_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_shipment_shipment_tracker_messages {
@@ -956,6 +986,7 @@ export interface get_shipment_shipment_tracker {
   estimated_delivery: any | null;
   meta: any | null;
   metadata: any;
+  info: get_shipment_shipment_tracker_info | null;
   messages: get_shipment_shipment_tracker_messages[];
   updated_at: any;
 }
@@ -1035,6 +1066,7 @@ export interface get_shipments_shipments_edges_node_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1054,6 +1086,7 @@ export interface get_shipments_shipments_edges_node_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1073,6 +1106,7 @@ export interface get_shipments_shipments_edges_node_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1147,6 +1181,7 @@ export interface get_shipments_shipments_edges_node_customs_duty_billing_address
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1293,6 +1328,7 @@ export interface get_shipment_data_shipment_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1312,6 +1348,7 @@ export interface get_shipment_data_shipment_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1331,6 +1368,7 @@ export interface get_shipment_data_shipment_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1405,6 +1443,7 @@ export interface get_shipment_data_shipment_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1508,6 +1547,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_recipi
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1527,6 +1567,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_shippe
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1546,6 +1587,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_billin
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1620,6 +1662,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1757,6 +1800,30 @@ export interface get_tracker_tracker_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_tracker_tracker_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_tracker_tracker_messages {
@@ -1802,6 +1869,7 @@ export interface get_tracker_tracker {
   estimated_delivery: any | null;
   meta: any | null;
   metadata: any;
+  info: get_tracker_tracker_info | null;
   messages: get_tracker_tracker_messages[];
   created_at: any;
   updated_at: any;
@@ -1844,6 +1912,30 @@ export interface get_trackers_trackers_edges_node_events {
   code: string | null;
   date: string | null;
   time: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export interface get_trackers_trackers_edges_node_info {
+  carrier_tracking_link: string | null;
+  customer_name: string | null;
+  expected_delivery: string | null;
+  note: string | null;
+  order_date: string | null;
+  order_id: string | null;
+  package_weight: string | null;
+  package_weight_unit: string | null;
+  shipment_package_count: string | null;
+  shipment_pickup_date: string | null;
+  shipment_service: string | null;
+  shipment_delivery_date: string | null;
+  shipment_origin_country: string | null;
+  shipment_origin_postal_code: string | null;
+  shipment_destination_country: string | null;
+  shipment_destination_postal_code: string | null;
+  shipping_date: string | null;
+  signed_by: string | null;
+  source: string | null;
 }
 
 export interface get_trackers_trackers_edges_node_messages {
@@ -1884,6 +1976,7 @@ export interface get_trackers_trackers_edges_node {
   delivered: boolean | null;
   estimated_delivery: any | null;
   test_mode: boolean;
+  info: get_trackers_trackers_edges_node_info | null;
   messages: get_trackers_trackers_edges_node_messages[];
   carrier_id: string;
   carrier_name: string;
@@ -2509,15 +2602,29 @@ export interface get_user_connections_user_connections_DHLExpressSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_DHLPolandSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_DHLPolandSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2526,6 +2633,7 @@ export interface get_user_connections_user_connections_DHLPolandSettingsType_ser
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_DHLPolandSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_DHLPolandSettingsType {
@@ -2570,15 +2678,43 @@ export interface get_user_connections_user_connections_DicomSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_DPDSettingsType {
+  __typename: "DPDSettingsType";
+  id: string;
+  carrier_id: string;
+  carrier_name: string;
+  display_name: string;
+  test_mode: boolean;
+  active: boolean;
+  delis_id: string;
+  password: string;
+  depot: string | null;
+  capabilities: string[];
+}
+
+export interface get_user_connections_user_connections_DPDHLSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_DPDHLSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2587,6 +2723,7 @@ export interface get_user_connections_user_connections_DPDHLSettingsType_service
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_DPDHLSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_DPDHLSettingsType {
@@ -2664,15 +2801,29 @@ export interface get_user_connections_user_connections_FreightcomSettingsType {
   capabilities: string[];
 }
 
+export interface get_user_connections_user_connections_GenericSettingsType_services_zones {
+  label: string | null;
+  rate: number | null;
+  min_weight: number | null;
+  max_weight: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
+  radius: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  cities: string[] | null;
+  country_codes: CountryCodeEnum[] | null;
+}
+
 export interface get_user_connections_user_connections_GenericSettingsType_services {
   id: string;
   active: boolean | null;
   service_name: string | null;
   service_code: string | null;
   description: string | null;
-  cost: number | null;
   currency: CurrencyCodeEnum | null;
-  estimated_transit_days: number | null;
+  transit_days: number | null;
+  transit_time: number | null;
   max_weight: number | null;
   max_width: number | null;
   max_height: number | null;
@@ -2681,6 +2832,7 @@ export interface get_user_connections_user_connections_GenericSettingsType_servi
   dimension_unit: DimensionUnitEnum | null;
   domicile: boolean | null;
   international: boolean | null;
+  zones: get_user_connections_user_connections_GenericSettingsType_services_zones[];
 }
 
 export interface get_user_connections_user_connections_GenericSettingsType_label_template {
@@ -2872,7 +3024,7 @@ export interface get_user_connections_user_connections_YunExpressSettingsType {
   capabilities: string[];
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_AmazonMwsSettingsType | get_user_connections_user_connections_AramexSettingsType | get_user_connections_user_connections_AustraliaPostSettingsType | get_user_connections_user_connections_CanadaPostSettingsType | get_user_connections_user_connections_CanparSettingsType | get_user_connections_user_connections_ChronopostSettingsType | get_user_connections_user_connections_DHLExpressSettingsType | get_user_connections_user_connections_DHLPolandSettingsType | get_user_connections_user_connections_DHLUniversalSettingsType | get_user_connections_user_connections_DicomSettingsType | get_user_connections_user_connections_DPDHLSettingsType | get_user_connections_user_connections_EShipperSettingsType | get_user_connections_user_connections_EasyPostSettingsType | get_user_connections_user_connections_FedexSettingsType | get_user_connections_user_connections_FreightcomSettingsType | get_user_connections_user_connections_GenericSettingsType | get_user_connections_user_connections_PurolatorSettingsType | get_user_connections_user_connections_RoyalMailSettingsType | get_user_connections_user_connections_SendleSettingsType | get_user_connections_user_connections_SFExpressSettingsType | get_user_connections_user_connections_TNTSettingsType | get_user_connections_user_connections_UPSSettingsType | get_user_connections_user_connections_UPSFreightSettingsType | get_user_connections_user_connections_USPSSettingsType | get_user_connections_user_connections_USPSInternationalSettingsType | get_user_connections_user_connections_YanwenSettingsType | get_user_connections_user_connections_YunExpressSettingsType;
+export type get_user_connections_user_connections = get_user_connections_user_connections_AmazonMwsSettingsType | get_user_connections_user_connections_AramexSettingsType | get_user_connections_user_connections_AustraliaPostSettingsType | get_user_connections_user_connections_CanadaPostSettingsType | get_user_connections_user_connections_CanparSettingsType | get_user_connections_user_connections_ChronopostSettingsType | get_user_connections_user_connections_DHLExpressSettingsType | get_user_connections_user_connections_DHLPolandSettingsType | get_user_connections_user_connections_DHLUniversalSettingsType | get_user_connections_user_connections_DicomSettingsType | get_user_connections_user_connections_DPDSettingsType | get_user_connections_user_connections_DPDHLSettingsType | get_user_connections_user_connections_EShipperSettingsType | get_user_connections_user_connections_EasyPostSettingsType | get_user_connections_user_connections_FedexSettingsType | get_user_connections_user_connections_FreightcomSettingsType | get_user_connections_user_connections_GenericSettingsType | get_user_connections_user_connections_PurolatorSettingsType | get_user_connections_user_connections_RoyalMailSettingsType | get_user_connections_user_connections_SendleSettingsType | get_user_connections_user_connections_SFExpressSettingsType | get_user_connections_user_connections_TNTSettingsType | get_user_connections_user_connections_UPSSettingsType | get_user_connections_user_connections_UPSFreightSettingsType | get_user_connections_user_connections_USPSSettingsType | get_user_connections_user_connections_USPSInternationalSettingsType | get_user_connections_user_connections_YanwenSettingsType | get_user_connections_user_connections_YunExpressSettingsType;
 
 export interface get_user_connections {
   user_connections: get_user_connections_user_connections[];
@@ -3199,6 +3351,7 @@ export interface get_order_order_shipping_to {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3218,6 +3371,7 @@ export interface get_order_order_shipping_from {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3237,6 +3391,7 @@ export interface get_order_order_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3283,6 +3438,7 @@ export interface get_order_order_shipments_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3302,6 +3458,7 @@ export interface get_order_order_shipments_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3321,6 +3478,7 @@ export interface get_order_order_shipments_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3395,6 +3553,7 @@ export interface get_order_order_shipments_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3555,6 +3714,7 @@ export interface get_orders_orders_edges_node_shipping_to {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3574,6 +3734,7 @@ export interface get_orders_orders_edges_node_shipping_from {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3593,6 +3754,7 @@ export interface get_orders_orders_edges_node_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3639,6 +3801,7 @@ export interface get_orders_orders_edges_node_shipments_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3658,6 +3821,7 @@ export interface get_orders_orders_edges_node_shipments_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3677,6 +3841,7 @@ export interface get_orders_orders_edges_node_shipments_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3751,6 +3916,7 @@ export interface get_orders_orders_edges_node_shipments_customs_duty_billing_add
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -4081,6 +4247,7 @@ export interface delete_document_templateVariables {
 export interface search_data_shipment_results_edges_node_recipient {
   id: string;
   city: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   country_code: CountryCodeEnum;
@@ -4110,6 +4277,7 @@ export interface search_data_shipment_results {
 export interface search_data_order_results_edges_node_shipping_to {
   id: string;
   city: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   country_code: CountryCodeEnum;
@@ -4620,9 +4788,13 @@ export enum LabelTypeEnum {
 
 export enum TrackerStatusEnum {
   delivered = "delivered",
+  delivery_delayed = "delivery_delayed",
+  delivery_failed = "delivery_failed",
   in_transit = "in_transit",
-  incident = "incident",
+  on_hold = "on_hold",
+  out_for_delivery = "out_for_delivery",
   pending = "pending",
+  ready_for_pickup = "ready_for_pickup",
   unknown = "unknown",
 }
 
@@ -4698,6 +4870,7 @@ export interface CreateCarrierConnectionMutationInput {
   dhl_poland?: DHLPolandSettingsInput | null;
   dhl_universal?: DHLUniversalSettingsInput | null;
   dicom?: DicomSettingsInput | null;
+  dpd?: DPDSettingsInput | null;
   dpdhl?: DPDHLSettingsInput | null;
   easypost?: EasyPostSettingsInput | null;
   eshipper?: EShipperSettingsInput | null;
@@ -4816,19 +4989,36 @@ export interface DHLPolandSettingsInput {
 export interface CreateServiceLevelInput {
   service_name: string;
   service_code: string;
-  cost: number;
   currency: CurrencyCodeEnum;
+  zones: ServiceZoneInput[];
   description?: string | null;
   active?: boolean | null;
-  estimated_transit_days?: number | null;
-  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
   max_width?: number | null;
   max_height?: number | null;
   max_length?: number | null;
-  weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  weight_unit?: WeightUnitEnum | null;
   domicile?: boolean | null;
   international?: boolean | null;
+}
+
+// null
+export interface ServiceZoneInput {
+  rate: number;
+  label?: string | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
+  radius?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  cities?: string[] | null;
+  country_codes?: string[] | null;
 }
 
 // null
@@ -4848,6 +5038,19 @@ export interface DicomSettingsInput {
   username: string;
   password: string;
   billing_account: string;
+  test_mode?: boolean | null;
+  carrier_id: string;
+}
+
+// null
+export interface DPDSettingsInput {
+  account_country_code?: string | null;
+  services?: CreateServiceLevelInput[] | null;
+  active?: boolean | null;
+  metadata?: any | null;
+  delis_id: string;
+  password: string;
+  depot?: string | null;
   test_mode?: boolean | null;
   carrier_id: string;
 }
@@ -5073,6 +5276,7 @@ export interface UpdateCarrierConnectionMutationInput {
   dhl_poland?: UpdateDHLPolandSettingsInput | null;
   dhl_universal?: UpdateDHLUniversalSettingsInput | null;
   dicom?: UpdateDicomSettingsInput | null;
+  dpd?: UpdateDPDSettingsInput | null;
   dpdhl?: UpdateDPDHLSettingsInput | null;
   easypost?: UpdateEasyPostSettingsInput | null;
   eshipper?: UpdateEShipperSettingsInput | null;
@@ -5199,20 +5403,37 @@ export interface UpdateDHLPolandSettingsInput {
 export interface UpdateServiceLevelInput {
   service_name?: string | null;
   service_code?: string | null;
-  cost?: number | null;
   currency?: CurrencyCodeEnum | null;
+  zones?: UpdateServiceZoneInput[] | null;
   description?: string | null;
   active?: boolean | null;
-  estimated_transit_days?: number | null;
-  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
   max_width?: number | null;
   max_height?: number | null;
   max_length?: number | null;
-  weight_unit?: WeightUnitEnum | null;
   dimension_unit?: DimensionUnitEnum | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  weight_unit?: WeightUnitEnum | null;
   domicile?: boolean | null;
   international?: boolean | null;
   id?: string | null;
+}
+
+// null
+export interface UpdateServiceZoneInput {
+  rate?: number | null;
+  label?: string | null;
+  min_weight?: number | null;
+  max_weight?: number | null;
+  transit_days?: number | null;
+  transit_time?: number | null;
+  radius?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  cities?: string[] | null;
+  country_codes?: string[] | null;
 }
 
 // null
@@ -5234,6 +5455,20 @@ export interface UpdateDicomSettingsInput {
   username?: string | null;
   password?: string | null;
   billing_account?: string | null;
+  test_mode?: boolean | null;
+  carrier_id?: string | null;
+}
+
+// null
+export interface UpdateDPDSettingsInput {
+  id: string;
+  account_country_code?: string | null;
+  services?: UpdateServiceLevelInput[] | null;
+  active?: boolean | null;
+  metadata?: any | null;
+  delis_id?: string | null;
+  password?: string | null;
+  depot?: string | null;
   test_mode?: boolean | null;
   carrier_id?: string | null;
 }
@@ -5562,6 +5797,7 @@ export interface UpdateAddressInput {
   state_code?: string | null;
   suburb?: string | null;
   residential?: boolean | null;
+  street_number?: string | null;
   address_line1?: string | null;
   address_line2?: string | null;
   validate_location?: boolean | null;
@@ -5625,6 +5861,7 @@ export interface AddressInput {
   state_code?: string | null;
   suburb?: string | null;
   residential?: boolean | null;
+  street_number?: string | null;
   address_line1?: string | null;
   address_line2?: string | null;
   validate_location?: boolean | null;

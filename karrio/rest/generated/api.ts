@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.1.12`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.3`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
  *
- * The version of the OpenAPI document: 2023.1.12
+ * The version of the OpenAPI document: 2023.3
  * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -132,6 +132,12 @@ export interface Address {
      * @memberof Address
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof Address
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -481,6 +487,12 @@ export interface AddressData {
      * @memberof AddressData
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof AddressData
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -1020,7 +1032,7 @@ export interface CarrierSettings {
      */
     'carrier_id': string;
     /**
-     * Indicates a carrier (type)  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpdhl` - dpdhl * `easypost` - easypost * `eshipper` - eshipper * `fedex` - fedex * `freightcom` - freightcom * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
+     * Indicates a carrier (type)  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpd` - dpd * `dpdhl` - dpdhl * `easypost` - easypost * `eshipper` - eshipper * `fedex` - fedex * `freightcom` - freightcom * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
      * @type {string}
      * @memberof CarrierSettings
      */
@@ -1062,6 +1074,7 @@ export const CarrierSettingsCarrierNameEnum = {
     DhlPoland: 'dhl_poland',
     DhlUniversal: 'dhl_universal',
     Dicom: 'dicom',
+    Dpd: 'dpd',
     Dpdhl: 'dpdhl',
     Easypost: 'easypost',
     Eshipper: 'eshipper',
@@ -2381,6 +2394,12 @@ export interface CustomsDataDutyBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof CustomsDataDutyBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof CustomsDataDutyBillingAddress
@@ -2914,6 +2933,12 @@ export interface CustomsDutyBillingAddress {
      * @memberof CustomsDutyBillingAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof CustomsDutyBillingAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -4429,6 +4454,12 @@ export interface OrderBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderBillingAddress
@@ -4827,6 +4858,12 @@ export interface OrderDataShippingFrom {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderDataShippingFrom
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderDataShippingFrom
@@ -5163,6 +5200,12 @@ export interface OrderDataShippingTo {
      * @memberof OrderDataShippingTo
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderDataShippingTo
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -5538,6 +5581,12 @@ export interface OrderShippingFrom {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderShippingFrom
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof OrderShippingFrom
@@ -5892,6 +5941,12 @@ export interface OrderShippingTo {
      * @memberof OrderShippingTo
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof OrderShippingTo
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -6527,6 +6582,12 @@ export interface PatchedAddressData {
      * @memberof PatchedAddressData
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof PatchedAddressData
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -7432,6 +7493,12 @@ export interface PickupAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof PickupAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof PickupAddress
@@ -7824,6 +7891,12 @@ export interface PickupCancelRequestAddress {
      * @memberof PickupCancelRequestAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof PickupCancelRequestAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -8706,6 +8779,12 @@ export interface RateRequestShipper {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof RateRequestShipper
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof RateRequestShipper
@@ -9281,6 +9360,12 @@ export interface ShipmentBillingAddress {
      * @memberof ShipmentBillingAddress
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentBillingAddress
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -9873,6 +9958,12 @@ export interface ShipmentDataBillingAddress {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentDataBillingAddress
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof ShipmentDataBillingAddress
@@ -10320,6 +10411,12 @@ export interface ShipmentDataShipper {
      * @memberof ShipmentDataShipper
      */
     'residential'?: boolean | null;
+    /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentDataShipper
+     */
+    'street_number'?: string | null;
     /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
@@ -11211,6 +11308,12 @@ export interface ShipmentShipper {
      */
     'residential'?: boolean | null;
     /**
+     * The address street number
+     * @type {string}
+     * @memberof ShipmentShipper
+     */
+    'street_number'?: string | null;
+    /**
      * The address line with street number <br/>         **(required for shipment purchase)**         
      * @type {string}
      * @memberof ShipmentShipper
@@ -11944,11 +12047,138 @@ export interface TrackerList {
  */
 export interface TrackerUpdateData {
     /**
+     * 
+     * @type {TrackerUpdateDataInfo}
+     * @memberof TrackerUpdateData
+     */
+    'info'?: TrackerUpdateDataInfo | null;
+    /**
      * User metadata for the tracker
      * @type {{ [key: string]: any; }}
      * @memberof TrackerUpdateData
      */
     'metadata'?: { [key: string]: any; };
+}
+/**
+ * The package and shipment tracking details
+ * @export
+ * @interface TrackerUpdateDataInfo
+ */
+export interface TrackerUpdateDataInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackerUpdateDataInfo
+     */
+    'source'?: string | null;
 }
 /**
  * 
@@ -11963,11 +12193,29 @@ export interface TrackingData {
      */
     'tracking_number': string;
     /**
-     * The tracking carrier  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpdhl` - dpdhl * `fedex` - fedex * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
+     * The tracking carrier  * `amazon_mws` - amazon_mws * `aramex` - aramex * `australiapost` - australiapost * `canadapost` - canadapost * `canpar` - canpar * `chronopost` - chronopost * `dhl_express` - dhl_express * `dhl_poland` - dhl_poland * `dhl_universal` - dhl_universal * `dicom` - dicom * `dpd` - dpd * `dpdhl` - dpdhl * `fedex` - fedex * `generic` - generic * `purolator` - purolator * `royalmail` - royalmail * `sendle` - sendle * `sf_express` - sf_express * `tnt` - tnt * `ups` - ups * `ups_freight` - ups_freight * `usps` - usps * `usps_international` - usps_international * `yanwen` - yanwen * `yunexpress` - yunexpress
      * @type {string}
      * @memberof TrackingData
      */
     'carrier_name': TrackingDataCarrierNameEnum;
+    /**
+     * The shipper account number
+     * @type {string}
+     * @memberof TrackingData
+     */
+    'account_number'?: string | null;
+    /**
+     * The shipment reference
+     * @type {string}
+     * @memberof TrackingData
+     */
+    'reference'?: string | null;
+    /**
+     * 
+     * @type {TrackerUpdateDataInfo}
+     * @memberof TrackingData
+     */
+    'info'?: TrackerUpdateDataInfo | null;
 }
 
 export const TrackingDataCarrierNameEnum = {
@@ -11981,6 +12229,7 @@ export const TrackingDataCarrierNameEnum = {
     DhlPoland: 'dhl_poland',
     DhlUniversal: 'dhl_universal',
     Dicom: 'dicom',
+    Dpd: 'dpd',
     Dpdhl: 'dpdhl',
     Fedex: 'fedex',
     Generic: 'generic',
@@ -12035,6 +12284,139 @@ export interface TrackingEvent {
      * @memberof TrackingEvent
      */
     'time'?: string | null;
+    /**
+     * The tracking event\'s latitude.
+     * @type {number}
+     * @memberof TrackingEvent
+     */
+    'latitude'?: number | null;
+    /**
+     * The tracking event\'s longitude.
+     * @type {number}
+     * @memberof TrackingEvent
+     */
+    'longitude'?: number | null;
+}
+/**
+ * 
+ * @export
+ * @interface TrackingInfo
+ */
+export interface TrackingInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackingInfo
+     */
+    'source'?: string | null;
 }
 /**
  * 
@@ -12086,6 +12468,12 @@ export interface TrackingResponseTracking {
      */
     'tracking_number': string;
     /**
+     * 
+     * @type {TrackingStatusInfo}
+     * @memberof TrackingResponseTracking
+     */
+    'info'?: TrackingStatusInfo | null;
+    /**
      * The tracking details events
      * @type {Array<TrackingEvent>}
      * @memberof TrackingResponseTracking
@@ -12104,7 +12492,7 @@ export interface TrackingResponseTracking {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
+     * The current tracking status  * `pending` - pending * `unknown` - unknown * `delivered` - delivered * `on_hold` - on_hold * `in_transit` - in_transit * `delivery_delayed` - delivery_delayed * `out_for_delivery` - out_for_delivery * `ready_for_pickup` - ready_for_pickup * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof TrackingResponseTracking
      */
@@ -12143,10 +12531,14 @@ export interface TrackingResponseTracking {
 
 export const TrackingResponseTrackingStatusEnum = {
     Pending: 'pending',
-    InTransit: 'in_transit',
-    Incident: 'incident',
+    Unknown: 'unknown',
     Delivered: 'delivered',
-    Unknown: 'unknown'
+    OnHold: 'on_hold',
+    InTransit: 'in_transit',
+    DeliveryDelayed: 'delivery_delayed',
+    OutForDelivery: 'out_for_delivery',
+    ReadyForPickup: 'ready_for_pickup',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type TrackingResponseTrackingStatusEnum = typeof TrackingResponseTrackingStatusEnum[keyof typeof TrackingResponseTrackingStatusEnum];
@@ -12182,6 +12574,12 @@ export interface TrackingStatus {
      */
     'tracking_number': string;
     /**
+     * 
+     * @type {TrackingStatusInfo}
+     * @memberof TrackingStatus
+     */
+    'info'?: TrackingStatusInfo | null;
+    /**
      * The tracking details events
      * @type {Array<TrackingEvent>}
      * @memberof TrackingStatus
@@ -12200,7 +12598,7 @@ export interface TrackingStatus {
      */
     'test_mode': boolean;
     /**
-     * The current tracking status  * `pending` - pending * `in_transit` - in_transit * `incident` - incident * `delivered` - delivered * `unknown` - unknown
+     * The current tracking status  * `pending` - pending * `unknown` - unknown * `delivered` - delivered * `on_hold` - on_hold * `in_transit` - in_transit * `delivery_delayed` - delivery_delayed * `out_for_delivery` - out_for_delivery * `ready_for_pickup` - ready_for_pickup * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof TrackingStatus
      */
@@ -12239,14 +12637,139 @@ export interface TrackingStatus {
 
 export const TrackingStatusStatusEnum = {
     Pending: 'pending',
-    InTransit: 'in_transit',
-    Incident: 'incident',
+    Unknown: 'unknown',
     Delivered: 'delivered',
-    Unknown: 'unknown'
+    OnHold: 'on_hold',
+    InTransit: 'in_transit',
+    DeliveryDelayed: 'delivery_delayed',
+    OutForDelivery: 'out_for_delivery',
+    ReadyForPickup: 'ready_for_pickup',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type TrackingStatusStatusEnum = typeof TrackingStatusStatusEnum[keyof typeof TrackingStatusStatusEnum];
 
+/**
+ * The package and shipment tracking details
+ * @export
+ * @interface TrackingStatusInfo
+ */
+export interface TrackingStatusInfo {
+    /**
+     * The carrier tracking link
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'carrier_tracking_link'?: string | null;
+    /**
+     * The customer name
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'customer_name'?: string | null;
+    /**
+     * The expected delivery date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'expected_delivery'?: string | null;
+    /**
+     * A tracking note
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'note'?: string | null;
+    /**
+     * The package order date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'order_date'?: string | null;
+    /**
+     * The package order id or number
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'order_id'?: string | null;
+    /**
+     * The package weight
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'package_weight'?: string | null;
+    /**
+     * The package weight unit
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'package_weight_unit'?: string | null;
+    /**
+     * The package count
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_package_count'?: string | null;
+    /**
+     * The shipment pickup date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_pickup_date'?: string | null;
+    /**
+     * The shipment delivery date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_delivery_date'?: string | null;
+    /**
+     * The shipment service
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_service'?: string | null;
+    /**
+     * The shipment origin country
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_origin_country'?: string | null;
+    /**
+     * The shipment origin postal code
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_origin_postal_code'?: string | null;
+    /**
+     * The shipment destination country
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_destication_country'?: string | null;
+    /**
+     * The shipment destination postal code
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipment_destination_postal_code'?: string | null;
+    /**
+     * The shipping date
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'shipping_date'?: string | null;
+    /**
+     * The person who signed for the package
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'signed_by'?: string | null;
+    /**
+     * The tracker source
+     * @type {string}
+     * @memberof TrackingStatusInfo
+     */
+    'source'?: string | null;
+}
 /**
  * 
  * @export
@@ -14125,11 +14648,11 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServices: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getServices: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('getServices', 'carrierName', carrierName)
             const localVarPath = `/v1/carriers/{carrier_name}/services`
@@ -14237,11 +14760,11 @@ export const CarriersApiFp = function(configuration?: Configuration) {
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: any; }>> {
+        async getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: any; }>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getServices(carrierName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -14270,11 +14793,11 @@ export const CarriersApiFactory = function (configuration?: Configuration, baseP
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: any): AxiosPromise<{ [key: string]: any; }> {
+        getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: any): AxiosPromise<{ [key: string]: any; }> {
             return localVarFp.getServices(carrierName, options).then((request) => request(axios, basePath));
         },
         /**
@@ -14299,10 +14822,10 @@ export const CarriersApiFactory = function (configuration?: Configuration, baseP
 export interface CarriersApiGetServicesRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof CarriersApiGetServices
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 }
 
 /**
@@ -15240,7 +15763,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
         cancel: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('cancel', 'id', id)
-            const localVarPath = `/v1/orders/{id}`
+            const localVarPath = `/v1/orders/{id}/cancel`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -15249,7 +15772,7 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -15322,6 +15845,55 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(orderData, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        dismiss: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('dismiss', 'id', id)
+            const localVarPath = `/v1/orders/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JWT required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            // authentication OAuth2 required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            // authentication TokenBasic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -15505,6 +16077,18 @@ export const OrdersApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        async dismiss(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Order>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.dismiss(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Retrieve all orders.
          * @summary List all orders
          * @param {*} [options] Override http request option.
@@ -15568,6 +16152,17 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.create(orderData, options).then((request) => request(axios, basePath));
         },
         /**
+         * Dismiss an order from fulfillment.
+         * @summary Dismiss an order
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        dismiss(id: string, options?: any): AxiosPromise<Order> {
+            return localVarFp.dismiss(id, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Retrieve all orders.
          * @summary List all orders
          * @param {*} [options] Override http request option.
@@ -15626,6 +16221,20 @@ export interface OrdersApiCreateRequest {
      * @memberof OrdersApiCreate
      */
     readonly orderData: OrderData
+}
+
+/**
+ * Request parameters for dismiss operation in OrdersApi.
+ * @export
+ * @interface OrdersApiDismissRequest
+ */
+export interface OrdersApiDismissRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof OrdersApiDismiss
+     */
+    readonly id: string
 }
 
 /**
@@ -15692,6 +16301,19 @@ export class OrdersApi extends BaseAPI {
      */
     public create(requestParameters: OrdersApiCreateRequest, options?: AxiosRequestConfig) {
         return OrdersApiFp(this.configuration).create(requestParameters.orderData, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Dismiss an order from fulfillment.
+     * @summary Dismiss an order
+     * @param {OrdersApiDismissRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @deprecated
+     * @throws {RequiredError}
+     * @memberof OrdersApi
+     */
+    public dismiss(requestParameters: OrdersApiDismissRequest, options?: AxiosRequestConfig) {
+        return OrdersApiFp(this.configuration).dismiss(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16832,12 +17454,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupCancelRequest} pickupCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelPickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        cancelPickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('cancelPickup', 'carrierName', carrierName)
             // verify required parameter 'pickupCancelRequest' is not null or undefined
@@ -16991,12 +17613,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupRequest} pickupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        schedulePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        schedulePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('schedulePickup', 'carrierName', carrierName)
             // verify required parameter 'pickupRequest' is not null or undefined
@@ -17045,14 +17667,14 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        trackShipment: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        trackShipment: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('trackShipment', 'carrierName', carrierName)
             // verify required parameter 'trackingNumber' is not null or undefined
@@ -17103,12 +17725,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupUpdateRequest} pickupUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updatePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('updatePickup', 'carrierName', carrierName)
             // verify required parameter 'pickupUpdateRequest' is not null or undefined
@@ -17157,12 +17779,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {ShipmentCancelRequest} shipmentCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        voidLabel: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        voidLabel: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('voidLabel', 'carrierName', carrierName)
             // verify required parameter 'shipmentCancelRequest' is not null or undefined
@@ -17232,12 +17854,12 @@ export const ProxyApiFp = function(configuration?: Configuration) {
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupCancelRequest} pickupCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
+        async cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cancelPickup(carrierName, pickupCancelRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -17267,50 +17889,50 @@ export const ProxyApiFp = function(configuration?: Configuration) {
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupRequest} pickupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
+        async schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.schedulePickup(carrierName, pickupRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        async trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingResponse>> {
+        async trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.trackShipment(carrierName, trackingNumber, hub, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupUpdateRequest} pickupUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
+        async updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePickup(carrierName, pickupUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {ShipmentCancelRequest} shipmentCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
+        async voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.voidLabel(carrierName, shipmentCancelRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -17337,12 +17959,12 @@ export const ProxyApiFactory = function (configuration?: Configuration, basePath
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupCancelRequest} pickupCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: any): AxiosPromise<OperationResponse> {
+        cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: any): AxiosPromise<OperationResponse> {
             return localVarFp.cancelPickup(carrierName, pickupCancelRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -17369,47 +17991,47 @@ export const ProxyApiFactory = function (configuration?: Configuration, basePath
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupRequest} pickupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: any): AxiosPromise<PickupResponse> {
+        schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: any): AxiosPromise<PickupResponse> {
             return localVarFp.schedulePickup(carrierName, pickupRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingResponse> {
+        trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingResponse> {
             return localVarFp.trackShipment(carrierName, trackingNumber, hub, options).then((request) => request(axios, basePath));
         },
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {PickupUpdateRequest} pickupUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: any): AxiosPromise<PickupResponse> {
+        updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: any): AxiosPromise<PickupResponse> {
             return localVarFp.updatePickup(carrierName, pickupUpdateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
          * @param {ShipmentCancelRequest} shipmentCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: any): AxiosPromise<OperationResponse> {
+        voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: any): AxiosPromise<OperationResponse> {
             return localVarFp.voidLabel(carrierName, shipmentCancelRequest, options).then((request) => request(axios, basePath));
         },
     };
@@ -17437,10 +18059,10 @@ export interface ProxyApiBuyLabelRequest {
 export interface ProxyApiCancelPickupRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiCancelPickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -17493,10 +18115,10 @@ export interface ProxyApiGetTrackingRequest {
 export interface ProxyApiSchedulePickupRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiSchedulePickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -17514,10 +18136,10 @@ export interface ProxyApiSchedulePickupRequest {
 export interface ProxyApiTrackShipmentRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiTrackShipment
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -17542,10 +18164,10 @@ export interface ProxyApiTrackShipmentRequest {
 export interface ProxyApiUpdatePickupRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiUpdatePickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -17563,10 +18185,10 @@ export interface ProxyApiUpdatePickupRequest {
 export interface ProxyApiVoidLabelRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiVoidLabel
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -17790,7 +18412,7 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
          * Retrieve all shipments.
          * @summary List all shipments
          * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
          * @param {string} [keyword] 
@@ -17805,7 +18427,7 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/shipments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -18141,7 +18763,7 @@ export const ShipmentsApiFp = function(configuration?: Configuration) {
          * Retrieve all shipments.
          * @summary List all shipments
          * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
          * @param {string} [keyword] 
@@ -18156,7 +18778,7 @@ export const ShipmentsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
+        async list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -18241,7 +18863,7 @@ export const ShipmentsApiFactory = function (configuration?: Configuration, base
          * Retrieve all shipments.
          * @summary List all shipments
          * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
          * @param {string} [keyword] 
@@ -18256,7 +18878,7 @@ export const ShipmentsApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: any): AxiosPromise<ShipmentList> {
+        list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: any): AxiosPromise<ShipmentList> {
             return localVarFp.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
@@ -18348,10 +18970,10 @@ export interface ShipmentsApiListRequest {
 
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ShipmentsApiList
      */
-    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -18671,14 +19293,14 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
          * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        create: async (carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create: async (carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('create', 'carrierName', carrierName)
             // verify required parameter 'carrierName2' is not null or undefined
@@ -18735,15 +19357,15 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/trackers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -18980,29 +19602,29 @@ export const TrackersApiFp = function(configuration?: Configuration) {
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
          * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        async create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
+        async create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.create(carrierName, carrierName2, trackingNumber, hub, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
+        async list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -19066,28 +19688,28 @@ export const TrackersApiFactory = function (configuration?: Configuration, baseP
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
          * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingStatus> {
+        create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingStatus> {
             return localVarFp.create(carrierName, carrierName2, trackingNumber, hub, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'} [status] 
+         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown', trackingNumber?: string, options?: any): AxiosPromise<TrackerList> {
+        list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: any): AxiosPromise<TrackerList> {
             return localVarFp.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
@@ -19167,10 +19789,10 @@ export interface TrackersApiCreateRequest {
 
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof TrackersApiCreate
      */
-    readonly carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -19195,10 +19817,10 @@ export interface TrackersApiCreateRequest {
 export interface TrackersApiListRequest {
     /**
      * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof TrackersApiList
      */
-    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'purolator' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
 
     /**
      * 
@@ -19216,10 +19838,10 @@ export interface TrackersApiListRequest {
 
     /**
      * 
-     * @type {'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'}
+     * @type {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'}
      * @memberof TrackersApiList
      */
-    readonly status?: 'delivered' | 'in_transit' | 'incident' | 'pending' | 'unknown'
+    readonly status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'
 
     /**
      * 

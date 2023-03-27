@@ -105,6 +105,18 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
             refresh && setKey(`address-${Date.now()}`);
           }}
           required
+          max={30}
+        />
+      </div>
+
+      <div className="columns mb-0">
+        <InputField label="company"
+          name="company_name"
+          onChange={handleChange}
+          value={address.company_name}
+          className="is-small"
+          fieldClass="column mb-0 px-2 py-2"
+          max={30}
         />
       </div>
 
@@ -133,14 +145,28 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
         />
       </div>
 
-      <div className="columns is-multiline mb-0">
+      <div className="columns mb-0">
         <InputField
-          label="Street (Line 2)"
+          label="Unit (Line 2)"
           name="address_line2"
           onChange={handleChange}
           value={address.address_line2}
           className="is-small"
+          fieldClass="column  mb-0 px-2 py-2"
+          max={50}
+        />
+      </div>
+
+      <div className="columns is-multiline mb-0">
+
+        <InputField
+          label="Street no."
+          name="street_number"
+          onChange={handleChange}
+          value={address.street_number}
+          className="is-small"
           fieldClass="column is-6 mb-0 px-2 py-2"
+          max={20}
         />
 
         <InputField
@@ -175,11 +201,14 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
       </div>
 
       <div className="columns mb-0">
-        <InputField label="company" name="company_name" onChange={handleChange} value={address.company_name} className="is-small" fieldClass="column mb-0 px-2 py-2" />
-      </div>
-
-      <div className="columns mb-0">
-        <InputField label="email" name="email" onChange={handleChange} value={address.email} className="is-small" fieldClass="column mb-0 is-7 px-2 py-2" type="email" />
+        <InputField label="email"
+          name="email"
+          onChange={handleChange}
+          value={address.email}
+          className="is-small"
+          fieldClass="column mb-0 is-6 px-2 py-2"
+          type="email"
+        />
 
         <PhoneInput
           label="phone"
@@ -193,7 +222,11 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
 
       <div className="columns mb-0 py-2">
 
-        <CheckBoxField name="residential" onChange={handleChange} defaultChecked={address.residential} fieldClass="column mb-0 is-12 px-2 py-2">
+        <CheckBoxField name="residential"
+          onChange={handleChange}
+          defaultChecked={address.residential}
+          fieldClass="column mb-0 is-12 px-2 py-2"
+        >
           <span>Residential address</span>
         </CheckBoxField>
 
@@ -220,6 +253,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
             value={address.federal_tax_id}
             className="is-small"
             fieldClass="column is-7 mb-0 px-2 py-2"
+            max={20}
           />
 
           <InputField
@@ -229,6 +263,7 @@ const AddressForm: React.FC<AddressFormComponent> = ({ value, default_value, shi
             value={address.state_tax_id}
             className="is-small"
             fieldClass="column is-7 mb-0 px-2 py-2"
+            max={20}
           />
 
         </div>
