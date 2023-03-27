@@ -17,6 +17,7 @@ export interface get_address_templates_address_templates_page_info {
 export interface get_address_templates_address_templates_edges_node_address {
   company_name: string | null;
   person_name: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   postal_code: string | null;
@@ -125,6 +126,7 @@ export interface get_customs_info_templatesVariables {
 export interface get_default_templates_default_templates_default_address_address {
   company_name: string | null;
   person_name: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   postal_code: string | null;
@@ -742,6 +744,7 @@ export interface get_shipment_shipment_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -761,6 +764,7 @@ export interface get_shipment_shipment_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -780,6 +784,7 @@ export interface get_shipment_shipment_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -854,6 +859,7 @@ export interface get_shipment_shipment_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1060,6 +1066,7 @@ export interface get_shipments_shipments_edges_node_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1079,6 +1086,7 @@ export interface get_shipments_shipments_edges_node_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1098,6 +1106,7 @@ export interface get_shipments_shipments_edges_node_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1172,6 +1181,7 @@ export interface get_shipments_shipments_edges_node_customs_duty_billing_address
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1318,6 +1328,7 @@ export interface get_shipment_data_shipment_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1337,6 +1348,7 @@ export interface get_shipment_data_shipment_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1356,6 +1368,7 @@ export interface get_shipment_data_shipment_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1430,6 +1443,7 @@ export interface get_shipment_data_shipment_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1533,6 +1547,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_recipi
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1552,6 +1567,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_shippe
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1571,6 +1587,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_billin
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -1645,6 +1662,7 @@ export interface partial_shipment_update_partial_shipment_update_shipment_custom
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3333,6 +3351,7 @@ export interface get_order_order_shipping_to {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3352,6 +3371,7 @@ export interface get_order_order_shipping_from {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3371,6 +3391,7 @@ export interface get_order_order_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3417,6 +3438,7 @@ export interface get_order_order_shipments_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3436,6 +3458,7 @@ export interface get_order_order_shipments_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3455,6 +3478,7 @@ export interface get_order_order_shipments_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3529,6 +3553,7 @@ export interface get_order_order_shipments_customs_duty_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3689,6 +3714,7 @@ export interface get_orders_orders_edges_node_shipping_to {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3708,6 +3734,7 @@ export interface get_orders_orders_edges_node_shipping_from {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3727,6 +3754,7 @@ export interface get_orders_orders_edges_node_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3773,6 +3801,7 @@ export interface get_orders_orders_edges_node_shipments_recipient {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3792,6 +3821,7 @@ export interface get_orders_orders_edges_node_shipments_shipper {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3811,6 +3841,7 @@ export interface get_orders_orders_edges_node_shipments_billing_address {
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -3885,6 +3916,7 @@ export interface get_orders_orders_edges_node_shipments_customs_duty_billing_add
   state_code: string | null;
   suburb: string | null;
   residential: boolean | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   federal_tax_id: string | null;
@@ -4215,6 +4247,7 @@ export interface delete_document_templateVariables {
 export interface search_data_shipment_results_edges_node_recipient {
   id: string;
   city: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   country_code: CountryCodeEnum;
@@ -4244,6 +4277,7 @@ export interface search_data_shipment_results {
 export interface search_data_order_results_edges_node_shipping_to {
   id: string;
   city: string | null;
+  street_number: string | null;
   address_line1: string | null;
   address_line2: string | null;
   country_code: CountryCodeEnum;
@@ -5763,6 +5797,7 @@ export interface UpdateAddressInput {
   state_code?: string | null;
   suburb?: string | null;
   residential?: boolean | null;
+  street_number?: string | null;
   address_line1?: string | null;
   address_line2?: string | null;
   validate_location?: boolean | null;
@@ -5826,6 +5861,7 @@ export interface AddressInput {
   state_code?: string | null;
   suburb?: string | null;
   residential?: boolean | null;
+  street_number?: string | null;
   address_line1?: string | null;
   address_line2?: string | null;
   validate_location?: boolean | null;

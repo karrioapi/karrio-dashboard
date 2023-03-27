@@ -17,6 +17,7 @@ export const GET_ADDRESS_TEMPLATES = gql`query get_address_templates($filter: Ad
         address {
           company_name
           person_name
+          street_number
           address_line1
           address_line2
           postal_code
@@ -81,6 +82,7 @@ export const GET_DEFAULT_TEMPLATES = gql`query get_default_templates {
       address {
         company_name
         person_name
+        street_number
         address_line1
         address_line2
         postal_code
@@ -418,6 +420,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -436,6 +439,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -454,6 +458,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -543,6 +548,7 @@ export const GET_SHIPMENT = gql`query get_shipment($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -684,6 +690,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -702,6 +709,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -720,6 +728,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -809,6 +818,7 @@ export const GET_SHIPMENTS = gql`query get_shipments($filter: ShipmentFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -887,6 +897,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -905,6 +916,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -923,6 +935,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -1005,6 +1018,7 @@ export const GET_SHIPMENT_DATA = gql`query get_shipment_data($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1064,6 +1078,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1082,6 +1097,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1100,6 +1116,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -1182,6 +1199,7 @@ export const PARTIAL_UPDATE_SHIPMENT = gql`mutation partial_shipment_update($dat
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2238,6 +2256,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2256,6 +2275,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2274,6 +2294,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
       state_code
       suburb
       residential
+      street_number
       address_line1
       address_line2
       federal_tax_id
@@ -2328,6 +2349,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2346,6 +2368,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2364,6 +2387,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
         state_code
         suburb
         residential
+        street_number
         address_line1
         address_line2
         federal_tax_id
@@ -2452,6 +2476,7 @@ export const GET_ORDER = gql`query get_order($id: String!) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2538,6 +2563,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2556,6 +2582,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2574,6 +2601,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
           state_code
           suburb
           residential
+          street_number
           address_line1
           address_line2
           federal_tax_id
@@ -2628,6 +2656,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2646,6 +2675,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2664,6 +2694,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
             state_code
             suburb
             residential
+            street_number
             address_line1
             address_line2
             federal_tax_id
@@ -2752,6 +2783,7 @@ export const GET_ORDERS = gql`query get_orders($filter: OrderFilter) {
               state_code
               suburb
               residential
+              street_number
               address_line1
               address_line2
               federal_tax_id
@@ -2907,6 +2939,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
         recipient {
           id
           city
+          street_number
           address_line1
           address_line2
           country_code
@@ -2929,6 +2962,7 @@ export const SEARCH_DATA = gql`query search_data($keyword: String) {
         shipping_to {
           id
           city
+          street_number
           address_line1
           address_line2
           country_code
