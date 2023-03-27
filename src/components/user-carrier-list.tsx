@@ -2,6 +2,7 @@ import { useCarrierConnectionMutation, useCarrierConnections } from '@/context/u
 import { ConnectProviderModalContext } from '@/components/connect-provider-modal';
 import { useLabelTemplateModal } from '@/components/label-template-edit-modal';
 import { UpdateCarrierConnectionMutationInput } from '@karrio/graphql';
+import { useRateSheetModal } from '@/components/rate-sheet-edit-modal';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import CarrierNameBadge from '@/components/carrier-name-badge';
 import CopiableLink from '@/components/copiable-link';
@@ -10,7 +11,7 @@ import { useRouter } from 'next/dist/client/router';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import { Loading } from '@/components/loader';
-import { isNoneOrEmpty } from '@/lib/helper';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import Spinner from '@/components/spinner';
 
 type ConnectionUpdateType = Partial<UpdateCarrierConnectionMutationInput> & { id: string, carrier_name: string };
@@ -19,8 +20,9 @@ interface UserConnectionListView { }
 const UserConnectionList: React.FC<UserConnectionListView> = () => {
   const router = useRouter();
   const { notify } = useContext(Notify);
-  const { setLoading } = useContext(Loading);
+  const ratesModal = useRateSheetModal();
   const labelModal = useLabelTemplateModal();
+  const { setLoading } = useContext(Loading);
   const { confirm: confirmDeletion } = useContext(ConfirmModalContext);
   const { editConnection } = useContext(ConnectProviderModalContext);
   const mutation = useCarrierConnectionMutation();
@@ -120,7 +122,9 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
               <td className="action is-vcentered pr-0">
                 <div className="buttons is-justify-content-end">
                   {!isNoneOrEmpty((connection as any).custom_carrier_name) && <button
-                    title="edit label" className="button is-white" onClick={() => labelModal.editLabelTemplate({
+                    title="edit label"
+                    className="button is-white"
+                    onClick={() => labelModal.editLabelTemplate({
                       connection: connection as any, onSubmit: label_template => update({
                         id: connection.id,
                         carrier_name: connection.carrier_name,
@@ -129,6 +133,21 @@ const UserConnectionList: React.FC<UserConnectionListView> = () => {
                     })}>
                     <span className="icon is-small">
                       <i className="fas fa-sticky-note"></i>
+                    </span>
+                  </button>}
+                  {!isNone((connection as any).services) && <button
+                    title="edit rates"
+                    className="button is-white"
+                    onClick={() => ratesModal.editRateSheet({
+                      connection: connection as any,
+                      onSubmit: services => update({
+                        id: connection.id,
+                        carrier_name: connection.carrier_name,
+                        services,
+                      } as any)()
+                    })}>
+                    <span className="icon is-small">
+                      <i className="fas fa-clipboard-list"></i>
                     </span>
                   </button>}
                   <button title="edit account" className="button is-white" onClick={() => editConnection({ connection })}>

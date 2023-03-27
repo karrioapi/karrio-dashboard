@@ -310,8 +310,8 @@ export interface References {
   service_names: Collection<Collection>;
   package_presets: Collection<Collection>;
   packaging_types: Collection<Collection>;
-  carrier_capabilities: Collection<Collection<Array<string>>>;
-  service_levels: Collection<Collection<Array<ServiceLevelType>>>;
+  carrier_capabilities: Collection<string[]>;
+  service_levels: Collection<ServiceLevelType[]>;
 }
 
 export const CARRIER_THEMES: Collection = {

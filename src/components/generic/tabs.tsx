@@ -17,16 +17,17 @@ interface TabStateInterface {
 interface TabStateProviderProps {
   tabs: string[];
   disabledTabs?: string[];
+  defaultSelected?: string;
   setSelectedToURL?: boolean;
 }
 
 export const TabStateContext = React.createContext<TabStateInterface>({} as TabStateInterface);
 
-export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, tabs, disabledTabs = [], setSelectedToURL }) => {
+export const TabStateProvider: React.FC<TabStateProviderProps> = ({ children, tabs, defaultSelected, disabledTabs = [], setSelectedToURL }) => {
   const router = useRouter();
   const { tab } = router.query;
   const { addUrlParam } = useLocation();
-  const [selected, setSelected] = useState<string>(tabs[0]);
+  const [selected, setSelected] = useState<string>(defaultSelected || tabs[0]);
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const selectTab = (tab: string, disabled?: string[]) => {
