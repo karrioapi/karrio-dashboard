@@ -542,6 +542,16 @@ export default function CreateLabelPage(pageProps: any) {
 
                 </div>
 
+
+                {/* paperless trade */}
+                <CheckBoxField name="paperless_trade"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={shipment.options?.paperless_trade}
+                  onChange={e => onChange({ options: { ...shipment.options, paperless_trade: e.target.checked } })}
+                >
+                  <span>Paperless trade</span>
+                </CheckBoxField>
+
               </div>
 
               <hr className='my-1' style={{ height: '1px' }} />
@@ -660,7 +670,8 @@ export default function CreateLabelPage(pageProps: any) {
                         ...DEFAULT_CUSTOMS_CONTENT.duty,
                         currency: shipment.options?.currency,
                         paid_by: shipment.payment?.paid_by,
-                        account_number: shipment.payment?.account_number
+                        account_number: shipment.payment?.account_number,
+                        declared_value: shipment.options?.declared_value,
                       },
                       duty_billing_address: shipment.billing_address,
                       commodities: getShipmentCommodities(shipment),
