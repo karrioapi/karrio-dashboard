@@ -249,8 +249,8 @@ export function useLabelDataMutation(id: string) {
       try {
         const invalidCustoms = (
           "customs" in changes && [
-            ...(changes.customs?.commodities, []),
-            ...(state.shipment.customs?.commodities, [])
+            ...(changes.customs?.commodities || []),
+            ...(state.shipment.customs?.commodities || [])
           ].length === 0
         );
         if (invalidCustoms) {
