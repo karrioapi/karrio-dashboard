@@ -28,7 +28,7 @@ interface ConnectProviderModalComponent {
   connection?: CarrierConnectionType;
 }
 
-function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
+function reducer(state: any, { name, value }: { name: string, value: string | boolean | object | null }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -42,7 +42,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
-  const { references: { carriers, service_levels } } = useAPIMetadata();
+  const { references: { carriers } } = useAPIMetadata();
   const { testMode } = useAppMode();
   const { notify } = useContext(Notify);
   const mutation = useCarrierConnectionMutation();
@@ -94,7 +94,24 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name: string = target.name;
 
-    dispatch({ name, value });
+    dispatch({ name, value: value === 'none' ? null : value });
+  };
+  const handleCarrierChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const target = event.target;
+    const value = target.value as CarrierNameType;
+    let state = ["lang", "language"].reduce((acc, cur) => {
+      if (fieldState(value, cur).default) {
+        return { ...acc, [cur]: fieldState(value, cur).default };
+      }
+      return acc;
+    }, {
+      test_mode: testMode,
+      carrier_id: `${value.toLocaleLowerCase()}-${testMode ? 'test' : ''}`
+    });
+
+    setCarrierName(value);
+    console.log('state', state);
+    dispatch({ name: "full", value: state });
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -138,10 +155,15 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
             </div>
             <div className="p-3 my-4"></div>
 
-            <SelectField value={carrier_name} onChange={e => setCarrierName(e.target.value)} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
+            <SelectField value={carrier_name} onChange={handleCarrierChange}
+              disabled={!isNew}
+              key={`select-${key}`}
+              className="is-fullwidth"
+              required
+            >
               <option value='none'>Select Carrier</option>
 
-              {carriers && Object.keys(carriers).map(carrier => (
+              {carriers && Object.keys(carriers).sort().map(carrier => (
                 <option key={carrier} value={carrier}>{(carriers as Collection)[carrier]}</option>
               ))}
 
@@ -174,8 +196,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("carrier_id").required}
-                  placeholder='friendly-tag. e.g: dhl-express-us, ups-ca-test...'
-                />
+                >
+                  <p className="help">friendly-tag. e.g: <strong>dhl-express-us, ups-ca-test...</strong></p>
+                </InputField>
 
                 {/* Carrier specific fields BEGING */}
 
@@ -198,6 +221,20 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("seller_id").required}
+                />}
+
+                {field("customer_id").exists && <InputField label="Customer ID" value={payload.customer_id}
+                  name="customer_id"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("customer_id").required}
+                />}
+
+                {field("identifier").exists && <InputField label="Identifier" value={payload.identifier}
+                  name="identifier"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("identifier").required}
                 />}
 
                 {field("api_key").exists && <InputField label="API Key" value={payload.api_key}
@@ -401,14 +438,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("depot").required}
                 />}
 
-                {field("account_country_code").exists && <CountryInput label="Account Country Code"
-                  onValueChange={directChange("account_country_code")}
-                  value={payload.account_country_code}
-                  className="is-small"
-                  dropdownClass="is-small"
-                  required={field("account_country_code").required}
-                />}
-
                 {field("mailer_id").exists && <InputField label="Mailer ID" value={payload.mailer_id}
                   name="mailer_id"
                   onChange={handleChange}
@@ -451,9 +480,41 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("mws_auth_token").required}
                 />}
 
+                {field("lang").exists && <SelectField value={payload.lang}
+                  label="Lang"
+                  name="lang"
+                  onChange={handleChange}
+                  className="is-small is-fullwidth"
+                  required={field("lang").required}
+                >
+                  {!field("lang").required && <option value='none'></option>}
+                  <option value='en_EN'>en_EN</option>
+                  <option value='fr_FR'>fr_FR</option>
+                </SelectField>}
+
+                {field("language").exists && <SelectField value={payload.language}
+                  label="Language"
+                  name="language"
+                  onChange={handleChange}
+                  className="is-small is-fullwidth"
+                  required={field("language").required}
+                >
+                  {!field("language").required && <option value='none'></option>}
+                  <option value='en'>en</option>
+                  <option value='fr'>fr</option>
+                </SelectField>}
+
+                {field("account_country_code").exists && <CountryInput label="Account Country Code"
+                  onValueChange={directChange("account_country_code")}
+                  value={payload.account_country_code}
+                  className="is-small"
+                  dropdownClass="is-small"
+                  required={field("account_country_code").required}
+                />}
+
                 {/* Carrier specific fields END */}
 
-                <hr className="mt-1 my-3" style={{ height: '1px' }} />
+                <hr className="my-3" style={{ height: '1px' }} />
 
                 <MetadataEditor
                   object_type={MetadataObjectTypeEnum.carrier}
@@ -509,6 +570,7 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],
       [CarrierSettingsCarrierNameEnum.Aramex]: [["carrier_id", true], ["username", true], ["password", true], ["account_pin", true], ["account_entity", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Australiapost]: [["carrier_id", true], ["api_key", true], ["password", true], ["account_number", true]],
+      [CarrierSettingsCarrierNameEnum.Boxknight]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Canadapost]: [["carrier_id", true], ["username", true], ["password", true], ["customer_number", true], ["contract_id"]],
       [CarrierSettingsCarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
@@ -522,6 +584,10 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Easypost]: [["carrier_id", true], ["api_key", true]],
       [CarrierSettingsCarrierNameEnum.Freightcom]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Generic]: [["display_name", true], ["custom_carrier_name", true], ["carrier_id", true], ["account_number"], ["account_country_code"], ["services"]],
+      [CarrierSettingsCarrierNameEnum.Geodis]: [["carrier_id", true], ["identifier", true], ["api_key", true], ["language", false, "fr"]],
+      [CarrierSettingsCarrierNameEnum.Laposte]: [["carrier_id", true], ["api_key", true], ["lang", false, "fr_FR"]],
+      [CarrierSettingsCarrierNameEnum.Nationex]: [["carrier_id", true], ["api_key", true], ["customer_id", true], ["billing_account"], ["language", false, "en"]],
+      [CarrierSettingsCarrierNameEnum.Roadie]: [["carrier_id", true], ["api_key", true]],
       [CarrierSettingsCarrierNameEnum.Fedex]: [["carrier_id", true], ["user_key"], ["password", true], ["meter_number", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Purolator]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["user_token"]],
       [CarrierSettingsCarrierNameEnum.Royalmail]: [["carrier_id", true], ["client_id", true], ["client_secret", true]],
@@ -536,12 +602,13 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Yunexpress]: [["carrier_id", true], ["customer_number", true], ["api_secret", true]],
       [NoneEnum.none]: [],
     }[carrier_name] || [])
-      .find(([_, ...__]) => `${_}`.includes(property)) || []
+      .find(([_, ...__]) => _ === property) || []
   );
 
   return {
     get exists() { return field[0] !== undefined },
-    get required() { return field[1] === true; }
+    get required() { return field[1] === true; },
+    get default() { return field[2]; }
   }
 }
 

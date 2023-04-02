@@ -26,12 +26,12 @@ const InputField: React.FC<InputFieldComponent> = ({ label, required, className,
           <i className="fas fa-asterisk" style={{ fontSize: ".7em" }}></i>
         </span>}
       </label>}
-      {addonLeft && addonLeft}
-      <p className={`control ${controlClass}`}>
+      <div className={`control ${controlClass}`}>
+        {addonLeft && addonLeft}
         <input type="text" className={`input ${className}`} {...Props} {...Ref} />
-        {children}
-      </p>
-      {addonRight ? addonRight : <></>}
+        {addonRight ? addonRight : <></>}
+      </div>
+      {children}
     </div>
   )
 };
