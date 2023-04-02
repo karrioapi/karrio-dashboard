@@ -92,8 +92,11 @@ function renderError(msg: any, _: number): any {
       if (msg.details) {
         return <>{renderError(msg, 0)}</>;
       }
+      if (msg.validation) {
+        return <>{renderError({ details: msg.validation }, 0)}</>;
+      }
       if (msg.message) {
-        return <p key={index}><strong>{msg.code}:</strong> {msg.message}</p>;
+        return <p key={index}><strong>{JSON.stringify(msg.code)}:</strong> {msg.message}</p>;
       }
       return <p key={index}>{JSON.stringify(msg)}</p>;
     });
