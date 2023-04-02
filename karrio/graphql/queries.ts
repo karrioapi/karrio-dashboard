@@ -1650,11 +1650,12 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      capabilities
+      metadata
       seller_id
       developer_id
       mws_auth_token
       aws_region
-      capabilities
     }
     ... on AramexSettingsType {
       id
@@ -1663,13 +1664,14 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      capabilities
+      metadata
       username
       password
       account_pin
       account_entity
       account_number
       account_country_code
-      capabilities
     }
     ... on AustraliaPostSettingsType {
       id
@@ -1678,10 +1680,22 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      capabilities
+      metadata
       api_key
       password
       account_number
+    }
+    ... on BoxKnightSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
       capabilities
+      username
+      password
     }
     ... on CanadaPostSettingsType {
       id
@@ -1690,12 +1704,12 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      capabilities
+      metadata
       username
       password
       customer_number
       contract_id
-      metadata
-      capabilities
     }
     ... on CanparSettingsType {
       id
@@ -1704,9 +1718,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
-      capabilities
     }
     ... on ChronopostSettingsType {
       id
@@ -1715,10 +1730,11 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       password
       account_number
       account_country_code
-      capabilities
     }
     ... on DHLExpressSettingsType {
       id
@@ -1727,11 +1743,12 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       site_id
       password
       account_number
       account_country_code
-      capabilities
     }
     ... on DHLPolandSettingsType {
       id
@@ -1740,6 +1757,8 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       account_number
@@ -1774,7 +1793,6 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
           country_codes
         }
       }
-      capabilities
     }
     ... on DHLUniversalSettingsType {
       id
@@ -1783,9 +1801,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       consumer_key
       consumer_secret
-      capabilities
     }
     ... on DicomSettingsType {
       id
@@ -1794,10 +1813,11 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       billing_account
-      capabilities
     }
     ... on DPDSettingsType {
       id
@@ -1806,10 +1826,11 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       delis_id
       password
       depot
-      capabilities
     }
     ... on DPDHLSettingsType {
       id
@@ -1818,6 +1839,8 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       app_id
@@ -1856,7 +1879,6 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
           country_codes
         }
       }
-      capabilities
     }
     ... on EShipperSettingsType {
       id
@@ -1865,9 +1887,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
-      capabilities
     }
     ... on EasyPostSettingsType {
       id
@@ -1876,9 +1899,9 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
-      api_key
       metadata
       capabilities
+      api_key
     }
     ... on FedexSettingsType {
       id
@@ -1887,13 +1910,13 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       account_number
       password
       meter_number
       user_key
       account_country_code
-      metadata
-      capabilities
     }
     ... on FreightcomSettingsType {
       id
@@ -1902,9 +1925,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
-      capabilities
     }
     ... on GenericSettingsType {
       id
@@ -1915,6 +1939,8 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       account_number
       test_mode
       active
+      metadata
+      capabilities
       account_country_code
       services {
         id
@@ -1956,8 +1982,45 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
         width
         height
       }
+    }
+    ... on GEODISSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
       metadata
       capabilities
+      api_key
+      identifier
+      language
+    }
+    ... on LaPosteSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
+      metadata
+      capabilities
+      api_key
+      lang
+    }
+    ... on NationexSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
+      metadata
+      capabilities
+      api_key
+      customer_id
+      billing_account
+      language
     }
     ... on PurolatorSettingsType {
       id
@@ -1966,12 +2029,23 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       account_number
       user_token
+    }
+    ... on RoadieSettingsType {
+      id
+      carrier_id
+      carrier_name
+      display_name
+      test_mode
+      active
       metadata
       capabilities
+      api_key
     }
     ... on RoyalMailSettingsType {
       id
@@ -1980,9 +2054,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       client_id
       client_secret
-      capabilities
     }
     ... on SendleSettingsType {
       id
@@ -1991,9 +2066,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       sendle_id
       api_key
-      capabilities
     }
     ... on SFExpressSettingsType {
       id
@@ -2002,9 +2078,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       partner_id
       check_word
-      capabilities
     }
     ... on TNTSettingsType {
       id
@@ -2013,11 +2090,12 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       account_number
       account_country_code
-      capabilities
     }
     ... on UPSSettingsType {
       id
@@ -2026,13 +2104,13 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       access_license_number
       account_number
       account_country_code
-      metadata
-      capabilities
     }
     ... on UPSFreightSettingsType {
       id
@@ -2041,13 +2119,13 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       access_license_number
       account_number
       account_country_code
-      metadata
-      capabilities
     }
     ... on USPSSettingsType {
       id
@@ -2056,12 +2134,13 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
-      capabilities
     }
     ... on USPSInternationalSettingsType {
       id
@@ -2070,12 +2149,13 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       username
       password
       mailer_id
       customer_registration_id
       logistics_manager_mailer_id
-      capabilities
     }
     ... on YanwenSettingsType {
       id
@@ -2084,9 +2164,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       customer_number
       license_key
-      capabilities
     }
     ... on YunExpressSettingsType {
       id
@@ -2095,9 +2176,10 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       display_name
       test_mode
       active
+      metadata
+      capabilities
       customer_number
       api_secret
-      capabilities
     }
   }
 }`;
