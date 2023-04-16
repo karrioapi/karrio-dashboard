@@ -19,7 +19,7 @@ import ConfirmModal from "@/components/confirm-modal";
 import { useRouter } from "next/dist/client/router";
 import StatusBadge from "@/components/status-badge";
 import { useNotifier } from "@/components/notifier";
-import { DocumentUploadData } from "@karrio/rest";
+import { DocumentUploadData, DocumentUploadRecord } from "@karrio/rest";
 import { useShipment } from "@/context/shipment";
 import { useLoader } from "@/components/loader";
 import { useEvents } from "@/context/event";
@@ -29,6 +29,7 @@ import { useLogs } from "@/context/log";
 import Head from "next/head";
 import React from "react";
 import { useAPIMetadata } from "@/context/api-metadata";
+import OptionsDescription from "@/components/descriptions/options-description";
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
@@ -297,14 +298,7 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
             {(Object.values(shipment.options as object).length > 0) && <div className="column is-6 is-size-6 py-1">
               <p className="is-title is-size-6 my-2 has-text-weight-semibold">OPTIONS</p>
 
-              {Object.entries(shipment.options).map(([key, value]: any, index) => <React.Fragment key={index + "item-info"}>
-                <p className="is-subtitle is-size-7 my-1 has-text-weight-semibold has-text-grey">
-                  <span>
-                    {formatRef(key).toLowerCase()}: <strong>{String(value)}</strong>
-                    {['insurance', 'cash_on_delivery', 'declared_value'].includes(key) && ` ${shipment.options.currency || ''}`}
-                  </span>
-                </p>
-              </React.Fragment>)}
+              <OptionsDescription options={shipment.options} />
 
             </div>}
           </div>
@@ -376,35 +370,46 @@ export const ShipmentComponent: React.FC<{ shipmentId?: string }> = ({ shipmentI
 
 
         {/* Document section */}
-        {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("upload_document") && ("paperless_trade" in shipment.options) && <>
+        {((carrier_capabilities[shipment.carrier_name as string] || []) as any).includes("paperless") && ("paperless_trade" in shipment.options) && <>
 
           <h2 className="title is-5 my-4">Paperless Trade Documents</h2>
 
           {(!documents.isFetched && documents.isFetching) && <Spinner />}
 
-          {(documents.isFetched && !documents.isFetching) && (uploads || []).length == 0 && <>
+          {(documents.isFetched && !documents.isFetching) && [...(uploads || []), ...(shipment.options.doc_files || [])].length == 0 && <>
             <hr className="mt-1 mb-3" style={{ height: '1px' }} />
             <div className="pb-3">No documents uploaded</div>
           </>}
 
-          {documents.isFetched && (uploads || []).length > 0 && <div className="table-container">
-            <table className="related-item-table table is-hoverable is-fullwidth">
-              <tbody>
-                {(uploads || []).map(upload => <React.Fragment key={shipment.id}>
-                  {(upload.documents || []).map(doc => (
-                    <tr key={doc.doc_id} className="items">
+          {documents.isFetched && [...(uploads || []), ...(shipment.options.doc_files || [])].length > 0 &&
+            <div className="table-container">
+              <table className="related-item-table table is-hoverable is-fullwidth">
+                <tbody>
+                  {(uploads || []).map(upload => <React.Fragment key={shipment.id}>
+                    {(upload.documents || []).map(doc => (
+                      <tr key={doc.doc_id} className="items">
+                        <td className="description is-vcentered p-0">
+                          <span>{doc.file_name}</span>
+                        </td>
+                        <td className="status is-vcentered p-0">
+                          <span className="tag is-success my-2">uploaded</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </React.Fragment>)}
+                  {(shipment.options.doc_files || []).map((doc: any, idx: number) => (
+                    <tr key={`${new Date()}-${idx}`} className="items">
                       <td className="description is-vcentered p-0">
-                        <span>{doc.file_name}</span>
+                        <span>{doc.doc_name}</span>
                       </td>
                       <td className="status is-vcentered p-0">
                         <span className="tag is-success my-2">uploaded</span>
                       </td>
                     </tr>
                   ))}
-                </React.Fragment>)}
-              </tbody>
-            </table>
-          </div>}
+                </tbody>
+              </table>
+            </div>}
 
           <div className="is-flex is-justify-content-space-between">
             <div className="is-flex">
