@@ -1061,6 +1061,18 @@ export interface CarrierSettings {
      * @memberof CarrierSettings
      */
     'capabilities'?: Array<string> | null;
+    /**
+     * The carrier user metadata.
+     * @type {{ [key: string]: any; }}
+     * @memberof CarrierSettings
+     */
+    'metadata'?: { [key: string]: any; };
+    /**
+     * The carrier connection config.
+     * @type {{ [key: string]: any; }}
+     * @memberof CarrierSettings
+     */
+    'config'?: { [key: string]: any; };
 }
 
 export const CarrierSettingsCarrierNameEnum = {
@@ -7112,6 +7124,9 @@ export const PatchedWebhookDataEnabledEventsEnum = {
     ShipmentPurchased: 'shipment_purchased',
     ShipmentCancelled: 'shipment_cancelled',
     ShipmentFulfilled: 'shipment_fulfilled',
+    ShipmentOutForDelivery: 'shipment_out_for_delivery',
+    ShipmentNeedsAttention: 'shipment_needs_attention',
+    ShipmentDeliveryFailed: 'shipment_delivery_failed',
     TrackerCreated: 'tracker_created',
     TrackerUpdated: 'tracker_updated',
     OrderCreated: 'order_created',
@@ -8687,7 +8702,7 @@ export interface RateRequest {
      */
     'services'?: Array<string> | null;
     /**
-     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"shipment_date\": \"2020-01-01\",             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"signature_confirmation\": true,             \"preferred_service\": \"fedex_express_saver\",         }         
+     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"sms_notification\": true,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"hold_at_location\": true,             \"paperless_trade\": true,             \"preferred_service\": \"fedex_express_saver\",             \"shipment_date\": \"2020-01-01\",             \"shipment_note\": \"This is a shipment note\",             \"signature_confirmation\": true,             \"doc_files\": [                 {                     \"doc_type\": \"commercial_invoice\",                     \"doc_file\": \"base64 encoded file\",                     \"doc_name\": \"commercial_invoice.pdf\",                     \"doc_format\": \"pdf\",                 }             ],             \"doc_references\": [                 {                     \"doc_id\": \"123456789\",                     \"doc_type\": \"commercial_invoice\",                 }             ],         }         
      * @type {{ [key: string]: any; }}
      * @memberof RateRequest
      */
@@ -9116,7 +9131,7 @@ export interface Shipment {
      */
     'services'?: Array<string> | null;
     /**
-     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"shipment_date\": \"2020-01-01\",             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"signature_confirmation\": true,             \"preferred_service\": \"fedex_express_saver\",         }         
+     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"sms_notification\": true,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"hold_at_location\": true,             \"paperless_trade\": true,             \"preferred_service\": \"fedex_express_saver\",             \"shipment_date\": \"2020-01-01\",             \"shipment_note\": \"This is a shipment note\",             \"signature_confirmation\": true,             \"doc_files\": [                 {                     \"doc_type\": \"commercial_invoice\",                     \"doc_file\": \"base64 encoded file\",                     \"doc_name\": \"commercial_invoice.pdf\",                     \"doc_format\": \"pdf\",                 }             ],             \"doc_references\": [                 {                     \"doc_id\": \"123456789\",                     \"doc_type\": \"commercial_invoice\",                 }             ],         }         
      * @type {{ [key: string]: any; }}
      * @memberof Shipment
      */
@@ -9188,7 +9203,7 @@ export interface Shipment {
      */
     'messages'?: Array<Message>;
     /**
-     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered
+     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered * `needs_attention` - needs_attention * `out_for_delivery` - out_for_delivery * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof Shipment
      */
@@ -9276,7 +9291,10 @@ export const ShipmentStatusEnum = {
     Cancelled: 'cancelled',
     Shipped: 'shipped',
     InTransit: 'in_transit',
-    Delivered: 'delivered'
+    Delivered: 'delivered',
+    NeedsAttention: 'needs_attention',
+    OutForDelivery: 'out_for_delivery',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type ShipmentStatusEnum = typeof ShipmentStatusEnum[keyof typeof ShipmentStatusEnum];
@@ -9815,7 +9833,7 @@ export interface ShipmentData {
      */
     'parcels': Array<ParcelData>;
     /**
-     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"shipment_date\": \"2020-01-01\",             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"signature_confirmation\": true,             \"preferred_service\": \"fedex_express_saver\",         }         
+     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"sms_notification\": true,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"hold_at_location\": true,             \"paperless_trade\": true,             \"preferred_service\": \"fedex_express_saver\",             \"shipment_date\": \"2020-01-01\",             \"shipment_note\": \"This is a shipment note\",             \"signature_confirmation\": true,             \"doc_files\": [                 {                     \"doc_type\": \"commercial_invoice\",                     \"doc_file\": \"base64 encoded file\",                     \"doc_name\": \"commercial_invoice.pdf\",                     \"doc_format\": \"pdf\",                 }             ],             \"doc_references\": [                 {                     \"doc_id\": \"123456789\",                     \"doc_type\": \"commercial_invoice\",                 }             ],         }         
      * @type {{ [key: string]: any; }}
      * @memberof ShipmentData
      */
@@ -11660,7 +11678,7 @@ export interface ShippingRequest {
      */
     'parcels': Array<ParcelData>;
     /**
-     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"shipment_date\": \"2020-01-01\",             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"signature_confirmation\": true,             \"preferred_service\": \"fedex_express_saver\",         }         
+     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"sms_notification\": true,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"hold_at_location\": true,             \"paperless_trade\": true,             \"preferred_service\": \"fedex_express_saver\",             \"shipment_date\": \"2020-01-01\",             \"shipment_note\": \"This is a shipment note\",             \"signature_confirmation\": true,             \"doc_files\": [                 {                     \"doc_type\": \"commercial_invoice\",                     \"doc_file\": \"base64 encoded file\",                     \"doc_name\": \"commercial_invoice.pdf\",                     \"doc_format\": \"pdf\",                 }             ],             \"doc_references\": [                 {                     \"doc_id\": \"123456789\",                     \"doc_type\": \"commercial_invoice\",                 }             ],         }         
      * @type {{ [key: string]: any; }}
      * @memberof ShippingRequest
      */
@@ -11766,7 +11784,7 @@ export interface ShippingResponse {
      */
     'services'?: Array<string> | null;
     /**
-     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"shipment_date\": \"2020-01-01\",             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"signature_confirmation\": true,             \"preferred_service\": \"fedex_express_saver\",         }         
+     * <details>         <summary>The options available for the shipment.</summary>          {             \"currency\": \"USD\",             \"insurance\": 100.00,             \"cash_on_delivery\": 30.00,             \"dangerous_good\": true,             \"declared_value\": 150.00,             \"sms_notification\": true,             \"email_notification\": true,             \"email_notification_to\": \"shipper@mail.com\",             \"hold_at_location\": true,             \"paperless_trade\": true,             \"preferred_service\": \"fedex_express_saver\",             \"shipment_date\": \"2020-01-01\",             \"shipment_note\": \"This is a shipment note\",             \"signature_confirmation\": true,             \"doc_files\": [                 {                     \"doc_type\": \"commercial_invoice\",                     \"doc_file\": \"base64 encoded file\",                     \"doc_name\": \"commercial_invoice.pdf\",                     \"doc_format\": \"pdf\",                 }             ],             \"doc_references\": [                 {                     \"doc_id\": \"123456789\",                     \"doc_type\": \"commercial_invoice\",                 }             ],         }         
      * @type {{ [key: string]: any; }}
      * @memberof ShippingResponse
      */
@@ -11838,7 +11856,7 @@ export interface ShippingResponse {
      */
     'messages'?: Array<Message>;
     /**
-     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered
+     * The current Shipment status  * `draft` - draft * `purchased` - purchased * `cancelled` - cancelled * `shipped` - shipped * `in_transit` - in_transit * `delivered` - delivered * `needs_attention` - needs_attention * `out_for_delivery` - out_for_delivery * `delivery_failed` - delivery_failed
      * @type {string}
      * @memberof ShippingResponse
      */
@@ -11920,7 +11938,10 @@ export const ShippingResponseStatusEnum = {
     Cancelled: 'cancelled',
     Shipped: 'shipped',
     InTransit: 'in_transit',
-    Delivered: 'delivered'
+    Delivered: 'delivered',
+    NeedsAttention: 'needs_attention',
+    OutForDelivery: 'out_for_delivery',
+    DeliveryFailed: 'delivery_failed'
 } as const;
 
 export type ShippingResponseStatusEnum = typeof ShippingResponseStatusEnum[keyof typeof ShippingResponseStatusEnum];
@@ -12872,6 +12893,9 @@ export const WebhookEnabledEventsEnum = {
     ShipmentPurchased: 'shipment_purchased',
     ShipmentCancelled: 'shipment_cancelled',
     ShipmentFulfilled: 'shipment_fulfilled',
+    ShipmentOutForDelivery: 'shipment_out_for_delivery',
+    ShipmentNeedsAttention: 'shipment_needs_attention',
+    ShipmentDeliveryFailed: 'shipment_delivery_failed',
     TrackerCreated: 'tracker_created',
     TrackerUpdated: 'tracker_updated',
     OrderCreated: 'order_created',
@@ -12924,6 +12948,9 @@ export const WebhookDataEnabledEventsEnum = {
     ShipmentPurchased: 'shipment_purchased',
     ShipmentCancelled: 'shipment_cancelled',
     ShipmentFulfilled: 'shipment_fulfilled',
+    ShipmentOutForDelivery: 'shipment_out_for_delivery',
+    ShipmentNeedsAttention: 'shipment_needs_attention',
+    ShipmentDeliveryFailed: 'shipment_delivery_failed',
     TrackerCreated: 'tracker_created',
     TrackerUpdated: 'tracker_updated',
     OrderCreated: 'order_created',
@@ -14707,11 +14734,12 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
          * Returns the list of configured carriers
          * @summary List all carriers
          * @param {boolean} [active] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {boolean} [systemOnly] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (active?: boolean, systemOnly?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (active?: boolean, carrierName?: string, systemOnly?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/carriers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14740,6 +14768,10 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
 
             if (active !== undefined) {
                 localVarQueryParameter['active'] = active;
+            }
+
+            if (carrierName !== undefined) {
+                localVarQueryParameter['carrier_name'] = carrierName;
             }
 
             if (systemOnly !== undefined) {
@@ -14782,12 +14814,13 @@ export const CarriersApiFp = function(configuration?: Configuration) {
          * Returns the list of configured carriers
          * @summary List all carriers
          * @param {boolean} [active] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {boolean} [systemOnly] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(active?: boolean, systemOnly?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CarrierList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.list(active, systemOnly, options);
+        async list(active?: boolean, carrierName?: string, systemOnly?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CarrierList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.list(active, carrierName, systemOnly, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -14814,12 +14847,13 @@ export const CarriersApiFactory = function (configuration?: Configuration, baseP
          * Returns the list of configured carriers
          * @summary List all carriers
          * @param {boolean} [active] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {boolean} [systemOnly] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(active?: boolean, systemOnly?: boolean, options?: any): AxiosPromise<CarrierList> {
-            return localVarFp.list(active, systemOnly, options).then((request) => request(axios, basePath));
+        list(active?: boolean, carrierName?: string, systemOnly?: boolean, options?: any): AxiosPromise<CarrierList> {
+            return localVarFp.list(active, carrierName, systemOnly, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -14850,6 +14884,13 @@ export interface CarriersApiListRequest {
      * @memberof CarriersApiList
      */
     readonly active?: boolean
+
+    /**
+     * The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
+     * @type {string}
+     * @memberof CarriersApiList
+     */
+    readonly carrierName?: string
 
     /**
      * 
@@ -14887,7 +14928,7 @@ export class CarriersApi extends BaseAPI {
      * @memberof CarriersApi
      */
     public list(requestParameters: CarriersApiListRequest = {}, options?: AxiosRequestConfig) {
-        return CarriersApiFp(this.configuration).list(requestParameters.active, requestParameters.systemOnly, options).then((request) => request(this.axios, this.basePath));
+        return CarriersApiFp(this.configuration).list(requestParameters.active, requestParameters.carrierName, requestParameters.systemOnly, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -18432,12 +18473,12 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
          * @param {string} [optionValue] 
          * @param {string} [reference] 
          * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped'} [status] 
+         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/shipments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -18783,12 +18824,12 @@ export const ShipmentsApiFp = function(configuration?: Configuration) {
          * @param {string} [optionValue] 
          * @param {string} [reference] 
          * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped'} [status] 
+         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
+        async list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -18883,12 +18924,12 @@ export const ShipmentsApiFactory = function (configuration?: Configuration, base
          * @param {string} [optionValue] 
          * @param {string} [reference] 
          * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped'} [status] 
+         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped', trackingNumber?: string, options?: any): AxiosPromise<ShipmentList> {
+        list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options?: any): AxiosPromise<ShipmentList> {
             return localVarFp.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
@@ -19050,10 +19091,10 @@ export interface ShipmentsApiListRequest {
 
     /**
      * 
-     * @type {'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped'}
+     * @type {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'}
      * @memberof ShipmentsApiList
      */
-    readonly status?: 'cancelled' | 'delivered' | 'draft' | 'in_transit' | 'purchased' | 'shipped'
+    readonly status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'
 
     /**
      * 
