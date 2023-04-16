@@ -19,6 +19,7 @@ interface ConfirmModalComponent { }
 const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
   const { notify } = useContext(Notify);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [operation, setOperation] = useState<OperationType>();
 
   const confirmDeletion = (operation: OperationType) => {
@@ -28,18 +29,21 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
   const close = (evt?: React.MouseEvent) => {
     evt?.preventDefault();
     setIsActive(false);
+    setIsLoading(false);
     setOperation(undefined);
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+    setIsLoading(true);
     try {
       await operation?.onConfirm();
       notify({
         type: NotificationType.success, message: `${operation?.label} successfully!...`
       });
-      close();
+      setTimeout(() => { close(); }, 2000);
     } catch (message: any) {
       notify({ type: NotificationType.error, message });
+      setIsLoading(false);
     }
   };
 
@@ -61,8 +65,19 @@ const ConfirmModal: React.FC<ConfirmModalComponent> = ({ children }) => {
             <div className="p-3 my-4"></div>
 
             <div className="buttons my=2">
-              <button className="button is-info is-light is-small" onClick={close}>Cancel</button>
-              <input className="button is-danger is-small" type="submit" value={operation?.action || "Delete"} />
+              <button
+                className="button is-info is-light is-small"
+                onClick={close}
+                disabled={isLoading}
+              >
+                <span>Cancel</span>
+              </button>
+              <input
+                type="submit"
+                className={"button is-danger is-small" + `${isLoading ? " is-loading" : ""}`}
+                value={operation?.action || "Delete"}
+                disabled={isLoading}
+              />
             </div>
           </section>
         </form>
