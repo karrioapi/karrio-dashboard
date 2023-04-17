@@ -68,8 +68,8 @@ export default function ShipmentsPage(pageProps: any) {
             <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['purchased', 'delivered', 'in_transit', 'cancelled', 'needs_attention', 'out_for_delivery', 'delivery_failed']) ? 'is-active' : ''}`}>
               <a onClick={() => updateFilter({ status: ['purchased', 'delivered', 'in_transit', 'cancelled', 'needs_attention', 'out_for_delivery', 'delivery_failed'], offset: 0 })}>all</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['purchased', 'in_transit']) ? 'is-active' : ''}`}>
-              <a onClick={() => updateFilter({ status: ['purchased', 'in_transit'], offset: 0 })}>purchased</a>
+            <li className={`is-capitalized has-text-weight-semibold ${isListEqual(filter?.status || [], ['purchased', 'in_transit', 'out_for_delivery', 'ready_for_pickup']) ? 'is-active' : ''}`}>
+              <a onClick={() => updateFilter({ status: ['purchased', 'in_transit', 'out_for_delivery', 'ready_for_pickup'], offset: 0 })}>purchased</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivered' as any) && filter?.status?.length === 1 ? 'is-active' : ''}`}>
               <a onClick={() => updateFilter({ status: ['delivered'], offset: 0 })}>delivered</a>
