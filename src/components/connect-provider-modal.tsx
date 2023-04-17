@@ -1,7 +1,7 @@
 import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/user-connection';
 import { isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import { Collection, NoneEnum, NotificationType } from '@/lib/types';
+import { Collection, LABEL_TYPES, NoneEnum, NotificationType } from '@/lib/types';
 import React, { useContext, useReducer, useState } from 'react';
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import CountryInput from '@/components/generic/country-input';
@@ -12,6 +12,7 @@ import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { useAPIMetadata } from '@/context/api-metadata';
 import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
+import { Disclosure } from '@headlessui/react';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;
 type OperationType = {
@@ -42,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
-  const { references: { carriers } } = useAPIMetadata();
+  const { references: { carriers, connection_configs, service_names, option_names } } = useAPIMetadata();
   const { testMode } = useAppMode();
   const { notify } = useContext(Notify);
   const mutation = useCarrierConnectionMutation();
@@ -110,8 +111,19 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     });
 
     setCarrierName(value);
-    console.log('state', state);
     dispatch({ name: "full", value: state });
+  };
+  const handleConfigChange = (event: React.ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
+    const target = event.target;
+    const name: string = target.name;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+
+    if (target.multiple === true) {
+      value = Array.from(target.selectedOptions).map((o: any) => o.value) as any
+    }
+
+    const config = { ...payload.config, [name]: value === 'none' ? null : value };
+    dispatch({ name: "config", value: config });
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -512,9 +524,110 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("account_country_code").required}
                 />}
 
+                {/* Carrier config section */}
+
+                {carrier_name.toString() in connection_configs && <div className='mt-4'>
+
+                  <Disclosure>
+                    {({ open }) => (
+                      <div className="block">
+                        <Disclosure.Button as="div" style={{ boxShadow: 'none' }}
+                          className="is-flex is-justify-content-space-between is-clickable px-0 mb-2">
+                          <h2 className="title is-6 my-3">Connection Config</h2>
+                          <span className="icon is-small m-2 mt-3">
+                            {open ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
+                          </span>
+                        </Disclosure.Button>
+                        <Disclosure.Panel className="card is-flat columns is-multiline m-0">
+
+                          {"cost_center" in connection_configs[carrier_name.toString()] &&
+                            <InputField value={payload.config?.cost_center || ""}
+                              name="cost_center"
+                              label="Cost center"
+                              onChange={handleConfigChange}
+                              fieldClass="column is-6 mb-0"
+                              className="is-small is-fullwidth"
+                            />}
+
+                          {"language_code" in connection_configs[carrier_name.toString()] &&
+                            <SelectField value={payload.config?.language_code}
+                              name="language_code"
+                              label="language code"
+                              onChange={handleChange}
+                              className="is-small is-fullwidth"
+                              fieldClass="column is-6 mb-0"
+                            >
+                              <option value='none'></option>
+                              <option value='en'>en</option>
+                              <option value='fr'>fr</option>
+                            </SelectField>}
+
+                          {"label_type" in connection_configs[carrier_name.toString()] &&
+                            <SelectField value={payload.config?.label_type}
+                              name="label_type"
+                              label="Default label type"
+                              onChange={handleConfigChange}
+                              className="is-small is-fullwidth"
+                              fieldClass="column is-6 mb-0"
+                            >
+                              <option value='none'></option>
+                              {LABEL_TYPES.map(_ => <option key={_} value={_}>{_}</option>)}
+                            </SelectField>}
+
+                          {"enforce_zpl" in connection_configs[carrier_name.toString()] &&
+                            <div className="field column is-6 mb-0">
+                              <div className="control">
+                                <label className="checkbox has-text-weight-bold mt-5 pt-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={payload.config?.enforce_zpl}
+                                    name="enforce_zpl"
+                                    onChange={handleConfigChange}
+                                  />
+                                  {' '}
+                                  <span style={{ fontSize: '0.8em' }}>Always use ZPL</span>
+                                </label>
+                              </div>
+                            </div>}
+
+                          {"shipping_services" in connection_configs[carrier_name.toString()] &&
+                            <SelectField defaultValue={payload.config?.shipping_services}
+                              name="shipping_services"
+                              label="Preferred shipping services"
+                              className="is-small is-multiple is-fullwidth"
+                              fieldClass="column is-12 mb-0"
+                              onChange={handleConfigChange}
+                              size={6}
+                              multiple
+                            >
+                              {Object.entries(service_names[carrier_name.toString()] || {})
+                                .map(([_, __]) => <option key={_} value={_}>{__}</option>)}
+                            </SelectField>}
+
+                          {"shipping_options" in connection_configs[carrier_name.toString()] &&
+                            <SelectField defaultValue={payload.config?.shipping_options}
+                              name="shipping_options"
+                              label={`Enable carrier specific shipping options`}
+                              className="is-small is-multiple is-fullwidth"
+                              fieldClass="column is-12 mb-0"
+                              onChange={handleConfigChange}
+                              size={6}
+                              multiple
+                            >
+                              {Object.entries(option_names[carrier_name.toString()] || {})
+                                .map(([_, __]) => <option key={_} value={_}>{__}</option>)}
+                            </SelectField>}
+
+                        </Disclosure.Panel>
+                      </div>
+                    )}
+                  </Disclosure>
+
+                </div>}
+
                 {/* Carrier specific fields END */}
 
-                <hr className="my-3" style={{ height: '1px' }} />
+                <hr className="mt-5 mb-3" style={{ height: '1px' }} />
 
                 <MetadataEditor
                   object_type={MetadataObjectTypeEnum.carrier}

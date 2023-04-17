@@ -28,7 +28,7 @@ const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metad
     queryKey: ['references'],
     queryFn: () => (
       axios
-        .get<References>(url$`${context.host}/v1/references`)
+        .get<References>(url$`${context.host}/v1/references?reduced=false`)
         .then(({ data }) => data)
     ),
     staleTime: 5000,
