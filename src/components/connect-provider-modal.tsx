@@ -107,7 +107,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
       return acc;
     }, {
       test_mode: testMode,
-      carrier_id: `${value.toLocaleLowerCase()}-${testMode ? 'test' : ''}`
+      carrier_id: `${value.toLocaleLowerCase()}${testMode ? '-test' : ''}`
     });
 
     setCarrierName(value);
