@@ -398,7 +398,6 @@ export const CARRIER_IMAGES: Collection = {
   'interlink': 'generic',
   'jppost': 'generic',
   'kuroneko_yamato': 'generic',
-  'laposte': 'generic',
   'lasership': 'generic',
   'loomis': 'generic',
   'lso': 'generic',
@@ -424,7 +423,6 @@ export const CARRIER_IMAGES: Collection = {
   'usps': 'usps',
   'veho': 'generic',
   'yanwen': 'yanwen',
-  'boxknight': 'generic',
   'eshipper': 'eshipper',
   'easypost': 'generic',
   'freightcom': 'freightcom',
@@ -433,6 +431,11 @@ export const CARRIER_IMAGES: Collection = {
   'tnt': 'tnt',
   'usps_international': 'usps',
   'yunexpress': 'yunexpress',
+  'boxknight': 'boxknight',
+  'geodis': 'geodis',
+  'laposte': 'laposte',
+  'nationex': 'nationex',
+  'roadie': 'roadie',
 }
 
 export const IMAGES = (
