@@ -1,4 +1,4 @@
-import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, CreateServiceLevelInput, UpdateServiceLevelInput, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum, get_user_connections_user_connections_GenericSettingsType_label_template, get_webhooks_webhooks_edges_node } from 'karrio/graphql';
+import { CurrencyCodeEnum, CustomsContentTypeEnum, DimensionUnitEnum, GetUser_user, get_address_templates_address_templates_edges_node, get_customs_info_templates_customs_templates_edges_node, get_document_template_document_template, get_events_events_edges_node, get_logs_logs_edges_node, get_order_order, get_order_order_line_items, get_organizations_organizations, get_parcel_templates_parcel_templates_edges_node, get_shipment_shipment, get_shipment_shipment_customs, get_shipment_shipment_customs_commodities, get_shipment_shipment_customs_duty, get_shipment_shipment_parcels, get_shipment_shipment_parcels_items, get_shipment_shipment_payment, get_shipment_shipment_rates, get_shipment_shipment_selected_rate_extra_charges, get_shipment_shipment_shipper, get_tracker_tracker, get_tracker_tracker_events, get_tracker_tracker_messages, OrderStatus, PaidByEnum, CreateServiceLevelInput, UpdateServiceLevelInput, ShipmentStatusEnum, TemplateRelatedObject, TrackerStatusEnum, WeightUnitEnum, get_user_connections_user_connections_GenericSettingsType_label_template, get_webhooks_webhooks_edges_node, LabelTypeEnum } from 'karrio/graphql';
 import { CarrierSettingsCarrierNameEnum, CustomsIncotermEnum, WebhookEnabledEventsEnum } from 'karrio/rest/index';
 import { Session } from 'next-auth';
 
@@ -163,6 +163,11 @@ export const DOCUMENT_RELATED_OBJECTS: string[] = Array.from(new Set(
     .values(TemplateRelatedObject)
 ));
 
+export const LABEL_TYPES: string[] = Array.from(new Set(
+  Object
+    .values(LabelTypeEnum)
+));
+
 export type ErrorMessage = MessageType & {
   carrier_id?: string;
   carrier_name?: string;
@@ -306,12 +311,15 @@ export interface References {
   carriers: Collection;
   custom_carriers: Collection;
   states: Collection<Collection>;
+  options: Collection<Collection>;
   services: Collection<Collection>;
+  option_names: Collection<Collection>;
   service_names: Collection<Collection>;
   package_presets: Collection<Collection>;
   packaging_types: Collection<Collection>;
   carrier_capabilities: Collection<string[]>;
   service_levels: Collection<ServiceLevelType[]>;
+  connection_configs: Collection<Collection<Collection>>;
 }
 
 export const CARRIER_THEMES: Collection = {
@@ -328,10 +336,14 @@ export const CARRIER_THEMES: Collection = {
   'dpdhl': 'is-dhl',
   'eshipper': 'is-eshipper',
   'easypost': 'is-easypost',
+  'geodis': 'is-geodis',
+  'laposte': 'is-laposte',
+  'nationex': 'is-nationex',
   'fedex': 'is-fedex',
   'freightcom': 'is-freightcom',
   'generic': 'is-generic',
   'purolator': 'is-purolator',
+  'roadie': 'is-roadie',
   'royalmail': 'is-royalmail',
   'sendle': 'is-sendle',
   'sf_express': 'is-sf_express',
@@ -386,7 +398,6 @@ export const CARRIER_IMAGES: Collection = {
   'interlink': 'generic',
   'jppost': 'generic',
   'kuroneko_yamato': 'generic',
-  'laposte': 'generic',
   'lasership': 'generic',
   'loomis': 'generic',
   'lso': 'generic',
@@ -412,7 +423,6 @@ export const CARRIER_IMAGES: Collection = {
   'usps': 'usps',
   'veho': 'generic',
   'yanwen': 'yanwen',
-  'boxknight': 'generic',
   'eshipper': 'eshipper',
   'easypost': 'generic',
   'freightcom': 'freightcom',
@@ -421,6 +431,11 @@ export const CARRIER_IMAGES: Collection = {
   'tnt': 'tnt',
   'usps_international': 'usps',
   'yunexpress': 'yunexpress',
+  'boxknight': 'boxknight',
+  'geodis': 'geodis',
+  'laposte': 'laposte',
+  'nationex': 'nationex',
+  'roadie': 'roadie',
 }
 
 export const IMAGES = (

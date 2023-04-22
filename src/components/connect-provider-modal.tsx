@@ -1,7 +1,7 @@
 import { CarrierConnectionType, useCarrierConnectionMutation } from '@/context/user-connection';
 import { isEqual, isNone, useLocation, validationMessage, validityCheck } from '@/lib/helper';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
-import { Collection, NoneEnum, NotificationType } from '@/lib/types';
+import { Collection, LABEL_TYPES, NoneEnum, NotificationType } from '@/lib/types';
 import React, { useContext, useReducer, useState } from 'react';
 import { CarrierSettingsCarrierNameEnum } from '@karrio/rest';
 import CountryInput from '@/components/generic/country-input';
@@ -12,6 +12,7 @@ import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { useAPIMetadata } from '@/context/api-metadata';
 import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
+import { Disclosure } from '@headlessui/react';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;
 type OperationType = {
@@ -28,7 +29,7 @@ interface ConnectProviderModalComponent {
   connection?: CarrierConnectionType;
 }
 
-function reducer(state: any, { name, value }: { name: string, value: string | boolean | object }) {
+function reducer(state: any, { name, value }: { name: string, value: string | boolean | object | null }) {
   switch (name) {
     case "full":
       return { ...(value as object) };
@@ -42,7 +43,7 @@ function reducer(state: any, { name, value }: { name: string, value: string | bo
 }
 
 const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ children }) => {
-  const { references: { carriers, service_levels } } = useAPIMetadata();
+  const { references: { carriers, connection_configs, service_names, option_names } } = useAPIMetadata();
   const { testMode } = useAppMode();
   const { notify } = useContext(Notify);
   const mutation = useCarrierConnectionMutation();
@@ -94,7 +95,35 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name: string = target.name;
 
-    dispatch({ name, value });
+    dispatch({ name, value: value === 'none' ? null : value });
+  };
+  const handleCarrierChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const target = event.target;
+    const value = target.value as CarrierNameType;
+    let state = ["lang", "language"].reduce((acc, cur) => {
+      if (fieldState(value, cur).default) {
+        return { ...acc, [cur]: fieldState(value, cur).default };
+      }
+      return acc;
+    }, {
+      test_mode: testMode,
+      carrier_id: `${value.toLocaleLowerCase()}${testMode ? '-test' : ''}`
+    });
+
+    setCarrierName(value);
+    dispatch({ name: "full", value: state });
+  };
+  const handleConfigChange = (event: React.ChangeEvent<HTMLInputElement & HTMLSelectElement>) => {
+    const target = event.target;
+    const name: string = target.name;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+
+    if (target.multiple === true) {
+      value = Array.from(target.selectedOptions).map((o: any) => o.value) as any
+    }
+
+    const config = { ...payload.config, [name]: value === 'none' ? null : value };
+    dispatch({ name: "config", value: config });
   };
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -138,10 +167,15 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
             </div>
             <div className="p-3 my-4"></div>
 
-            <SelectField value={carrier_name} onChange={e => setCarrierName(e.target.value)} disabled={!isNew} key={`select-${key}`} className="is-fullwidth" required>
+            <SelectField value={carrier_name} onChange={handleCarrierChange}
+              disabled={!isNew}
+              key={`select-${key}`}
+              className="is-fullwidth"
+              required
+            >
               <option value='none'>Select Carrier</option>
 
-              {carriers && Object.keys(carriers).map(carrier => (
+              {carriers && Object.keys(carriers).sort().map(carrier => (
                 <option key={carrier} value={carrier}>{(carriers as Collection)[carrier]}</option>
               ))}
 
@@ -174,8 +208,9 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("carrier_id").required}
-                  placeholder='friendly-tag. e.g: dhl-express-us, ups-ca-test...'
-                />
+                >
+                  <p className="help">friendly-tag. e.g: <strong>dhl-express-us, ups-ca-test...</strong></p>
+                </InputField>
 
                 {/* Carrier specific fields BEGING */}
 
@@ -198,6 +233,20 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   onChange={handleChange}
                   className="is-small"
                   required={field("seller_id").required}
+                />}
+
+                {field("customer_id").exists && <InputField label="Customer ID" value={payload.customer_id}
+                  name="customer_id"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("customer_id").required}
+                />}
+
+                {field("identifier").exists && <InputField label="Identifier" value={payload.identifier}
+                  name="identifier"
+                  onChange={handleChange}
+                  className="is-small"
+                  required={field("identifier").required}
                 />}
 
                 {field("api_key").exists && <InputField label="API Key" value={payload.api_key}
@@ -401,14 +450,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("depot").required}
                 />}
 
-                {field("account_country_code").exists && <CountryInput label="Account Country Code"
-                  onValueChange={directChange("account_country_code")}
-                  value={payload.account_country_code}
-                  className="is-small"
-                  dropdownClass="is-small"
-                  required={field("account_country_code").required}
-                />}
-
                 {field("mailer_id").exists && <InputField label="Mailer ID" value={payload.mailer_id}
                   name="mailer_id"
                   onChange={handleChange}
@@ -451,9 +492,142 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("mws_auth_token").required}
                 />}
 
+                {field("lang").exists && <SelectField value={payload.lang}
+                  label="Lang"
+                  name="lang"
+                  onChange={handleChange}
+                  className="is-small is-fullwidth"
+                  required={field("lang").required}
+                >
+                  {!field("lang").required && <option value='none'></option>}
+                  <option value='en_EN'>en_EN</option>
+                  <option value='fr_FR'>fr_FR</option>
+                </SelectField>}
+
+                {field("language").exists && <SelectField value={payload.language}
+                  label="Language"
+                  name="language"
+                  onChange={handleChange}
+                  className="is-small is-fullwidth"
+                  required={field("language").required}
+                >
+                  {!field("language").required && <option value='none'></option>}
+                  <option value='en'>en</option>
+                  <option value='fr'>fr</option>
+                </SelectField>}
+
+                {field("account_country_code").exists && <CountryInput label="Account Country Code"
+                  onValueChange={directChange("account_country_code")}
+                  value={payload.account_country_code}
+                  className="is-small"
+                  dropdownClass="is-small"
+                  required={field("account_country_code").required}
+                />}
+
+                {/* Carrier config section */}
+
+                {carrier_name.toString() in connection_configs && <div className='mt-4'>
+
+                  <Disclosure>
+                    {({ open }) => (
+                      <div className="block">
+                        <Disclosure.Button as="div" style={{ boxShadow: 'none' }}
+                          className="is-flex is-justify-content-space-between is-clickable px-0 mb-2">
+                          <h2 className="title is-6 my-3">Connection Config</h2>
+                          <span className="icon is-small m-2 mt-3">
+                            {open ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
+                          </span>
+                        </Disclosure.Button>
+                        <Disclosure.Panel className="card is-flat columns is-multiline m-0">
+
+                          {"cost_center" in connection_configs[carrier_name.toString()] &&
+                            <InputField value={payload.config?.cost_center || ""}
+                              name="cost_center"
+                              label="Cost center"
+                              onChange={handleConfigChange}
+                              fieldClass="column is-6 mb-0"
+                              className="is-small is-fullwidth"
+                            />}
+
+                          {"language_code" in connection_configs[carrier_name.toString()] &&
+                            <SelectField value={payload.config?.language_code}
+                              name="language_code"
+                              label="language code"
+                              onChange={handleChange}
+                              className="is-small is-fullwidth"
+                              fieldClass="column is-6 mb-0"
+                            >
+                              <option value='none'></option>
+                              <option value='en'>en</option>
+                              <option value='fr'>fr</option>
+                            </SelectField>}
+
+                          {"label_type" in connection_configs[carrier_name.toString()] &&
+                            <SelectField value={payload.config?.label_type}
+                              name="label_type"
+                              label="Default label type"
+                              onChange={handleConfigChange}
+                              className="is-small is-fullwidth"
+                              fieldClass="column is-6 mb-0"
+                            >
+                              <option value='none'></option>
+                              {LABEL_TYPES.map(_ => <option key={_} value={_}>{_}</option>)}
+                            </SelectField>}
+
+                          {"enforce_zpl" in connection_configs[carrier_name.toString()] &&
+                            <div className="field column is-6 mb-0">
+                              <div className="control">
+                                <label className="checkbox has-text-weight-bold mt-5 pt-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={payload.config?.enforce_zpl}
+                                    name="enforce_zpl"
+                                    onChange={handleConfigChange}
+                                  />
+                                  {' '}
+                                  <span style={{ fontSize: '0.8em' }}>Always use ZPL</span>
+                                </label>
+                              </div>
+                            </div>}
+
+                          {"shipping_services" in connection_configs[carrier_name.toString()] &&
+                            <SelectField defaultValue={payload.config?.shipping_services}
+                              name="shipping_services"
+                              label="Preferred shipping services"
+                              className="is-small is-multiple is-fullwidth"
+                              fieldClass="column is-12 mb-0"
+                              onChange={handleConfigChange}
+                              size={6}
+                              multiple
+                            >
+                              {Object.entries(service_names[carrier_name.toString()] || {})
+                                .map(([_, __]) => <option key={_} value={_}>{__}</option>)}
+                            </SelectField>}
+
+                          {"shipping_options" in connection_configs[carrier_name.toString()] &&
+                            <SelectField defaultValue={payload.config?.shipping_options}
+                              name="shipping_options"
+                              label={`Enable carrier specific shipping options`}
+                              className="is-small is-multiple is-fullwidth"
+                              fieldClass="column is-12 mb-0"
+                              onChange={handleConfigChange}
+                              size={6}
+                              multiple
+                            >
+                              {Object.entries(option_names[carrier_name.toString()] || {})
+                                .map(([_, __]) => <option key={_} value={_}>{__}</option>)}
+                            </SelectField>}
+
+                        </Disclosure.Panel>
+                      </div>
+                    )}
+                  </Disclosure>
+
+                </div>}
+
                 {/* Carrier specific fields END */}
 
-                <hr className="mt-1 my-3" style={{ height: '1px' }} />
+                <hr className="mt-5 mb-3" style={{ height: '1px' }} />
 
                 <MetadataEditor
                   object_type={MetadataObjectTypeEnum.carrier}
@@ -509,6 +683,7 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],
       [CarrierSettingsCarrierNameEnum.Aramex]: [["carrier_id", true], ["username", true], ["password", true], ["account_pin", true], ["account_entity", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Australiapost]: [["carrier_id", true], ["api_key", true], ["password", true], ["account_number", true]],
+      [CarrierSettingsCarrierNameEnum.Boxknight]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Canadapost]: [["carrier_id", true], ["username", true], ["password", true], ["customer_number", true], ["contract_id"]],
       [CarrierSettingsCarrierNameEnum.Canpar]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Chronopost]: [["carrier_id", true], ["account_number", true], ["password", true], ["account_country_code"]],
@@ -522,6 +697,10 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Easypost]: [["carrier_id", true], ["api_key", true]],
       [CarrierSettingsCarrierNameEnum.Freightcom]: [["carrier_id", true], ["username", true], ["password", true]],
       [CarrierSettingsCarrierNameEnum.Generic]: [["display_name", true], ["custom_carrier_name", true], ["carrier_id", true], ["account_number"], ["account_country_code"], ["services"]],
+      [CarrierSettingsCarrierNameEnum.Geodis]: [["carrier_id", true], ["identifier", true], ["api_key", true], ["language", false, "fr"]],
+      [CarrierSettingsCarrierNameEnum.Laposte]: [["carrier_id", true], ["api_key", true], ["lang", false, "fr_FR"]],
+      [CarrierSettingsCarrierNameEnum.Nationex]: [["carrier_id", true], ["api_key", true], ["customer_id", true], ["billing_account"], ["language", false, "en"]],
+      [CarrierSettingsCarrierNameEnum.Roadie]: [["carrier_id", true], ["api_key", true]],
       [CarrierSettingsCarrierNameEnum.Fedex]: [["carrier_id", true], ["user_key"], ["password", true], ["meter_number", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Purolator]: [["carrier_id", true], ["username", true], ["password", true], ["account_number", true], ["user_token"]],
       [CarrierSettingsCarrierNameEnum.Royalmail]: [["carrier_id", true], ["client_id", true], ["client_secret", true]],
@@ -536,12 +715,13 @@ function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, pro
       [CarrierSettingsCarrierNameEnum.Yunexpress]: [["carrier_id", true], ["customer_number", true], ["api_secret", true]],
       [NoneEnum.none]: [],
     }[carrier_name] || [])
-      .find(([_, ...__]) => `${_}`.includes(property)) || []
+      .find(([_, ...__]) => _ === property) || []
   );
 
   return {
     get exists() { return field[0] !== undefined },
-    get required() { return field[1] === true; }
+    get required() { return field[1] === true; },
+    get default() { return field[2]; }
   }
 }
 

@@ -1,4 +1,4 @@
-import { formatAddressRegion, formatDayDate, isNone, useLocation } from '@/lib/helper';
+import { formatAddressRegion, formatDayDate, formatRef, isNone, useLocation } from '@/lib/helper';
 import { TrackerType, TrackingEventType } from '@/lib/types';
 import CarrierImage from '@/components/carrier-image';
 import { TrackerStatusEnum } from '@karrio/graphql';
@@ -47,11 +47,28 @@ const TrackingPreview: React.FC<TrackingPreviewComponent> = ({ children }) => {
   const computeColor = (tracker: TrackerType) => {
     if (tracker?.delivered) return "has-background-success";
     else if (tracker?.status === TrackerStatusEnum.pending.toString()) return "has-background-grey-dark";
+    else if ([
+      TrackerStatusEnum.on_hold.toString(),
+      TrackerStatusEnum.delivery_delayed.toString(),
+    ].includes(tracker?.status as string)) return "has-background-warning";
+    else if ([
+      TrackerStatusEnum.unknown.toString(),
+    ].includes(tracker?.status as string)) return "has-background-grey";
+    else if ([
+      TrackerStatusEnum.delivery_failed.toString(),
+    ].includes(tracker?.status as string)) return "has-background-danger";
     else return "has-background-info";
   };
   const computeStatus = (tracker: TrackerType) => {
     if (tracker?.delivered) return "Delivered";
     else if (tracker?.status === TrackerStatusEnum.pending.toString()) return "Pending";
+    else if ([
+      TrackerStatusEnum.on_hold.toString(),
+      TrackerStatusEnum.delivery_delayed.toString(),
+      TrackerStatusEnum.ready_for_pickup.toString(),
+      TrackerStatusEnum.unknown.toString(),
+      TrackerStatusEnum.delivery_failed.toString(),
+    ].includes(tracker?.status as string)) return formatRef(tracker!.status as string);
     else return "In-Transit";
   };
   const computeEvents = (tracker: TrackerType): DayEvents => {

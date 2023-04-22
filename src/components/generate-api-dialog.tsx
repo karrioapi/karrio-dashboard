@@ -48,7 +48,7 @@ const GenerateAPIModal: React.FC = ({ children }) => {
               <div className="p-3 my-4"></div>
 
               <div className="notification is-warning is-light">
-                This action will block the curren API key and generate a new one.
+                This action will disable the current API key and generate a new one.
                 We recommend reviewing your security history for events related to this key.
                 Any webhook endpoints created with this key will stay active, even after the key is regenerated.
               </div>

@@ -8,6 +8,11 @@ Karrio custom styling
   border-radius: 6px;
   box-shadow: 0.5px 0.5px 2.5px #efefef;
   border: 1px solid #e5e5e5;
+
+  &.is-flat {
+    box-shadow: none;
+    border: 1px solid #e5e5e5;
+  }
 }
 
 .options-item,
