@@ -553,7 +553,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                             <SelectField value={payload.config?.language_code}
                               name="language_code"
                               label="language code"
-                              onChange={handleChange}
+                              onChange={handleConfigChange}
                               className="is-small is-fullwidth"
                               fieldClass="column is-6 mb-0"
                             >
