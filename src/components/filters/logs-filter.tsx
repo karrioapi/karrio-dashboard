@@ -160,6 +160,26 @@ const LogsFilter: React.FC<LogsFilterComponent> = ({ context }) => {
 
           </div>
 
+          {/* Remote Address */}
+          <div className="panel-block columns is-multiline m-0 p-0">
+
+            <CheckBoxField defaultChecked={!isNone(filters?.remote_addr)} onChange={handleChange} name="hasEndpoint" value="remote_addr" fieldClass="column mb-0 is-12 px-2 py-2">
+              <span>Remote Address</span>
+            </CheckBoxField>
+
+            {!isNone(filters?.remote_addr) && <div className="column is-12 px-2 has-background-light">
+              <InputField
+                defaultValue={filters?.remote_addr}
+                onChange={handleChange}
+                name="remote_addr"
+                fieldClass="mb-0 py-1"
+                className="is-fullwidth is-small"
+                placeholder="e.g: 192.168.0.1"
+              />
+            </div>}
+
+          </div>
+
           {/* Entity ID */}
           <div className="panel-block columns is-multiline m-0 p-0">
 
