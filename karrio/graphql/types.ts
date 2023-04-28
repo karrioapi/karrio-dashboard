@@ -6093,6 +6093,7 @@ export interface LogFilter {
   offset?: number | null;
   first?: number | null;
   api_endpoint?: string | null;
+  remote_addr?: string | null;
   date_after?: any | null;
   date_before?: any | null;
   entity_id?: string | null;
