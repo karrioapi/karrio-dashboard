@@ -1,7 +1,7 @@
 import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, OrderType, ShipmentType } from '@/lib/types';
+import { get_orders_orders_edges, LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import { get_orders_orders_edges, LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
@@ -528,17 +528,13 @@ export default function CreateLabelPage(pageProps: any) {
                     label="Package value"
                     type="number" min={0} step="any"
                     className="is-small"
-                    controlClass="has-icons-left has-icons-right"
+                    controlClass="has-icons-right"
                     fieldClass="column mb-0 is-4 px-1 py-2"
                     value={shipment.options?.declared_value}
                     required={!isNone(shipment.options?.declared_value)}
                     onChange={e => onChange({ options: { ...shipment.options, declared_value: parseFloat(e.target.value) } })}
-                  >
-                    <span className="icon is-small is-left">
-                      <i className="fas fa-dollar-sign"></i>
-                    </span>
-                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
-                  </InputField>
+                    addonRight={<span className="icon is-small is-right pr-2">{shipment.options?.currency}</span>}
+                  />
 
                 </div>
 
