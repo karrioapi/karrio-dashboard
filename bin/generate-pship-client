@@ -7,7 +7,7 @@ docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
   -o /local/karrio/rest/generated \
   --additional-properties=typescriptThreePlus=true \
   --additional-properties=modelPropertyNaming=snake_case \
-  --additional-properties=useSingleRequestParameter=True
+  --additional-properties=useSingleRequestParameter=true
 
 rm -rf karrio/rest/generated/.openapi-generator/ \
   karrio/rest/generated/.openapi-generator-ignore \

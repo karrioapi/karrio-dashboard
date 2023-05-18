@@ -2,9 +2,9 @@
 /* eslint-disable */
 /**
  * Karrio API
- *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.4`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
+ *  ## API Reference  Karrio is an open source multi-carrier shipping API that simplifies the integration of logistic carrier services.  The Karrio API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.  The Karrio API differs for every account as we release new versions. These docs are customized to your version of the API.   ## Versioning  When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023.4.4`.  Read our API changelog and to learn more about backwards compatibility.  As a precaution, use API versioning to check a new API version before committing to an upgrade.   ## Environments  The Karrio API offer the possibility to create and retrieve certain objects in `test_mode`. In development, it is therefore possible to add carrier connections, get live rates, buy labels, create trackers and schedule pickups in `test_mode`.   ## Pagination  All top-level API resources have support for bulk fetches via \"list\" API methods. For instance, you can list addresses, list shipments, and list trackers. These list API methods share a common structure, taking at least these two parameters: limit, and offset.  Karrio utilizes offset-based pagination via the offset and limit parameters. Both parameters take a number as value (see below) and return objects in reverse chronological order. The offset parameter returns objects listed after an index. The limit parameter take a limit on the number of objects to be returned from 1 to 100.   ```json {     \"count\": 100,     \"next\": \"/v1/shipments?limit=25&offset=50\",     \"previous\": \"/v1/shipments?limit=25&offset=25\",     \"results\": [         { ... },     ] } ```  ## Metadata  Updateable Karrio objects—including Shipment and Order—have a metadata parameter. You can use this parameter to attach key-value data to these Karrio objects.  Metadata is useful for storing additional, structured information on an object. As an example, you could store your user\'s full name and corresponding unique identifier from your system on a Karrio Order object.  Do not store any sensitive information as metadata.  ## Authentication  API keys are used to authenticate requests. You can view and manage your API keys in the Dashboard.  Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.  Authentication to the API is performed via HTTP Basic Auth. Provide your API token as the basic auth username value. You do not need to provide a password.  ```shell $ curl https://instance.api.com/v1/shipments \\     -u key_xxxxxx: # The colon prevents curl from asking for a password. ```  If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H \"Authorization: Token key_xxxxxx\"` instead of `-u key_xxxxxx`.  All API requests must be made over [HTTPS](http://en.wikipedia.org/wiki/HTTP_Secure). API requests without authentication will also fail. 
  *
- * The version of the OpenAPI document: 2023.4
+ * The version of the OpenAPI document: 2023.4.4
  * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
@@ -13308,12 +13308,12 @@ export const APIApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * Authenticate the user and return a token pair
          * @summary Obtain auth token pair
-         * @param {TokenObtainPair} tokenObtainPair 
+         * @param {APIApiAuthenticateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authenticate(tokenObtainPair: TokenObtainPair, options?: any): AxiosPromise<TokenPair> {
-            return localVarFp.authenticate(tokenObtainPair, options).then((request) => request(axios, basePath));
+        authenticate(requestParameters: APIApiAuthenticateRequest, options?: AxiosRequestConfig): AxiosPromise<TokenPair> {
+            return localVarFp.authenticate(requestParameters.tokenObtainPair, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13321,18 +13321,18 @@ export const APIApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        data(options?: any): AxiosPromise<{ [key: string]: any; }> {
+        data(options?: AxiosRequestConfig): AxiosPromise<{ [key: string]: any; }> {
             return localVarFp.data(options).then((request) => request(axios, basePath));
         },
         /**
          * Get a verified JWT token pair by submitting a Two-Factor authentication code.
          * @summary Get verified JWT token
-         * @param {VerifiedTokenObtainPair} verifiedTokenObtainPair 
+         * @param {APIApiGetVerifiedTokenRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVerifiedToken(verifiedTokenObtainPair: VerifiedTokenObtainPair, options?: any): AxiosPromise<TokenPair> {
-            return localVarFp.getVerifiedToken(verifiedTokenObtainPair, options).then((request) => request(axios, basePath));
+        getVerifiedToken(requestParameters: APIApiGetVerifiedTokenRequest, options?: AxiosRequestConfig): AxiosPromise<TokenPair> {
+            return localVarFp.getVerifiedToken(requestParameters.verifiedTokenObtainPair, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13340,28 +13340,28 @@ export const APIApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        ping(options?: any): AxiosPromise<{ [key: string]: any; }> {
+        ping(options?: AxiosRequestConfig): AxiosPromise<{ [key: string]: any; }> {
             return localVarFp.ping(options).then((request) => request(axios, basePath));
         },
         /**
          * Authenticate the user and return a token pair
          * @summary Refresh auth token
-         * @param {TokenRefresh} tokenRefresh 
+         * @param {APIApiRefreshTokenRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        refreshToken(tokenRefresh: TokenRefresh, options?: any): AxiosPromise<TokenPair> {
-            return localVarFp.refreshToken(tokenRefresh, options).then((request) => request(axios, basePath));
+        refreshToken(requestParameters: APIApiRefreshTokenRequest, options?: AxiosRequestConfig): AxiosPromise<TokenPair> {
+            return localVarFp.refreshToken(requestParameters.tokenRefresh, options).then((request) => request(axios, basePath));
         },
         /**
          * Verify an existent authentication token
          * @summary Verify token
-         * @param {TokenVerify} tokenVerify 
+         * @param {APIApiVerifyTokenRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        verifyToken(tokenVerify: TokenVerify, options?: any): AxiosPromise<{ [key: string]: any; }> {
-            return localVarFp.verifyToken(tokenVerify, options).then((request) => request(axios, basePath));
+        verifyToken(requestParameters: APIApiVerifyTokenRequest, options?: AxiosRequestConfig): AxiosPromise<{ [key: string]: any; }> {
+            return localVarFp.verifyToken(requestParameters.tokenVerify, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -13501,6 +13501,7 @@ export class APIApi extends BaseAPI {
 }
 
 
+
 /**
  * AddressesApi - axios parameter creator
  * @export
@@ -13529,19 +13530,19 @@ export const AddressesApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -13580,19 +13581,19 @@ export const AddressesApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -13624,19 +13625,19 @@ export const AddressesApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -13672,19 +13673,19 @@ export const AddressesApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -13721,19 +13722,19 @@ export const AddressesApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -13827,22 +13828,22 @@ export const AddressesApiFactory = function (configuration?: Configuration, base
         /**
          * Create a new address.
          * @summary Create an address
-         * @param {AddressData} addressData 
+         * @param {AddressesApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(addressData: AddressData, options?: any): AxiosPromise<Address> {
-            return localVarFp.create(addressData, options).then((request) => request(axios, basePath));
+        create(requestParameters: AddressesApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Address> {
+            return localVarFp.create(requestParameters.addressData, options).then((request) => request(axios, basePath));
         },
         /**
          * Discard an address.
          * @summary Discard an address
-         * @param {string} id 
+         * @param {AddressesApiDiscardRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discard(id: string, options?: any): AxiosPromise<Address> {
-            return localVarFp.discard(id, options).then((request) => request(axios, basePath));
+        discard(requestParameters: AddressesApiDiscardRequest, options?: AxiosRequestConfig): AxiosPromise<Address> {
+            return localVarFp.discard(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all addresses.
@@ -13850,29 +13851,28 @@ export const AddressesApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<AddressList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<AddressList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve an address.
          * @summary Retrieve an address
-         * @param {string} id 
+         * @param {AddressesApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Address> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: AddressesApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Address> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * update an address.
          * @summary Update an address
-         * @param {string} id 
-         * @param {PatchedAddressData} [patchedAddressData] 
+         * @param {AddressesApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, patchedAddressData?: PatchedAddressData, options?: any): AxiosPromise<Address> {
-            return localVarFp.update(id, patchedAddressData, options).then((request) => request(axios, basePath));
+        update(requestParameters: AddressesApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Address> {
+            return localVarFp.update(requestParameters.id, requestParameters.patchedAddressData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -14008,6 +14008,7 @@ export class AddressesApi extends BaseAPI {
 }
 
 
+
 /**
  * BatchesApi - axios parameter creator
  * @export
@@ -14036,19 +14037,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14086,19 +14087,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14136,19 +14137,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14169,14 +14170,14 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
          * @summary Import data files
          * @param {File} [dataFile] 
          * @param {string} [dataTemplate] A data template slug to use for the import.&lt;br/&gt;         **When nothing is specified, the system default headers are expected.**         
-         * @param {'billing' | 'order' | 'shipment' | 'trackers'} [resourceType] The type of the resource to import
+         * @param {ImportFileResourceTypeEnum} [resourceType] The type of the resource to import
          * @param {string} [resourceType2] 
          * @param {string} [dataTemplate2] 
          * @param {File} [dataFile2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        importFile: async (dataFile?: File, dataTemplate?: string, resourceType?: 'billing' | 'order' | 'shipment' | 'trackers', resourceType2?: string, dataTemplate2?: string, dataFile2?: File, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        importFile: async (dataFile?: File, dataTemplate?: string, resourceType?: ImportFileResourceTypeEnum, resourceType2?: string, dataTemplate2?: string, dataFile2?: File, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/batches/data/import`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14190,19 +14191,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarQueryParameter = {} as any;
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (dataFile !== undefined) {
                 localVarQueryParameter['data_file'] = dataFile;
@@ -14261,19 +14262,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14309,19 +14310,19 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14382,14 +14383,14 @@ export const BatchesApiFp = function(configuration?: Configuration) {
          * @summary Import data files
          * @param {File} [dataFile] 
          * @param {string} [dataTemplate] A data template slug to use for the import.&lt;br/&gt;         **When nothing is specified, the system default headers are expected.**         
-         * @param {'billing' | 'order' | 'shipment' | 'trackers'} [resourceType] The type of the resource to import
+         * @param {ImportFileResourceTypeEnum} [resourceType] The type of the resource to import
          * @param {string} [resourceType2] 
          * @param {string} [dataTemplate2] 
          * @param {File} [dataFile2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async importFile(dataFile?: File, dataTemplate?: string, resourceType?: 'billing' | 'order' | 'shipment' | 'trackers', resourceType2?: string, dataTemplate2?: string, dataFile2?: File, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BatchOperation>> {
+        async importFile(dataFile?: File, dataTemplate?: string, resourceType?: ImportFileResourceTypeEnum, resourceType2?: string, dataTemplate2?: string, dataFile2?: File, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BatchOperation>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.importFile(dataFile, dataTemplate, resourceType, resourceType2, dataTemplate2, dataFile2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -14427,47 +14428,42 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
         /**
          * Create multiple orders in a single batch. `Beta`
          * @summary Create orders
-         * @param {BatchOrderData} batchOrderData 
+         * @param {BatchesApiCreateOrdersRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createOrders(batchOrderData: BatchOrderData, options?: any): AxiosPromise<BatchOperation> {
-            return localVarFp.createOrders(batchOrderData, options).then((request) => request(axios, basePath));
+        createOrders(requestParameters: BatchesApiCreateOrdersRequest, options?: AxiosRequestConfig): AxiosPromise<BatchOperation> {
+            return localVarFp.createOrders(requestParameters.batchOrderData, options).then((request) => request(axios, basePath));
         },
         /**
          * Create multiple shipments in a single batch. `Beta`
          * @summary Create shipments
-         * @param {BatchShipmentData} batchShipmentData 
+         * @param {BatchesApiCreateShipmentsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createShipments(batchShipmentData: BatchShipmentData, options?: any): AxiosPromise<BatchOperation> {
-            return localVarFp.createShipments(batchShipmentData, options).then((request) => request(axios, basePath));
+        createShipments(requestParameters: BatchesApiCreateShipmentsRequest, options?: AxiosRequestConfig): AxiosPromise<BatchOperation> {
+            return localVarFp.createShipments(requestParameters.batchShipmentData, options).then((request) => request(axios, basePath));
         },
         /**
          * Create multiple trackers in a single batch. `Beta`
          * @summary Create trackers
-         * @param {BatchTrackerData} batchTrackerData 
+         * @param {BatchesApiCreateTrackersRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTrackers(batchTrackerData: BatchTrackerData, options?: any): AxiosPromise<BatchOperation> {
-            return localVarFp.createTrackers(batchTrackerData, options).then((request) => request(axios, basePath));
+        createTrackers(requestParameters: BatchesApiCreateTrackersRequest, options?: AxiosRequestConfig): AxiosPromise<BatchOperation> {
+            return localVarFp.createTrackers(requestParameters.batchTrackerData, options).then((request) => request(axios, basePath));
         },
         /**
          * Import csv, xls and xlsx data files for: `Beta`<br/> - trackers data - orders data - shipments data - billing data (soon)<br/><br/> **This operation will return a batch operation that you can poll to follow the import progression.**
          * @summary Import data files
-         * @param {File} [dataFile] 
-         * @param {string} [dataTemplate] A data template slug to use for the import.&lt;br/&gt;         **When nothing is specified, the system default headers are expected.**         
-         * @param {'billing' | 'order' | 'shipment' | 'trackers'} [resourceType] The type of the resource to import
-         * @param {string} [resourceType2] 
-         * @param {string} [dataTemplate2] 
-         * @param {File} [dataFile2] 
+         * @param {BatchesApiImportFileRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        importFile(dataFile?: File, dataTemplate?: string, resourceType?: 'billing' | 'order' | 'shipment' | 'trackers', resourceType2?: string, dataTemplate2?: string, dataFile2?: File, options?: any): AxiosPromise<BatchOperation> {
-            return localVarFp.importFile(dataFile, dataTemplate, resourceType, resourceType2, dataTemplate2, dataFile2, options).then((request) => request(axios, basePath));
+        importFile(requestParameters: BatchesApiImportFileRequest = {}, options?: AxiosRequestConfig): AxiosPromise<BatchOperation> {
+            return localVarFp.importFile(requestParameters.dataFile, requestParameters.dataTemplate, requestParameters.resourceType, requestParameters.resourceType2, requestParameters.dataTemplate2, requestParameters.dataFile2, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all batch operations. `Beta`
@@ -14475,18 +14471,18 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<BatchOperations> {
+        list(options?: AxiosRequestConfig): AxiosPromise<BatchOperations> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a batch operation. `Beta`
          * @summary Retrieve a batch operation
-         * @param {string} id 
+         * @param {BatchesApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<BatchOperation> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: BatchesApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<BatchOperation> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -14558,7 +14554,7 @@ export interface BatchesApiImportFileRequest {
      * @type {'billing' | 'order' | 'shipment' | 'trackers'}
      * @memberof BatchesApiImportFile
      */
-    readonly resourceType?: 'billing' | 'order' | 'shipment' | 'trackers'
+    readonly resourceType?: ImportFileResourceTypeEnum
 
     /**
      * 
@@ -14675,6 +14671,17 @@ export class BatchesApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const ImportFileResourceTypeEnum = {
+    Billing: 'billing',
+    Order: 'order',
+    Shipment: 'shipment',
+    Trackers: 'trackers'
+} as const;
+export type ImportFileResourceTypeEnum = typeof ImportFileResourceTypeEnum[keyof typeof ImportFileResourceTypeEnum];
+
 
 /**
  * CarriersApi - axios parameter creator
@@ -14685,11 +14692,11 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {string} carrierName The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServices: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getServices: async (carrierName: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('getServices', 'carrierName', carrierName)
             const localVarPath = `/v1/carriers/{carrier_name}/services`
@@ -14705,19 +14712,19 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -14752,19 +14759,19 @@ export const CarriersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (active !== undefined) {
                 localVarQueryParameter['active'] = active;
@@ -14802,11 +14809,11 @@ export const CarriersApiFp = function(configuration?: Configuration) {
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {string} carrierName The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: any; }>> {
+        async getServices(carrierName: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: any; }>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getServices(carrierName, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -14836,24 +14843,22 @@ export const CarriersApiFactory = function (configuration?: Configuration, baseP
         /**
          * Retrieve a carrier\'s services
          * @summary Get carrier services
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {CarriersApiGetServicesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServices(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', options?: any): AxiosPromise<{ [key: string]: any; }> {
-            return localVarFp.getServices(carrierName, options).then((request) => request(axios, basePath));
+        getServices(requestParameters: CarriersApiGetServicesRequest, options?: AxiosRequestConfig): AxiosPromise<{ [key: string]: any; }> {
+            return localVarFp.getServices(requestParameters.carrierName, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns the list of configured carriers
          * @summary List all carriers
-         * @param {boolean} [active] 
-         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
-         * @param {boolean} [systemOnly] 
+         * @param {CarriersApiListRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(active?: boolean, carrierName?: string, systemOnly?: boolean, options?: any): AxiosPromise<CarrierList> {
-            return localVarFp.list(active, carrierName, systemOnly, options).then((request) => request(axios, basePath));
+        list(requestParameters: CarriersApiListRequest = {}, options?: AxiosRequestConfig): AxiosPromise<CarrierList> {
+            return localVarFp.list(requestParameters.active, requestParameters.carrierName, requestParameters.systemOnly, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -14865,11 +14870,11 @@ export const CarriersApiFactory = function (configuration?: Configuration, baseP
  */
 export interface CarriersApiGetServicesRequest {
     /**
-     * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
+     * @type {string}
      * @memberof CarriersApiGetServices
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: string
 }
 
 /**
@@ -14933,6 +14938,7 @@ export class CarriersApi extends BaseAPI {
 }
 
 
+
 /**
  * CustomsApi - axios parameter creator
  * @export
@@ -14961,19 +14967,19 @@ export const CustomsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15012,19 +15018,19 @@ export const CustomsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15056,19 +15062,19 @@ export const CustomsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15104,19 +15110,19 @@ export const CustomsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15153,19 +15159,19 @@ export const CustomsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15259,22 +15265,22 @@ export const CustomsApiFactory = function (configuration?: Configuration, basePa
         /**
          * Create a new customs declaration.
          * @summary Create a customs info
-         * @param {CustomsData} customsData 
+         * @param {CustomsApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(customsData: CustomsData, options?: any): AxiosPromise<Customs> {
-            return localVarFp.create(customsData, options).then((request) => request(axios, basePath));
+        create(requestParameters: CustomsApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Customs> {
+            return localVarFp.create(requestParameters.customsData, options).then((request) => request(axios, basePath));
         },
         /**
          * Discard a customs declaration.
          * @summary Discard a customs info
-         * @param {string} id 
+         * @param {CustomsApiDiscardRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discard(id: string, options?: any): AxiosPromise<Customs> {
-            return localVarFp.discard(id, options).then((request) => request(axios, basePath));
+        discard(requestParameters: CustomsApiDiscardRequest, options?: AxiosRequestConfig): AxiosPromise<Customs> {
+            return localVarFp.discard(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all stored customs declarations.
@@ -15282,29 +15288,28 @@ export const CustomsApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<CustomsList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<CustomsList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve customs declaration.
          * @summary Retrieve a customs info
-         * @param {string} id 
+         * @param {CustomsApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Customs> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: CustomsApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Customs> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * modify an existing customs declaration.
          * @summary Update a customs info
-         * @param {string} id 
-         * @param {PatchedCustomsData} [patchedCustomsData] 
+         * @param {CustomsApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, patchedCustomsData?: PatchedCustomsData, options?: any): AxiosPromise<Customs> {
-            return localVarFp.update(id, patchedCustomsData, options).then((request) => request(axios, basePath));
+        update(requestParameters: CustomsApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Customs> {
+            return localVarFp.update(requestParameters.id, requestParameters.patchedCustomsData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -15440,6 +15445,7 @@ export class CustomsApi extends BaseAPI {
 }
 
 
+
 /**
  * DocumentsApi - axios parameter creator
  * @export
@@ -15468,19 +15474,19 @@ export const DocumentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (createdAfter !== undefined) {
                 localVarQueryParameter['created_after'] = (createdAfter as any instanceof Date) ?
@@ -15532,19 +15538,19 @@ export const DocumentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15579,19 +15585,19 @@ export const DocumentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15665,34 +15671,32 @@ export const DocumentsApiFactory = function (configuration?: Configuration, base
         /**
          * Retrieve all shipping document upload records.
          * @summary List all upload records
-         * @param {string} [createdAfter] 
-         * @param {string} [createdBefore] 
-         * @param {string} [shipmentId] 
+         * @param {DocumentsApiListRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(createdAfter?: string, createdBefore?: string, shipmentId?: string, options?: any): AxiosPromise<DocumentUploadRecords> {
-            return localVarFp.list(createdAfter, createdBefore, shipmentId, options).then((request) => request(axios, basePath));
+        list(requestParameters: DocumentsApiListRequest = {}, options?: AxiosRequestConfig): AxiosPromise<DocumentUploadRecords> {
+            return localVarFp.list(requestParameters.createdAfter, requestParameters.createdBefore, requestParameters.shipmentId, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a shipping document upload record.
          * @summary Retrieve an upload record
-         * @param {string} id 
+         * @param {DocumentsApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<DocumentUploadRecord> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: DocumentsApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<DocumentUploadRecord> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Upload a shipping document.
          * @summary Upload documents
-         * @param {DocumentUploadData} documentUploadData 
+         * @param {DocumentsApiUploadRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upload(documentUploadData: DocumentUploadData, options?: any): AxiosPromise<DocumentUploadRecord> {
-            return localVarFp.upload(documentUploadData, options).then((request) => request(axios, basePath));
+        upload(requestParameters: DocumentsApiUploadRequest, options?: AxiosRequestConfig): AxiosPromise<DocumentUploadRecord> {
+            return localVarFp.upload(requestParameters.documentUploadData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -15798,6 +15802,7 @@ export class DocumentsApi extends BaseAPI {
 }
 
 
+
 /**
  * OrdersApi - axios parameter creator
  * @export
@@ -15827,19 +15832,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15874,19 +15879,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15926,19 +15931,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -15970,19 +15975,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16018,19 +16023,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16067,19 +16072,19 @@ export const OrdersApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16185,33 +16190,33 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
         /**
          * Cancel an order.
          * @summary Cancel an order
-         * @param {string} id 
+         * @param {OrdersApiCancelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel(id: string, options?: any): AxiosPromise<Order> {
-            return localVarFp.cancel(id, options).then((request) => request(axios, basePath));
+        cancel(requestParameters: OrdersApiCancelRequest, options?: AxiosRequestConfig): AxiosPromise<Order> {
+            return localVarFp.cancel(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Create a new order object.
          * @summary Create an order
-         * @param {OrderData} orderData 
+         * @param {OrdersApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(orderData: OrderData, options?: any): AxiosPromise<Order> {
-            return localVarFp.create(orderData, options).then((request) => request(axios, basePath));
+        create(requestParameters: OrdersApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Order> {
+            return localVarFp.create(requestParameters.orderData, options).then((request) => request(axios, basePath));
         },
         /**
          * Dismiss an order from fulfillment.
          * @summary Dismiss an order
-         * @param {string} id 
+         * @param {OrdersApiDismissRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        dismiss(id: string, options?: any): AxiosPromise<Order> {
-            return localVarFp.dismiss(id, options).then((request) => request(axios, basePath));
+        dismiss(requestParameters: OrdersApiDismissRequest, options?: AxiosRequestConfig): AxiosPromise<Order> {
+            return localVarFp.dismiss(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all orders.
@@ -16219,29 +16224,28 @@ export const OrdersApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<OrderList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<OrderList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve an order.
          * @summary Retrieve an order
-         * @param {string} id 
+         * @param {OrdersApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Order> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: OrdersApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Order> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * This operation allows for updating properties of an order including `options` and `metadata`. It is not for editing the line items of an order.
          * @summary Update an order
-         * @param {string} id 
-         * @param {OrderUpdateData} [orderUpdateData] 
+         * @param {OrdersApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, orderUpdateData?: OrderUpdateData, options?: any): AxiosPromise<Order> {
-            return localVarFp.update(id, orderUpdateData, options).then((request) => request(axios, basePath));
+        update(requestParameters: OrdersApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Order> {
+            return localVarFp.update(requestParameters.id, requestParameters.orderUpdateData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -16404,6 +16408,7 @@ export class OrdersApi extends BaseAPI {
 }
 
 
+
 /**
  * ParcelsApi - axios parameter creator
  * @export
@@ -16432,19 +16437,19 @@ export const ParcelsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16483,19 +16488,19 @@ export const ParcelsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16527,19 +16532,19 @@ export const ParcelsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16575,19 +16580,19 @@ export const ParcelsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16624,19 +16629,19 @@ export const ParcelsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16730,22 +16735,22 @@ export const ParcelsApiFactory = function (configuration?: Configuration, basePa
         /**
          * Create a new parcel.
          * @summary Create a parcel
-         * @param {ParcelData} parcelData 
+         * @param {ParcelsApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(parcelData: ParcelData, options?: any): AxiosPromise<Parcel> {
-            return localVarFp.create(parcelData, options).then((request) => request(axios, basePath));
+        create(requestParameters: ParcelsApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Parcel> {
+            return localVarFp.create(requestParameters.parcelData, options).then((request) => request(axios, basePath));
         },
         /**
          * Remove a parcel.
          * @summary Remove a parcel
-         * @param {string} id 
+         * @param {ParcelsApiDiscardRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discard(id: string, options?: any): AxiosPromise<Parcel> {
-            return localVarFp.discard(id, options).then((request) => request(axios, basePath));
+        discard(requestParameters: ParcelsApiDiscardRequest, options?: AxiosRequestConfig): AxiosPromise<Parcel> {
+            return localVarFp.discard(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all stored parcels.
@@ -16753,29 +16758,28 @@ export const ParcelsApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<ParcelList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<ParcelList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a parcel.
          * @summary Retrieve a parcel
-         * @param {string} id 
+         * @param {ParcelsApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Parcel> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: ParcelsApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Parcel> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * modify an existing parcel\'s details.
          * @summary Update a parcel
-         * @param {string} id 
-         * @param {PatchedParcelData} [patchedParcelData] 
+         * @param {ParcelsApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, patchedParcelData?: PatchedParcelData, options?: any): AxiosPromise<Parcel> {
-            return localVarFp.update(id, patchedParcelData, options).then((request) => request(axios, basePath));
+        update(requestParameters: ParcelsApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Parcel> {
+            return localVarFp.update(requestParameters.id, requestParameters.patchedParcelData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -16911,6 +16915,7 @@ export class ParcelsApi extends BaseAPI {
 }
 
 
+
 /**
  * PickupsApi - axios parameter creator
  * @export
@@ -16941,19 +16946,19 @@ export const PickupsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -16988,19 +16993,19 @@ export const PickupsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17036,19 +17041,19 @@ export const PickupsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17087,19 +17092,19 @@ export const PickupsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17141,19 +17146,19 @@ export const PickupsApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17249,13 +17254,12 @@ export const PickupsApiFactory = function (configuration?: Configuration, basePa
         /**
          * Cancel a pickup of one or more shipments.
          * @summary Cancel a pickup
-         * @param {string} id 
-         * @param {PickupCancelData} [pickupCancelData] 
+         * @param {PickupsApiCancelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel(id: string, pickupCancelData?: PickupCancelData, options?: any): AxiosPromise<Pickup> {
-            return localVarFp.cancel(id, pickupCancelData, options).then((request) => request(axios, basePath));
+        cancel(requestParameters: PickupsApiCancelRequest, options?: AxiosRequestConfig): AxiosPromise<Pickup> {
+            return localVarFp.cancel(requestParameters.id, requestParameters.pickupCancelData, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all scheduled pickups.
@@ -17263,40 +17267,38 @@ export const PickupsApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<PickupList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<PickupList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a scheduled pickup.
          * @summary Retrieve a pickup
-         * @param {string} id 
+         * @param {PickupsApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Pickup> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: PickupsApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Pickup> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Schedule a pickup for one or many shipments with labels already purchased.
          * @summary Schedule a pickup
-         * @param {string} carrierName 
-         * @param {PickupData} pickupData 
+         * @param {PickupsApiScheduleRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        schedule(carrierName: string, pickupData: PickupData, options?: any): AxiosPromise<Pickup> {
-            return localVarFp.schedule(carrierName, pickupData, options).then((request) => request(axios, basePath));
+        schedule(requestParameters: PickupsApiScheduleRequest, options?: AxiosRequestConfig): AxiosPromise<Pickup> {
+            return localVarFp.schedule(requestParameters.carrierName, requestParameters.pickupData, options).then((request) => request(axios, basePath));
         },
         /**
          * Modify a pickup for one or many shipments with labels already purchased.
          * @summary Update a pickup
-         * @param {string} id 
-         * @param {PickupUpdateData} pickupUpdateData 
+         * @param {PickupsApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, pickupUpdateData: PickupUpdateData, options?: any): AxiosPromise<Pickup> {
-            return localVarFp.update(id, pickupUpdateData, options).then((request) => request(axios, basePath));
+        update(requestParameters: PickupsApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Pickup> {
+            return localVarFp.update(requestParameters.id, requestParameters.pickupUpdateData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -17446,6 +17448,7 @@ export class PickupsApi extends BaseAPI {
 }
 
 
+
 /**
  * ProxyApi - axios parameter creator
  * @export
@@ -17474,19 +17477,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17505,12 +17508,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {CancelPickupCarrierNameEnum} carrierName 
          * @param {PickupCancelRequest} pickupCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelPickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        cancelPickup: async (carrierName: CancelPickupCarrierNameEnum, pickupCancelRequest: PickupCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('cancelPickup', 'carrierName', carrierName)
             // verify required parameter 'pickupCancelRequest' is not null or undefined
@@ -17528,19 +17531,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17578,19 +17581,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17629,19 +17632,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (hub !== undefined) {
                 localVarQueryParameter['hub'] = hub;
@@ -17664,12 +17667,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {SchedulePickupCarrierNameEnum} carrierName 
          * @param {PickupRequest} pickupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        schedulePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        schedulePickup: async (carrierName: SchedulePickupCarrierNameEnum, pickupRequest: PickupRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('schedulePickup', 'carrierName', carrierName)
             // verify required parameter 'pickupRequest' is not null or undefined
@@ -17687,19 +17690,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17718,14 +17721,14 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {TrackShipmentCarrierNameEnum} carrierName 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        trackShipment: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        trackShipment: async (carrierName: TrackShipmentCarrierNameEnum, trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('trackShipment', 'carrierName', carrierName)
             // verify required parameter 'trackingNumber' is not null or undefined
@@ -17744,19 +17747,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (hub !== undefined) {
                 localVarQueryParameter['hub'] = hub;
@@ -17776,12 +17779,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {UpdatePickupCarrierNameEnum} carrierName 
          * @param {PickupUpdateRequest} pickupUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePickup: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updatePickup: async (carrierName: UpdatePickupCarrierNameEnum, pickupUpdateRequest: PickupUpdateRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('updatePickup', 'carrierName', carrierName)
             // verify required parameter 'pickupUpdateRequest' is not null or undefined
@@ -17799,19 +17802,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17830,12 +17833,12 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {VoidLabelCarrierNameEnum} carrierName 
          * @param {ShipmentCancelRequest} shipmentCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        voidLabel: async (carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        voidLabel: async (carrierName: VoidLabelCarrierNameEnum, shipmentCancelRequest: ShipmentCancelRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('voidLabel', 'carrierName', carrierName)
             // verify required parameter 'shipmentCancelRequest' is not null or undefined
@@ -17853,19 +17856,19 @@ export const ProxyApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -17905,12 +17908,12 @@ export const ProxyApiFp = function(configuration?: Configuration) {
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {CancelPickupCarrierNameEnum} carrierName 
          * @param {PickupCancelRequest} pickupCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
+        async cancelPickup(carrierName: CancelPickupCarrierNameEnum, pickupCancelRequest: PickupCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cancelPickup(carrierName, pickupCancelRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -17940,50 +17943,50 @@ export const ProxyApiFp = function(configuration?: Configuration) {
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {SchedulePickupCarrierNameEnum} carrierName 
          * @param {PickupRequest} pickupRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
+        async schedulePickup(carrierName: SchedulePickupCarrierNameEnum, pickupRequest: PickupRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.schedulePickup(carrierName, pickupRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {TrackShipmentCarrierNameEnum} carrierName 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        async trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingResponse>> {
+        async trackShipment(carrierName: TrackShipmentCarrierNameEnum, trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.trackShipment(carrierName, trackingNumber, hub, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {UpdatePickupCarrierNameEnum} carrierName 
          * @param {PickupUpdateRequest} pickupUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
+        async updatePickup(carrierName: UpdatePickupCarrierNameEnum, pickupUpdateRequest: PickupUpdateRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PickupResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePickup(carrierName, pickupUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
+         * @param {VoidLabelCarrierNameEnum} carrierName 
          * @param {ShipmentCancelRequest} shipmentCancelRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
+        async voidLabel(carrierName: VoidLabelCarrierNameEnum, shipmentCancelRequest: ShipmentCancelRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OperationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.voidLabel(carrierName, shipmentCancelRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -18000,90 +18003,83 @@ export const ProxyApiFactory = function (configuration?: Configuration, basePath
         /**
          * Once the shipping rates are retrieved, provide the required info to submit the shipment by specifying your preferred rate.
          * @summary Buy a shipment label
-         * @param {ShippingRequest} shippingRequest 
+         * @param {ProxyApiBuyLabelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        buyLabel(shippingRequest: ShippingRequest, options?: any): AxiosPromise<ShippingResponse> {
-            return localVarFp.buyLabel(shippingRequest, options).then((request) => request(axios, basePath));
+        buyLabel(requestParameters: ProxyApiBuyLabelRequest, options?: AxiosRequestConfig): AxiosPromise<ShippingResponse> {
+            return localVarFp.buyLabel(requestParameters.shippingRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Cancel a pickup previously scheduled
          * @summary Cancel a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
-         * @param {PickupCancelRequest} pickupCancelRequest 
+         * @param {ProxyApiCancelPickupRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancelPickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupCancelRequest: PickupCancelRequest, options?: any): AxiosPromise<OperationResponse> {
-            return localVarFp.cancelPickup(carrierName, pickupCancelRequest, options).then((request) => request(axios, basePath));
+        cancelPickup(requestParameters: ProxyApiCancelPickupRequest, options?: AxiosRequestConfig): AxiosPromise<OperationResponse> {
+            return localVarFp.cancelPickup(requestParameters.carrierName, requestParameters.pickupCancelRequest, options).then((request) => request(axios, basePath));
         },
         /**
          *  The Shipping process begins by fetching rates for your shipment. Use this service to fetch a shipping rates available. 
          * @summary Fetch shipment rates
-         * @param {RateRequest} rateRequest 
+         * @param {ProxyApiFetchRatesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        fetchRates(rateRequest: RateRequest, options?: any): AxiosPromise<RateResponse> {
-            return localVarFp.fetchRates(rateRequest, options).then((request) => request(axios, basePath));
+        fetchRates(requestParameters: ProxyApiFetchRatesRequest, options?: AxiosRequestConfig): AxiosPromise<RateResponse> {
+            return localVarFp.fetchRates(requestParameters.rateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Get tracking details
-         * @param {TrackingData} trackingData 
-         * @param {string} [hub] 
+         * @param {ProxyApiGetTrackingRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTracking(trackingData: TrackingData, hub?: string, options?: any): AxiosPromise<TrackingResponse> {
-            return localVarFp.getTracking(trackingData, hub, options).then((request) => request(axios, basePath));
+        getTracking(requestParameters: ProxyApiGetTrackingRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingResponse> {
+            return localVarFp.getTracking(requestParameters.trackingData, requestParameters.hub, options).then((request) => request(axios, basePath));
         },
         /**
          * Schedule one or many parcels pickup
          * @summary Schedule a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
-         * @param {PickupRequest} pickupRequest 
+         * @param {ProxyApiSchedulePickupRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        schedulePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupRequest: PickupRequest, options?: any): AxiosPromise<PickupResponse> {
-            return localVarFp.schedulePickup(carrierName, pickupRequest, options).then((request) => request(axios, basePath));
+        schedulePickup(requestParameters: ProxyApiSchedulePickupRequest, options?: AxiosRequestConfig): AxiosPromise<PickupResponse> {
+            return localVarFp.schedulePickup(requestParameters.carrierName, requestParameters.pickupRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * You can track a shipment by specifying the carrier and the shipment tracking number.
          * @summary Track a shipment
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
-         * @param {string} trackingNumber 
-         * @param {string} [hub] 
+         * @param {ProxyApiTrackShipmentRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        trackShipment(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingResponse> {
-            return localVarFp.trackShipment(carrierName, trackingNumber, hub, options).then((request) => request(axios, basePath));
+        trackShipment(requestParameters: ProxyApiTrackShipmentRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingResponse> {
+            return localVarFp.trackShipment(requestParameters.carrierName, requestParameters.trackingNumber, requestParameters.hub, options).then((request) => request(axios, basePath));
         },
         /**
          * Modify a scheduled pickup
          * @summary Update a pickup
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
-         * @param {PickupUpdateRequest} pickupUpdateRequest 
+         * @param {ProxyApiUpdatePickupRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePickup(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', pickupUpdateRequest: PickupUpdateRequest, options?: any): AxiosPromise<PickupResponse> {
-            return localVarFp.updatePickup(carrierName, pickupUpdateRequest, options).then((request) => request(axios, basePath));
+        updatePickup(requestParameters: ProxyApiUpdatePickupRequest, options?: AxiosRequestConfig): AxiosPromise<PickupResponse> {
+            return localVarFp.updatePickup(requestParameters.carrierName, requestParameters.pickupUpdateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Cancel a shipment and the label previously created
          * @summary Void a shipment label
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName 
-         * @param {ShipmentCancelRequest} shipmentCancelRequest 
+         * @param {ProxyApiVoidLabelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        voidLabel(carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', shipmentCancelRequest: ShipmentCancelRequest, options?: any): AxiosPromise<OperationResponse> {
-            return localVarFp.voidLabel(carrierName, shipmentCancelRequest, options).then((request) => request(axios, basePath));
+        voidLabel(requestParameters: ProxyApiVoidLabelRequest, options?: AxiosRequestConfig): AxiosPromise<OperationResponse> {
+            return localVarFp.voidLabel(requestParameters.carrierName, requestParameters.shipmentCancelRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -18113,7 +18109,7 @@ export interface ProxyApiCancelPickupRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiCancelPickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: CancelPickupCarrierNameEnum
 
     /**
      * 
@@ -18169,7 +18165,7 @@ export interface ProxyApiSchedulePickupRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiSchedulePickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: SchedulePickupCarrierNameEnum
 
     /**
      * 
@@ -18190,7 +18186,7 @@ export interface ProxyApiTrackShipmentRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiTrackShipment
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: TrackShipmentCarrierNameEnum
 
     /**
      * 
@@ -18218,7 +18214,7 @@ export interface ProxyApiUpdatePickupRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiUpdatePickup
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: UpdatePickupCarrierNameEnum
 
     /**
      * 
@@ -18239,7 +18235,7 @@ export interface ProxyApiVoidLabelRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof ProxyApiVoidLabel
      */
-    readonly carrierName: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName: VoidLabelCarrierNameEnum
 
     /**
      * 
@@ -18354,6 +18350,199 @@ export class ProxyApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const CancelPickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type CancelPickupCarrierNameEnum = typeof CancelPickupCarrierNameEnum[keyof typeof CancelPickupCarrierNameEnum];
+/**
+ * @export
+ */
+export const SchedulePickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type SchedulePickupCarrierNameEnum = typeof SchedulePickupCarrierNameEnum[keyof typeof SchedulePickupCarrierNameEnum];
+/**
+ * @export
+ */
+export const TrackShipmentCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Fedex: 'fedex',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type TrackShipmentCarrierNameEnum = typeof TrackShipmentCarrierNameEnum[keyof typeof TrackShipmentCarrierNameEnum];
+/**
+ * @export
+ */
+export const UpdatePickupCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type UpdatePickupCarrierNameEnum = typeof UpdatePickupCarrierNameEnum[keyof typeof UpdatePickupCarrierNameEnum];
+/**
+ * @export
+ */
+export const VoidLabelCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Easypost: 'easypost',
+    Eshipper: 'eshipper',
+    Fedex: 'fedex',
+    Freightcom: 'freightcom',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type VoidLabelCarrierNameEnum = typeof VoidLabelCarrierNameEnum[keyof typeof VoidLabelCarrierNameEnum];
+
 
 /**
  * ShipmentsApi - axios parameter creator
@@ -18384,19 +18573,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18431,19 +18620,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18463,7 +18652,7 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
          * Retrieve all shipments.
          * @summary List all shipments
          * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
          * @param {string} [keyword] 
@@ -18473,12 +18662,12 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
          * @param {string} [optionValue] 
          * @param {string} [reference] 
          * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
+         * @param {string} [status] Valid shipment status. &lt;br/&gt;Values: &#x60;draft&#x60;, &#x60;purchased&#x60;, &#x60;cancelled&#x60;, &#x60;shipped&#x60;, &#x60;in_transit&#x60;, &#x60;delivered&#x60;, &#x60;needs_attention&#x60;, &#x60;out_for_delivery&#x60;, &#x60;delivery_failed&#x60;
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (address?: string, carrierName?: string, createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: string, trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/shipments`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -18491,19 +18680,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (address !== undefined) {
                 localVarQueryParameter['address'] = address;
@@ -18598,19 +18787,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18650,19 +18839,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18701,19 +18890,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18750,19 +18939,19 @@ export const ShipmentsApiAxiosParamCreator = function (configuration?: Configura
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -18814,7 +19003,7 @@ export const ShipmentsApiFp = function(configuration?: Configuration) {
          * Retrieve all shipments.
          * @summary List all shipments
          * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
          * @param {string} [keyword] 
@@ -18824,12 +19013,12 @@ export const ShipmentsApiFp = function(configuration?: Configuration) {
          * @param {string} [optionValue] 
          * @param {string} [reference] 
          * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
+         * @param {string} [status] Valid shipment status. &lt;br/&gt;Values: &#x60;draft&#x60;, &#x60;purchased&#x60;, &#x60;cancelled&#x60;, &#x60;shipped&#x60;, &#x60;in_transit&#x60;, &#x60;delivered&#x60;, &#x60;needs_attention&#x60;, &#x60;out_for_delivery&#x60;, &#x60;delivery_failed&#x60;
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
+        async list(address?: string, carrierName?: string, createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: string, trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShipmentList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -18893,87 +19082,72 @@ export const ShipmentsApiFactory = function (configuration?: Configuration, base
         /**
          * Void a shipment with the associated label.
          * @summary Cancel a shipment
-         * @param {string} id 
+         * @param {ShipmentsApiCancelRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        cancel(id: string, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.cancel(id, options).then((request) => request(axios, basePath));
+        cancel(requestParameters: ShipmentsApiCancelRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.cancel(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Create a new shipment instance.
          * @summary Create a shipment
-         * @param {ShipmentData} shipmentData 
+         * @param {ShipmentsApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(shipmentData: ShipmentData, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.create(shipmentData, options).then((request) => request(axios, basePath));
+        create(requestParameters: ShipmentsApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.create(requestParameters.shipmentData, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all shipments.
          * @summary List all shipments
-         * @param {string} [address] 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
-         * @param {string} [createdAfter] 
-         * @param {string} [createdBefore] 
-         * @param {string} [keyword] 
-         * @param {string} [metadataKey] 
-         * @param {string} [metadataValue] 
-         * @param {string} [optionKey] 
-         * @param {string} [optionValue] 
-         * @param {string} [reference] 
-         * @param {string} [service] 
-         * @param {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'} [status] 
-         * @param {string} [trackingNumber] 
+         * @param {ShipmentsApiListRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(address?: string, carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, keyword?: string, metadataKey?: string, metadataValue?: string, optionKey?: string, optionValue?: string, reference?: string, service?: string, status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped', trackingNumber?: string, options?: any): AxiosPromise<ShipmentList> {
-            return localVarFp.list(address, carrierName, createdAfter, createdBefore, keyword, metadataKey, metadataValue, optionKey, optionValue, reference, service, status, trackingNumber, options).then((request) => request(axios, basePath));
+        list(requestParameters: ShipmentsApiListRequest = {}, options?: AxiosRequestConfig): AxiosPromise<ShipmentList> {
+            return localVarFp.list(requestParameters.address, requestParameters.carrierName, requestParameters.createdAfter, requestParameters.createdBefore, requestParameters.keyword, requestParameters.metadataKey, requestParameters.metadataValue, requestParameters.optionKey, requestParameters.optionValue, requestParameters.reference, requestParameters.service, requestParameters.status, requestParameters.trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Select your preferred rates to buy a shipment label.
          * @summary Buy a shipment label
-         * @param {string} id 
-         * @param {ShipmentPurchaseData} shipmentPurchaseData 
+         * @param {ShipmentsApiPurchaseRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        purchase(id: string, shipmentPurchaseData: ShipmentPurchaseData, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.purchase(id, shipmentPurchaseData, options).then((request) => request(axios, basePath));
+        purchase(requestParameters: ShipmentsApiPurchaseRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.purchase(requestParameters.id, requestParameters.shipmentPurchaseData, options).then((request) => request(axios, basePath));
         },
         /**
          * Refresh the list of the shipment rates
          * @summary Fetch new shipment rates
-         * @param {string} id 
-         * @param {ShipmentRateData} [shipmentRateData] 
+         * @param {ShipmentsApiRatesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        rates(id: string, shipmentRateData?: ShipmentRateData, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.rates(id, shipmentRateData, options).then((request) => request(axios, basePath));
+        rates(requestParameters: ShipmentsApiRatesRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.rates(requestParameters.id, requestParameters.shipmentRateData, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a shipment.
          * @summary Retrieve a shipment
-         * @param {string} id 
+         * @param {ShipmentsApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: ShipmentsApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * This operation allows for updating properties of a shipment including `label_type`, `reference`, `payment`, `options` and `metadata`. It is not for editing the parcels of a shipment.
          * @summary Update a shipment
-         * @param {string} id 
-         * @param {ShipmentUpdateData} [shipmentUpdateData] 
+         * @param {ShipmentsApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, shipmentUpdateData?: ShipmentUpdateData, options?: any): AxiosPromise<Shipment> {
-            return localVarFp.update(id, shipmentUpdateData, options).then((request) => request(axios, basePath));
+        update(requestParameters: ShipmentsApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Shipment> {
+            return localVarFp.update(requestParameters.id, requestParameters.shipmentUpdateData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -19020,11 +19194,11 @@ export interface ShipmentsApiListRequest {
     readonly address?: string
 
     /**
-     * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
+     * @type {string}
      * @memberof ShipmentsApiList
      */
-    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName?: string
 
     /**
      * 
@@ -19090,11 +19264,11 @@ export interface ShipmentsApiListRequest {
     readonly service?: string
 
     /**
-     * 
-     * @type {'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'}
+     * Valid shipment status. &lt;br/&gt;Values: &#x60;draft&#x60;, &#x60;purchased&#x60;, &#x60;cancelled&#x60;, &#x60;shipped&#x60;, &#x60;in_transit&#x60;, &#x60;delivered&#x60;, &#x60;needs_attention&#x60;, &#x60;out_for_delivery&#x60;, &#x60;delivery_failed&#x60;
+     * @type {string}
      * @memberof ShipmentsApiList
      */
-    readonly status?: 'cancelled' | 'delivered' | 'delivery_failed' | 'draft' | 'in_transit' | 'needs_attention' | 'out_for_delivery' | 'purchased' | 'shipped'
+    readonly status?: string
 
     /**
      * 
@@ -19274,6 +19448,7 @@ export class ShipmentsApi extends BaseAPI {
 }
 
 
+
 /**
  * TrackersApi - axios parameter creator
  * @export
@@ -19304,19 +19479,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (hub !== undefined) {
                 localVarQueryParameter['hub'] = hub;
@@ -19344,14 +19519,14 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
          * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
+         * @param {CreateCarrierNameEnum} carrierName2 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        create: async (carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        create: async (carrierName: string, carrierName2: CreateCarrierNameEnum, trackingNumber: string, hub?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'carrierName' is not null or undefined
             assertParamExists('create', 'carrierName', carrierName)
             // verify required parameter 'carrierName2' is not null or undefined
@@ -19372,19 +19547,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (carrierName2 !== undefined) {
                 localVarQueryParameter['carrier_name'] = carrierName2;
@@ -19408,15 +19583,15 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
+         * @param {string} [status] Valid tracker status. &lt;br/&gt;Values: &#x60;pending&#x60;, &#x60;unknown&#x60;, &#x60;delivered&#x60;, &#x60;on_hold&#x60;, &#x60;in_transit&#x60;, &#x60;delivery_delayed&#x60;, &#x60;out_for_delivery&#x60;, &#x60;ready_for_pickup&#x60;, &#x60;delivery_failed&#x60;
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list: async (carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        list: async (carrierName?: string, createdAfter?: string, createdBefore?: string, status?: string, trackingNumber?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/trackers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -19429,19 +19604,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (carrierName !== undefined) {
                 localVarQueryParameter['carrier_name'] = carrierName;
@@ -19501,19 +19676,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -19549,19 +19724,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -19598,19 +19773,19 @@ export const TrackersApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -19653,29 +19828,29 @@ export const TrackersApiFp = function(configuration?: Configuration) {
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
          * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
+         * @param {CreateCarrierNameEnum} carrierName2 
          * @param {string} trackingNumber 
          * @param {string} [hub] 
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        async create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
+        async create(carrierName: string, carrierName2: CreateCarrierNameEnum, trackingNumber: string, hub?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackingStatus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.create(carrierName, carrierName2, trackingNumber, hub, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
+         * @param {string} [carrierName] The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
          * @param {string} [createdAfter] 
          * @param {string} [createdBefore] 
-         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
+         * @param {string} [status] Valid tracker status. &lt;br/&gt;Values: &#x60;pending&#x60;, &#x60;unknown&#x60;, &#x60;delivered&#x60;, &#x60;on_hold&#x60;, &#x60;in_transit&#x60;, &#x60;delivery_delayed&#x60;, &#x60;out_for_delivery&#x60;, &#x60;ready_for_pickup&#x60;, &#x60;delivery_failed&#x60;
          * @param {string} [trackingNumber] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
+        async list(carrierName?: string, createdAfter?: string, createdBefore?: string, status?: string, trackingNumber?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TrackerList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -19726,73 +19901,63 @@ export const TrackersApiFactory = function (configuration?: Configuration, baseP
         /**
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Add a package tracker
-         * @param {TrackingData} trackingData 
-         * @param {string} [hub] 
-         * @param {boolean} [pendingPickup] Add this flag to add the tracker whether the tracking info exist or not.When the package is eventually picked up, the tracker with capture real time updates.
+         * @param {TrackersApiAddRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        add(trackingData: TrackingData, hub?: string, pendingPickup?: boolean, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.add(trackingData, hub, pendingPickup, options).then((request) => request(axios, basePath));
+        add(requestParameters: TrackersApiAddRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingStatus> {
+            return localVarFp.add(requestParameters.trackingData, requestParameters.hub, requestParameters.pendingPickup, options).then((request) => request(axios, basePath));
         },
         /**
          * This API creates or retrieves (if existent) a tracking status object containing the details and events of a shipping in progress.
          * @summary Create a package tracker
-         * @param {string} carrierName 
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} carrierName2 
-         * @param {string} trackingNumber 
-         * @param {string} [hub] 
+         * @param {TrackersApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @deprecated
          * @throws {RequiredError}
          */
-        create(carrierName: string, carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', trackingNumber: string, hub?: string, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.create(carrierName, carrierName2, trackingNumber, hub, options).then((request) => request(axios, basePath));
+        create(requestParameters: TrackersApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingStatus> {
+            return localVarFp.create(requestParameters.carrierName, requestParameters.carrierName2, requestParameters.trackingNumber, requestParameters.hub, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all shipment trackers.
          * @summary List all package trackers
-         * @param {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'} [carrierName] 
-         * @param {string} [createdAfter] 
-         * @param {string} [createdBefore] 
-         * @param {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'} [status] 
-         * @param {string} [trackingNumber] 
+         * @param {TrackersApiListRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress', createdAfter?: string, createdBefore?: string, status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown', trackingNumber?: string, options?: any): AxiosPromise<TrackerList> {
-            return localVarFp.list(carrierName, createdAfter, createdBefore, status, trackingNumber, options).then((request) => request(axios, basePath));
+        list(requestParameters: TrackersApiListRequest = {}, options?: AxiosRequestConfig): AxiosPromise<TrackerList> {
+            return localVarFp.list(requestParameters.carrierName, requestParameters.createdAfter, requestParameters.createdBefore, requestParameters.status, requestParameters.trackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Discard a package tracker.
          * @summary Discard a package tracker
-         * @param {string} idOrTrackingNumber 
+         * @param {TrackersApiRemoveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        remove(idOrTrackingNumber: string, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.remove(idOrTrackingNumber, options).then((request) => request(axios, basePath));
+        remove(requestParameters: TrackersApiRemoveRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingStatus> {
+            return localVarFp.remove(requestParameters.idOrTrackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a package tracker
          * @summary Retrieves a package tracker
-         * @param {string} idOrTrackingNumber 
+         * @param {TrackersApiRetrievesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieves(idOrTrackingNumber: string, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.retrieves(idOrTrackingNumber, options).then((request) => request(axios, basePath));
+        retrieves(requestParameters: TrackersApiRetrievesRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingStatus> {
+            return localVarFp.retrieves(requestParameters.idOrTrackingNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Mixin to log requests
          * @summary Update tracker data
-         * @param {string} idOrTrackingNumber 
-         * @param {TrackerUpdateData} [trackerUpdateData] 
+         * @param {TrackersApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(idOrTrackingNumber: string, trackerUpdateData?: TrackerUpdateData, options?: any): AxiosPromise<TrackingStatus> {
-            return localVarFp.update(idOrTrackingNumber, trackerUpdateData, options).then((request) => request(axios, basePath));
+        update(requestParameters: TrackersApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<TrackingStatus> {
+            return localVarFp.update(requestParameters.idOrTrackingNumber, requestParameters.trackerUpdateData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -19843,7 +20008,7 @@ export interface TrackersApiCreateRequest {
      * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
      * @memberof TrackersApiCreate
      */
-    readonly carrierName2: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'fedex' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName2: CreateCarrierNameEnum
 
     /**
      * 
@@ -19867,11 +20032,11 @@ export interface TrackersApiCreateRequest {
  */
 export interface TrackersApiListRequest {
     /**
-     * 
-     * @type {'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'}
+     * The unique carrier slug. &lt;br/&gt;Values: &#x60;amazon_mws&#x60;, &#x60;aramex&#x60;, &#x60;australiapost&#x60;, &#x60;boxknight&#x60;, &#x60;canadapost&#x60;, &#x60;canpar&#x60;, &#x60;chronopost&#x60;, &#x60;dhl_express&#x60;, &#x60;dhl_poland&#x60;, &#x60;dhl_universal&#x60;, &#x60;dicom&#x60;, &#x60;dpd&#x60;, &#x60;dpdhl&#x60;, &#x60;easypost&#x60;, &#x60;eshipper&#x60;, &#x60;fedex&#x60;, &#x60;freightcom&#x60;, &#x60;generic&#x60;, &#x60;geodis&#x60;, &#x60;laposte&#x60;, &#x60;nationex&#x60;, &#x60;purolator&#x60;, &#x60;roadie&#x60;, &#x60;royalmail&#x60;, &#x60;sendle&#x60;, &#x60;sf_express&#x60;, &#x60;tnt&#x60;, &#x60;ups&#x60;, &#x60;ups_freight&#x60;, &#x60;usps&#x60;, &#x60;usps_international&#x60;, &#x60;yanwen&#x60;, &#x60;yunexpress&#x60;
+     * @type {string}
      * @memberof TrackersApiList
      */
-    readonly carrierName?: 'amazon_mws' | 'aramex' | 'australiapost' | 'boxknight' | 'canadapost' | 'canpar' | 'chronopost' | 'dhl_express' | 'dhl_poland' | 'dhl_universal' | 'dicom' | 'dpd' | 'dpdhl' | 'easypost' | 'eshipper' | 'fedex' | 'freightcom' | 'generic' | 'geodis' | 'laposte' | 'nationex' | 'purolator' | 'roadie' | 'royalmail' | 'sendle' | 'sf_express' | 'tnt' | 'ups' | 'ups_freight' | 'usps' | 'usps_international' | 'yanwen' | 'yunexpress'
+    readonly carrierName?: string
 
     /**
      * 
@@ -19888,11 +20053,11 @@ export interface TrackersApiListRequest {
     readonly createdBefore?: string
 
     /**
-     * 
-     * @type {'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'}
+     * Valid tracker status. &lt;br/&gt;Values: &#x60;pending&#x60;, &#x60;unknown&#x60;, &#x60;delivered&#x60;, &#x60;on_hold&#x60;, &#x60;in_transit&#x60;, &#x60;delivery_delayed&#x60;, &#x60;out_for_delivery&#x60;, &#x60;ready_for_pickup&#x60;, &#x60;delivery_failed&#x60;
+     * @type {string}
      * @memberof TrackersApiList
      */
-    readonly status?: 'delivered' | 'delivery_delayed' | 'delivery_failed' | 'in_transit' | 'on_hold' | 'out_for_delivery' | 'pending' | 'ready_for_pickup' | 'unknown'
+    readonly status?: string
 
     /**
      * 
@@ -20032,6 +20197,43 @@ export class TrackersApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const CreateCarrierNameEnum = {
+    AmazonMws: 'amazon_mws',
+    Aramex: 'aramex',
+    Australiapost: 'australiapost',
+    Boxknight: 'boxknight',
+    Canadapost: 'canadapost',
+    Canpar: 'canpar',
+    Chronopost: 'chronopost',
+    DhlExpress: 'dhl_express',
+    DhlPoland: 'dhl_poland',
+    DhlUniversal: 'dhl_universal',
+    Dicom: 'dicom',
+    Dpd: 'dpd',
+    Dpdhl: 'dpdhl',
+    Fedex: 'fedex',
+    Generic: 'generic',
+    Geodis: 'geodis',
+    Laposte: 'laposte',
+    Nationex: 'nationex',
+    Purolator: 'purolator',
+    Roadie: 'roadie',
+    Royalmail: 'royalmail',
+    Sendle: 'sendle',
+    SfExpress: 'sf_express',
+    Tnt: 'tnt',
+    Ups: 'ups',
+    UpsFreight: 'ups_freight',
+    Usps: 'usps',
+    UspsInternational: 'usps_international',
+    Yanwen: 'yanwen',
+    Yunexpress: 'yunexpress'
+} as const;
+export type CreateCarrierNameEnum = typeof CreateCarrierNameEnum[keyof typeof CreateCarrierNameEnum];
+
 
 /**
  * WebhooksApi - axios parameter creator
@@ -20061,19 +20263,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20108,19 +20310,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20156,19 +20358,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20204,19 +20406,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20255,19 +20457,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20307,19 +20509,19 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            // authentication JWT required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
             // authentication OAuth2 required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth2", [], configuration)
 
-            // authentication Token required
+            // authentication JWT required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             // authentication TokenBasic required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            // authentication Token required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
     
@@ -20425,12 +20627,12 @@ export const WebhooksApiFactory = function (configuration?: Configuration, baseP
         /**
          * Create a new webhook.
          * @summary Create a webhook
-         * @param {WebhookData} webhookData 
+         * @param {WebhooksApiCreateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create(webhookData: WebhookData, options?: any): AxiosPromise<Webhook> {
-            return localVarFp.create(webhookData, options).then((request) => request(axios, basePath));
+        create(requestParameters: WebhooksApiCreateRequest, options?: AxiosRequestConfig): AxiosPromise<Webhook> {
+            return localVarFp.create(requestParameters.webhookData, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve all webhooks.
@@ -20438,50 +20640,48 @@ export const WebhooksApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        list(options?: any): AxiosPromise<WebhookList> {
+        list(options?: AxiosRequestConfig): AxiosPromise<WebhookList> {
             return localVarFp.list(options).then((request) => request(axios, basePath));
         },
         /**
          * Remove a webhook.
          * @summary Remove a webhook
-         * @param {string} id 
+         * @param {WebhooksApiRemoveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        remove(id: string, options?: any): AxiosPromise<Operation> {
-            return localVarFp.remove(id, options).then((request) => request(axios, basePath));
+        remove(requestParameters: WebhooksApiRemoveRequest, options?: AxiosRequestConfig): AxiosPromise<Operation> {
+            return localVarFp.remove(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Retrieve a webhook.
          * @summary Retrieve a webhook
-         * @param {string} id 
+         * @param {WebhooksApiRetrieveRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieve(id: string, options?: any): AxiosPromise<Webhook> {
-            return localVarFp.retrieve(id, options).then((request) => request(axios, basePath));
+        retrieve(requestParameters: WebhooksApiRetrieveRequest, options?: AxiosRequestConfig): AxiosPromise<Webhook> {
+            return localVarFp.retrieve(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * test a webhook.
          * @summary Test a webhook
-         * @param {string} id 
-         * @param {WebhookTestRequest} webhookTestRequest 
+         * @param {WebhooksApiTestRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        test(id: string, webhookTestRequest: WebhookTestRequest, options?: any): AxiosPromise<Operation> {
-            return localVarFp.test(id, webhookTestRequest, options).then((request) => request(axios, basePath));
+        test(requestParameters: WebhooksApiTestRequest, options?: AxiosRequestConfig): AxiosPromise<Operation> {
+            return localVarFp.test(requestParameters.id, requestParameters.webhookTestRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * update a webhook.
          * @summary Update a webhook
-         * @param {string} id 
-         * @param {PatchedWebhookData} [patchedWebhookData] 
+         * @param {WebhooksApiUpdateRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, patchedWebhookData?: PatchedWebhookData, options?: any): AxiosPromise<Webhook> {
-            return localVarFp.update(id, patchedWebhookData, options).then((request) => request(axios, basePath));
+        update(requestParameters: WebhooksApiUpdateRequest, options?: AxiosRequestConfig): AxiosPromise<Webhook> {
+            return localVarFp.update(requestParameters.id, requestParameters.patchedWebhookData, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -20648,5 +20848,6 @@ export class WebhooksApi extends BaseAPI {
         return WebhooksApiFp(this.configuration).update(requestParameters.id, requestParameters.patchedWebhookData, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 

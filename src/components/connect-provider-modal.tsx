@@ -677,7 +677,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   )
 }
 
-function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, property: string) {
+function fieldState(carrier_name: CarrierNameType, property: string) {
   const field = (
     ({
       [CarrierSettingsCarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],
