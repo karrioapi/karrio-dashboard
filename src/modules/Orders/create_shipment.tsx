@@ -17,6 +17,7 @@ import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import LineItemSelector from '@/components/line-item-selector';
+import { useConnections } from '@/context/carrier-connections';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
@@ -30,6 +31,7 @@ import React, { useEffect, useState } from 'react';
 import { bundleContexts } from '@/context/utils';
 import { useLoader } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
+import { Disclosure } from '@headlessui/react';
 import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
@@ -47,6 +49,7 @@ export default function CreateShipmentPage(pageProps: any) {
     const loader = useLoader();
     const notifier = useNotifier();
     const { basePath } = useAppMode();
+    const { carrierOptions } = useConnections();
     const { query: templates } = useDefaultTemplates();
     const { addUrlParam, ...router } = useLocation();
     const [ready, setReady] = useState<boolean>(false);
@@ -579,7 +582,64 @@ export default function CreateShipmentPage(pageProps: any) {
                   <span>Paperless trade</span>
                 </CheckBoxField>
 
+
+                {/* hold at location */}
+                <CheckBoxField name="hold_at_location"
+                  fieldClass="column mb-0 is-12 px-0 py-2"
+                  defaultChecked={shipment.options?.hold_at_location}
+                  onChange={e => onChange({ options: { ...shipment.options, hold_at_location: e.target.checked } })}
+                >
+                  <span>Hold at location</span>
+                </CheckBoxField>
+
               </div>
+
+              {/* CARRIER OPTIONS SECTION */}
+              {carrierOptions.length > 0 && <div className='mb-4 px-3'>
+
+                <Disclosure>
+                  {({ open }) => (
+                    <div className="block">
+                      <Disclosure.Button as="div" style={{ boxShadow: 'none' }}
+                        className="is-flex is-justify-content-space-between is-clickable py-2">
+                        <div className="has-text-grey has-text-weight-semibold is-size-7 pt-1">CARRIER SPECIFIC OPTIONS</div>
+                        <span className="icon is-small m-1">
+                          {open ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
+                        </span>
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="card is-flat columns is-multiline m-0 px-2">
+
+                        {(carrierOptions.includes("dpdhl_packstation")) && <>
+                          {/* dpdhl packstation */}
+                          <CheckBoxField name="Packstation"
+                            fieldClass="column mb-0 is-12 px-1 py-2"
+                            defaultChecked={!isNoneOrEmpty(shipment.options?.dpdhl_packstation)}
+                            onChange={e => onChange({ options: { ...shipment.options, dpdhl_packstation: e.target.checked === true ? "" : null } })}
+                          >
+                            <span>Packstation</span>
+                          </CheckBoxField>
+
+                          <div className="column is-multiline m-0 p-0" style={{
+                            display: `${isNone(shipment.options?.dpdhl_packstation) ? 'none' : 'block'}`
+                          }}>
+
+                            <InputField name="dpdhl_packstation"
+                              // label="Packstation"
+                              className="is-small"
+                              fieldClass="column mb-0 is-6 px-1 py-2"
+                              value={shipment.options?.dpdhl_packstation}
+                              required={!isNone(shipment.options?.dpdhl_packstation)}
+                              onChange={e => onChange({ options: { ...shipment.options, dpdhl_packstation: e.target.value } })}
+                            />
+                          </div>
+                        </>}
+
+                      </Disclosure.Panel>
+                    </div>
+                  )}
+                </Disclosure>
+
+              </div>}
 
               <hr className='my-1' style={{ height: '1px' }} />
 

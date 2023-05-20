@@ -1893,6 +1893,7 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       zt_id
       zt_password
       account_number
+      config
       services {
         id
         active
