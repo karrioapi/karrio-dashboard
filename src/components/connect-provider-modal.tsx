@@ -590,6 +590,15 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                               </div>
                             </div>}
 
+                          {"service_suffix" in connection_configs[carrier_name.toString()] &&
+                            <InputField value={payload.config?.service_suffix || ""}
+                              name="service_suffix"
+                              label="Fixed service suffix"
+                              onChange={handleConfigChange}
+                              fieldClass="column is-6 mb-0"
+                              className="is-small is-fullwidth"
+                            />}
+
                           {"shipping_services" in connection_configs[carrier_name.toString()] &&
                             <SelectField defaultValue={payload.config?.shipping_services}
                               name="shipping_services"
