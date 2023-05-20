@@ -4,6 +4,7 @@ import { onError, url$ } from '@/lib/helper';
 import React, { useContext } from 'react';
 import getConfig from 'next/config';
 import axios from 'axios';
+import { useSyncedSession } from './session';
 
 const { publicRuntimeConfig } = getConfig();
 type APIMeta = {
@@ -14,6 +15,7 @@ type APIMeta = {
 const APIMetadata = React.createContext<APIMeta>({} as any);
 
 const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metadata }) => {
+  const { query: { data: session } } = useSyncedSession();
   const context = {
     metadata: (metadata || {}) as Metadata,
     get host() {
@@ -25,10 +27,12 @@ const APIMetadataProvider: React.FC<{ metadata: Metadata }> = ({ children, metad
   };
 
   const { data: references } = useQuery({
-    queryKey: ['references'],
+    queryKey: ['references', session?.accessToken],
     queryFn: () => (
       axios
-        .get<References>(url$`${context.host}/v1/references?reduced=false`)
+        .get<References>(url$`${context.host}/v1/references?reduced=false`, (!!session?.accessToken ? {
+          headers: { 'authorization': `Bearer ${session?.accessToken}` }
+        } : {}))
         .then(({ data }) => data)
     ),
     staleTime: 5000,

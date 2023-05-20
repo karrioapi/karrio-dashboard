@@ -1,7 +1,7 @@
 import { AddressType, CommodityType, CURRENCY_OPTIONS, CustomsType, NotificationType, OrderType, ShipmentType } from '@/lib/types';
+import { get_orders_orders_edges, LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import { formatRef, formatWeight, getShipmentCommodities, isNone, isNoneOrEmpty, useLocation } from '@/lib/helper';
 import { AddressModalEditor, CustomsModalEditor, ParcelModalEditor } from '@/components/form-parts/form-modals';
-import { get_orders_orders_edges, LabelTypeEnum, MetadataObjectTypeEnum, PaidByEnum, ShipmentStatusEnum } from 'karrio/graphql';
 import CommodityEditModalProvider, { CommodityStateContext } from '@/components/commodity-edit-modal';
 import CustomsInfoDescription from '@/components/descriptions/customs-info-description';
 import MetadataEditor, { MetadataEditorContext } from '@/components/metadata-editor';
@@ -17,6 +17,7 @@ import RateDescription from '@/components/descriptions/rate-description';
 import { useDefaultTemplates } from '@/context/default-template';
 import CheckBoxField from '@/components/generic/checkbox-field';
 import LineItemSelector from '@/components/line-item-selector';
+import { useConnections } from '@/context/carrier-connections';
 import AuthenticatedPage from '@/layouts/authenticated-page';
 import ButtonField from '@/components/generic/button-field';
 import SelectField from '@/components/generic/select-field';
@@ -32,6 +33,7 @@ import { useAppMode } from '@/context/app-mode';
 import { useOrders } from '@/context/order';
 import Spinner from '@/components/spinner';
 import Head from 'next/head';
+import { Disclosure } from '@headlessui/react';
 
 export { getServerSideProps } from "@/lib/data-fetching";
 
@@ -46,6 +48,7 @@ export default function CreateLabelPage(pageProps: any) {
   const Component: React.FC = () => {
     const notifier = useNotifier();
     const { basePath } = useAppMode();
+    const { carrierOptions } = useConnections();
     const { addUrlParam, ...router } = useLocation();
     const { query: templates } = useDefaultTemplates();
     const { shipment_id = 'new' } = router.query as { shipment_id: string };
@@ -528,17 +531,13 @@ export default function CreateLabelPage(pageProps: any) {
                     label="Package value"
                     type="number" min={0} step="any"
                     className="is-small"
-                    controlClass="has-icons-left has-icons-right"
+                    controlClass="has-icons-right"
                     fieldClass="column mb-0 is-4 px-1 py-2"
                     value={shipment.options?.declared_value}
                     required={!isNone(shipment.options?.declared_value)}
                     onChange={e => onChange({ options: { ...shipment.options, declared_value: parseFloat(e.target.value) } })}
-                  >
-                    <span className="icon is-small is-left">
-                      <i className="fas fa-dollar-sign"></i>
-                    </span>
-                    <span className="icon is-small is-right">{shipment.options?.currency}</span>
-                  </InputField>
+                    addonRight={<span className="icon is-small is-right pr-2">{shipment.options?.currency}</span>}
+                  />
 
                 </div>
 
@@ -554,6 +553,53 @@ export default function CreateLabelPage(pageProps: any) {
 
               </div>
 
+              {/* CARRIER OPTIONS SECTION */}
+              {carrierOptions.length > 0 && <div className='mb-4 px-3'>
+
+                <Disclosure>
+                  {({ open }) => (
+                    <div className="block">
+                      <Disclosure.Button as="div" style={{ boxShadow: 'none' }}
+                        className="is-flex is-justify-content-space-between is-clickable py-2">
+                        <div className="has-text-grey has-text-weight-semibold is-size-7 pt-1">CARRIER SPECIFIC OPTIONS</div>
+                        <span className="icon is-small m-1">
+                          {open ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
+                        </span>
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="card is-flat columns is-multiline m-0 px-2">
+
+                        {(carrierOptions.includes("dpdhl_packstation")) && <>
+                          {/* dpdhl packstation */}
+                          <CheckBoxField name="Packstation"
+                            fieldClass="column mb-0 is-12 px-1 py-2"
+                            defaultChecked={!isNoneOrEmpty(shipment.options?.dpdhl_packstation)}
+                            onChange={e => onChange({ options: { ...shipment.options, dpdhl_packstation: e.target.checked === true ? "" : null } })}
+                          >
+                            <span>Packstation</span>
+                          </CheckBoxField>
+
+                          <div className="column is-multiline m-0 p-0" style={{
+                            display: `${isNone(shipment.options?.dpdhl_packstation) ? 'none' : 'block'}`
+                          }}>
+
+                            <InputField name="dpdhl_packstation"
+                              // label="Packstation"
+                              className="is-small"
+                              fieldClass="column mb-0 is-6 px-1 py-2"
+                              value={shipment.options?.dpdhl_packstation}
+                              required={!isNone(shipment.options?.dpdhl_packstation)}
+                              onChange={e => onChange({ options: { ...shipment.options, dpdhl_packstation: e.target.value } })}
+                            />
+                          </div>
+                        </>}
+
+                      </Disclosure.Panel>
+                    </div>
+                  )}
+                </Disclosure>
+
+              </div>}
+
               <hr className='my-1' style={{ height: '1px' }} />
 
               <div className="p-3">
@@ -561,7 +607,7 @@ export default function CreateLabelPage(pageProps: any) {
                 <InputField label="Reference"
                   name="reference"
                   defaultValue={shipment.reference as string}
-                  onChange={e => mutation.updateShipment({ reference: e.target.value })}
+                  onChange={e => mutation.updateShipment({ reference: (e.target.value as string) })}
                   placeholder="shipment reference"
                   className="is-small"
                   autoComplete="off"

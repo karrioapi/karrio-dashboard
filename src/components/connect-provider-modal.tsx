@@ -590,6 +590,15 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                               </div>
                             </div>}
 
+                          {"service_suffix" in connection_configs[carrier_name.toString()] &&
+                            <InputField value={payload.config?.service_suffix || ""}
+                              name="service_suffix"
+                              label="Fixed service suffix"
+                              onChange={handleConfigChange}
+                              fieldClass="column is-6 mb-0"
+                              className="is-small is-fullwidth"
+                            />}
+
                           {"shipping_services" in connection_configs[carrier_name.toString()] &&
                             <SelectField defaultValue={payload.config?.shipping_services}
                               name="shipping_services"
@@ -677,7 +686,7 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
   )
 }
 
-function fieldState(carrier_name: CarrierSettingsCarrierNameEnum | NoneEnum, property: string) {
+function fieldState(carrier_name: CarrierNameType, property: string) {
   const field = (
     ({
       [CarrierSettingsCarrierNameEnum.AmazonMws]: [["carrier_id", true], ["seller_id", true], ["developer_id", true], ["mws_auth_token", true], ["aws_region"]],

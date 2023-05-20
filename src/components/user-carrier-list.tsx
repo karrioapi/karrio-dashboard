@@ -6,12 +6,12 @@ import { useRateSheetModal } from '@/components/rate-sheet-edit-modal';
 import { ConfirmModalContext } from '@/components/confirm-modal';
 import CarrierNameBadge from '@/components/carrier-name-badge';
 import CopiableLink from '@/components/copiable-link';
+import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 import { Notify } from '@/components/notifier';
 import { NotificationType } from '@/lib/types';
 import { Loading } from '@/components/loader';
-import { isNone, isNoneOrEmpty } from '@/lib/helper';
 import Spinner from '@/components/spinner';
 
 type ConnectionUpdateType = Partial<UpdateCarrierConnectionMutationInput> & { id: string, carrier_name: string };

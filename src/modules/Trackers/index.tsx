@@ -73,13 +73,13 @@ export default function TrackersPage(pageProps: any) {
               <a onClick={() => !isNone(filter?.status) && updateFilter({ status: null, offset: 0 })}>all</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('in_transit') ? 'is-active' : ''}`}>
-              <a onClick={() => !filter?.status?.includes('in_transit') && updateFilter({ status: ['on_hold', 'in_transit', 'out_for_delivery', 'ready_for_pickup'], offset: 0 })}>in-transit</a>
+              <a onClick={() => !filter?.status?.includes('in_transit') && updateFilter({ status: ['in_transit', 'on_hold', 'out_for_delivery', 'ready_for_pickup'], offset: 0 })}>in-transit</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('pending') ? 'is-active' : ''}`}>
               <a onClick={() => !filter?.status?.includes('pending') && updateFilter({ status: ['pending'], offset: 0 })}>pending</a>
             </li>
-            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('on_hold') ? 'is-active' : ''}`}>
-              <a onClick={() => !filter?.status?.includes('on_hold') && updateFilter({ status: ['on_hold', 'delivery_delayed', 'delivery_failed'], offset: 0 })}>exception</a>
+            <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivery_delayed') ? 'is-active' : ''}`}>
+              <a onClick={() => !filter?.status?.includes('delivery_delayed') && updateFilter({ status: ['delivery_delayed', 'delivery_failed', 'on_hold'], offset: 0 })}>exception</a>
             </li>
             <li className={`is-capitalized has-text-weight-semibold ${filter?.status?.includes('delivered') ? 'is-active' : ''}`}>
               <a onClick={() => !filter?.status?.includes('delivered') && updateFilter({ status: ['delivered'], offset: 0 })}>delivered</a>

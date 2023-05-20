@@ -9,7 +9,7 @@ interface MessagesDescriptionComponent {
 const MessagesDescription: React.FC<MessagesDescriptionComponent> = ({ messages }) => {
   return (
     <>
-      {JSON.stringify(messages, null, 2)}
+      {formatMessage(messages as any)}
     </>
   );
 };
