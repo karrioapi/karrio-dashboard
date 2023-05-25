@@ -1,12 +1,13 @@
 import ButtonField from "@/components/generic/button-field";
 import SectionLayout from "@/layouts/section-layout";
 import { useRouter } from "next/dist/client/router";
-import LoadingProvider from "@/components/loader";
+import LoadingProvider, { Loading } from "@/components/loader";
 import React, { FormEvent, useRef } from "react";
 import { useUserMutation } from "@/context/user";
 import { p } from "@/lib/client";
 import Head from "next/head";
 import Link from "next/link";
+import { isNone } from "@/lib/helper";
 
 export { getServerSideProps } from '@/lib/data-fetching/metadata';
 
@@ -16,16 +17,24 @@ export default function Page(pageProps: any) {
   const Component: React.FC<{}> = () => {
     const router = useRouter();
     const email = useRef<HTMLInputElement>(null);
-    const { requestPasswordReset: { isLoading, mutateAsync } } = useUserMutation();
+    const [errors, setErrors] = React.useState<any[]>([]);
+    const { loading, setLoading } = React.useContext(Loading);
+    const { requestPasswordReset } = useUserMutation();
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const { request_password_reset } = await mutateAsync({
-        email: email.current?.value as string,
-        redirect_url: location.origin + p`/password/reset`
-      });
-
-      if ((request_password_reset?.errors || []).length === 0) router.push(`/password/reset/sent`)
+      try {
+        setLoading(true);
+        await requestPasswordReset.mutateAsync({
+          email: email.current?.value as string,
+          redirect_url: location.origin + p`/password/reset`
+        });
+        router.push(`/password/reset/sent`)
+      } catch (error: any) {
+        const _error = error.data?.errors || error;
+        setErrors(Array.isArray(_error) ? _error : [_error]);
+      }
+      setLoading(false);
     };
 
     return (
@@ -35,6 +44,10 @@ export default function Page(pageProps: any) {
             <p className="subtitle has-text-centered mb-4">Forgotten your password?</p>
             <p className="has-text-centered mb-4">Enter your email address below, and we’ll email instructions for setting a new one.</p>
 
+            {(errors as any[]).filter(error => isNone(error.field)).map(({ message }, index) => (
+              <p key={index} className="has-text-danger has-text-centered is-size-7">{message}</p>
+            ))}
+
             <form method="post" onSubmit={onSubmit}>
 
               <div className="field mt-6">
@@ -43,8 +56,12 @@ export default function Page(pageProps: any) {
                 </div>
               </div>
 
+              {errors.filter(error => error.field === 'email').map(({ messages }) => (
+                messages.map((message: any, index: number) => <p key={index} className="has-text-danger is-size-7">{message}</p>)
+              ))}
+
               <ButtonField type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className={`is-primary is-fullwidth mt-6`}
                 controlClass="has-text-centered">
                 <span>Reset my password</span>
