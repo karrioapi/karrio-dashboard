@@ -2166,25 +2166,8 @@ export const GET_USER_CONNECTIONS = gql`query get_user_connections {
       active
       metadata
       capabilities
-      username
-      password
-      access_license_number
-      account_number
-      account_country_code
-      config
-    }
-    ... on UPSFreightSettingsType {
-      id
-      carrier_id
-      carrier_name
-      display_name
-      test_mode
-      active
-      metadata
-      capabilities
-      username
-      password
-      access_license_number
+      client_id
+      client_secret
       account_number
       account_country_code
       config
