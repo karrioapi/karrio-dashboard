@@ -10,9 +10,9 @@ import InputField from '@/components/generic/input-field';
 import Notifier, { Notify } from '@/components/notifier';
 import { MetadataObjectTypeEnum } from 'karrio/graphql';
 import { useAPIMetadata } from '@/context/api-metadata';
-import { Loading } from '@/components/loader';
 import { useAppMode } from '@/context/app-mode';
 import { Disclosure } from '@headlessui/react';
+import { Loading } from '@/components/loader';
 
 type CarrierNameType = CarrierSettingsCarrierNameEnum | NoneEnum;
 type OperationType = {
@@ -422,13 +422,6 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                   required={field("user_token").required}
                 />}
 
-                {field("access_license_number").exists && <InputField label="Access License Number" value={payload.access_license_number}
-                  name="access_license_number"
-                  onChange={handleChange}
-                  className="is-small"
-                  required={field("access_license_number").required}
-                />}
-
                 {field("account_pin").exists && <InputField label="Account Pin" value={payload.account_pin}
                   name="account_pin"
                   onChange={handleChange}
@@ -590,6 +583,22 @@ const ConnectProviderModal: React.FC<ConnectProviderModalComponent> = ({ childre
                               </div>
                             </div>}
 
+                          {"skip_service_filter" in connection_configs[carrier_name.toString()] &&
+                            <div className="field column is-6 mb-0">
+                              <div className="control">
+                                <label className="checkbox has-text-weight-bold mt-5 pt-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={payload.config?.skip_service_filter}
+                                    name="skip_service_filter"
+                                    onChange={handleConfigChange}
+                                  />
+                                  {' '}
+                                  <span style={{ fontSize: '0.8em' }}>Disable service filter</span>
+                                </label>
+                              </div>
+                            </div>}
+
                           {"service_suffix" in connection_configs[carrier_name.toString()] &&
                             <InputField value={payload.config?.service_suffix || ""}
                               name="service_suffix"
@@ -716,8 +725,7 @@ function fieldState(carrier_name: CarrierNameType, property: string) {
       [CarrierSettingsCarrierNameEnum.Sendle]: [["carrier_id", true], ["sendle_id", true], ["api_key", true]],
       [CarrierSettingsCarrierNameEnum.SfExpress]: [["carrier_id", true], ["partner_id", true], ["check_word", true]],
       [CarrierSettingsCarrierNameEnum.Tnt]: [["carrier_id", true], ["username", true], ["password", true], ["account_number"], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.Ups]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
-      [CarrierSettingsCarrierNameEnum.UpsFreight]: [["carrier_id", true], ["username", true], ["password", true], ["access_license_number", true], ["account_number", true], ["account_country_code"]],
+      [CarrierSettingsCarrierNameEnum.Ups]: [["carrier_id", true], ["client_id", true], ["client_secret", true], ["account_number", true], ["account_country_code"]],
       [CarrierSettingsCarrierNameEnum.Usps]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
       [CarrierSettingsCarrierNameEnum.UspsInternational]: [["carrier_id", true], ["username", true], ["password", true], ["mailer_id"], ["customer_registration_id"], ["logistics_manager_mailer_id"]],
       [CarrierSettingsCarrierNameEnum.Yanwen]: [["carrier_id", true], ["customer_number", true], ["license_key", true]],

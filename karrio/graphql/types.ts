@@ -2815,6 +2815,7 @@ export interface get_user_connections_user_connections_DPDHLSettingsType {
   zt_id: string | null;
   zt_password: string | null;
   account_number: string | null;
+  config: any | null;
   services: get_user_connections_user_connections_DPDHLSettingsType_services[] | null;
 }
 
@@ -3093,27 +3094,8 @@ export interface get_user_connections_user_connections_UPSSettingsType {
   active: boolean;
   metadata: any | null;
   capabilities: string[];
-  username: string;
-  password: string;
-  access_license_number: string;
-  account_number: string | null;
-  account_country_code: string | null;
-  config: any | null;
-}
-
-export interface get_user_connections_user_connections_UPSFreightSettingsType {
-  __typename: "UPSFreightSettingsType";
-  id: string;
-  carrier_id: string;
-  carrier_name: string;
-  display_name: string;
-  test_mode: boolean;
-  active: boolean;
-  metadata: any | null;
-  capabilities: string[];
-  username: string;
-  password: string;
-  access_license_number: string;
+  client_id: string;
+  client_secret: string;
   account_number: string | null;
   account_country_code: string | null;
   config: any | null;
@@ -3185,7 +3167,7 @@ export interface get_user_connections_user_connections_YunExpressSettingsType {
   config: any | null;
 }
 
-export type get_user_connections_user_connections = get_user_connections_user_connections_AmazonMwsSettingsType | get_user_connections_user_connections_AramexSettingsType | get_user_connections_user_connections_AustraliaPostSettingsType | get_user_connections_user_connections_BoxKnightSettingsType | get_user_connections_user_connections_CanadaPostSettingsType | get_user_connections_user_connections_CanparSettingsType | get_user_connections_user_connections_ChronopostSettingsType | get_user_connections_user_connections_DHLExpressSettingsType | get_user_connections_user_connections_DHLPolandSettingsType | get_user_connections_user_connections_DHLUniversalSettingsType | get_user_connections_user_connections_DicomSettingsType | get_user_connections_user_connections_DPDSettingsType | get_user_connections_user_connections_DPDHLSettingsType | get_user_connections_user_connections_EShipperSettingsType | get_user_connections_user_connections_EasyPostSettingsType | get_user_connections_user_connections_FedexSettingsType | get_user_connections_user_connections_FreightcomSettingsType | get_user_connections_user_connections_GenericSettingsType | get_user_connections_user_connections_GEODISSettingsType | get_user_connections_user_connections_LaPosteSettingsType | get_user_connections_user_connections_NationexSettingsType | get_user_connections_user_connections_PurolatorSettingsType | get_user_connections_user_connections_RoadieSettingsType | get_user_connections_user_connections_RoyalMailSettingsType | get_user_connections_user_connections_SendleSettingsType | get_user_connections_user_connections_SFExpressSettingsType | get_user_connections_user_connections_TNTSettingsType | get_user_connections_user_connections_UPSSettingsType | get_user_connections_user_connections_UPSFreightSettingsType | get_user_connections_user_connections_USPSSettingsType | get_user_connections_user_connections_USPSInternationalSettingsType | get_user_connections_user_connections_YanwenSettingsType | get_user_connections_user_connections_YunExpressSettingsType;
+export type get_user_connections_user_connections = get_user_connections_user_connections_AmazonMwsSettingsType | get_user_connections_user_connections_AramexSettingsType | get_user_connections_user_connections_AustraliaPostSettingsType | get_user_connections_user_connections_BoxKnightSettingsType | get_user_connections_user_connections_CanadaPostSettingsType | get_user_connections_user_connections_CanparSettingsType | get_user_connections_user_connections_ChronopostSettingsType | get_user_connections_user_connections_DHLExpressSettingsType | get_user_connections_user_connections_DHLPolandSettingsType | get_user_connections_user_connections_DHLUniversalSettingsType | get_user_connections_user_connections_DicomSettingsType | get_user_connections_user_connections_DPDSettingsType | get_user_connections_user_connections_DPDHLSettingsType | get_user_connections_user_connections_EShipperSettingsType | get_user_connections_user_connections_EasyPostSettingsType | get_user_connections_user_connections_FedexSettingsType | get_user_connections_user_connections_FreightcomSettingsType | get_user_connections_user_connections_GenericSettingsType | get_user_connections_user_connections_GEODISSettingsType | get_user_connections_user_connections_LaPosteSettingsType | get_user_connections_user_connections_NationexSettingsType | get_user_connections_user_connections_PurolatorSettingsType | get_user_connections_user_connections_RoadieSettingsType | get_user_connections_user_connections_RoyalMailSettingsType | get_user_connections_user_connections_SendleSettingsType | get_user_connections_user_connections_SFExpressSettingsType | get_user_connections_user_connections_TNTSettingsType | get_user_connections_user_connections_UPSSettingsType | get_user_connections_user_connections_USPSSettingsType | get_user_connections_user_connections_USPSInternationalSettingsType | get_user_connections_user_connections_YanwenSettingsType | get_user_connections_user_connections_YunExpressSettingsType;
 
 export interface get_user_connections {
   user_connections: get_user_connections_user_connections[];
@@ -5055,7 +5037,6 @@ export interface CreateCarrierConnectionMutationInput {
   sf_express?: SFExpressSettingsInput | null;
   tnt?: TNTSettingsInput | null;
   ups?: UPSSettingsInput | null;
-  ups_freight?: UPSFreightSettingsInput | null;
   usps?: USPSSettingsInput | null;
   usps_international?: USPSInternationalSettingsInput | null;
   yanwen?: YanwenSettingsInput | null;
@@ -5449,24 +5430,9 @@ export interface UPSSettingsInput {
   active?: boolean | null;
   config?: any | null;
   metadata?: any | null;
-  username: string;
-  password: string;
-  access_license_number: string;
-  account_number: string;
-  test_mode?: boolean | null;
-  carrier_id: string;
-}
-
-// null
-export interface UPSFreightSettingsInput {
-  account_country_code?: string | null;
-  active?: boolean | null;
-  config?: any | null;
-  metadata?: any | null;
-  username: string;
-  password: string;
-  access_license_number: string;
-  account_number: string;
+  client_id: string;
+  client_secret: string;
+  account_number?: string | null;
   test_mode?: boolean | null;
   carrier_id: string;
 }
@@ -5551,7 +5517,6 @@ export interface UpdateCarrierConnectionMutationInput {
   sf_express?: UpdateSFExpressSettingsInput | null;
   tnt?: UpdateTNTSettingsInput | null;
   ups?: UpdateUPSSettingsInput | null;
-  ups_freight?: UpdateUPSFreightSettingsInput | null;
   usps?: UpdateUSPSSettingsInput | null;
   usps_international?: UpdateUSPSInternationalSettingsInput | null;
   yanwen?: UpdateYanwenSettingsInput | null;
@@ -5963,24 +5928,8 @@ export interface UpdateUPSSettingsInput {
   active?: boolean | null;
   config?: any | null;
   metadata?: any | null;
-  username?: string | null;
-  password?: string | null;
-  access_license_number?: string | null;
-  account_number?: string | null;
-  test_mode?: boolean | null;
-  carrier_id?: string | null;
-}
-
-// null
-export interface UpdateUPSFreightSettingsInput {
-  id: string;
-  account_country_code?: string | null;
-  active?: boolean | null;
-  config?: any | null;
-  metadata?: any | null;
-  username?: string | null;
-  password?: string | null;
-  access_license_number?: string | null;
+  client_id?: string | null;
+  client_secret?: string | null;
   account_number?: string | null;
   test_mode?: boolean | null;
   carrier_id?: string | null;
