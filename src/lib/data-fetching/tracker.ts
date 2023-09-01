@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const data = await client.trackers.retrieves({ idOrTrackingNumber: id })
       .then(({ data }) => ({ tracker: JSON.parse(JSON.stringify(data)) }))
       .catch(_ => {
-        console.log(_)
+        console.log(_.response?.data?.errors || _.response)
         return ({ message: `No Tracker ID nor Tracking Number found for ${id}` });
       });
 
