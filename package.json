@@ -33,7 +33,7 @@
     "lodash.tonumber": "^4.0.3",
     "moment": "^2.29.4",
     "next": "^13.1.6",
-    "next-auth": "^4.20.1",
+    "next-auth": "^4.24.5",
     "pino": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
