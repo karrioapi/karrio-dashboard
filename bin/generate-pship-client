@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 branch="${1:=main}"
 
-docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
+docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli:v7.0.1 generate \
   -i "https://raw.githubusercontent.com/karrioapi/karrio/${branch}/server/schemas/openapi.yml" \
   -g typescript-axios \
   -o /local/karrio/rest/generated \
