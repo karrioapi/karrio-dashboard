@@ -1,3 +1,6 @@
+__This repository has been archived but the karrio docs have been moved to a monorepo https://github.com/karrioapi/karrio__ 
+
+
 # Karrio Dashboard
 
 ![Karrio Dashboard](screenshots/dashboard.png)
